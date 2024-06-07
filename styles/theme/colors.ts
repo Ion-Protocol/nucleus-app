@@ -52,18 +52,15 @@ export const colors = {
     light: '#E6F9F3',
     medium: '#B4EBDB',
     dark: '#05BB85',
-    veryDark: '#014A55',
   },
   yellow: {
     light: '#FEF7E8',
     medium: '#FCE5BA',
     dark: '#F2A818',
-    veryDark: '#494434',
   },
   red: {
     light: '#FBEDED',
     medium: '#F2C7C7',
     dark: '#D14343',
-    veryDark: '#3F2641',
   },
 }

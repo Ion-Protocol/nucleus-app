@@ -1,4 +1,4 @@
-const semanticTokens = {
+export const semanticTokens = {
   colors: {
     border: {
       primary: {
@@ -66,5 +66,3 @@ const semanticTokens = {
     },
   },
 }
-
-export default semanticTokens

@@ -11,7 +11,7 @@ export default function Home() {
       <Text fontSize="16px" color="border.primary">
         the quick brown fox jumped over the lazy dog
       </Text>
-      <Text textStyle="header1">
+      <Text textStyle="header2">
         THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG
       </Text>
       <Text textStyle="header1" color="warning.main" mt={3}>

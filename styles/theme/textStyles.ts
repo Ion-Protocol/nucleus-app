@@ -1,4 +1,7 @@
 export const textStyles = {
+  button: {
+    fontWeight: 'bold',
+  },
   header1: {
     fontSize: '32px',
     fontWeight: 'bold',
