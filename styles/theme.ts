@@ -1,11 +1,28 @@
-import { extendTheme } from '@chakra-ui/react'
+import { extendTheme, ThemeConfig } from '@chakra-ui/react'
+import { fonts } from './fonts'
+import { colors } from './colors'
+import semanticTokens from './tokens'
+import { textStyles } from './textStyles'
 
-export const theme = extendTheme({
-  fonts: {
-    heading: 'var(--font-aventa)',
-    body: 'var(--font-aventa)',
-    // Or directly use the font-family name if CSS variables are not used
-    // heading: 'Aventa, sans-serif',
-    // body: 'Aventa, sans-serif',
+const config: ThemeConfig = {
+  initialColorMode: 'dark',
+  useSystemColorMode: false,
+}
+
+const theme = extendTheme({
+  config,
+  fonts,
+  colors,
+  semanticTokens,
+  textStyles,
+  styles: {
+    global: (props: any) => ({
+      body: {
+        bg: 'background',
+        color: 'text',
+      },
+    }),
   },
 })
+
+export default theme
