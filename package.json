@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "convert-icons": "node scripts/convertSvgToChakraIcon.js && prettier --write components/icons/*.tsx"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.2.0",
@@ -29,6 +30,7 @@
     "eslint-config-next": "14.2.3",
     "eslint-config-prettier": "^9.1.0",
     "husky": "^9.0.11",
+    "jsdom": "^24.1.0",
     "prettier": "^3.3.1",
     "typescript": "^5"
   }

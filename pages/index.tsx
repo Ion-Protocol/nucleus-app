@@ -1,3 +1,5 @@
+import { ArbitrumIcon } from '@/components/icons/Arbitrum'
+import { SwellChainIcon } from '@/components/icons/SwellChain'
 import { Box, Button, Text, useColorMode } from '@chakra-ui/react'
 
 export default function Home() {
@@ -17,6 +19,8 @@ export default function Home() {
       <Text textStyle="header1" color="warning.main" mt={3}>
         $277,308.00
       </Text>
+      <ArbitrumIcon fontSize="128px" />
+      <SwellChainIcon fontSize="128px" />
     </Box>
   )
 }
