@@ -45,21 +45,9 @@ export const StethIcon = createIcon({
           <feOffset />
           <feGaussianBlur stdDeviation="2.5" />
           <feComposite in2="hardAlpha" operator="out" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 0.208 0 0 0 0 0.69344 0 0 0 0 0.8 0 0 0 0.25 0"
-          />
-          <feBlend
-            mode="normal"
-            in2="BackgroundImageFix"
-            result="effect1_dropShadow_958_478"
-          />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="effect1_dropShadow_958_478"
-            result="shape"
-          />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.208 0 0 0 0 0.69344 0 0 0 0 0.8 0 0 0 0.25 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_958_478" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_958_478" result="shape" />
         </filter>
       </defs>
     </>

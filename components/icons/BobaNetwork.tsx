@@ -5,24 +5,10 @@ export const BobaNetworkIcon = createIcon({
   viewBox: '0 0 22 22',
   path: (
     <>
-      <rect
-        xmlns="http://www.w3.org/2000/svg"
-        x="1"
-        width="20.24"
-        height="22"
-        fill="url(#pattern0_10197_26015)"
-      />
+      <rect xmlns="http://www.w3.org/2000/svg" x="1" width="20.24" height="22" fill="url(#pattern0_10197_26015)" />
       <defs xmlns="http://www.w3.org/2000/svg">
-        <pattern
-          id="pattern0_10197_26015"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
-          <use
-            transform="matrix(0.0037037 0 0 0.00340741 0 -0.0281481)"
-            href="#image0_10197_26015"
-          />
+        <pattern id="pattern0_10197_26015" patternContentUnits="objectBoundingBox" width="1" height="1">
+          <use transform="matrix(0.0037037 0 0 0.00340741 0 -0.0281481)" href="#image0_10197_26015" />
         </pattern>
         <image
           id="image0_10197_26015"

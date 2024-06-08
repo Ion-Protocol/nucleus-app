@@ -5,19 +5,9 @@ export const TokenRocketPoolIcon = createIcon({
   viewBox: '0 0 25 25',
   path: (
     <>
-      <rect
-        xmlns="http://www.w3.org/2000/svg"
-        width="25"
-        height="25"
-        fill="url(#pattern0_958_474)"
-      />
+      <rect xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="url(#pattern0_958_474)" />
       <defs xmlns="http://www.w3.org/2000/svg">
-        <pattern
-          id="pattern0_958_474"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
+        <pattern id="pattern0_958_474" patternContentUnits="objectBoundingBox" width="1" height="1">
           <use transform="scale(0.015625)" href="#image0_958_474" />
         </pattern>
         <image

@@ -109,9 +109,7 @@ const convertSvgFilesToChakraIcons = (inputDir, outputDir) => {
         const outputFilePath = path.join(outputDir, `${iconNamePascal}.tsx`)
 
         if (fs.existsSync(outputFilePath)) {
-          console.log(
-            `Icon ${iconNamePascal}.tsx already exists, skipping conversion.`
-          )
+          console.log(`Icon ${iconNamePascal}.tsx already exists, skipping conversion.`)
           return
         }
 

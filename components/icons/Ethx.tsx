@@ -15,31 +15,19 @@ export const EthxIcon = createIcon({
         d="M12.4985 5L12.4001 5.33401V15.0254L12.4985 15.1236L16.997 12.4644L12.4985 5Z"
         fill="#B7B7B7"
       />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M12.4987 5L8 12.4644L12.4987 15.1236V10.4196V5Z"
-        fill="white"
-      />
+      <path xmlns="http://www.w3.org/2000/svg" d="M12.4987 5L8 12.4644L12.4987 15.1236V10.4196V5Z" fill="white" />
       <path
         xmlns="http://www.w3.org/2000/svg"
         d="M12.4985 15.9751L12.4431 16.0427V19.495L12.4985 19.6568L16.9999 13.3174L12.4985 15.9751Z"
         fill="#939090"
       />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M12.4987 19.6568V15.9751L8 13.3174L12.4987 19.6568Z"
-        fill="white"
-      />
+      <path xmlns="http://www.w3.org/2000/svg" d="M12.4987 19.6568V15.9751L8 13.3174L12.4987 19.6568Z" fill="white" />
       <path
         xmlns="http://www.w3.org/2000/svg"
         d="M12.4985 15.1234L16.9971 12.4642L12.4985 10.4194V15.1234Z"
         fill="#939090"
       />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M8 12.4642L12.4987 15.1234V10.4194L8 12.4642Z"
-        fill="#B1B1B1"
-      />
+      <path xmlns="http://www.w3.org/2000/svg" d="M8 12.4642L12.4987 15.1234V10.4194L8 12.4642Z" fill="#B1B1B1" />
       <path
         xmlns="http://www.w3.org/2000/svg"
         d="M7.275 3.4751L8.7 4.9001C8.06667 5.21676 7.085 6.0401 6.325 6.8001C5.565 7.5601 4.58333 8.7001 4.425 9.1751L3 7.7501L7.275 3.4751Z"

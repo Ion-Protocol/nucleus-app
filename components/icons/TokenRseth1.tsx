@@ -11,14 +11,7 @@ export const TokenRseth1Icon = createIcon({
           fill="url(#paint0_linear_6528_64503)"
           stroke="#312751"
         />
-        <mask
-          id="mask0_6528_64503"
-          maskUnits="userSpaceOnUse"
-          x="-1"
-          y="-1"
-          width="27"
-          height="27"
-        >
+        <mask id="mask0_6528_64503" maskUnits="userSpaceOnUse" x="-1" y="-1" width="27" height="27">
           <path
             d="M12.5001 24.6622C19.217 24.6622 24.6622 19.217 24.6622 12.5001C24.6622 5.78308 19.217 0.337891 12.5001 0.337891C5.78308 0.337891 0.337891 5.78308 0.337891 12.5001C0.337891 19.217 5.78308 24.6622 12.5001 24.6622Z"
             fill="url(#paint1_linear_6528_64503)"
@@ -26,14 +19,7 @@ export const TokenRseth1Icon = createIcon({
           />
         </mask>
         <g mask="url(#mask0_6528_64503)">
-          <mask
-            id="mask1_6528_64503"
-            maskUnits="userSpaceOnUse"
-            x="-1"
-            y="-1"
-            width="27"
-            height="28"
-          >
+          <mask id="mask1_6528_64503" maskUnits="userSpaceOnUse" x="-1" y="-1" width="27" height="28">
             <path
               d="M26 10.8179C26 18.3208 22.3155 26.1702 14.5106 26.1702C6.7058 26.1702 -1 20.8611 -1 13.3582C-1 5.85539 3.48877 -1 11.2936 -1C19.0985 -1 26 3.31509 26 10.8179Z"
               fill="#D9D9D9"
@@ -85,12 +71,7 @@ export const TokenRseth1Icon = createIcon({
           colorInterpolationFilters="sRGB"
         >
           <feFlood result="BackgroundImageFix" floodOpacity="0" />
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          />
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -100,15 +81,8 @@ export const TokenRseth1Icon = createIcon({
           <feOffset dy="1.16134" />
           <feGaussianBlur stdDeviation="3.0685" />
           <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 0.122917 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0"
-          />
-          <feBlend
-            mode="normal"
-            in2="shape"
-            result="effect1_innerShadow_6528_64503"
-          />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.122917 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0" />
+          <feBlend mode="normal" in2="shape" result="effect1_innerShadow_6528_64503" />
         </filter>
         <linearGradient
           id="paint0_linear_6528_64503"

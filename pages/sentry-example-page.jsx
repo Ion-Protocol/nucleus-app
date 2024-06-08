@@ -66,10 +66,7 @@ export default function Page() {
 
         <p>
           Next, look for the error on the{' '}
-          <a href="https://molecular-labs-a2.sentry.io/issues/?project=4507386805485568">
-            Issues Page
-          </a>
-          .
+          <a href="https://molecular-labs-a2.sentry.io/issues/?project=4507386805485568">Issues Page</a>.
         </p>
         <p style={{ marginTop: '24px' }}>
           For more information, see{' '}

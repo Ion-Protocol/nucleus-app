@@ -11,26 +11,10 @@ export const RswethIcon = createIcon({
         fill="#1E1273"
         stroke="#FEBC0C"
       />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M13.5 5.5L8.5 13.5H12.5V12.5H13.5V5.5Z"
-        fill="#FFE8A8"
-      />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M13.5 12.5V5.5L18 12.5H13.5Z"
-        fill="#FFBC01"
-      />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M13 22L18 14H14V15H13V22Z"
-        fill="#FFBC01"
-      />
-      <path
-        xmlns="http://www.w3.org/2000/svg"
-        d="M13 15V22L8.5 15H13Z"
-        fill="#FFE8A8"
-      />
+      <path xmlns="http://www.w3.org/2000/svg" d="M13.5 5.5L8.5 13.5H12.5V12.5H13.5V5.5Z" fill="#FFE8A8" />
+      <path xmlns="http://www.w3.org/2000/svg" d="M13.5 12.5V5.5L18 12.5H13.5Z" fill="#FFBC01" />
+      <path xmlns="http://www.w3.org/2000/svg" d="M13 22L18 14H14V15H13V22Z" fill="#FFBC01" />
+      <path xmlns="http://www.w3.org/2000/svg" d="M13 15V22L8.5 15H13Z" fill="#FFE8A8" />
     </>
   ),
 })

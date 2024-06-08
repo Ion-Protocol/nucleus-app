@@ -5,24 +5,8 @@ export const TokenEzethIcon = createIcon({
   viewBox: '0 0 25 25',
   path: (
     <>
-      <rect
-        xmlns="http://www.w3.org/2000/svg"
-        x="0.5"
-        y="0.5"
-        width="24"
-        height="24"
-        rx="12"
-        fill="white"
-      />
-      <rect
-        xmlns="http://www.w3.org/2000/svg"
-        x="0.5"
-        y="0.5"
-        width="24"
-        height="24"
-        rx="12"
-        stroke="#F0F0F4"
-      />
+      <rect xmlns="http://www.w3.org/2000/svg" x="0.5" y="0.5" width="24" height="24" rx="12" fill="white" />
+      <rect xmlns="http://www.w3.org/2000/svg" x="0.5" y="0.5" width="24" height="24" rx="12" stroke="#F0F0F4" />
       <path
         xmlns="http://www.w3.org/2000/svg"
         d="M12.4988 5.44678L12.4004 5.78129V15.4871L12.4988 15.5853L16.9971 12.9223L12.4988 5.44678Z"
