@@ -7,8 +7,12 @@ const buttonGradient = (props: StyleFunctionProps) => {
 export const ButtonStyles: ComponentStyleConfig = {
   baseStyle: {
     borderRadius: '5px',
-    paddingY: 3,
     paddingX: 6,
+    paddingY: 3,
+    display: 'flex',
+    alignItems: 'center',
+    lineHeight: '2',
+    marginTop: '3px',
   },
   variants: {
     solid: (props) => ({
@@ -22,6 +26,11 @@ export const ButtonStyles: ComponentStyleConfig = {
           filter: 'brightness(0.7)',
         },
       },
+    }),
+    outline: (props) => ({
+      border: '2px solid',
+      borderColor: 'border',
+      backgroundColor: 'backgroundSecondary',
     }),
   },
   defaultProps: {

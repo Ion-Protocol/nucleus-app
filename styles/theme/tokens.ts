@@ -1,18 +1,20 @@
 export const semanticTokens = {
   colors: {
     border: {
-      primary: {
-        default: 'neutral.100',
-        _dark: 'midnight.700',
-      },
-      subtle: {
-        default: 'neutral.100',
-        _dark: 'midnight.400',
-      },
+      default: 'neutral.100',
+      _dark: 'midnight.700',
+    },
+    borderSubtle: {
+      default: 'neutral.200',
+      _dark: 'midnight.600',
     },
     background: {
       default: 'white',
       _dark: 'midnight.900',
+    },
+    backgroundSecondary: {
+      default: 'white',
+      _dark: 'midnight.800',
     },
     text: {
       default: 'neutral.900',
