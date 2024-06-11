@@ -1,6 +1,6 @@
 import { Chain } from '@rainbow-me/rainbowkit'
 
-const TENDERLY_STAGING_RPC_URL = process.env.PUBLIC_NEXT_TENDERLY_STAGING_RPC_URL || ''
+const TENDERLY_STAGING_RPC_URL = 'https://virtual.mainnet.rpc.tenderly.co/2c860eb1-24d0-4817-86f4-dd17c2629d18'
 const TENDERLY_STAGING_CHAIN_ID = 99099127
 
 export const tenderlyStaging: Chain = {

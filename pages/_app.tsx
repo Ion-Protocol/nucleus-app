@@ -1,6 +1,8 @@
+import ErrorModal from '@/components/ErrorModal'
 import { queryClient } from '@/config/queryClient'
 import { wagmiConfig } from '@/config/wagmi'
 import { store } from '@/store'
+import { StoreInitializer } from '@/store/components/StoreInitializer'
 import '@/styles/globals.css'
 import theme from '@/styles/theme'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
@@ -17,10 +19,13 @@ export default function App({ Component, pageProps }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={darkTheme()}>
           <Provider store={store}>
-            <ChakraProvider theme={theme}>
-              <ColorModeScript initialColorMode={theme.config?.initialColorMode} />
-              <Component {...pageProps} />
-            </ChakraProvider>
+            <StoreInitializer>
+              <ChakraProvider theme={theme}>
+                <ColorModeScript initialColorMode={theme.config?.initialColorMode} />
+                <ErrorModal />
+                <Component {...pageProps} />
+              </ChakraProvider>
+            </StoreInitializer>
           </Provider>
         </RainbowKitProvider>
       </QueryClientProvider>

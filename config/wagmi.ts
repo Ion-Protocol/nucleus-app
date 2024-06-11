@@ -1,14 +1,14 @@
-import { connectorsForWallets, getDefaultConfig } from '@rainbow-me/rainbowkit'
-import { createConfig, http } from 'wagmi'
-import { Chain, mainnet } from 'wagmi/chains'
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
   bitgetWallet,
-  rainbowWallet,
-  metaMaskWallet,
   coinbaseWallet,
-  walletConnectWallet,
   ledgerWallet,
+  metaMaskWallet,
+  rainbowWallet,
+  walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
+import { createConfig, http } from 'wagmi'
+import { Chain, mainnet } from 'wagmi/chains'
 import { tenderlyStaging } from './tenderlyChain'
 
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
@@ -43,5 +43,5 @@ if (process.env.NEXT_PUBLIC_SHOW_TESTNET) {
 export const wagmiConfig = createConfig({
   chains,
   connectors,
-  transports: { [mainnet.id]: http() },
+  transports: { [mainnet.id]: http(), [tenderlyStaging.id]: http() },
 })

@@ -21,10 +21,10 @@ export const ButtonStyles: ComponentStyleConfig = {
       _hover: {
         background: buttonGradient(props),
         filter: 'brightness(0.9)',
-        _active: {
-          background: buttonGradient(props),
-          filter: 'brightness(0.7)',
-        },
+      },
+      _active: {
+        background: buttonGradient(props),
+        filter: 'brightness(0.7)',
       },
     }),
     outline: (props) => ({
