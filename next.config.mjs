@@ -2,6 +2,15 @@ import { withSentryConfig } from '@sentry/nextjs'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard',
+        permanent: false, // Set to true if you want a 308 permanent redirect
+      },
+    ]
+  },
 }
 
 export default withSentryConfig(nextConfig, {
