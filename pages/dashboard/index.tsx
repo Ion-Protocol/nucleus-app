@@ -1,9 +1,8 @@
 import { AnnouncementBanner } from '@/components/AnnouncementBanner'
-import { Flex, Text, useColorMode } from '@chakra-ui/react'
+import YieldBridgeList from '@/components/YieldBridgeList'
+import { Flex, Text } from '@chakra-ui/react'
 
 export default function Dashboard() {
-  const { colorMode } = useColorMode()
-
   return (
     <Flex p={9} direction="column">
       {/* Page title */}
@@ -21,6 +20,7 @@ export default function Dashboard() {
 
       {/* Yield Bridge list */}
       <Text textStyle="header2">Choose Yield Bridge</Text>
+      <YieldBridgeList />
     </Flex>
   )
 }
