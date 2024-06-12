@@ -17,4 +17,7 @@ export const textStyles = {
   header3: {
     fontSize: '24px',
   },
+  header4: {
+    fontSize: '18px',
+  },
 }

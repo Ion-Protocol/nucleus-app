@@ -128,7 +128,7 @@ const convertSvgFilesToChakraIcons = (inputDir, outputDir) => {
 }
 
 // Example usage
-const inputDirectory = path.resolve(__dirname, '../assets/svgs')
+const inputDirectory = path.resolve(__dirname, '../public/assets/svgs')
 const outputDirectory = path.resolve(__dirname, '../components/icons')
 
 // Ensure output directory exists

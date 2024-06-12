@@ -20,6 +20,7 @@ export default function Home() {
         </Skeleton>
       </Flex>
       {balanceError && <Text color="error.main">{balanceError}</Text>}
+      <Box h="2000px">Hello World</Box>
     </Box>
   )
 }

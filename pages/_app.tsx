@@ -1,4 +1,5 @@
 import ErrorModal from '@/components/ErrorModal'
+import { Layout } from '@/components/layouts/Layout'
 import { queryClient } from '@/config/queryClient'
 import { wagmiConfig } from '@/config/wagmi'
 import { store } from '@/store'
@@ -23,7 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
               <ChakraProvider theme={theme}>
                 <ColorModeScript initialColorMode={theme.config?.initialColorMode} />
                 <ErrorModal />
-                <Component {...pageProps} />
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
               </ChakraProvider>
             </StoreInitializer>
           </Provider>

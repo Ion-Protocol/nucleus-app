@@ -24,6 +24,18 @@ export const semanticTokens = {
       default: 'neutral.500',
       _dark: 'midnight.200',
     },
+    selected: {
+      default: 'primary.50',
+      _dark: 'midnight.800',
+    },
+    hover: {
+      default: 'primary.50',
+      _dark: 'midnight.800',
+    },
+    active: {
+      default: 'primary.100',
+      _dark: 'midnight.700',
+    },
     success: {
       main: {
         default: 'green.dark',
