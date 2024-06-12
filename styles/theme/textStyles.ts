@@ -20,4 +20,8 @@ export const textStyles = {
   header4: {
     fontSize: '18px',
   },
+  caption: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+  },
 }
