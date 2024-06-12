@@ -20,11 +20,6 @@ export const fetchPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue
   'price/fetchPrice',
   async (_, { getState, rejectWithValue, dispatch }) => {
     try {
-      const state = getState()
-      const address = state.account.address
-
-      if (!address) return { price: '0' }
-
       const result = (await readContract(wagmiConfig, {
         abi: Chainlink.abi as Abi,
         address: contractAddresses.chainlink,

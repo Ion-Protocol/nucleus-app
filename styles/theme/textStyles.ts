@@ -16,6 +16,7 @@ export const textStyles = {
   },
   header3: {
     fontSize: '24px',
+    fontWeight: 'bold',
   },
   header4: {
     fontSize: '18px',
@@ -23,5 +24,8 @@ export const textStyles = {
   caption: {
     fontSize: '14px',
     fontWeight: 'bold',
+  },
+  small: {
+    fontSize: '14px',
   },
 }

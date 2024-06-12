@@ -9,8 +9,8 @@ import { formatUnits } from 'viem'
 export function bigIntToNumber(value: bigint, decimals = 18): string {
   const numberValue = parseFloat(formatUnits(value, decimals))
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 4,
-    maximumFractionDigits: 4,
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
   }).format(numberValue)
 }
 

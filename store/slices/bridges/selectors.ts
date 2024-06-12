@@ -7,8 +7,11 @@ import { selectCurrency } from '@/store/slices/currency'
 import { BridgesState } from './slice'
 import { selectPrice } from '../price'
 import { bigIntToPercent } from '@/utils/bigint'
+import { uiConfig } from '@/config/ui'
 
-const selectBridgesState = (state: RootState): BridgesState => state.bridges
+export const selectBridgesState = (state: RootState): BridgesState => state.bridges
+export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.loading)
+export const selectBridgesError = createSelector([selectBridgesState], (bridgesState) => bridgesState.error)
 
 /**
  * Selects the Total Value Locked (TVL) for a specific bridge key.
@@ -18,7 +21,7 @@ const selectBridgesState = (state: RootState): BridgesState => state.bridges
  */
 export const selectBridgeTVLByKey = (key: BridgeKey) =>
   createSelector([selectBridgesState], (bridgesState): bigint | undefined => {
-    return BigInt(bridgesState[key]?.tvl || 0)
+    return BigInt(bridgesState.data[key]?.tvl || 0)
   })
 
 /**
@@ -28,7 +31,7 @@ export const selectBridgeTVLByKey = (key: BridgeKey) =>
  */
 export const selectBridgeAPYByKey = (key: BridgeKey) =>
   createSelector([selectBridgesState], (bridgesState): string | undefined => {
-    return bridgesState[key]?.apy
+    return bridgesState.data[key]?.apy
   })
 
 /**
@@ -42,7 +45,8 @@ export const selectFormattedBridgeTVLByKey = (key: BridgeKey) => {
     const tvl = selectBridgeTVLByKey(key)(state) || BigInt(0)
     const price = selectPrice(state)
     const currency = selectCurrency(state)
-    return utils.currencySwitch(currency, tvl, price)
+    const formattedTvl = utils.currencySwitch(currency, tvl, price)
+    return formattedTvl
   })
 }
 
@@ -60,26 +64,46 @@ export const selectFormattedBridgeAPYByKey = (key: BridgeKey) => {
 }
 
 /**
+ * Selects a bridge by its key and formats the data.
+ *
+ * @param key - The key of the bridge.
+ * @returns The formatted bridge data for the specified key.
+ */
+export const selectFormattedBridgeDataByKey = (key: BridgeKey) =>
+  createSelector([(state: RootState) => state], (state) => {
+    const bridges = selectBridgesState(state)
+    const bridgeData = bridges.data[key]
+
+    const formattedTvl = selectFormattedBridgeTVLByKey(key as BridgeKey)(state)
+    const formattedApy = selectFormattedBridgeAPYByKey(key as BridgeKey)(state)
+
+    // Trim the description down to a certain length to fit inside the container properly
+    const descriptionLength = uiConfig.pages.dashboard.yieldBridges.descrptionLength
+    const description = bridgesConfig[key as BridgeKey]?.description || ''
+    const trimmedDescription =
+      description.length > descriptionLength ? `${description.slice(0, descriptionLength)}...` : description
+
+    return {
+      key: key as BridgeKey,
+      tvl: {
+        raw: BigInt(bridgeData?.tvl || 0),
+        formatted: formattedTvl,
+      },
+      apy: {
+        raw: BigInt(bridgeData?.apy || 0),
+        formatted: formattedApy,
+      },
+      name: bridgesConfig[key as BridgeKey]?.name || '',
+      description: trimmedDescription,
+    }
+  })
+
+/**
  * Selects all bridges from the state and formats the data.
  * @param state - The root state of the application.
  * @returns An array of bridges with formatted data.
  */
 export const selectAllBridges = createSelector([(state: RootState) => state], (state) => {
   const bridges = selectBridgesState(state)
-  return Object.entries(bridges).map(([key, bridgeData]) => {
-    const formattedTvl = selectFormattedBridgeTVLByKey(key as BridgeKey)(state)
-    const formattedApy = selectFormattedBridgeAPYByKey(key as BridgeKey)(state)
-    return {
-      key: key as BridgeKey,
-      tvl: {
-        raw: BigInt(bridgeData.tvl),
-        formatted: formattedTvl,
-      },
-      apy: {
-        raw: BigInt(bridgeData.apy),
-        formatted: formattedApy,
-      },
-      name: bridgesConfig[key as BridgeKey]?.name || '',
-    }
-  })
+  return Object.keys(bridges.data).map((key) => selectFormattedBridgeDataByKey(key as BridgeKey)(state))
 })

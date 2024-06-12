@@ -10,7 +10,7 @@ import { useMockInitializer } from '@/store/hooks/useMockInitializer'
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
   useStoreInitializer()
-  useMockInitializer()
+  // useMockInitializer()
 
   const [isDesktop] = useMediaQuery('(min-width: 1025px)')
   const [isTablet] = useMediaQuery('(min-width: 769px) and (max-width: 1024px)')

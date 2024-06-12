@@ -1,8 +1,6 @@
-import { useAppDispatch } from '@/store/hooks'
-import { setBridgeNavOpen } from '@/store/slices/ui'
 import { Box, ChakraProps, Flex, Link, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 
 interface NavItemProps extends ChakraProps {
   title: string
