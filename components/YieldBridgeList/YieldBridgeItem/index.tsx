@@ -34,7 +34,7 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
         <Flex mt={3} gap={6}>
           <Flex direction="column">
             <Text textStyle="small">TVL</Text>
-            <Skeleton isLoaded={!loading} w="90px">
+            <Skeleton isLoaded={!loading} w="95px">
               <Text textStyle="caption">{bridge.tvl.formatted}</Text>
             </Skeleton>
           </Flex>

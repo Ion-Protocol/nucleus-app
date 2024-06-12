@@ -1,17 +1,16 @@
 import { bridgesConfig } from '@/config/bridges'
+import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
+import { selectCurrency } from '@/store/slices/currency'
 import { BridgeKey } from '@/types/Bridge'
 import { utils } from '@/utils'
-import { createSelector } from 'reselect'
-import { selectCurrency } from '@/store/slices/currency'
-import { BridgesState } from './slice'
-import { selectPrice } from '../price'
 import { bigIntToPercent } from '@/utils/bigint'
-import { uiConfig } from '@/config/ui'
+import { createSelector } from 'reselect'
+import { selectPrice } from '../price'
+import { BridgesState } from './initialState'
 
 export const selectBridgesState = (state: RootState): BridgesState => state.bridges
-export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.loading)
-export const selectBridgesError = createSelector([selectBridgesState], (bridgesState) => bridgesState.error)
+export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.overallLoading)
 
 /**
  * Selects the Total Value Locked (TVL) for a specific bridge key.
@@ -21,7 +20,7 @@ export const selectBridgesError = createSelector([selectBridgesState], (bridgesS
  */
 export const selectBridgeTVLByKey = (key: BridgeKey) =>
   createSelector([selectBridgesState], (bridgesState): bigint | undefined => {
-    return BigInt(bridgesState.data[key]?.tvl || 0)
+    return BigInt(bridgesState.data[key].tvl.value)
   })
 
 /**
@@ -30,8 +29,8 @@ export const selectBridgeTVLByKey = (key: BridgeKey) =>
  * @returns The APY value as a string, or undefined if the bridge key is not found.
  */
 export const selectBridgeAPYByKey = (key: BridgeKey) =>
-  createSelector([selectBridgesState], (bridgesState): string | undefined => {
-    return bridgesState.data[key]?.apy
+  createSelector([selectBridgesState], (bridgesState): bigint | undefined => {
+    return BigInt(bridgesState.data[key].apy.value)
   })
 
 /**
@@ -71,9 +70,8 @@ export const selectFormattedBridgeAPYByKey = (key: BridgeKey) => {
  */
 export const selectFormattedBridgeDataByKey = (key: BridgeKey) =>
   createSelector([(state: RootState) => state], (state) => {
-    const bridges = selectBridgesState(state)
-    const bridgeData = bridges.data[key]
-
+    const rawTvl = selectBridgeTVLByKey(key)(state)
+    const rawApy = selectBridgeAPYByKey(key)(state)
     const formattedTvl = selectFormattedBridgeTVLByKey(key as BridgeKey)(state)
     const formattedApy = selectFormattedBridgeAPYByKey(key as BridgeKey)(state)
 
@@ -86,11 +84,11 @@ export const selectFormattedBridgeDataByKey = (key: BridgeKey) =>
     return {
       key: key as BridgeKey,
       tvl: {
-        raw: BigInt(bridgeData?.tvl || 0),
+        raw: rawTvl,
         formatted: formattedTvl,
       },
       apy: {
-        raw: BigInt(bridgeData?.apy || 0),
+        raw: rawApy,
         formatted: formattedApy,
       },
       name: bridgesConfig[key as BridgeKey]?.name || '',
