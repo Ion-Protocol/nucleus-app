@@ -1,7 +1,7 @@
-import { AppHeader } from '@/components/AppHeader'
-import { NavDrawer } from '@/components/NavDrawer'
-import { Flex } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
+import { Flex } from '@chakra-ui/react'
+import { NavDrawer } from '@/components/NavDrawer'
+import { AppHeader } from '@/components/AppHeader'
 
 export function DesktopLayout({ children }: PropsWithChildren) {
   return (
@@ -9,9 +9,7 @@ export function DesktopLayout({ children }: PropsWithChildren) {
       <NavDrawer />
       <Flex direction="column" flex={1} height="100vh">
         <AppHeader />
-        <main style={{ flex: 1, overflowY: 'auto' }}>
-          <Flex bg="yellow.dark">{children}</Flex>
-        </main>
+        <main style={{ flex: 1, overflowY: 'auto' }}>{children}</main>
       </Flex>
     </Flex>
   )

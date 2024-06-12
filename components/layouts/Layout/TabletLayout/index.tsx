@@ -9,9 +9,7 @@ export function TabletLayout({ children }: PropsWithChildren) {
       <NavDrawer />
       <Flex direction="column" flex={1} height="100vh">
         <AppHeader />
-        <main style={{ flex: 1, overflowY: 'auto' }}>
-          <Flex bg="yellow.dark">{children}</Flex>
-        </main>
+        <main style={{ flex: 1, overflowY: 'auto' }}>{children}</main>
       </Flex>
     </Flex>
   )
