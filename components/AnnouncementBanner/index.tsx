@@ -1,18 +1,45 @@
-import { Image, useColorMode } from '@chakra-ui/react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Box, Image, useColorMode } from '@chakra-ui/react'
 
 export function AnnouncementBanner() {
   const { colorMode } = useColorMode()
+  const [imageHeight, setImageHeight] = useState<number | null>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  useEffect(() => {
+    if (imageRef.current) {
+      setImageHeight(imageRef.current.clientHeight)
+    }
+  }, [colorMode])
+
   return (
-    <Image
-      alt="announcement"
-      src={
-        colorMode === 'light'
-          ? '/assets/images/AnnouncementBannerLight.png'
-          : '/assets/images/AnnouncementBannerDark.png'
-      }
-      minW="1300px"
-      maxW="1300px"
-      alignSelf="center"
-    />
+    <Box
+      w="100%"
+      height={imageHeight ? `${imageHeight}px` : 'auto'}
+      overflowX="hidden"
+      display="flex"
+      position="relative"
+      borderRadius="16px"
+    >
+      <Image
+        ref={imageRef}
+        position="absolute"
+        top="0px"
+        left="0px"
+        minW="1300px"
+        maxW="1300px"
+        alt="announcement"
+        src={
+          colorMode === 'light'
+            ? '/assets/images/AnnouncementBannerLight.png'
+            : '/assets/images/AnnouncementBannerDark.png'
+        }
+        onLoad={() => {
+          if (imageRef.current) {
+            setImageHeight(imageRef.current.clientHeight)
+          }
+        }}
+      />
+    </Box>
   )
 }
