@@ -32,6 +32,10 @@ export const semanticTokens = {
       default: 'primary.50',
       _dark: 'midnight.800',
     },
+    hoverSecondary: {
+      default: 'primary.100',
+      _dark: 'midnight.700',
+    },
     active: {
       default: 'primary.100',
       _dark: 'midnight.700',

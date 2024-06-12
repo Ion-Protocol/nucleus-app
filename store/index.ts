@@ -4,6 +4,7 @@ import { accountReducer } from './slices/account'
 import { balancesReducer } from './slices/balance'
 import { statusReducer } from './slices/status'
 import { UIReducer } from './slices/ui'
+import { currencyReducer } from './slices/currency'
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     ui: UIReducer,
     balances: balancesReducer,
     counter: counterReducer,
+    currency: currencyReducer,
     status: statusReducer,
   },
 })

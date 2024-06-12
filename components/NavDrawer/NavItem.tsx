@@ -36,9 +36,7 @@ export function NavItem({ title, href, leftIcon }: NavItemProps) {
         _active={{ bg: 'active' }}
       >
         <Box w="36px">{iconWithSize}</Box>
-        <Text pointerEvents="none" textStyle="header4">
-          {title}
-        </Text>
+        <Text userSelect="none">{title}</Text>
       </Flex>
     </Link>
   )

@@ -24,9 +24,7 @@ function NavCollapse({ title, leftIcon, children, isOpen, toggle }: NavCollapseC
         >
           <Flex gap={3}>
             <Box w="36px">{iconWithSize}</Box>
-            <Text pointerEvents="none" textStyle="header4">
-              {title}
-            </Text>
+            <Text userSelect="none">{title}</Text>
           </Flex>
           {isOpen && <ChevronUpIcon />}
           {!isOpen && <ChevronDownIcon />}

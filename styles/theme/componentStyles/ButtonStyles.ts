@@ -32,6 +32,17 @@ export const ButtonStyles: ComponentStyleConfig = {
       borderColor: 'border',
       backgroundColor: 'backgroundSecondary',
     }),
+    borderless: (props) => ({
+      backgroundColor: 'transparent',
+      color: 'text',
+      border: 'none',
+      _hover: {
+        background: 'hover',
+      },
+      _active: {
+        background: 'active',
+      },
+    }),
   },
   defaultProps: {
     textStyle: 'button',
