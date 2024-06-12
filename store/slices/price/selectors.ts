@@ -36,6 +36,6 @@ export function selectPriceError(state: RootState): string | null {
 export function selectFormattedPrice(state: RootState): string {
   let price = selectPrice(state)
   const priceAsBigInt = BigInt(price)
-  const priceFormatted = utils.formatBigInt(priceAsBigInt)
+  const priceFormatted = utils.bigIntToNumber(priceAsBigInt)
   return priceFormatted
 }

@@ -2,7 +2,7 @@ import { bridgesConfig } from '@/config/bridges'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
-import { BridgeKey } from '@/types/Bridge'
+import { BridgeKey, BridgeUI } from '@/types/Bridge'
 import { utils } from '@/utils'
 import { bigIntToPercent } from '@/utils/bigint'
 import { createSelector } from 'reselect'
@@ -93,7 +93,7 @@ export const selectFormattedBridgeDataByKey = (key: BridgeKey) =>
       },
       name: bridgesConfig[key as BridgeKey]?.name || '',
       description: trimmedDescription,
-    }
+    } as BridgeUI
   })
 
 /**
