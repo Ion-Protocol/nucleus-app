@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { fetchWeETHBalance } from '@/store/slices/balance'
 import { fetchPrice } from '../slices/price'
 import { fetchBridgeApy, fetchBridgeTvl } from '../slices/bridges/thunks'
-import { BridgeKey } from '@/types/Bridge'
+import { BridgeKey } from '@/config/bridges'
 
 export function useStoreInitializer() {
   const dispatch = useAppDispatch()

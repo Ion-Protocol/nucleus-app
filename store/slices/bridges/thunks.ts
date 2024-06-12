@@ -2,7 +2,7 @@ import { RootState } from '@/store'
 import { utils } from '@/utils'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { setError } from '../status'
-import { BridgeKey } from '@/types/Bridge'
+import { BridgeKey } from '@/config/bridges'
 
 export interface FetchBridgeTvlResult {
   tvl: string

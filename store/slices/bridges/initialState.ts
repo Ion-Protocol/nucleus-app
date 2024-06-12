@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/types/Bridge'
+import { BridgeKey } from '@/config/bridges'
 
 export interface BridgeMetric {
   value: string
@@ -16,33 +16,22 @@ export type BridgesState = {
   overallLoading: boolean
 }
 
+// Initialize the data object by iterating over all the bridge keys and setting the initial state
+const initializeData = (): { [key in BridgeKey]: BridgeData } => {
+  const data: { [key in BridgeKey]: BridgeData } = {} as any
+
+  Object.values(BridgeKey).forEach((key) => {
+    data[key] = {
+      tvl: { value: BigInt(0).toString(), loading: false },
+      apy: { value: BigInt(0).toString(), loading: false },
+      error: null,
+    }
+  })
+
+  return data
+}
+
 export const initialState: BridgesState = {
-  data: {
-    [BridgeKey.ARBITRUM]: {
-      tvl: { value: BigInt(0).toString(), loading: false },
-      apy: { value: BigInt(0).toString(), loading: false },
-      error: null,
-    },
-    [BridgeKey.EDGELESS]: {
-      tvl: { value: BigInt(0).toString(), loading: false },
-      apy: { value: BigInt(0).toString(), loading: false },
-      error: null,
-    },
-    [BridgeKey.SWELL]: {
-      tvl: { value: BigInt(0).toString(), loading: false },
-      apy: { value: BigInt(0).toString(), loading: false },
-      error: null,
-    },
-    [BridgeKey.OPTIMISM]: {
-      tvl: { value: BigInt(0).toString(), loading: false },
-      apy: { value: BigInt(0).toString(), loading: false },
-      error: null,
-    },
-    [BridgeKey.BOBA_NETWORK]: {
-      tvl: { value: BigInt(0).toString(), loading: false },
-      apy: { value: BigInt(0).toString(), loading: false },
-      error: null,
-    },
-  },
+  data: initializeData(),
   overallLoading: true,
 }

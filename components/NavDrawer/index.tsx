@@ -5,8 +5,7 @@ import { DashboardIcon } from '../icons/Dashboard'
 import { BridgeIcon } from '../icons/Bridge'
 import { PortfolioIcon } from '../icons/Portfolio'
 import NavCollapse from './NavCollapse'
-import { bridgesConfig } from '@/config/bridges'
-import { BridgeKey } from '@/types/Bridge'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 
 export function NavDrawer() {
   const bridges = Object.keys(bridgesConfig) as BridgeKey[]

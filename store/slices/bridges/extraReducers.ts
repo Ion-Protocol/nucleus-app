@@ -1,7 +1,7 @@
-import { BridgeKey } from '@/types/Bridge'
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import { FetchBridgeApyResult, FetchBridgeTvlResult, fetchBridgeApy, fetchBridgeTvl } from './thunks'
+import { BridgeKey } from '@/config/bridges'
 
 /**
  * Defines the extra reducers for the bridges slice.

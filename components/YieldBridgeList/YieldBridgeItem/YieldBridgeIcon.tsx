@@ -3,7 +3,8 @@ import { BobaNetworkIcon } from '@/components/icons/BobaNetwork'
 import { EdgelessIcon } from '@/components/icons/Edgeless'
 import { OptimismIcon } from '@/components/icons/Optimism'
 import { SwellChainIcon } from '@/components/icons/SwellChain'
-import { BridgeKey } from '@/types/Bridge'
+import { SeiIcon } from '@/components/icons/Sei'
+import { BridgeKey } from '@/config/bridges'
 import { ChakraProps } from '@chakra-ui/react'
 
 interface YieldBridgeIconProps extends ChakraProps {
@@ -17,6 +18,7 @@ export function YieldBridgeIcon({ bridgeKey, ...props }: YieldBridgeIconProps) {
     [BridgeKey.SWELL]: <SwellChainIcon {...props} />,
     [BridgeKey.OPTIMISM]: <OptimismIcon {...props} />,
     [BridgeKey.BOBA_NETWORK]: <BobaNetworkIcon {...props} />,
+    [BridgeKey.SEI]: <SeiIcon {...props} />,
   }
 
   return bridgeIconMap[bridgeKey]
