@@ -8,15 +8,17 @@ interface NavItemProps extends ChakraProps {
   title: string
   href: string
   leftIcon?: ReactElement
+  disabled?: boolean
 }
 
-export function NavItem({ title, href, leftIcon }: NavItemProps) {
+export function NavItem({ title, href, leftIcon, disabled }: NavItemProps) {
   const router = useRouter()
   const isSelected = router.asPath === href
 
   const iconWithSize = leftIcon ? React.cloneElement(leftIcon, { height: '20px', width: '20px' }) : null
 
   const handleClick = (event: React.MouseEvent) => {
+    if (disabled) return
     event.preventDefault()
     if (!isSelected) {
       router.push(href)
@@ -24,7 +26,13 @@ export function NavItem({ title, href, leftIcon }: NavItemProps) {
   }
 
   return (
-    <Link href={href} _hover={{ textDecoration: 'none' }} onClick={handleClick}>
+    <Link
+      href={href}
+      _hover={{ textDecoration: 'none' }}
+      onClick={handleClick}
+      pointerEvents={disabled ? 'none' : undefined}
+      color={disabled ? 'disabled' : undefined}
+    >
       <Flex
         borderRadius="8px"
         align="center"

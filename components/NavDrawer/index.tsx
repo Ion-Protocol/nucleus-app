@@ -17,7 +17,7 @@ export function NavDrawer() {
           <NavItem title="Arbitrum" href="/bridge/arbitrum" />
           <NavItem title="Edgeless" href="/bridge/edgeless" />
         </NavCollapse>
-        <NavItem title="Portfolio" href="/portfolio" leftIcon={<PortfolioIcon />} />
+        <NavItem title="Portfolio (coming soon)" href="/portfolio" leftIcon={<PortfolioIcon />} disabled />
       </Flex>
     </Box>
   )

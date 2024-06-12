@@ -40,6 +40,10 @@ export const semanticTokens = {
       default: 'primary.100',
       _dark: 'midnight.700',
     },
+    disabled: {
+      default: 'neutral.500',
+      _dark: 'midnight.400',
+    },
     success: {
       main: {
         default: 'green.dark',
