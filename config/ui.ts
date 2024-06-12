@@ -5,5 +5,10 @@ export const uiConfig = {
         descrptionLength: 55,
       },
     },
+    bridge: {
+      title: {
+        descriptionLenth: 175,
+      },
+    },
   },
 }

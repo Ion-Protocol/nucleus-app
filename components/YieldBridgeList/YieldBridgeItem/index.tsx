@@ -1,6 +1,6 @@
+import { BridgeIcon } from '@/components/config/bridgeIcons'
 import { BridgeUI } from '@/types/Bridge'
 import { Flex, Skeleton, Text } from '@chakra-ui/react'
-import { YieldBridgeIcon } from './YieldBridgeIcon'
 import { useRouter } from 'next/router'
 
 interface YieldBridgeItemProps {
@@ -47,7 +47,7 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
         </Flex>
       </Flex>
       <Flex flex={1} position="relative">
-        <YieldBridgeIcon bridgeKey={bridge.key} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
+        <BridgeIcon bridgeKey={bridge.key} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
       </Flex>
     </Flex>
   )
