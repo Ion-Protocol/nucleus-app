@@ -11,7 +11,7 @@ import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role } = ownProps
-  const bridgeKey = state.router.query?.bridge || BridgeKey.ARBITRUM
+  const bridgeKey = state.router.query?.bridge || BridgeKey.SEI
 
   const bridge = bridgesConfig[bridgeKey]
   const chainKeys = role === 'source' ? bridge.sourceChains : bridge.destinationChains

@@ -5,11 +5,6 @@ import { TokenKey } from './token'
 // Use kebab-case (with hyphens) for the values.
 // These values are used to define the url paths.
 export enum BridgeKey {
-  ARBITRUM = 'arbitrum',
-  SWELL = 'swell',
-  EDGELESS = 'edgeless',
-  OPTIMISM = 'optimism',
-  BOBA_NETWORK = 'boba-network',
   SEI = 'sei',
 }
 
@@ -22,57 +17,6 @@ export enum BridgeKey {
  * 5. Add the L2 to the BridgeIconMap in the YieldBridgeIcon component.
  */
 export const bridgesConfig: Record<BridgeKey, Bridge> = {
-  [BridgeKey.ARBITRUM]: {
-    name: 'Arbitrum',
-    contracts: {
-      teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-    },
-    sourceChains: [ChainKey.ETHEREUM],
-    destinationChains: [ChainKey.ETHEREUM],
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-  },
-  [BridgeKey.SWELL]: {
-    name: 'Swell',
-    contracts: {
-      teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-    },
-    sourceChains: [ChainKey.ETHEREUM],
-    destinationChains: [ChainKey.ETHEREUM],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-  },
-  [BridgeKey.EDGELESS]: {
-    name: 'Edgeless',
-    contracts: {
-      teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-    },
-    sourceChains: [ChainKey.ETHEREUM],
-    destinationChains: [ChainKey.ETHEREUM],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-  },
-  [BridgeKey.OPTIMISM]: {
-    name: 'Optimism',
-    contracts: {
-      teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-    },
-    sourceChains: [ChainKey.ETHEREUM],
-    destinationChains: [ChainKey.ETHEREUM],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-  },
-  [BridgeKey.BOBA_NETWORK]: {
-    name: 'Boba Network',
-    contracts: {
-      teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-    },
-    sourceChains: [ChainKey.ETHEREUM],
-    destinationChains: [ChainKey.ETHEREUM],
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-  },
   [BridgeKey.SEI]: {
     name: 'Sei',
     contracts: {
