@@ -74,7 +74,9 @@ export const setBridgeFrom = createAsyncThunk<
     throw new Error('Bridge key is missing in router query')
   }
 
-  return { bridgeKey, from }
+  const fromWithoutLeadingZeroes = parseFloat(from).toString()
+
+  return { bridgeKey, from: fromWithoutLeadingZeroes }
 })
 
 /**
@@ -100,5 +102,7 @@ export const setBridgeTo = createAsyncThunk<
     throw new Error('Bridge key is missing in router query')
   }
 
-  return { bridgeKey, to }
+  const toWithoutLeadingZeroes = parseFloat(to).toString()
+
+  return { bridgeKey, to: toWithoutLeadingZeroes }
 })
