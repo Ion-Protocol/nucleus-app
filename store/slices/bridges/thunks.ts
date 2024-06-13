@@ -8,6 +8,7 @@ import { WAD } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { setError, setSuccess } from '../status'
 import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
+import { selectAddress } from '../account'
 
 export interface FetchBridgeTvlResult {
   tvl: string
@@ -155,6 +156,7 @@ export const performDeposit = createAsyncThunk<
 >('bridges/deposit', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
+    const userAddress = selectAddress(state)
 
     const depositAssetKey = selectBridgeTokenKey(state, bridgeKey)
     const depositAsset = tokensConfig[depositAssetKey as TokenKey].address
@@ -164,11 +166,13 @@ export const performDeposit = createAsyncThunk<
 
     const minimumMint = depositAmount / BigInt(1.01 * WAD.number) / WAD.bigint
 
-    const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey })
-
-    dispatch(setSuccess('Deposit successful!'))
-
-    return { txHash: '0x' }
+    if (userAddress) {
+      const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey, userAddress })
+      dispatch(setSuccess('Deposit successful!'))
+      return { txHash }
+    } else {
+      return { txHash: '0x0' }
+    }
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
