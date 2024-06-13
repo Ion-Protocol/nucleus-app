@@ -15,12 +15,15 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props)
         textAlign="left"
         color={!selected ? 'disabled' : undefined}
       >
-        <Flex align="center" gap={1}>
-          {selected && <TokenIcon tokenKey={selected.key} />}
+        {/* Token Selector Button */}
+        <Flex align="center" gap={2}>
+          {selected && <TokenIcon fontSize="lg" tokenKey={selected.key} />}
           <Text>{selected.name}</Text>
           <ChevronDownIcon />
         </Flex>
       </MenuButton>
+
+      {/* Token List */}
       <MenuList bg="backgroundSecondary">
         {tokens.map((token) => (
           <MenuItem key={token.key} bg="none" onClick={() => onChange(token.key)} _hover={{ bg: 'hoverSecondary' }}>

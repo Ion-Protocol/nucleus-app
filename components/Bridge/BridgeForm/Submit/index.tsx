@@ -8,8 +8,8 @@ function Submit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
       isLoading={loading}
       onClick={onSubmit}
       isDisabled={disabled}
-      _hover={disabled ? {} : undefined}
-      _active={disabled ? {} : undefined}
+      _hover={disabled || loading ? {} : undefined}
+      _active={disabled || loading ? {} : undefined}
     >
       Submit
     </Button>

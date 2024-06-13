@@ -19,17 +19,28 @@ function TokenTo({ to }: TokenToConnector.Props) {
       <Flex justify="space-between">
         <Text fontSize="sm">To</Text>
         <Text fontSize="sm" color="secondaryText">
-          Balance: 35.422 ETH
+          Balance: N/A
         </Text>
       </Flex>
 
       {/* Bottom Row */}
       <Flex align="center" gap={3}>
         {/* Input Box */}
-        <Input disabled value={to} variant="unstyled" size="lg" placeholder="Amount" fontWeight="bold" />
+        <Input
+          disabled
+          _disabled={{
+            cursor: 'text',
+          }}
+          cursor="pointer"
+          value={to}
+          variant="unstyled"
+          size="lg"
+          placeholder="Amount"
+          fontWeight="bold"
+        />
 
         <Divider orientation="vertical" />
-        <Flex align="center" gap={2}>
+        <Flex align="center" gap={2} ml={1} mr={3}>
           <TokenIcon tokenKey={TokenKey.SEI} />
           <Text fontWeight="bold" fontSize="sm" pt="4px">
             SEI
