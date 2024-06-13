@@ -1,4 +1,4 @@
-import ErrorModal from '@/components/ErrorModal'
+import ErrorModal from '@/components/modals/ErrorModal'
 import { Layout } from '@/components/layouts/Layout'
 import { queryClient } from '@/config/queryClient'
 import { wagmiConfig } from '@/config/wagmi'
@@ -12,6 +12,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { WagmiProvider } from 'wagmi'
+import SuccessModal from '@/components/modals/SuccessModal'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -22,6 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
             <ChakraProvider theme={theme}>
               <ColorModeScript initialColorMode={theme.config?.initialColorMode} />
               <ErrorModal />
+              <SuccessModal />
               <Layout>
                 <Component {...pageProps} />
               </Layout>

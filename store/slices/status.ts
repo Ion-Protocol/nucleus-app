@@ -6,10 +6,12 @@ import { selectBridgesLoading } from './bridges'
 
 interface StatusState {
   error: string | null
+  success: string | null
 }
 
 const initialState: StatusState = {
   error: null,
+  success: null,
 }
 
 const statusSlice = createSlice({
@@ -22,6 +24,12 @@ const statusSlice = createSlice({
     clearError(state) {
       state.error = null
     },
+    setSuccess(state, action: PayloadAction<string | null>) {
+      state.success = action.payload
+    },
+    clearSuccess(state) {
+      state.success = null
+    },
   },
 })
 
@@ -31,6 +39,7 @@ export const selectLoading = createSelector(
   (balancesLoading, priceLoading, bridgesLoading) => balancesLoading || priceLoading || bridgesLoading
 )
 
-export const { setError, clearError } = statusSlice.actions
+export const { setError, clearError, setSuccess, clearSuccess } = statusSlice.actions
 export const selectErrorMessage = (state: RootState) => state.status.error
+export const selectSuccessMessage = (state: RootState) => state.status.success
 export const statusReducer = statusSlice.reducer

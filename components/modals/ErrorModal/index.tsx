@@ -23,9 +23,9 @@ function ErrorModal({ errorMessage, clearError }: ErrorModalConnector.Props) {
   }
 
   return (
-    <Modal isOpen={!!errorMessage} onClose={handleClose}>
+    <Modal isOpen={!!errorMessage} onClose={handleClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent bg="backgroundSecondary">
         <ModalHeader>Error</ModalHeader>
         <ModalCloseButton />
         <ModalBody>{errorMessage}</ModalBody>

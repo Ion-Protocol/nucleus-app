@@ -6,7 +6,7 @@ import { RootState } from '@/store'
 import { utils } from '@/utils'
 import { WAD } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { setError } from '../status'
+import { setError, setSuccess } from '../status'
 import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 
 export interface FetchBridgeTvlResult {
@@ -166,7 +166,9 @@ export const performDeposit = createAsyncThunk<
 
     const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey })
 
-    return { txHash }
+    dispatch(setSuccess('Deposit successful!'))
+
+    return { txHash: '0x' }
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
