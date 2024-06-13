@@ -1,3 +1,4 @@
+import { Chain } from '@rainbow-me/rainbowkit'
 import { Bridge } from '@/types/Bridge'
 import { ChainKey } from './chains'
 
@@ -23,7 +24,7 @@ export enum BridgeKey {
 export const bridgesConfig: Record<BridgeKey, Bridge> = {
   [BridgeKey.ARBITRUM]: {
     name: 'Arbitrum',
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: [ChainKey.ETHEREUM, ChainKey.TEST],
     destinationChains: [ChainKey.ETHEREUM],
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit',

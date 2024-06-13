@@ -15,8 +15,8 @@ export interface BridgeData {
 export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
-  sourceChains: ChainKey[]
-  destinationChains: ChainKey[]
+  sourceChain: ChainKey | null
+  destinationChain: ChainKey | null
 }
 
 // Initialize the data object by iterating over all the bridge keys and setting the initial state
@@ -37,6 +37,6 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
 export const initialState: BridgesState = {
   data: initializeData(),
   overallLoading: true,
-  sourceChains: [],
-  destinationChains: [],
+  sourceChain: null,
+  destinationChain: null,
 }

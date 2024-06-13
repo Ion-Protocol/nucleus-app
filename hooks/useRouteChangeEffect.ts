@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useAppDispatch } from '@/store/hooks'
 import { setBridgeNavOpen } from '@/store/slices/ui'
+import { RouterQuery, setPath, setQuery } from '@/store/slices/router'
 
 /**
  * Custom hook to handle side effects based on route changes.
@@ -17,6 +18,9 @@ export function useRouteChangeEffect() {
       if (url.startsWith('/bridge/')) {
         dispatch(setBridgeNavOpen(true))
       }
+      dispatch(setPath(url))
+      const query = router.query as RouterQuery
+      dispatch(setQuery(query))
     }
 
     handleRouteChange(router.asPath)
@@ -24,5 +28,5 @@ export function useRouteChangeEffect() {
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange)
     }
-  }, [dispatch, router.asPath, router.events])
+  }, [dispatch, router])
 }

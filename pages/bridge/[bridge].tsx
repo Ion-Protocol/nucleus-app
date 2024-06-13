@@ -1,3 +1,4 @@
+import { BridgeChart } from '@/components/Bridge/BridgeChart'
 import { BridgeForm } from '@/components/Bridge/BridgeForm'
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
 import { BridgeKey } from '@/config/bridges'
@@ -9,14 +10,22 @@ export default function Bridge() {
   const { bridge: bridgeKey } = router.query as { bridge: BridgeKey }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" h="100%">
       {/* Title & Description */}
-      <Flex direction="column" h="185px" borderBottom="1px solid" borderColor="border">
+      <Flex direction="column" h="200px" borderBottom="1px solid" borderColor="border">
         <BridgeTitle bridgeKey={bridgeKey} ml={9} mt={9} />
       </Flex>
 
-      {/* Main Bridge Form */}
-      <BridgeForm ml={9} mt={9} />
+      {/* Bottom */}
+      <Flex h="100%">
+        {/* Left: Main Bridge Form */}
+        <BridgeForm px={9} pt={9} w="40%" minW="300px" borderRight="1px solid" borderColor="border" />
+
+        {/* Right: Chart and Markets Table */}
+        <Flex direction="column" w="60%">
+          <BridgeChart />
+        </Flex>
+      </Flex>
     </Flex>
   )
 }

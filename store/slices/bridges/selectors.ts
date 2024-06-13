@@ -11,6 +11,11 @@ import { BridgesState } from './initialState'
 
 export const selectBridgesState = (state: RootState): BridgesState => state.bridges
 export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.overallLoading)
+export const selectBridgeSourceChain = createSelector([selectBridgesState], (bridgesState) => bridgesState.sourceChain)
+export const selectBridgeDestinationChain = createSelector(
+  [selectBridgesState],
+  (bridgesState) => bridgesState.destinationChain
+)
 
 /**
  * Selects the Total Value Locked (TVL) for a specific bridge key.

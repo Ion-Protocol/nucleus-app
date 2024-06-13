@@ -7,6 +7,7 @@ import { UIReducer } from './slices/ui'
 import { currencyReducer } from './slices/currency'
 import { bridgesReducer } from './slices/bridges'
 import { priceReducer } from './slices/price'
+import { routerReducer } from './slices/router'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     counter: counterReducer,
     currency: currencyReducer,
     price: priceReducer,
+    router: routerReducer,
     status: statusReducer,
     ui: UIReducer,
   },
