@@ -1,11 +1,13 @@
-import { RootState } from '@/store'
-import { utils } from '@/utils'
-import { createAsyncThunk } from '@reduxjs/toolkit'
-import { setError } from '../status'
+import { getRate } from '@/api/contracts/Accountant/getRate'
+import { deposit } from '@/api/contracts/Teller/deposit'
 import { BridgeKey } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
-import { Token } from '@/types/Token'
-import { getRate } from '@/api/contracts/Accountant/getRate'
+import { RootState } from '@/store'
+import { utils } from '@/utils'
+import { WAD } from '@/utils/bigint'
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { setError } from '../status'
+import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 
 export interface FetchBridgeTvlResult {
   tvl: string
@@ -126,6 +128,48 @@ export const fetchBridgeRate = createAsyncThunk<
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to fetch rate for bridge ${bridgeKey}`
+    const fullErrorMessage = `${errorMessage}\n${error.message}`
+    console.error(fullErrorMessage)
+    dispatch(setError(fullErrorMessage))
+    return rejectWithValue(errorMessage)
+  }
+})
+
+export interface PerformDepositResult {
+  txHash: `0x${string}`
+}
+
+/**
+ * Performs a deposit for a bridge.
+ *
+ * @param bridgeKey - The key of the bridge.
+ * @param getState - A function to get the current state of the application.
+ * @param rejectWithValue - A function to reject the async thunk with a value.
+ * @param dispatch - A function to dispatch actions.
+ * @returns A promise that resolves to the transaction hash of the deposit.
+ */
+export const performDeposit = createAsyncThunk<
+  PerformDepositResult,
+  BridgeKey,
+  { rejectValue: string; state: RootState }
+>('bridges/deposit', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+  try {
+    const state = getState()
+
+    const depositAssetKey = selectBridgeTokenKey(state, bridgeKey)
+    const depositAsset = tokensConfig[depositAssetKey as TokenKey].address
+
+    const depositAmountAsString = selectBridgeFrom(state, bridgeKey)
+    const depositAmount = BigInt(parseFloat(depositAmountAsString) * WAD.number)
+
+    const minimumMint = depositAmount / BigInt(1.01 * WAD.number) / WAD.bigint
+
+    const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey })
+
+    return { txHash }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
     dispatch(setError(fullErrorMessage))

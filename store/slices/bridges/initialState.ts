@@ -19,8 +19,12 @@ export interface BridgeData {
 export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
-  sourceChain: ChainKey | null
-  destinationChain: ChainKey | null
+  sourceChain: ChainKey
+  destinationChain: ChainKey
+  deposit: {
+    pending: boolean
+    error: string | null
+  }
 }
 
 // Initialize the data object by iterating over all the bridge keys and setting the initial state
@@ -34,7 +38,7 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
       rate: { value: BigInt(0).toString(), loading: false },
       error: null,
       from: '',
-      selectedToken: TokenKey.ETH,
+      selectedToken: TokenKey.WETH,
     }
   })
 
@@ -44,6 +48,10 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
 export const initialState: BridgesState = {
   data: initializeData(),
   overallLoading: true,
-  sourceChain: null,
-  destinationChain: null,
+  sourceChain: ChainKey.ETHEREUM,
+  destinationChain: ChainKey.ETHEREUM,
+  deposit: {
+    pending: false,
+    error: null,
+  },
 }

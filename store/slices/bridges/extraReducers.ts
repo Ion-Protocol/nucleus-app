@@ -8,10 +8,10 @@ import {
   fetchBridgeApy,
   fetchBridgeRate,
   fetchBridgeTvl,
+  performDeposit,
   setBridgeFrom,
   setBridgeToken,
 } from './thunks'
-import { TokenKey } from '@/config/token'
 
 /**
  * Defines the extra reducers for the bridges slice.
@@ -92,6 +92,22 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       bridge.rate.loading = false
       bridge.error = action.error.message || 'Failed to fetch rate'
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
+    })
+
+    ///////////////////////////////
+    // Deposit
+    ///////////////////////////////
+    .addCase(performDeposit.pending, (state, action) => {
+      state.deposit.pending = true
+    })
+    .addCase(performDeposit.fulfilled, (state) => {
+      state.deposit.pending = false
+    })
+    .addCase(performDeposit.rejected, (state, action) => {
+      state.deposit.pending = false
+      const bridge = state.data[action.meta.arg]
+      bridge.rate.loading = false
+      bridge.error = action.error.message || 'Failed to deposit'
     })
 
     ///////////////////////////////

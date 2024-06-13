@@ -146,3 +146,13 @@ export const selectBridgeRate = (state: RootState, key: BridgeKey): string | und
   const bridgesState = selectBridgesState(state)
   return bridgesState.data[key]?.rate.value
 }
+
+export const selectDepositPending = createSelector([(state: RootState) => state], (state) => {
+  const bridges = selectBridgesState(state)
+  return bridges.deposit.pending
+})
+
+export const selectDepositError = createSelector([(state: RootState) => state], (state) => {
+  const bridges = selectBridgesState(state)
+  return bridges.deposit.error
+})

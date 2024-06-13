@@ -17,7 +17,7 @@ interface TokenIconProps extends ChakraProps {
   tokenKey?: TokenKey
 }
 
-export const TokenIcon: React.FC<TokenIconProps> = ({ tokenKey = TokenKey.ETH, ...props }) => {
+export const TokenIcon: React.FC<TokenIconProps> = ({ tokenKey = TokenKey.WETH, ...props }) => {
   const IconComponent = tokenIconMap[tokenKey]
   if (!IconComponent) {
     console.error(`No icon component found for token key: ${tokenKey}`)

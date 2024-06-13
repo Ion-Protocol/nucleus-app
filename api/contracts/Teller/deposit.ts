@@ -10,7 +10,7 @@ export async function deposit(
     depositAmount,
     minimumMint,
   }: {
-    depositAsset: string
+    depositAsset: `0x${string}`
     depositAmount: bigint
     minimumMint: bigint
   },
@@ -33,9 +33,9 @@ export async function deposit(
     args: [depositAsset, depositAmount, minimumMint],
   })
 
-  const receipt = await waitForTransactionReceipt(wagmiConfig, {
+  const { blockHash } = await waitForTransactionReceipt(wagmiConfig, {
     hash,
   })
 
-  return receipt
+  return blockHash
 }

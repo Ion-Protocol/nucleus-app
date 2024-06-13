@@ -28,7 +28,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
       accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
-    sourceChains: [ChainKey.ETHEREUM, ChainKey.TEST],
+    sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit',

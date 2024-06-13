@@ -8,6 +8,6 @@ export enum ChainKey {
 export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.ETHEREUM]: {
     name: 'Ethereum',
-    availableTokens: [TokenKey.ETH, TokenKey.WETH, TokenKey.WSTETH],
+    availableTokens: [TokenKey.WETH, TokenKey.WSTETH],
   },
 }

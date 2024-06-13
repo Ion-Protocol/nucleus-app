@@ -11,11 +11,11 @@ const mapState = (state: RootState, ownProps: TokenSelectOwnProps) => {
 
   const sourceChainKey = selectBridgeSourceChain(state)
   const sourceChain = sourceChainKey ? chainsConfig[sourceChainKey] : null
-  const tokenKeys = sourceChain?.availableTokens || [TokenKey.ETH]
+  const tokenKeys = sourceChain?.availableTokens || [TokenKey.WETH]
   const tokens = tokenKeys.map((key) => ({ key, ...tokensConfig[key] }))
 
-  const selectedTokenKey = selectBridgeTokenKey(state, bridgeKey) || TokenKey.ETH
-  const selectedToken = selectedTokenKey ? tokensConfig[selectedTokenKey] : tokensConfig[TokenKey.ETH]
+  const selectedTokenKey = selectBridgeTokenKey(state, bridgeKey) || TokenKey.WETH
+  const selectedToken = selectedTokenKey ? tokensConfig[selectedTokenKey] : tokensConfig[TokenKey.WETH]
   const selectedTokenWithKey = { key: selectedTokenKey, ...selectedToken }
 
   return {
