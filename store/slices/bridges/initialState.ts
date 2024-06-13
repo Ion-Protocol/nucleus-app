@@ -10,6 +10,8 @@ export interface BridgeData {
   tvl: BridgeMetric
   apy: BridgeMetric
   error: string | null
+  from: string
+  to: string
 }
 
 export type BridgesState = {
@@ -28,6 +30,8 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
       tvl: { value: BigInt(0).toString(), loading: false },
       apy: { value: BigInt(0).toString(), loading: false },
       error: null,
+      from: '',
+      to: '',
     }
   })
 

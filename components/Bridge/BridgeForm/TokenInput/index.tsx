@@ -1,7 +1,7 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { TokenInputConnector } from './connector'
 
-function TokenInput({ role }: TokenInputConnector.Props) {
+function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
   return (
     <Flex
       direction="column"
@@ -23,7 +23,15 @@ function TokenInput({ role }: TokenInputConnector.Props) {
       {/* Bottom Row */}
       <Flex align="center" gap={3}>
         {/* Input Box */}
-        <Input variant="unstyled" size="lg" placeholder="Amount" fontWeight="bold" />
+        <Input
+          value={inputValue}
+          onChange={(e) => onChange(e.target.value)}
+          type="number"
+          variant="unstyled"
+          size="lg"
+          placeholder="Amount"
+          fontWeight="bold"
+        />
 
         {/* Max Button */}
         <Button variant="outline" color="secondaryText" size="sm">

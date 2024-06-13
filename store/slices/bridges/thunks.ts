@@ -51,3 +51,54 @@ export const fetchBridgeApy = createAsyncThunk<
     return rejectWithValue(errorMessage)
   }
 })
+
+/**
+ * Sets the "from" value for a bridge asynchronously.
+ *
+ * This is in a thunk because it needs to access RootState.
+ *
+ * @param from - The value to set as the "from" value for the bridge.
+ * @param options - The options object containing the state and reject value.
+ * @returns A promise that resolves to an object containing the bridge key and the "from" value.
+ * @throws If the bridge key is missing in the router query.
+ */
+export const setBridgeFrom = createAsyncThunk<
+  { bridgeKey: BridgeKey; from: string },
+  string,
+  { state: RootState; rejectValue: string }
+>('bridges/setBridgeFrom', async (from, { getState, rejectWithValue, dispatch }) => {
+  const state = getState() as RootState
+  const bridgeKey = state.router.query?.bridge as BridgeKey
+
+  if (!bridgeKey) {
+    throw new Error('Bridge key is missing in router query')
+  }
+
+  return { bridgeKey, from }
+})
+
+/**
+ * Sets the bridge destination for a given bridge key.
+ *
+ * This is in a thunk because it needs to access RootState.
+ *
+ * @param to - The destination value to set for the bridge.
+ * @param getState - A function that returns the current state of the Redux store.
+ * @param rejectWithValue - A function that can be used to reject the async thunk with a specific value.
+ * @param dispatch - A function that can be used to dispatch actions within the async thunk.
+ * @returns A promise that resolves to an object containing the bridge key and the destination value.
+ */
+export const setBridgeTo = createAsyncThunk<
+  { bridgeKey: BridgeKey; to: string },
+  string,
+  { state: RootState; rejectValue: string }
+>('bridges/setBridgeTo', async (to, { getState, rejectWithValue, dispatch }) => {
+  const state = getState() as RootState
+  const bridgeKey = state.router.query?.bridge as BridgeKey
+
+  if (!bridgeKey) {
+    throw new Error('Bridge key is missing in router query')
+  }
+
+  return { bridgeKey, to }
+})
