@@ -1,6 +1,7 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { TokenInputConnector } from './connector'
 import { useState } from 'react'
+import TokenSelect from './TokenSelect'
 
 function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
   const [displayValue, setDisplayValue] = useState(inputValue)
@@ -68,6 +69,9 @@ function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
         <Divider orientation="vertical" />
 
         {/* Token Select */}
+        <Flex>
+          <TokenSelect />
+        </Flex>
       </Flex>
     </Flex>
   )

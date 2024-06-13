@@ -1,33 +1,39 @@
+import { BridgeKey } from '@/config/bridges'
+import { chainsConfig } from '@/config/chains'
+import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
+import { selectBridgeSourceChain, selectBridgeTokenKey } from '@/store/slices/bridges'
+import { setBridgeToken } from '@/store/slices/bridges/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: TokenSelectOwnProps) => {
+  const bridgeKey = state.router.query?.bridge as BridgeKey
+
+  const sourceChainKey = selectBridgeSourceChain(state)
+  const sourceChain = sourceChainKey ? chainsConfig[sourceChainKey] : null
+  const tokenKeys = sourceChain?.availableTokens || [TokenKey.ETH]
+  const tokens = tokenKeys.map((key) => ({ key, ...tokensConfig[key] }))
+
+  const selectedTokenKey = selectBridgeTokenKey(state, bridgeKey) || TokenKey.ETH
+  const selectedToken = selectedTokenKey ? tokensConfig[selectedTokenKey] : tokensConfig[TokenKey.ETH]
+  const selectedTokenWithKey = { key: selectedTokenKey, ...selectedToken }
+
   return {
-    thing: '',
+    tokens,
+    selected: selectedTokenWithKey,
   }
 }
 
-const mapDispatch = {}
-
-const mergeProps = (
-  stateProps: ReturnType<typeof mapState>,
-  dispatchProps: typeof mapDispatch,
-  ownProps: TokenSelectOwnProps
-) => {
-  return {
-    ...stateProps,
-    ...ownProps,
-  }
+const mapDispatch = {
+  onChange: setBridgeToken,
 }
 
-const connector = connect(mapState, mapDispatch, mergeProps)
+const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 export type TokenSelectRole = 'from' | 'to'
-interface TokenSelectOwnProps {
-  role: TokenSelectRole
-}
+interface TokenSelectOwnProps {}
 
 interface TokenSelectProps extends TokenSelectOwnProps, PropsFromRedux {}
 

@@ -9,7 +9,6 @@ export interface Bridge {
   description: string
   sourceChains: ChainKey[]
   destinationChains: ChainKey[]
-  availableTokens: TokenKey[]
   contracts: Contracts
 }
 

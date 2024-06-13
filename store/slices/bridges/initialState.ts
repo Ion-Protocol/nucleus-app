@@ -1,5 +1,6 @@
 import { BridgeKey } from '@/config/bridges'
 import { ChainKey } from '@/config/chains'
+import { TokenKey } from '@/config/token'
 
 export interface BridgeMetric {
   value: string
@@ -12,6 +13,7 @@ export interface BridgeData {
   error: string | null
   from: string
   to: string
+  selectedToken: TokenKey
 }
 
 export type BridgesState = {
@@ -32,6 +34,7 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
       error: null,
       from: '',
       to: '',
+      selectedToken: TokenKey.ETH,
     }
   })
 

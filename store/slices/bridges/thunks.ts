@@ -3,6 +3,8 @@ import { utils } from '@/utils'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { setError } from '../status'
 import { BridgeKey } from '@/config/bridges'
+import { TokenKey, tokensConfig } from '@/config/token'
+import { Token } from '@/types/Token'
 
 export interface FetchBridgeTvlResult {
   tvl: string
@@ -74,9 +76,13 @@ export const setBridgeFrom = createAsyncThunk<
     throw new Error('Bridge key is missing in router query')
   }
 
-  const fromWithoutLeadingZeroes = parseFloat(from).toString()
+  let fromFormatted = parseFloat(from).toString()
 
-  return { bridgeKey, from: fromWithoutLeadingZeroes }
+  if (isNaN(parseFloat(fromFormatted))) {
+    fromFormatted = ''
+  }
+
+  return { bridgeKey, from: fromFormatted }
 })
 
 /**
@@ -105,4 +111,29 @@ export const setBridgeTo = createAsyncThunk<
   const toWithoutLeadingZeroes = parseFloat(to).toString()
 
   return { bridgeKey, to: toWithoutLeadingZeroes }
+})
+
+/**
+ * Sets the bridge token asynchronously.
+ *
+ * @param token - The token to set.
+ * @param options - The options object.
+ * @param options.state - The root state of the Redux store.
+ * @param options.rejectValue - The value to reject with if the async action fails.
+ * @returns A promise that resolves to an object containing the bridge key and token.
+ * @throws An error if the bridge key is missing in the router query.
+ */
+export const setBridgeToken = createAsyncThunk<
+  { bridgeKey: BridgeKey; tokenKey: TokenKey },
+  TokenKey,
+  { state: RootState; rejectValue: string }
+>('bridges/setBridgeToken', async (tokenKey, { getState, rejectWithValue, dispatch }) => {
+  const state = getState() as RootState
+  const bridgeKey = state.router.query?.bridge as BridgeKey
+
+  if (!bridgeKey) {
+    throw new Error('Bridge key is missing in router query')
+  }
+
+  return { bridgeKey, tokenKey }
 })

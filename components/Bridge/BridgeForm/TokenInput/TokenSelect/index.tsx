@@ -1,40 +1,37 @@
-import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import { TokenIcon } from '@/components/config/tokenIcons'
+import { ChevronDownIcon } from '@chakra-ui/icons'
+import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { TokenSelectConnector } from './connector'
 
-function TokenSelect({ role }: TokenSelectConnector.Props) {
+function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props) {
   return (
-    <Flex
-      direction="column"
-      border="1px solid"
-      borderColor="border"
-      borderRadius="8px"
-      p={4}
-      bg="backgroundSecondary"
-      gap={4}
-    >
-      {/* Top Row */}
-      <Flex justify="space-between">
-        <Text fontSize="sm">{role === 'from' ? 'From' : 'To'}</Text>
-        <Text fontSize="sm" color="secondaryText">
-          Balance: 35.422 ETH
-        </Text>
-      </Flex>
-
-      {/* Bottom Row */}
-      <Flex align="center" gap={3}>
-        {/* Input Box */}
-        <Input variant="unstyled" size="lg" placeholder="Amount" fontWeight="bold" />
-
-        {/* Max Button */}
-        <Button variant="outline" color="secondaryText" size="sm">
-          MAX
-        </Button>
-
-        <Divider orientation="vertical" />
-
-        {/* Token Select */}
-      </Flex>
-    </Flex>
+    <Menu>
+      <MenuButton
+        variant="outline"
+        size="sm"
+        p={1}
+        border="none"
+        as={Button}
+        textAlign="left"
+        color={!selected ? 'disabled' : undefined}
+      >
+        <Flex align="center" gap={1}>
+          {selected && <TokenIcon tokenKey={selected.key} />}
+          <Text>{selected.name}</Text>
+          <ChevronDownIcon />
+        </Flex>
+      </MenuButton>
+      <MenuList bg="backgroundSecondary">
+        {tokens.map((token) => (
+          <MenuItem key={token.key} bg="none" onClick={() => onChange(token.key)} _hover={{ bg: 'hoverSecondary' }}>
+            <Flex align="center" gap={3}>
+              <TokenIcon tokenKey={token.key} />
+              <Text>{token.name}</Text>
+            </Flex>
+          </MenuItem>
+        ))}
+      </MenuList>
+    </Menu>
   )
 }
 

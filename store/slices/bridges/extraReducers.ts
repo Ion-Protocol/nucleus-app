@@ -1,3 +1,4 @@
+import { BridgeKey } from '@/config/bridges'
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import {
@@ -7,8 +8,9 @@ import {
   fetchBridgeTvl,
   setBridgeFrom,
   setBridgeTo,
+  setBridgeToken,
 } from './thunks'
-import { BridgeKey } from '@/config/bridges'
+import { TokenKey } from '@/config/token'
 
 /**
  * Defines the extra reducers for the bridges slice.
@@ -81,6 +83,13 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       const { bridgeKey, to } = action.payload
       if (state.data[bridgeKey]) {
         state.data[bridgeKey].to = to
+      }
+    })
+
+    .addCase(setBridgeToken.fulfilled, (state, action) => {
+      const { bridgeKey, tokenKey } = action.payload
+      if (state.data[bridgeKey]) {
+        state.data[bridgeKey].selectedToken = tokenKey
       }
     })
 }

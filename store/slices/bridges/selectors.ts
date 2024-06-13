@@ -8,6 +8,7 @@ import { bigIntToPercent } from '@/utils/bigint'
 import { createSelector } from 'reselect'
 import { selectPrice } from '../price'
 import { BridgesState } from './initialState'
+import { TokenKey } from '@/config/token'
 
 export const selectBridgesState = (state: RootState): BridgesState => state.bridges
 export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.overallLoading)
@@ -133,4 +134,15 @@ export const selectBridgeFrom = (state: RootState, key: BridgeKey): string => {
 export const selectBridgeTo = (state: RootState, key: BridgeKey): string | undefined => {
   const bridgesState = selectBridgesState(state)
   return bridgesState.data[key]?.to
+}
+
+/**
+ * Retrieves the token of a specific bridge from the state.
+ * @param state - The root state of the application.
+ * @param key - The key of the bridge.
+ * @returns The token of the bridge, or undefined if the bridge does not exist.
+ */
+export const selectBridgeTokenKey = (state: RootState, key: BridgeKey): TokenKey | undefined => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.data[key]?.selectedToken
 }
