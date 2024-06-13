@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { ChainSelectConnector } from './connector'
 
-function ChainSelect({ chains, onChange, selected }: ChainSelectConnector.Props) {
+function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectConnector.Props) {
   return (
     <Menu>
       <MenuButton
@@ -15,7 +15,7 @@ function ChainSelect({ chains, onChange, selected }: ChainSelectConnector.Props)
       >
         <Flex align="center" gap={3}>
           {selected && <ChainIcon chainKey={selected.key} />}
-          <Text>{selected ? selected.name : 'Source Chain'}</Text>
+          <Text>{selected ? selected.name : placeholder}</Text>
         </Flex>
       </MenuButton>
       <MenuList bg="backgroundSecondary">

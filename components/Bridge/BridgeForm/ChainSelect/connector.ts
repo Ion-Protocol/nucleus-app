@@ -1,4 +1,4 @@
-import { bridgesConfig } from '@/config/bridges'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { chainsConfig } from '@/config/chains'
 import { RootState } from '@/store'
 import {
@@ -11,9 +11,7 @@ import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role } = ownProps
-  const bridgeKey = state.router.query?.bridge
-
-  if (!bridgeKey) return { chains: [], selected: null }
+  const bridgeKey = state.router.query?.bridge || BridgeKey.ARBITRUM
 
   const bridge = bridgesConfig[bridgeKey]
   const chainKeys = role === 'source' ? bridge.sourceChains : bridge.destinationChains
@@ -22,9 +20,12 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const selected = selectChain(state)
   const selectedChain = selected && chains.find((chain) => chain.key === selected)
 
+  const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
+
   return {
     chains,
     selected: selectedChain,
+    placeholder,
   }
 }
 

@@ -7,7 +7,6 @@ import {
   fetchBridgeApy,
   fetchBridgeTvl,
   setBridgeFrom,
-  setBridgeTo,
   setBridgeToken,
 } from './thunks'
 import { TokenKey } from '@/config/token'
@@ -70,7 +69,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     })
 
     ///////////////////////////////
-    // Bridge From/To Inputs
+    // Bridge From Input
     ///////////////////////////////
     .addCase(setBridgeFrom.fulfilled, (state, action) => {
       const { bridgeKey, from } = action.payload
@@ -79,13 +78,9 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       }
     })
 
-    .addCase(setBridgeTo.fulfilled, (state, action) => {
-      const { bridgeKey, to } = action.payload
-      if (state.data[bridgeKey]) {
-        state.data[bridgeKey].to = to
-      }
-    })
-
+    ///////////////////////////////
+    // Selected Token
+    ///////////////////////////////
     .addCase(setBridgeToken.fulfilled, (state, action) => {
       const { bridgeKey, tokenKey } = action.payload
       if (state.data[bridgeKey]) {

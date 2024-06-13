@@ -2,7 +2,7 @@ import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import TokenSelect from './TokenSelect'
 import { TokenInputConnector } from './connector'
 
-function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
+function TokenInput({ inputValue, onChange }: TokenInputConnector.Props) {
   return (
     <Flex
       direction="column"
@@ -15,7 +15,7 @@ function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
     >
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text fontSize="sm">{role === 'from' ? 'From' : 'To'}</Text>
+        <Text fontSize="sm">From</Text>
         <Text fontSize="sm" color="secondaryText">
           Balance: 35.422 ETH
         </Text>

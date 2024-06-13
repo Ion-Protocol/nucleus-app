@@ -12,7 +12,6 @@ export interface BridgeData {
   apy: BridgeMetric
   error: string | null
   from: string
-  to: string
   selectedToken: TokenKey
 }
 
@@ -33,7 +32,6 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
       apy: { value: BigInt(0).toString(), loading: false },
       error: null,
       from: '',
-      to: '',
       selectedToken: TokenKey.ETH,
     }
   })

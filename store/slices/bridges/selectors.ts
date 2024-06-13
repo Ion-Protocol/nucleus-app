@@ -125,18 +125,6 @@ export const selectBridgeFrom = (state: RootState, key: BridgeKey): string => {
 }
 
 /**
- * Selects the 'to' value of a bridge identified by the given key.
- *
- * @param state - The root state.
- * @param key - The key of the bridge.
- * @returns The 'to' value of the bridge, or undefined if the bridge does not exist.
- */
-export const selectBridgeTo = (state: RootState, key: BridgeKey): string | undefined => {
-  const bridgesState = selectBridgesState(state)
-  return bridgesState.data[key]?.to
-}
-
-/**
  * Retrieves the token of a specific bridge from the state.
  * @param state - The root state of the application.
  * @param key - The key of the bridge.

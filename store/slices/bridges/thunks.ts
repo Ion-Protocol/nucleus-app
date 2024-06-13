@@ -86,34 +86,6 @@ export const setBridgeFrom = createAsyncThunk<
 })
 
 /**
- * Sets the bridge destination for a given bridge key.
- *
- * This is in a thunk because it needs to access RootState.
- *
- * @param to - The destination value to set for the bridge.
- * @param getState - A function that returns the current state of the Redux store.
- * @param rejectWithValue - A function that can be used to reject the async thunk with a specific value.
- * @param dispatch - A function that can be used to dispatch actions within the async thunk.
- * @returns A promise that resolves to an object containing the bridge key and the destination value.
- */
-export const setBridgeTo = createAsyncThunk<
-  { bridgeKey: BridgeKey; to: string },
-  string,
-  { state: RootState; rejectValue: string }
->('bridges/setBridgeTo', async (to, { getState, rejectWithValue, dispatch }) => {
-  const state = getState() as RootState
-  const bridgeKey = state.router.query?.bridge as BridgeKey
-
-  if (!bridgeKey) {
-    throw new Error('Bridge key is missing in router query')
-  }
-
-  const toWithoutLeadingZeroes = parseFloat(to).toString()
-
-  return { bridgeKey, to: toWithoutLeadingZeroes }
-})
-
-/**
  * Sets the bridge token asynchronously.
  *
  * @param token - The token to set.
