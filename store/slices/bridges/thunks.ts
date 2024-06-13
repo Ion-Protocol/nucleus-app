@@ -5,6 +5,7 @@ import { setError } from '../status'
 import { BridgeKey } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { Token } from '@/types/Token'
+import { getRate } from '@/api/contracts/Accountant/getRate'
 
 export interface FetchBridgeTvlResult {
   tvl: string
@@ -108,4 +109,26 @@ export const setBridgeToken = createAsyncThunk<
   }
 
   return { bridgeKey, tokenKey }
+})
+
+export interface FetchBridgeRateResult {
+  rate: string
+}
+
+export const fetchBridgeRate = createAsyncThunk<
+  { bridgeKey: BridgeKey; result: FetchBridgeRateResult },
+  BridgeKey,
+  { rejectValue: string; state: RootState }
+>('bridges/fetchBridgeRate', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+  try {
+    const rateAsBigInt = await getRate(bridgeKey)
+    return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to fetch rate for bridge ${bridgeKey}`
+    const fullErrorMessage = `${errorMessage}\n${error.message}`
+    console.error(fullErrorMessage)
+    dispatch(setError(fullErrorMessage))
+    return rejectWithValue(errorMessage)
+  }
 })

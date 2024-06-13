@@ -13,11 +13,14 @@ export function useStoreInitializer() {
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))
+  }, [address, dispatch])
+
+  useEffect(() => {
     dispatch(fetchWeETHBalance())
     dispatch(fetchPrice())
     Object.values(BridgeKey).forEach((key) => {
       dispatch(fetchBridgeTvl(key))
       dispatch(fetchBridgeApy(key))
     })
-  }, [address, dispatch])
+  }, [dispatch])
 }

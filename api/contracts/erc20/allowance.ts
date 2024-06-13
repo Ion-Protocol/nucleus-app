@@ -1,6 +1,6 @@
 import { wagmiConfig } from '@/config/wagmi'
 import { erc20Abi } from 'viem'
-import { readContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
+import { readContract } from 'wagmi/actions'
 
 /**
  * Retrieves the allowance of a spender for a specific token.

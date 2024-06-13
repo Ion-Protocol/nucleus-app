@@ -4,8 +4,10 @@ import { selectBridgeFrom } from '@/store/slices/bridges'
 import { setBridgeFrom } from '@/store/slices/bridges/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 
-const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
+const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const bridgeKey = state.router.query?.bridge as BridgeKey
+
+  const from = selectBridgeFrom(state, bridgeKey)
 
   const inputValue = selectBridgeFrom(state, bridgeKey)
 
@@ -22,11 +24,11 @@ const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface TokenFromOwnProps {}
+interface TokenInputOwnProps {}
 
-interface TokenFromProps extends TokenFromOwnProps, PropsFromRedux {}
+interface TokenInputProps extends TokenInputOwnProps, PropsFromRedux {}
 
-export namespace TokenFromConnector {
+export namespace TokenInputConnector {
   export const Connector = connector
-  export type Props = TokenFromProps
+  export type Props = TokenInputProps
 }

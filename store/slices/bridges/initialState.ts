@@ -13,6 +13,7 @@ export interface BridgeData {
   error: string | null
   from: string
   selectedToken: TokenKey
+  rate: string
 }
 
 export type BridgesState = {
@@ -33,6 +34,7 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
       error: null,
       from: '',
       selectedToken: TokenKey.ETH,
+      rate: BigInt(0).toString(),
     }
   })
 

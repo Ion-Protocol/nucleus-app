@@ -26,6 +26,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     name: 'Arbitrum',
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
     sourceChains: [ChainKey.ETHEREUM, ChainKey.TEST],
     destinationChains: [ChainKey.ETHEREUM],
@@ -36,6 +37,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     name: 'Swell',
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
@@ -45,6 +47,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     name: 'Edgeless',
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
@@ -54,6 +57,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     name: 'Optimism',
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
@@ -63,6 +67,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     name: 'Boba Network',
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
@@ -72,6 +77,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     name: 'Sei',
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+      accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
