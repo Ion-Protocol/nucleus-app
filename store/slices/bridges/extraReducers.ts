@@ -3,8 +3,10 @@ import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import {
   FetchBridgeApyResult,
+  FetchBridgeRateResult,
   FetchBridgeTvlResult,
   fetchBridgeApy,
+  fetchBridgeRate,
   fetchBridgeTvl,
   setBridgeFrom,
   setBridgeToken,
@@ -66,6 +68,30 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       bridge.apy.loading = false
       bridge.error = action.error.message || 'Failed to fetch APY'
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
+    })
+
+    ///////////////////////////////
+    // Rate
+    ///////////////////////////////
+    .addCase(fetchBridgeRate.pending, (state, action) => {
+      const bridge = state.data[action.meta.arg]
+      bridge.rate.loading = true
+      state.overallLoading = true
+    })
+    .addCase(
+      fetchBridgeRate.fulfilled,
+      (state, action: PayloadAction<{ bridgeKey: BridgeKey; result: FetchBridgeRateResult }>) => {
+        const bridge = state.data[action.payload.bridgeKey]
+        bridge.rate.loading = false
+        bridge.rate.value = action.payload.result.rate
+        state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
+      }
+    )
+    .addCase(fetchBridgeRate.rejected, (state, action) => {
+      const bridge = state.data[action.meta.arg]
+      bridge.rate.loading = false
+      bridge.error = action.error.message || 'Failed to fetch rate'
+      state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
     })
 
     ///////////////////////////////

@@ -1,16 +1,30 @@
 import { formatUnits } from 'viem'
 
+export const RAY = {
+  bigint: BigInt(1e27),
+  number: 1e27,
+}
+
+export const WAD = {
+  bigint: BigInt(1e18),
+  number: 1e18,
+}
+
 /**
  * Formats a bigint value as a string with thousands separators and fixed decimal places.
  *
  * @param value - The bigint value to format.
  * @returns The formatted value as a string.
  */
-export function bigIntToNumber(value: bigint, decimals = 18): string {
+export function bigIntToNumber(
+  value: bigint,
+  opts: { decimals?: number; minimumFractionDigits?: number; maximumFractionDigits?: number } = {}
+): string {
+  const { decimals = 18, minimumFractionDigits = 0, maximumFractionDigits = 3 } = opts
   const numberValue = parseFloat(formatUnits(value, decimals))
   return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: 3,
-    maximumFractionDigits: 3,
+    minimumFractionDigits: minimumFractionDigits,
+    maximumFractionDigits: maximumFractionDigits,
   }).format(numberValue)
 }
 

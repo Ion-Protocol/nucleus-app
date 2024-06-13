@@ -1,5 +1,5 @@
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
-import { chainsConfig } from '@/config/chains'
+import { ChainKey, chainsConfig } from '@/config/chains'
 import { RootState } from '@/store'
 import {
   setSourceChain,
@@ -15,9 +15,9 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
 
   const bridge = bridgesConfig[bridgeKey]
   const chainKeys = role === 'source' ? bridge.sourceChains : bridge.destinationChains
-  const chains = chainKeys.map((key) => ({ key, ...chainsConfig[key] }))
+  const chains = chainKeys.map((key) => ({ key, ...chainsConfig[key] })).filter((chain) => chain.key)
   const selectChain = role === 'source' ? selectBridgeSourceChain : selectBridgeDestinationChain
-  const selected = selectChain(state)
+  const selected = selectChain(state) || ChainKey.ETHEREUM
   const selectedChain = selected && chains.find((chain) => chain.key === selected)
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'

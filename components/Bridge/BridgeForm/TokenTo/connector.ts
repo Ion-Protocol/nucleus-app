@@ -1,34 +1,37 @@
 import { BridgeKey } from '@/config/bridges'
 import { RootState } from '@/store'
-import { selectBridgeFrom } from '@/store/slices/bridges'
+import { selectBridgeFrom, selectBridgeRate } from '@/store/slices/bridges'
 import { setBridgeFrom } from '@/store/slices/bridges/thunks'
+import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { ConnectedProps, connect } from 'react-redux'
 
-const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
+const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   const bridgeKey = state.router.query?.bridge as BridgeKey
 
   const from = selectBridgeFrom(state, bridgeKey)
-
-  const inputValue = selectBridgeFrom(state, bridgeKey)
+  const rate = selectBridgeRate(state, bridgeKey)
+  const fromAsNumber = parseFloat(from)
+  const fromAsBigInt = fromAsNumber ? BigInt(fromAsNumber * WAD.number) : BigInt(0)
+  const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
+  const toAsBigInt = rateAsBigInt > 0 ? (fromAsBigInt * WAD.bigint) / rateAsBigInt : fromAsBigInt
+  const toFormatted = bigIntToNumber(toAsBigInt, { minimumFractionDigits: 0, maximumFractionDigits: 4 })
 
   return {
-    inputValue,
+    to: toFormatted,
   }
 }
 
-const mapDispatch = {
-  onChange: setBridgeFrom,
-}
+const mapDispatch = {}
 
 const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface TokenInputOwnProps {}
+interface TokenToOwnProps {}
 
-interface TokenInputProps extends TokenInputOwnProps, PropsFromRedux {}
+interface TokenToProps extends TokenToOwnProps, PropsFromRedux {}
 
-export namespace TokenInputConnector {
+export namespace TokenToConnector {
   export const Connector = connector
-  export type Props = TokenInputProps
+  export type Props = TokenToProps
 }

@@ -17,7 +17,7 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
       <Flex justify="space-between">
         <Text fontSize="sm">From</Text>
         <Text fontSize="sm" color="secondaryText">
-          Balance: 35.422 ETH
+          Balance: N/A
         </Text>
       </Flex>
 
@@ -35,9 +35,9 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
         />
 
         {/* Max Button */}
-        <Button variant="outline" color="secondaryText" size="sm">
+        {/* <Button variant="outline" color="secondaryText" size="sm">
           MAX
-        </Button>
+        </Button> */}
 
         <Divider orientation="vertical" />
 

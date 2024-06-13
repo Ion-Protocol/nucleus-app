@@ -144,5 +144,5 @@ export const selectBridgeTokenKey = (state: RootState, key: BridgeKey): TokenKey
  */
 export const selectBridgeRate = (state: RootState, key: BridgeKey): string | undefined => {
   const bridgesState = selectBridgesState(state)
-  return bridgesState.data[key]?.rate
+  return bridgesState.data[key]?.rate.value
 }

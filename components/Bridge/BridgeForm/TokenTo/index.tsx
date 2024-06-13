@@ -1,8 +1,10 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
-import TokenSelect from './TokenSelect'
-import { TokenInputConnector } from './connector'
+import { TokenToConnector } from './connector'
+import TokenSelect from '../TokenFrom/TokenSelect'
+import { TokenIcon } from '@/components/config/tokenIcons'
+import { TokenKey } from '@/config/token'
 
-function TokenTo({ inputValue, onChange }: TokenInputConnector.Props) {
+function TokenTo({ to }: TokenToConnector.Props) {
   return (
     <Flex
       direction="column"
@@ -15,7 +17,7 @@ function TokenTo({ inputValue, onChange }: TokenInputConnector.Props) {
     >
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text fontSize="sm">From</Text>
+        <Text fontSize="sm">To</Text>
         <Text fontSize="sm" color="secondaryText">
           Balance: 35.422 ETH
         </Text>
@@ -24,30 +26,18 @@ function TokenTo({ inputValue, onChange }: TokenInputConnector.Props) {
       {/* Bottom Row */}
       <Flex align="center" gap={3}>
         {/* Input Box */}
-        <Input
-          value={inputValue}
-          onChange={(e) => onChange(e.target.value)}
-          type="number"
-          variant="unstyled"
-          size="lg"
-          placeholder="Amount"
-          fontWeight="bold"
-        />
-
-        {/* Max Button */}
-        <Button variant="outline" color="secondaryText" size="sm">
-          MAX
-        </Button>
+        <Input disabled value={to} variant="unstyled" size="lg" placeholder="Amount" fontWeight="bold" />
 
         <Divider orientation="vertical" />
-
-        {/* Token Select */}
-        <Flex>
-          <TokenSelect />
+        <Flex align="center" gap={2}>
+          <TokenIcon tokenKey={TokenKey.SEI} />
+          <Text fontWeight="bold" fontSize="sm" pt="4px">
+            SEI
+          </Text>
         </Flex>
       </Flex>
     </Flex>
   )
 }
 
-export default TokenInputConnector.Connector(TokenFrom)
+export default TokenToConnector.Connector(TokenTo)

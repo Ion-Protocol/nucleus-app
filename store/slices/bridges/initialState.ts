@@ -2,18 +2,18 @@ import { BridgeKey } from '@/config/bridges'
 import { ChainKey } from '@/config/chains'
 import { TokenKey } from '@/config/token'
 
-export interface BridgeMetric {
+export interface AsyncMetric {
   value: string
   loading: boolean
 }
 
 export interface BridgeData {
-  tvl: BridgeMetric
-  apy: BridgeMetric
+  tvl: AsyncMetric
+  apy: AsyncMetric
+  rate: AsyncMetric
   error: string | null
   from: string
   selectedToken: TokenKey
-  rate: string
 }
 
 export type BridgesState = {
@@ -31,10 +31,10 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
     data[key] = {
       tvl: { value: BigInt(0).toString(), loading: false },
       apy: { value: BigInt(0).toString(), loading: false },
+      rate: { value: BigInt(0).toString(), loading: false },
       error: null,
       from: '',
       selectedToken: TokenKey.ETH,
-      rate: BigInt(0).toString(),
     }
   })
 

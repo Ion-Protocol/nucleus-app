@@ -4,7 +4,7 @@ import { setAddress } from '@/store/slices/account'
 import { useEffect } from 'react'
 import { fetchWeETHBalance } from '@/store/slices/balance'
 import { fetchPrice } from '../slices/price'
-import { fetchBridgeApy, fetchBridgeTvl } from '../slices/bridges/thunks'
+import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
 import { BridgeKey } from '@/config/bridges'
 
 export function useStoreInitializer() {
@@ -21,6 +21,7 @@ export function useStoreInitializer() {
     Object.values(BridgeKey).forEach((key) => {
       dispatch(fetchBridgeTvl(key))
       dispatch(fetchBridgeApy(key))
+      dispatch(fetchBridgeRate(key))
     })
   }, [dispatch])
 }
