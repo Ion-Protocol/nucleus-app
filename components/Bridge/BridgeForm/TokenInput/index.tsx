@@ -1,33 +1,8 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
-import { TokenInputConnector } from './connector'
-import { useState } from 'react'
 import TokenSelect from './TokenSelect'
+import { TokenInputConnector } from './connector'
 
 function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
-  const [displayValue, setDisplayValue] = useState(inputValue)
-
-  const handleBlur = () => {
-    if (inputValue) {
-      const formattedValue = parseFloat(inputValue).toLocaleString('en-US', {
-        maximumFractionDigits: 18,
-      })
-      setDisplayValue(formattedValue)
-    }
-  }
-
-  const handleFocus = () => {
-    setDisplayValue(inputValue)
-  }
-
-  const handleChange = (value: string) => {
-    const rawValue = value.replace(/,/g, '')
-
-    if (/^\d*\.?\d*$/.test(rawValue)) {
-      onChange(rawValue)
-      setDisplayValue(value)
-    }
-  }
-
   return (
     <Flex
       direction="column"
@@ -50,11 +25,9 @@ function TokenInput({ role, inputValue, onChange }: TokenInputConnector.Props) {
       <Flex align="center" gap={3}>
         {/* Input Box */}
         <Input
-          value={displayValue}
-          onChange={(e) => handleChange(e.target.value)}
-          onBlur={handleBlur}
-          onFocus={handleFocus}
-          type="text"
+          value={inputValue}
+          onChange={(e) => onChange(e.target.value)}
+          type="number"
           variant="unstyled"
           size="lg"
           placeholder="Amount"
