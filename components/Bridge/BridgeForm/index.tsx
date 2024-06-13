@@ -1,6 +1,6 @@
 import { ChakraProps, Divider, Flex } from '@chakra-ui/react'
 import ChainSelect from './ChainSelect'
-import TokenInput from './TokenInput'
+import TokenFrom from './TokenFrom'
 
 interface BridgeFormProps extends ChakraProps {}
 
@@ -8,7 +8,7 @@ export function BridgeForm({ ...props }: BridgeFormProps) {
   return (
     <Flex direction="column" {...props} gap={6}>
       <ChainSelect role="source" />
-      <TokenInput />
+      <TokenFrom />
       <Divider />
       <ChainSelect role="destination" />
     </Flex>

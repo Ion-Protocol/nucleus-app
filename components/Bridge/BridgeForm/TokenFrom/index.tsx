@@ -2,7 +2,7 @@ import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import TokenSelect from './TokenSelect'
 import { TokenInputConnector } from './connector'
 
-function TokenInput({ inputValue, onChange }: TokenInputConnector.Props) {
+function TokenFrom({ inputValue, onChange }: TokenInputConnector.Props) {
   return (
     <Flex
       direction="column"
@@ -50,4 +50,4 @@ function TokenInput({ inputValue, onChange }: TokenInputConnector.Props) {
   )
 }
 
-export default TokenInputConnector.Connector(TokenInput)
+export default TokenInputConnector.Connector(TokenFrom)
