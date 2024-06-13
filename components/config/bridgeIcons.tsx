@@ -18,10 +18,14 @@ export const bridgeIconMap: Record<BridgeKey, (props: ChakraProps) => JSX.Elemen
 }
 
 interface BridgeIconMapProps extends ChakraProps {
-  bridgeKey: BridgeKey
+  bridgeKey?: BridgeKey
 }
 
-export const BridgeIcon: React.FC<BridgeIconMapProps> = ({ bridgeKey, ...props }) => {
+export const BridgeIcon: React.FC<BridgeIconMapProps> = ({ bridgeKey = BridgeKey.ARBITRUM, ...props }) => {
   const IconComponent = bridgeIconMap[bridgeKey]
+  if (!IconComponent) {
+    console.error(`No icon component found for bridge key: ${bridgeKey}`)
+    return null
+  }
   return <IconComponent {...props} />
 }

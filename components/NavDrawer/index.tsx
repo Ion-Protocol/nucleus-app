@@ -2,7 +2,7 @@ import { Box, Text, Image, Flex } from '@chakra-ui/react'
 import { Logo } from './Logo'
 import { NavItem } from './NavItem'
 import { DashboardIcon } from '../icons/Dashboard'
-import { BridgeIcon } from '../icons/Bridge'
+import { BridgeNavIcon } from '../icons/Bridge'
 import { PortfolioIcon } from '../icons/Portfolio'
 import NavCollapse from './NavCollapse'
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
@@ -15,7 +15,7 @@ export function NavDrawer() {
       <Logo />
       <Flex direction="column" mt={6} gap={1}>
         <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
-        <NavCollapse title="Bridge" leftIcon={<BridgeIcon />}>
+        <NavCollapse title="Bridge" leftIcon={<BridgeNavIcon />}>
           {bridges.map((key) => (
             <NavItem key={key} title={bridgesConfig[key].name} href={`/bridge/${key}`} />
           ))}

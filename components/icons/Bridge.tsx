@@ -1,7 +1,7 @@
 import { createIcon } from '@chakra-ui/react'
 
-export const BridgeIcon = createIcon({
-  displayName: 'BridgeIcon',
+export const BridgeNavIcon = createIcon({
+  displayName: 'BridgeNavIcon',
   viewBox: '0 0 17 16',
   path: (
     <>

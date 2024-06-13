@@ -1,4 +1,5 @@
 import { Bridge } from '@/types/Bridge'
+import { ChainKey } from './chains'
 
 // Use kebab-case (with hyphens) for the values.
 // These values are used to define the url paths.
@@ -22,27 +23,39 @@ export enum BridgeKey {
 export const bridgesConfig: Record<BridgeKey, Bridge> = {
   [BridgeKey.ARBITRUM]: {
     name: 'Arbitrum',
+    sourceChains: [ChainKey.ETHEREUM],
+    destinationChains: [ChainKey.ETHEREUM],
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
   [BridgeKey.SWELL]: {
     name: 'Swell',
+    sourceChains: [ChainKey.ETHEREUM],
+    destinationChains: [ChainKey.ETHEREUM],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
   [BridgeKey.EDGELESS]: {
     name: 'Edgeless',
+    sourceChains: [ChainKey.ETHEREUM],
+    destinationChains: [ChainKey.ETHEREUM],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
   [BridgeKey.OPTIMISM]: {
     name: 'Optimism',
+    sourceChains: [ChainKey.ETHEREUM],
+    destinationChains: [ChainKey.ETHEREUM],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
   [BridgeKey.BOBA_NETWORK]: {
     name: 'Boba Network',
+    sourceChains: [ChainKey.ETHEREUM],
+    destinationChains: [ChainKey.ETHEREUM],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
   [BridgeKey.SEI]: {
     name: 'Sei',
+    sourceChains: [ChainKey.ETHEREUM],
+    destinationChains: [ChainKey.ETHEREUM],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
 }
