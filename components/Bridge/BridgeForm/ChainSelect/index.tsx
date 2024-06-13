@@ -1,13 +1,9 @@
+import { ChainIcon } from '@/components/config/chainIcons'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { Text, Button, Menu, MenuButton, MenuList, MenuItem, Flex } from '@chakra-ui/react'
+import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { ChainSelectConnector } from './connector'
-import { ChainIcon, chainIconMap } from '@/components/config/chainIcons'
 
-function ChainSelect({
-  chains,
-  onChange,
-  selected,
-}: ChainSelectConnector.Props & { onChange: (chainKey: string) => void }) {
+function ChainSelect({ chains, onChange, selected }: ChainSelectConnector.Props) {
   return (
     <Menu>
       <MenuButton
