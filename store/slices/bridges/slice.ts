@@ -10,18 +10,12 @@ const bridgesSlice = createSlice({
     setSourceChain: (state, action) => {
       state.sourceChain = action.payload
     },
-    clearSourceChain: (state) => {
-      state.sourceChain = null
-    },
     setDestinationChain: (state, action) => {
       state.destinationChain = action.payload
-    },
-    clearDestinationChain: (state) => {
-      state.destinationChain = null
     },
   },
   extraReducers,
 })
 
-export const { setSourceChain, clearSourceChain, setDestinationChain, clearDestinationChain } = bridgesSlice.actions
+export const { setSourceChain, setDestinationChain } = bridgesSlice.actions
 export const bridgesReducer = bridgesSlice.reducer

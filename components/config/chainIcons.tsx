@@ -5,7 +5,6 @@ import { EthereumIcon } from '../icons/Ethereum'
 
 export const chainIconMap: Record<ChainKey, (props: ChakraProps) => JSX.Element> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
-  [ChainKey.TEST]: (props) => <EthereumIcon {...props} />,
 }
 
 interface ChainIconProps extends ChakraProps {
