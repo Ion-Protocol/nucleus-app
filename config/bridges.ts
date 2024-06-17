@@ -22,6 +22,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     contracts: {
       teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
       accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
+      boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],

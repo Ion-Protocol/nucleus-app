@@ -169,6 +169,7 @@ export const performDeposit = createAsyncThunk<
     if (userAddress) {
       const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey, userAddress })
       dispatch(setSuccess('Deposit successful!'))
+      dispatch(setBridgeFrom(''))
       return { txHash }
     } else {
       return { txHash: '0x0' }

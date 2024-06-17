@@ -19,14 +19,15 @@ export async function deposit(
   { bridgeKey, userAddress }: { bridgeKey: BridgeKey; userAddress: `0x${string}` }
 ) {
   const bridge = bridgesConfig[bridgeKey]
-  const contractAddress = bridge.contracts.teller
+  const callingContractAddress = bridge.contracts.teller
+  const allowanceContractAddress = bridge.contracts.boringVault
 
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
   const allowanceAsBigInt = await allowance({
     tokenAddress: depositAsset,
-    spenderAddress: contractAddress,
+    spenderAddress: allowanceContractAddress,
     userAddress,
   })
 
@@ -36,7 +37,7 @@ export async function deposit(
   if (depositAmount > allowanceAsBigInt) {
     await approve({
       tokenAddress: depositAsset,
-      spenderAddress: contractAddress,
+      spenderAddress: allowanceContractAddress,
       amount: depositAmount,
     })
   }
@@ -46,7 +47,7 @@ export async function deposit(
   ////////////////////////////////
   await simulateContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: contractAddress,
+    address: callingContractAddress,
     functionName: 'deposit',
     args: [depositAsset, depositAmount, minimumMint],
   })
@@ -56,7 +57,7 @@ export async function deposit(
   ////////////////////////////////
   const hash = await writeContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: contractAddress,
+    address: callingContractAddress,
     functionName: 'deposit',
     args: [depositAsset, depositAmount, minimumMint],
   })
