@@ -4,7 +4,8 @@ import { SubmitConnector } from './connector'
 function Submit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
   return (
     <Button
-      size="lg"
+      h="fit-content"
+      p={2}
       isLoading={loading}
       onClick={onSubmit}
       isDisabled={disabled}

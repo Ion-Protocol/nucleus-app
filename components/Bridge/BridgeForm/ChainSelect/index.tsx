@@ -15,7 +15,7 @@ function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectCon
       >
         <Flex align="center" gap={3}>
           {selected && <ChainIcon chainKey={selected.key} />}
-          <Text>{selected ? selected.name : placeholder}</Text>
+          <Text variant="medium">{selected ? selected.name : placeholder}</Text>
         </Flex>
       </MenuButton>
       <MenuList bg="backgroundSecondary">
@@ -23,7 +23,7 @@ function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectCon
           <MenuItem key={chain.key} bg="none" onClick={() => onChange(chain.key)} _hover={{ bg: 'hoverSecondary' }}>
             <Flex align="center" gap={3}>
               <ChainIcon chainKey={chain.key} />
-              <Text>{chain.name}</Text>
+              <Text variant="medium">{chain.name}</Text>
             </Flex>
           </MenuItem>
         ))}

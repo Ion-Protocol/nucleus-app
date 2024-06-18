@@ -17,6 +17,7 @@ export const ButtonStyles: ComponentStyleConfig = {
   variants: {
     solid: (props) => ({
       color: 'white',
+      textStyle: 'button',
       background: buttonGradient(props),
       _hover: {
         background: buttonGradient(props),
@@ -28,6 +29,7 @@ export const ButtonStyles: ComponentStyleConfig = {
       },
     }),
     outline: (props) => ({
+      textStyle: 'button',
       border: '2px solid',
       borderColor: 'border',
       backgroundColor: 'backgroundSecondary',

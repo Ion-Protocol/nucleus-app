@@ -42,7 +42,9 @@ export function NavItem({ title, href, leftIcon, disabled }: NavItemProps) {
         _active={{ bg: 'active' }}
       >
         <Box w="36px">{iconWithSize}</Box>
-        <Text userSelect="none">{title}</Text>
+        <Text userSelect="none" variant="large">
+          {title}
+        </Text>
       </Flex>
     </Link>
   )

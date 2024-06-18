@@ -26,8 +26,8 @@ export function AnnouncementBanner() {
         position="absolute"
         top="0px"
         left="0px"
-        minW="1300px"
-        maxW="1300px"
+        minW="1100px"
+        maxW="1100px"
         alt="announcement"
         src={
           colorMode === 'light'

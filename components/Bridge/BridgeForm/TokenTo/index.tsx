@@ -16,10 +16,8 @@ function TokenTo({ to }: TokenToConnector.Props) {
     >
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text fontSize="sm">To</Text>
-        <Text fontSize="sm" color="secondaryText">
-          Balance: N/A
-        </Text>
+        <Text>To</Text>
+        <Text color="secondaryText">Balance: N/A</Text>
       </Flex>
 
       {/* Bottom Row */}
@@ -40,8 +38,8 @@ function TokenTo({ to }: TokenToConnector.Props) {
 
         <Divider orientation="vertical" />
         <Flex align="center" gap={2} ml={1} mr={3}>
-          <TokenIcon tokenKey={TokenKey.SEI} />
-          <Text fontWeight="bold" fontSize="sm" pt="4px">
+          <TokenIcon fontSize="28px" tokenKey={TokenKey.SEI} />
+          <Text fontWeight="bold" fontSize="xl" pt="4px">
             SEI
           </Text>
         </Flex>

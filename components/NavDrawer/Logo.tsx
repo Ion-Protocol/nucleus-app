@@ -11,7 +11,7 @@ export function Logo() {
   return (
     <Flex alignItems="center" gap={1} onClick={handleClick} cursor="pointer">
       <Image w="48px" h="48px" alt="Ion logo" src="/assets/images/IonLogo.png" />
-      <Text fontSize="20px" mt="8px">
+      <Text fontSize="large" mt="8px">
         ION PROTOCOL
       </Text>
     </Flex>

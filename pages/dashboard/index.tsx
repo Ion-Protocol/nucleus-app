@@ -7,7 +7,7 @@ export default function Dashboard() {
     <Flex p={9} pr={3} direction="column">
       {/* Page title */}
       <Flex direction="column" gap={1}>
-        <Text textStyle="header1">Dashboard</Text>
+        <Text variant="header1">Dashboard</Text>
         <Text>Lorem ipsum dolor sit amet, consectetur adipiscing.</Text>
       </Flex>
 
@@ -21,7 +21,7 @@ export default function Dashboard() {
       <Flex h={16} />
 
       {/* Yield Bridge list */}
-      <Text textStyle="header2">Choose Yield Bridge</Text>
+      <Text variant="header1">Choose Yield Bridge</Text>
       <Flex h={8} />
       <YieldBridgeList />
     </Flex>

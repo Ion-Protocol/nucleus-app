@@ -1,9 +1,12 @@
 export const textStyles = {
+  baseStyle: {
+    fontSize: '12px',
+  },
   button: {
     fontWeight: 'bold',
   },
   header1: {
-    fontSize: '32px',
+    fontSize: '25px',
     fontWeight: 'bold',
     lineHeight: '110%',
     letterSpacing: '-1%',
@@ -15,17 +18,23 @@ export const textStyles = {
     letterSpacing: '-1%',
   },
   header3: {
-    fontSize: '24px',
+    fontSize: '22px',
     fontWeight: 'bold',
   },
-  header4: {
-    fontSize: '18px',
+  medium: {
+    fontSize: '14px',
+  },
+  large: {
+    fontSize: '15px',
+  },
+  xl: {
+    fontSize: '16px',
   },
   caption: {
-    fontSize: '14px',
+    fontSize: '12px',
     fontWeight: 'bold',
   },
   small: {
-    fontSize: '14px',
+    fontSize: '12px',
   },
 }

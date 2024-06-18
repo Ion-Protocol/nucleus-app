@@ -17,8 +17,8 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props)
       >
         {/* Token Selector Button */}
         <Flex align="center" gap={2}>
-          {selected && <TokenIcon fontSize="lg" tokenKey={selected.key} />}
-          <Text>{selected.name}</Text>
+          {selected && <TokenIcon fontSize="28px" tokenKey={selected.key} />}
+          <Text variant="xl">{selected.name}</Text>
           <ChevronDownIcon />
         </Flex>
       </MenuButton>
@@ -28,8 +28,8 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props)
         {tokens.map((token) => (
           <MenuItem key={token.key} bg="none" onClick={() => onChange(token.key)} _hover={{ bg: 'hoverSecondary' }}>
             <Flex align="center" gap={3}>
-              <TokenIcon tokenKey={token.key} />
-              <Text>{token.name}</Text>
+              <TokenIcon fontSize="28px" tokenKey={token.key} />
+              <Text variant="xl">{token.name}</Text>
             </Flex>
           </MenuItem>
         ))}

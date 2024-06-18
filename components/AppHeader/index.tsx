@@ -7,7 +7,7 @@ export function AppHeader() {
   const { colorMode, toggleColorMode } = useColorMode()
 
   return (
-    <Flex h="80px" borderBottom="1px solid" borderColor="border" justify="flex-end" align="center" pr={6} gap={3}>
+    <Flex h="100px" borderBottom="1px solid" borderColor="border" justify="flex-end" align="center" pr={6} gap={3}>
       <IconButton
         variant="borderless"
         aria-label="toggle color mode"

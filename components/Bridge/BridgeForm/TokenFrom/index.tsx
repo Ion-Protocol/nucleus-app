@@ -15,10 +15,8 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
     >
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text fontSize="sm">From</Text>
-        <Text fontSize="sm" color="secondaryText">
-          Balance: N/A
-        </Text>
+        <Text>From</Text>
+        <Text color="secondaryText">Balance: N/A</Text>
       </Flex>
 
       {/* Bottom Row */}
