@@ -12,10 +12,6 @@ export function BridgeForm({ ...props }: BridgeFormProps) {
   const sourceChain = useAppSelector(selectBridgeSourceChain)
   const destinationChain = useAppSelector(selectBridgeDestinationChain)
 
-  function handleSubmit() {
-    //
-  }
-
   return (
     <Flex direction="column" {...props} gap={6}>
       <ChainSelect role="source" />
