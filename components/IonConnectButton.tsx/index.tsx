@@ -47,7 +47,7 @@ export function IonConnectButton() {
                       </Box>
                     }
                   >
-                    <Text>{chain.name}</Text>
+                    <Text variant="medium">{chain.name}</Text>
                   </Button>
                   <Button variant="outline" onClick={openAccountModal}>
                     {account.displayName}
