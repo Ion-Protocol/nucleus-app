@@ -26,6 +26,7 @@ export const bridgesConfig: Record<BridgeKey, Bridge> = {
     },
     sourceChains: [ChainKey.ETHEREUM],
     destinationChains: [ChainKey.ETHEREUM],
+    acceptedTokens: [TokenKey.WETH, TokenKey.WSTETH],
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
   },
 }

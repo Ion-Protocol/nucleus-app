@@ -5,9 +5,11 @@ import { TabletLayout } from './TabletLayout'
 import { useRouteChangeEffect } from '@/hooks/useRouteChangeEffect'
 import { useStoreInitializer } from '@/store/hooks/useStoreInitializer'
 import { DesktopLayout } from './DesktopLayout'
+import { useChainChangeEffect } from '@/hooks/useChainChangeEffect'
 
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
+  useChainChangeEffect()
   useStoreInitializer()
 
   const [isDesktop] = useMediaQuery('(min-width: 1025px)')

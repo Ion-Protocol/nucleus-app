@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './extraReducers'
 import { initialState } from './initialState'
-import { BridgeKey } from '@/config/bridges'
 
 const bridgesSlice = createSlice({
   name: 'bridges',

@@ -8,12 +8,14 @@ import { currencyReducer } from './slices/currency'
 import { bridgesReducer } from './slices/bridges'
 import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router'
+import { chainReducer } from './slices/chain'
 
 export const store = configureStore({
   reducer: {
     account: accountReducer,
     balances: balancesReducer,
     bridges: bridgesReducer,
+    chain: chainReducer,
     counter: counterReducer,
     currency: currencyReducer,
     price: priceReducer,

@@ -10,6 +10,7 @@ export interface Bridge {
   sourceChains: ChainKey[]
   destinationChains: ChainKey[]
   contracts: Contracts
+  acceptedTokens: TokenKey[]
 }
 
 export interface BridgeUI extends Bridge {

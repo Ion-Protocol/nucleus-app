@@ -1,6 +1,6 @@
 import { RootState } from '@/store'
 import { selectAllBridges } from '@/store/slices/bridges'
-import { clearError, selectErrorMessage, selectLoading } from '@/store/slices/status'
+import { selectLoading } from '@/store/slices/status'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {

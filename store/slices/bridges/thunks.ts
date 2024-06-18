@@ -1,37 +1,68 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
 import { deposit } from '@/api/contracts/Teller/deposit'
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { utils } from '@/utils'
 import { WAD } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { setError, setSuccess } from '../status'
-import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 import { selectAddress } from '../account'
+import { setError, setSuccess } from '../status'
+import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
+import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 
 export interface FetchBridgeTvlResult {
+  bridgeKey: BridgeKey
   tvl: string
 }
 
-export interface FetchBridgeApyResult {
-  apy: string
-}
-
-// These thunks will likely change once I know how this data is loaded
-
+/**
+ * Asynchronous thunk action to fetch the Total Value Locked (TVL) for a given bridge.
+ *
+ * This action:
+ * 1. Retrieves the current chain key from the state.
+ * 2. Fetches native token balances and exchange rates for the specified bridge.
+ * 3. Calculates the TVL in ETH and returns it as a string along with the bridge key.
+ * 4. Logs and dispatches an error if the fetch fails, and rejects with an error message.
+ *
+ * @param {BridgeKey} bridgeKey - The key identifying the bridge for which TVL is being fetched.
+ * @param {Object} thunkAPI - An object containing getState, rejectWithValue, and dispatch functions provided by Redux Toolkit.
+ * @returns {Promise<FetchBridgeTvlResult | string>} A promise that resolves to an object containing the TVL as a string
+ * and the bridge key, or rejects with an error message.
+ */
 export const fetchBridgeTvl = createAsyncThunk<
-  { bridgeKey: BridgeKey; result: FetchBridgeTvlResult },
+  FetchBridgeTvlResult,
   BridgeKey,
   { rejectValue: string; state: RootState }
->('bridges/fetchBridgeTvl', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+>('balances/fetchBridgeTvl', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+  const state = getState()
+  const chainKey = state.chain.chainKey
+
+  const vaultAddress = bridgesConfig[bridgeKey].contracts.boringVault
+  const acceptedTokens = bridgesConfig[bridgeKey].acceptedTokens
+
+  // Native token balances are in their native units (e.g. wstETH, weETH, etc.)
+  const nativeTokenBalancesPromise = Promise.all(
+    acceptedTokens.map((tokenKey) => getTotalAssetBalanceWithPools({ tokenKey, chainKey, vaultAddress }))
+  )
+  // Token exchange rates are ETH per token, or ETH/Token (e.g. ETH/wstETH, ETH/weETH, etc.)
+  const tokenExchangeRatesPromise = Promise.all(acceptedTokens.map((tokenKey) => tokensConfig[tokenKey].getPrice()))
+
   try {
-    await utils.sleep(2000)
-    const tvl = BigInt(5022.123231 * 1e18).toString()
-    return { bridgeKey, result: { tvl } }
+    const [nativeTokenBalances, tokenExchangeRates] = await Promise.all([
+      nativeTokenBalancesPromise,
+      tokenExchangeRatesPromise,
+    ])
+
+    // Calcualtes TVL and converts the native tokens to ETH
+    const tvlInEth = calculateTvl(nativeTokenBalances, tokenExchangeRates)
+
+    const tvlAsString = tvlInEth.toString()
+
+    return { tvl: tvlAsString, bridgeKey }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to fetch TVL for bridge ${bridgeKey}`
+    const errorMessage = `Failed to fetch TVL for bridge ${bridgesConfig[bridgeKey].name}.`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
     dispatch(setError(fullErrorMessage))
@@ -39,13 +70,16 @@ export const fetchBridgeTvl = createAsyncThunk<
   }
 })
 
+export interface FetchBridgeApyResult {
+  apy: string
+}
 export const fetchBridgeApy = createAsyncThunk<
   { bridgeKey: BridgeKey; result: FetchBridgeApyResult },
   BridgeKey,
   { rejectValue: string; state: RootState }
 >('bridges/fetchBridgeApy', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
-    await utils.sleep(3000)
+    await utils.sleep(0)
     const apy = BigInt(2.234234 * 1e18).toString()
     return { bridgeKey, result: { apy } }
   } catch (e) {
@@ -59,7 +93,7 @@ export const fetchBridgeApy = createAsyncThunk<
 })
 
 /**
- * Sets the "from" value for a bridge asynchronously.
+ * Sets the "from" value for a bridge.
  *
  * This is in a thunk because it needs to access RootState.
  *
@@ -90,7 +124,7 @@ export const setBridgeFrom = createAsyncThunk<
 })
 
 /**
- * Sets the bridge token asynchronously.
+ * Sets the bridge token.
  *
  * @param token - The token to set.
  * @param options - The options object.
