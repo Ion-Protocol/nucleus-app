@@ -16,8 +16,8 @@ export interface FetchPriceResult {
  *
  * @returns A promise that resolves to the fetched price.
  */
-export const fetchPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue: string; state: RootState }>(
-  'price/fetchPrice',
+export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue: string; state: RootState }>(
+  'price/fetchEthPrice',
   async (_, { getState, rejectWithValue, dispatch }) => {
     try {
       const result = (await readContract(wagmiConfig, {

@@ -30,6 +30,10 @@ export const textStyles = {
   xl: {
     fontSize: '16px',
   },
+  xxl: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+  },
   caption: {
     fontSize: '12px',
     fontWeight: 'bold',

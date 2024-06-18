@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { fetchPrice, FetchPriceResult } from './thunks'
+import { fetchEthPrice, FetchPriceResult } from './thunks'
 
 // ==================
 // 1. STATE INTERFACE
@@ -28,14 +28,14 @@ const pricesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPrice.pending, (state) => {
+      .addCase(fetchEthPrice.pending, (state) => {
         state.loading = true
       })
-      .addCase(fetchPrice.fulfilled, (state, action: PayloadAction<FetchPriceResult>) => {
+      .addCase(fetchEthPrice.fulfilled, (state, action: PayloadAction<FetchPriceResult>) => {
         state.loading = false
         state.data = action.payload.price
       })
-      .addCase(fetchPrice.rejected, (state, action: PayloadAction<string | undefined>) => {
+      .addCase(fetchEthPrice.rejected, (state, action: PayloadAction<string | undefined>) => {
         state.loading = false
         state.error = action.payload || 'Failed to fetch WE-ETH price'
       })
