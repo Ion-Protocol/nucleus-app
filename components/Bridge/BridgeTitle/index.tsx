@@ -13,7 +13,7 @@ function BridgeTitle({ bridgeKey, name, description, ...props }: BridgeTitleConn
         </Flex>
         <Text>{description}</Text>
       </Flex>
-      <Tvl bridgeKey={bridgeKey} />
+      <Tvl />
     </Flex>
   )
 }

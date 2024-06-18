@@ -15,12 +15,16 @@ export function useRouteChangeEffect() {
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
+      // Opens the bridge section of the navbar on the left of the screen when the route starts with '/bridge/'.
       if (url.startsWith('/bridge/')) {
         dispatch(setBridgeNavOpen(true))
       }
+
       dispatch(setPath(url))
       const query = router.query as RouterQuery
-      dispatch(setQuery(query))
+      if (Object.keys(query).length > 0) {
+        dispatch(setQuery(query))
+      }
     }
 
     handleRouteChange(router.asPath)

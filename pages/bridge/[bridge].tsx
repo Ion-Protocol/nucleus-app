@@ -13,7 +13,7 @@ export default function Bridge() {
     <Flex direction="column" h="100%">
       {/* Title & Description */}
       <Flex direction="column" h="122px" borderBottom="1px solid" borderColor="border" justify="center">
-        <BridgeTitle bridgeKey={bridgeKey} mx={9} />
+        <BridgeTitle mx={9} />
       </Flex>
 
       {/* Bottom */}

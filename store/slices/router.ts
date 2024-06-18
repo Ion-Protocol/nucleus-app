@@ -14,7 +14,9 @@ interface RouterState {
 
 const initialState: RouterState = {
   path: null,
-  query: null,
+  query: {
+    bridge: BridgeKey.SEI,
+  },
 }
 
 const routerSlice = createSlice({
