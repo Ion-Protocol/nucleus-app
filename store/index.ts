@@ -9,6 +9,8 @@ import { bridgesReducer } from './slices/bridges'
 import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router'
 import { chainReducer } from './slices/chain'
+import { netApyReducer } from './slices/netApy'
+import { netApyApi } from './slices/netApy/api'
 
 export const store = configureStore({
   reducer: {
@@ -18,11 +20,16 @@ export const store = configureStore({
     chain: chainReducer,
     counter: counterReducer,
     currency: currencyReducer,
+    netApy: netApyReducer,
     price: priceReducer,
     router: routerReducer,
     status: statusReducer,
     ui: UIReducer,
+
+    // API reducers
+    [netApyApi.reducerPath]: netApyApi.reducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(netApyApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>
