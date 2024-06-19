@@ -47,11 +47,13 @@ export function IonConnectButton() {
                       </Box>
                     }
                   >
-                    <Text variant="medium">{chain.name}</Text>
+                    <Text variant="large">{chain.name}</Text>
                   </Button>
                   <Button variant="outline" onClick={openAccountModal}>
-                    {account.displayName}
-                    {account.displayBalance ? ` (${account.displayBalance})` : ''}
+                    <Text variant="large">
+                      {account.displayName}
+                      {account.displayBalance ? ` (${account.displayBalance})` : ''}
+                    </Text>
                   </Button>
                 </Box>
               )

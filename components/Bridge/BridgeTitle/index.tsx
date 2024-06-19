@@ -6,10 +6,10 @@ import Tvl from './Tvl'
 function BridgeTitle({ bridgeKey, name, description, ...props }: BridgeTitleConnector.Props) {
   return (
     <Flex align="center" justify="space-between" {...props}>
-      <Flex direction="column" gap={1}>
+      <Flex direction="column" gap={2}>
         <Flex align="center" gap={3}>
           <Text variant="header1">Bridge {name}</Text>
-          <BridgeIcon bridgeKey={bridgeKey} fontSize="40px" />
+          <BridgeIcon bridgeKey={bridgeKey} fontSize="32px" />
         </Flex>
         <Text>{description}</Text>
       </Flex>
