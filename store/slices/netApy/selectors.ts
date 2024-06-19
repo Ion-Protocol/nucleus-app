@@ -25,18 +25,19 @@ export function selectNetApyTimeRange(state: RootState): TimeRange {
 }
 
 /**
- * Selects the start time from the state based on the selected time range.
+ * Selects the net APY data based on the selected time range from the Redux state.
  *
  * @param state - The root state of the application.
- * @returns The start time in milliseconds.
+ * @param timeRange - The selected time range.
+ * @returns An array of NetApyItem objects representing the net APY within the selected time range.
  */
-export function selectNetApyStartTime(state: RootState): number {
+export function selectNetApyByTimeRange(state: RootState): NetApyItem[] {
   const timeRange = selectNetApyTimeRange(state)
+  const history = selectNetApyHistory(state)
+
   let currentTime = new Date()
 
-  // Update to round down currentTime to the nearest 5 minutes.
-  // This adjustment enhances the determinism of the selector by extending its stable period,
-  // which is crucial for minimizing unnecessary fetching and re-renders.
+  // Round down currentTime to the nearest 5 minutes.
   let minutes = currentTime.getMinutes()
   minutes = minutes - (minutes % 5) // Adjust minutes to round down to the nearest 5 minutes
   currentTime.setMinutes(minutes, 0, 0) // Set adjusted minutes and round down seconds and milliseconds to 0
@@ -63,7 +64,7 @@ export function selectNetApyStartTime(state: RootState): number {
       throw new Error(`Unsupported time range: ${timeRange}`)
   }
 
-  return startTime.getTime()
+  return history.filter((item) => item.timeStamp >= startTime.getTime())
 }
 
 /**
@@ -77,8 +78,6 @@ export function selectNetApyEndTime(state: RootState): number {
   let currentTime = new Date()
 
   // Update to round down currentTime to the nearest 5 minutes.
-  // This adjustment enhances the determinism of the selector by extending its stable period,
-  // which is crucial for minimizing unnecessary fetching and re-renders.
   let minutes = currentTime.getMinutes()
   minutes = minutes - (minutes % 5) // Adjust minutes to round down to the nearest 5 minutes
   currentTime.setMinutes(minutes, 0, 0) // Set adjusted minutes and round down seconds and milliseconds to 0
