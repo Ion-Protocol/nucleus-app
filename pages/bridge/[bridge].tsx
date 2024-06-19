@@ -1,14 +1,9 @@
-import { BridgeChart } from '@/components/Bridge/BridgeChart'
+import BridgeChart from '@/components/Bridge/BridgeChart'
 import { BridgeForm } from '@/components/Bridge/BridgeForm'
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
-import { BridgeKey } from '@/config/bridges'
-import { Card, Flex } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { Flex } from '@chakra-ui/react'
 
 export default function Bridge() {
-  const router = useRouter()
-  const { bridge: bridgeKey } = router.query as { bridge: BridgeKey }
-
   return (
     <Flex direction="column" h="100%">
       {/* Title & Description */}
@@ -22,7 +17,7 @@ export default function Bridge() {
         <BridgeForm px={9} pt={9} w="40%" minW="300px" borderRight="1px solid" borderColor="border" />
 
         {/* Right: Chart and Markets Table */}
-        <Flex direction="column" w="60%">
+        <Flex direction="column" w="60%" p={6}>
           <BridgeChart />
         </Flex>
       </Flex>

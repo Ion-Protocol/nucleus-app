@@ -1,7 +1,18 @@
 import { RootState } from '@/store'
 import { NetApyItem } from '@/types/NetApyItem'
 import { TimeRange } from '@/types/TimeRange'
+import { numToPercent } from '@/utils/number'
+import { createSelector } from '@reduxjs/toolkit'
 import { subDays, subMonths, subWeeks, subYears } from 'date-fns'
+
+/**
+ * Selects the loading state of the netApy slice from the root state.
+ * @param state - The root state of the application.
+ * @returns A boolean indicating whether the netApy slice is currently loading.
+ */
+export function selectNetApyLoading(state: RootState): boolean {
+  return state.netApy.loading
+}
 
 /**
  * Selects the time range from the state.
@@ -84,3 +95,25 @@ export function selectNetApyEndTime(state: RootState): number {
 export function selectNetApyHistory(state: RootState): NetApyItem[] {
   return state.netApy.history
 }
+
+/**
+ * Selects the latest net APY (Annual Percentage Yield) from the net APY history.
+ *
+ * @returns The latest net APY value.
+ */
+export const selectLatestNetApy = createSelector([selectNetApyHistory], (history): number => {
+  if (history.length === 0) {
+    return 0
+  }
+  return history[history.length - 1].netApy
+})
+
+/**
+ * Selects the latest net APY and formats it as a percentage with one decimal place.
+ *
+ * @returns The formatted latest net APY.
+ */
+export const selectFormattedLatestNetApy = createSelector([selectLatestNetApy], (latestNetApy) => {
+  const latestNetApyMultBy100 = latestNetApy * 100
+  return numToPercent(latestNetApyMultBy100, { fractionDigits: 1 })
+})

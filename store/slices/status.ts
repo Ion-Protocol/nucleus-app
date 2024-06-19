@@ -3,6 +3,7 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { selectWeEthBalanceLoading } from './balance'
 import { selectPriceLoading } from './price'
 import { selectBridgesLoading } from './bridges'
+import { selectNetApyLoading } from './netApy'
 
 interface StatusState {
   error: string | null
