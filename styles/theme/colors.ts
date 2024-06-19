@@ -63,4 +63,8 @@ export const colors = {
     medium: '#F2C7C7',
     dark: '#D14343',
   },
+  shadow: {
+    light: '#0000000D',
+    dark: '#00000040',
+  },
 }

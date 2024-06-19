@@ -2,18 +2,11 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { TokenKey } from '@/config/token'
 import { Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { TokenToConnector } from './connector'
+import { IonCard } from '@/components/IonCard'
 
 function TokenTo({ to }: TokenToConnector.Props) {
   return (
-    <Flex
-      direction="column"
-      border="1px solid"
-      borderColor="border"
-      borderRadius="8px"
-      p={4}
-      bg="backgroundSecondary"
-      gap={4}
-    >
+    <IonCard variant="elevate">
       {/* Top Row */}
       <Flex justify="space-between">
         <Text>To</Text>
@@ -44,7 +37,7 @@ function TokenTo({ to }: TokenToConnector.Props) {
           </Text>
         </Flex>
       </Flex>
-    </Flex>
+    </IonCard>
   )
 }
 

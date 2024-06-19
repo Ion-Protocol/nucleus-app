@@ -2,7 +2,7 @@ import { BridgeChart } from '@/components/Bridge/BridgeChart'
 import { BridgeForm } from '@/components/Bridge/BridgeForm'
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
 import { BridgeKey } from '@/config/bridges'
-import { Flex } from '@chakra-ui/react'
+import { Card, Flex } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
 export default function Bridge() {

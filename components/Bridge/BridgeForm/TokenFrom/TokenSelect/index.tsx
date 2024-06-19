@@ -8,6 +8,7 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props)
     <Menu>
       <MenuButton
         variant="outline"
+        bg="none"
         size="sm"
         p={1}
         border="none"

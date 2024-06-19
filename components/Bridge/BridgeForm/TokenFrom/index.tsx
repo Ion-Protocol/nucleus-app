@@ -1,18 +1,14 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import TokenSelect from './TokenSelect'
 import { TokenFromConnector } from './connector'
+import { IonCard } from '@/components/IonCard'
+import { useState } from 'react'
 
 function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
+  const [isFocused, setIsFocused] = useState(false)
+
   return (
-    <Flex
-      direction="column"
-      border="1px solid"
-      borderColor="border"
-      borderRadius="8px"
-      p={4}
-      bg="backgroundSecondary"
-      gap={4}
-    >
+    <IonCard variant="elevate" bg={isFocused ? 'selectedSecondary' : 'backgroundSecondary'}>
       {/* Top Row */}
       <Flex justify="space-between">
         <Text>From</Text>
@@ -25,6 +21,8 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
         <Input
           value={inputValue}
           onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           type="number"
           variant="unstyled"
           size="lg"
@@ -44,7 +42,7 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
           <TokenSelect />
         </Flex>
       </Flex>
-    </Flex>
+    </IonCard>
   )
 }
 
