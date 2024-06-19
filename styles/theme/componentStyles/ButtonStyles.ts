@@ -1,18 +1,12 @@
 import { ComponentStyleConfig, StyleFunctionProps } from '@chakra-ui/react'
+import { getColorFromToken } from '../helpers/getColorFromToken'
 
 const buttonGradient = (props: StyleFunctionProps) => {
   return `linear-gradient(101.87deg, ${props.theme.colors.primary[600]} 2.85%, ${props.theme.colors.primary[800]} 100.03%)`
 }
 
 const getSelectedSecondaryColor = (props: StyleFunctionProps) => {
-  const theme = props.theme
-  const colorMode = props.colorMode
-
-  const shadow = theme.semanticTokens.colors.shadow
-  const shadowKey = colorMode === 'dark' ? shadow._dark : shadow.default
-
-  const [colorFamily, colorShade] = shadowKey.split('.')
-  return theme.colors[colorFamily][colorShade]
+  return getColorFromToken('shadow', props.colorMode)
 }
 
 export const ButtonStyles: ComponentStyleConfig = {

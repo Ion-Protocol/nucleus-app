@@ -1,14 +1,18 @@
 import { RootState } from '@/store'
-import { selectNetApyTimeRange } from '@/store/slices/netApy'
+import { selectNetApyTimeRange, setTimeRange } from '@/store/slices/netApy'
+import { TimeRange } from '@/types/TimeRange'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: TimeRangeSelectorOwnProps) => {
   const selectedTimeRange = selectNetApyTimeRange(state)
-  return { selectedTimeRange }
+  let timeRanges = Object.values(TimeRange)
+  return { selectedTimeRange, timeRanges }
 }
 
-const mapDispatch = {}
+const mapDispatch = {
+  setTimeRange,
+}
 
 const connector = connect(mapState, mapDispatch)
 

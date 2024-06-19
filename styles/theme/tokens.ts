@@ -94,5 +94,19 @@ export const semanticTokens = {
         _dark: 'midnight.850',
       },
     },
+    timeRange: {
+      background: {
+        default: 'neutral.50',
+        _dark: 'midnight.890',
+      },
+      unselectedText: {
+        default: 'neutral.500',
+        _dark: 'neutral.600',
+      },
+      selectedBackground: {
+        default: 'white',
+        _dark: 'midnight.700',
+      },
+    },
   },
 }
