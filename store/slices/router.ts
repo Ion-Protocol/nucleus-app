@@ -4,12 +4,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // Add fields to RouterQuery as needed
 export interface RouterQuery {
-  bridge?: BridgeKey
+  bridge: BridgeKey
 }
 
 interface RouterState {
   path: string | null
-  query: RouterQuery | null
+  query: RouterQuery
 }
 
 const initialState: RouterState = {
@@ -29,17 +29,15 @@ const routerSlice = createSlice({
     clearPath(state) {
       state.path = null
     },
-    setQuery(state, action: PayloadAction<RouterQuery | null>) {
+    setQuery(state, action: PayloadAction<RouterQuery>) {
       state.query = action.payload
-    },
-    clearQuery(state) {
-      state.query = null
     },
   },
 })
 
-export const { setPath, clearPath, setQuery, clearQuery } = routerSlice.actions
+export const { setPath, clearPath, setQuery } = routerSlice.actions
 export const selectRouterPath = (state: RootState) => state.router.path
 export const selectRouterQuery = (state: RootState) => state.router.query
+export const selectBridgeKey = (state: RootState) => state.router.query.bridge
 
 export const routerReducer = routerSlice.reducer

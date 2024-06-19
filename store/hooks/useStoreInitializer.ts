@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { setAddress } from '@/store/slices/account'
 import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '@/store/slices/bridges/thunks'
 import { fetchEthPrice } from '@/store/slices/price'
@@ -7,6 +7,7 @@ import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectNetApyEndTime, selectNetApyStartTime, selectNetApyTimeRange } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
+import { selectBridgeKey } from '../slices/router'
 
 export function useStoreInitializer() {
   const dispatch = useAppDispatch()
@@ -15,12 +16,10 @@ export function useStoreInitializer() {
   const startTime = useAppSelector(selectNetApyStartTime)
   const endTime = useAppSelector(selectNetApyEndTime)
 
-  useGetNetApyQuery(
-    { address: address || '0x0', startTime, endTime, timeRange },
-    {
-      skip: !address,
-    }
-  )
+  const bridgeKey = useAppSelector(selectBridgeKey)
+  const vaultAddress = bridgesConfig[bridgeKey].contracts.boringVault
+
+  useGetNetApyQuery({ address: vaultAddress, startTime, endTime, timeRange })
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))
