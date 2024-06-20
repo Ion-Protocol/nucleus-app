@@ -2,6 +2,7 @@ import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react'
 import TimeRangeSelector from './TimeRangeSelector'
 import { BridgeChartConnector } from './connector'
+import NetApyChart from './NetApyChart'
 
 function BridgeChart({ latestFormattedNetApy, loading }: BridgeChartConnector.Props) {
   return (
@@ -23,6 +24,11 @@ function BridgeChart({ latestFormattedNetApy, loading }: BridgeChartConnector.Pr
         {/* Time Range Selector */}
         <TimeRangeSelector />
       </Flex>
+
+      <Flex h={4} />
+
+      {/* Net APY Chart */}
+      <NetApyChart />
     </Flex>
   )
 }

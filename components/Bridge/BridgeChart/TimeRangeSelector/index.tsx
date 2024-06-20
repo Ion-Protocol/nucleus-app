@@ -37,12 +37,14 @@ function TimeRangeSelector({ selectedTimeRange, timeRanges, setTimeRange }: Time
           zIndex={2}
         >
           <Text
-            mt={1}
+            mt={2}
+            mb={1}
             variant="large"
             textTransform="capitalize"
-            color={selectedTimeRange === timeRange ? 'default' : 'unselected'}
+            color={selectedTimeRange === timeRange ? 'default' : 'timeRange.unselectedText'}
             zIndex={2}
             userSelect="none"
+            lineHeight={0.8}
           >
             {timeRange}
           </Text>

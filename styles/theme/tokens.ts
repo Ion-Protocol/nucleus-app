@@ -108,5 +108,15 @@ export const semanticTokens = {
         _dark: 'midnight.700',
       },
     },
+    chart: {
+      grid: {
+        default: 'neutral.200',
+        _dark: 'midnight.500',
+      },
+      line: {
+        default: 'primary.600',
+        _dark: 'primary.600',
+      },
+    },
   },
 }
