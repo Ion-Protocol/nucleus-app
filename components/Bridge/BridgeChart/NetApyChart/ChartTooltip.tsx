@@ -7,11 +7,27 @@ interface ChartTooltipProps {
 }
 
 export function ChartTooltip({ active, payload, label }: ChartTooltipProps) {
+  const formattedNetApy = payload[0]?.payload.formattedNetApy
+  const formattedTimestamp = payload[0]?.payload.formattedTimestamp
+
   if (active && payload && payload.length) {
     return (
-      <Flex>
-        <Text>{`Index: ${payload[0].payload.index}`}</Text>
-        <Text>{`Net APY: ${payload[0].value}`}</Text>
+      <Flex
+        direction="column"
+        gap={1}
+        bg="backgroundSecondary"
+        p={3}
+        border="1px solid"
+        borderColor="border"
+        borderRadius="8px"
+        zIndex={10}
+      >
+        <Text>
+          <b>{formattedTimestamp}</b>
+        </Text>
+        <Text>
+          <b>Net APY:</b> {formattedNetApy}
+        </Text>
       </Flex>
     )
   }

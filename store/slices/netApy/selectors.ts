@@ -4,7 +4,9 @@ import { TimeRange } from '@/types/TimeRange'
 import { formatTimestamps } from '@/utils/date'
 import { generateEvenlySpacedFloats, generateEvenlySpacedIntegers, numToPercent } from '@/utils/number'
 import { createSelector } from '@reduxjs/toolkit'
-import { subDays, subMonths, subWeeks, subYears } from 'date-fns'
+import { format, subMonths, subWeeks, subYears } from 'date-fns'
+import { enUS } from 'date-fns/locale'
+import { createEvenlySpacedData } from './helpers/createEvenlySpacedData'
 import { getTimeRangeDates } from './helpers/getTimeRangeDates'
 
 /**
@@ -27,15 +29,31 @@ export function selectNetApyTimeRange(state: RootState): TimeRange {
 }
 
 /**
- * Selects the net APY data based on the selected time range from the Redux state.
+ * Selects the NetApyData from the Redux state.
  *
- * @param state - The root state of the application.
- * @param timeRange - The selected time range.
- * @returns An array of NetApyItem objects representing the net APY within the selected time range.
+ * @param state - The RootState object representing the Redux state.
+ * @returns An array of NetApyItem objects representing the NetApyData.
  */
-export const selectNetApyByTimeRange = createSelector(
-  [selectNetApyTimeRange, selectNetApyHistory],
-  (timeRange, history) => {
+export function selectNetApyData(state: RootState): NetApyItem[] {
+  return state.netApy.history
+}
+
+/**
+ * Selects evenly spaced net APY data based on the specified time range.
+ * @param {Array} history - The array of net APY data.
+ * @param {TimeRange} timeRange - The time range for which to select the data.
+ * @returns {Array} - The evenly spaced net APY data.
+ * @throws {Error} - If an unsupported time range is provided.
+ */
+export const selectEvenlySpacedNetApyData = createSelector(
+  [selectNetApyData, selectNetApyTimeRange],
+  (history, timeRange) => {
+    const WEEK_MS = 6.048e8
+    const MONTH_MS = 2.628e9
+    const YEAR_MS = 3.154e10
+
+    const pointCount = 250
+
     let currentTime = new Date()
 
     // Round down currentTime to the nearest 5 minutes.
@@ -44,27 +62,49 @@ export const selectNetApyByTimeRange = createSelector(
     currentTime.setMinutes(minutes, 0, 0) // Set adjusted minutes and round down seconds and milliseconds to 0
 
     let startTime: Date
+    let interval = 0
 
     switch (timeRange) {
       case TimeRange.Week:
         startTime = subWeeks(currentTime, 1)
+        interval = Math.round(WEEK_MS / pointCount)
         break
       case TimeRange.Month:
         startTime = subMonths(currentTime, 1)
+        interval = Math.round(MONTH_MS / pointCount)
         break
       case TimeRange.Year:
         startTime = subYears(currentTime, 1)
+        interval = Math.round(YEAR_MS / pointCount)
         break
       case TimeRange.All:
-        startTime = new Date(10_000) // Unix epoch (near start of time)
+        startTime = new Date(history[0].timeStamp)
+        interval = Math.round((currentTime.getTime() - startTime.getTime()) / pointCount)
         break
       default:
         throw new Error(`Unsupported time range: ${timeRange}`)
     }
 
-    return history.filter((item) => item.timeStamp >= startTime.getTime())
+    const evenlySpacedData = createEvenlySpacedData(history, startTime.getTime(), currentTime.getTime(), interval)
+    return evenlySpacedData
   }
 )
+
+/**
+ * Selects the net APY data with formatting.
+ *
+ * @returns An array of net APY data objects with formatted values.
+ */
+export const selectNetApyDataWithFormatting = createSelector([selectEvenlySpacedNetApyData], (history) => {
+  const dateFormat = 'MMM d'
+  return history.map((item) => {
+    return {
+      ...item,
+      formattedNetApy: numToPercent(item.netApy * 100, { fractionDigits: 2 }),
+      formattedTimestamp: format(new Date(item.timeStamp), dateFormat, { locale: enUS }),
+    }
+  })
+})
 
 /**
  * Selects the current end time.
@@ -85,25 +125,11 @@ export function selectNetApyEndTime(state: RootState): number {
 }
 
 /**
- * Selects the net APY history from the Redux state.
- *
- * @param state - The root state of the Redux store.
- * @returns An array of NetApyItem objects representing the net APY history.
- */
-export function selectNetApyHistory(state: RootState): NetApyItem[] {
-  return state.netApy.history
-}
-
-export const selectNetApyHistoryWithIndexes = createSelector([selectNetApyByTimeRange], (history): NetApyItem[] => {
-  return history.map((item, index) => ({ ...item, index }))
-})
-
-/**
  * Selects the latest net APY (Annual Percentage Yield) from the net APY history.
  *
  * @returns The latest net APY value.
  */
-export const selectLatestNetApy = createSelector([selectNetApyByTimeRange], (history): number => {
+export const selectLatestNetApy = createSelector([selectNetApyData], (history): number => {
   if (history.length === 0) {
     return 0
   }
@@ -121,39 +147,6 @@ export const selectFormattedLatestNetApy = createSelector([selectLatestNetApy], 
 })
 
 /**
- * Memoized selector that selects the maximum net APY (Annual Percentage Yield) from the net APY history.
- * If the history is empty, returns 0.
- *
- * @returns The maximum net APY value.
- */
-export const selectMaxNetApy = createSelector([selectNetApyByTimeRange], (history): number => {
-  if (history.length === 0) {
-    return 0
-  }
-  return Math.max(...history.map((item) => item.netApy))
-})
-
-/**
- * Memoized selector that selects evenly spaced x ticks based on the net APY history length.
- * X axis is built on the indexes of the net APY history.
- *
- * @returns An array of evenly spaced x ticks.
- */
-export const selectEvenlySpacedXTicks = createSelector([selectNetApyByTimeRange], (history): number[] => {
-  return generateEvenlySpacedIntegers(history.length, 15)
-})
-
-/**
- * Memoized selector that selects evenly spaced y ticks based on the max net APY.
- * Y axis is built on the net APY values.
- *
- * @returns An array of evenly spaced x ticks.
- */
-export const selectEvenlySpacedYTicks = createSelector([selectMaxNetApy], (maxNetApy): number[] => {
-  return generateEvenlySpacedFloats(maxNetApy, 7)
-})
-
-/**
  * Selects the time range dates based on the given net APY time range and history.
  *
  * @param {TimeRange} timeRange - The net APY time range.
@@ -161,7 +154,7 @@ export const selectEvenlySpacedYTicks = createSelector([selectMaxNetApy], (maxNe
  * @returns {number[]} - The time range dates.
  */
 export const selectTimeRangeDates = createSelector(
-  [selectNetApyTimeRange, selectNetApyByTimeRange],
+  [selectNetApyTimeRange, selectNetApyData],
   (timeRange, history): number[] => {
     return getTimeRangeDates(timeRange, history)
   }

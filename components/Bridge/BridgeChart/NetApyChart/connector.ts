@@ -1,19 +1,12 @@
 import { RootState } from '@/store'
-import {
-  selectEvenlySpacedXTicks,
-  selectEvenlySpacedYTicks,
-  selectFormattedTimeRangeDates,
-  selectNetApyHistoryWithIndexes,
-} from '@/store/slices/netApy'
+import { selectFormattedTimeRangeDates, selectNetApyDataWithFormatting } from '@/store/slices/netApy'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: NetApyChartOwnProps) => {
-  const netApyDataWithIndexes = selectNetApyHistoryWithIndexes(state)
+  const dataWithFormatting = selectNetApyDataWithFormatting(state)
   const formattedTimeRangeDates = selectFormattedTimeRangeDates(state)
-  const xTickIndexes = selectEvenlySpacedXTicks(state)
-  const yTickIndexes = selectEvenlySpacedYTicks(state)
 
-  return { netApyData: netApyDataWithIndexes, formattedTimeRangeDates, xTickIndexes, yTickIndexes }
+  return { netApyData: dataWithFormatting, formattedTimeRangeDates }
 }
 
 const mapDispatch = {}

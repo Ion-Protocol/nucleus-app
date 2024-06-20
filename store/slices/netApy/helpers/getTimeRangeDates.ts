@@ -1,6 +1,6 @@
 import { NetApyItem } from '@/types/NetApyItem'
 import { TimeRange } from '@/types/TimeRange'
-import { addDays, addMonths, eachDayOfInterval, subDays, subMonths } from 'date-fns'
+import { addDays, addMonths, eachDayOfInterval, subDays, subMonths, subWeeks, subYears } from 'date-fns'
 
 /**
  * Generates an array of timestamps representing specific dates within a specified time range.
@@ -25,13 +25,13 @@ export function getTimeRangeDates(timeRange: TimeRange, data?: NetApyItem[]): nu
 
   switch (timeRange) {
     case TimeRange.Week: {
-      const startDate = subDays(today, 7)
+      const startDate = subWeeks(today, 1)
       const dates = eachDayOfInterval({ start: startDate, end: today })
       return dates.map((date) => date.getTime())
     }
 
     case TimeRange.Month: {
-      const startDate = subDays(today, 29)
+      const startDate = subMonths(today, 1)
       const dates: Date[] = []
       for (let i = 0; i <= 30; i += 5) {
         dates.push(addDays(startDate, i))
@@ -40,9 +40,9 @@ export function getTimeRangeDates(timeRange: TimeRange, data?: NetApyItem[]): nu
     }
 
     case TimeRange.Year: {
-      const startDate = subMonths(today, 11)
+      const startDate = subYears(today, 1)
       const dates: Date[] = []
-      for (let i = 0; i <= 5; i++) {
+      for (let i = 0; i <= 6; i++) {
         dates.push(addMonths(startDate, i * 2))
       }
       return dates.map((date) => date.getTime())
