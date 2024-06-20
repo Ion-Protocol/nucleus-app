@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // Add fields to RouterQuery as needed
 export interface RouterQuery {
-  bridge: BridgeKey
+  bridge?: BridgeKey
 }
 
 interface RouterState {
