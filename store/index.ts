@@ -13,10 +13,13 @@ import { netApyReducer } from './slices/netApy'
 import { netApyApi } from './slices/netApy/api'
 import { positionsReducer } from './slices/positions'
 import { positionsApi } from './slices/positions/api'
+import { assetApysReducer } from './slices/assetApys'
+import { assetApysApi } from './slices/assetApys/api'
 
 export const store = configureStore({
   reducer: {
     account: accountReducer,
+    assetApys: assetApysReducer,
     balances: balancesReducer,
     bridges: bridgesReducer,
     chain: chainReducer,
@@ -32,9 +35,10 @@ export const store = configureStore({
     // API reducers
     [netApyApi.reducerPath]: netApyApi.reducer,
     [positionsApi.reducerPath]: positionsApi.reducer,
+    [assetApysApi.reducerPath]: assetApysApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(netApyApi.middleware).concat(positionsApi.middleware),
+    getDefaultMiddleware().concat(netApyApi.middleware, positionsApi.middleware, assetApysApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>
