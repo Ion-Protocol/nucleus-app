@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectNetApyEndTime } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
 import { selectBridgeKey } from '../slices/router'
+import { useGetPositionsQuery } from '../slices/positions/api'
 
 export function useStoreInitializer() {
   const dispatch = useAppDispatch()
@@ -23,6 +24,7 @@ export function useStoreInitializer() {
   // Although the backend api supports filtering by timeRange we will do it in the frontend
   // This will save on loading time and cache storage in the frontend
   useGetNetApyQuery({ address: vaultAddress, startTime, endTime })
+  useGetPositionsQuery({ address: vaultAddress })
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))
