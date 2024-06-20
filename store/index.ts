@@ -15,6 +15,8 @@ import { positionsReducer } from './slices/positions'
 import { positionsApi } from './slices/positions/api'
 import { assetApysReducer } from './slices/assetApys'
 import { assetApysApi } from './slices/assetApys/api'
+import { ionPoolReducer } from './slices/ionPool'
+import { ionLensReducer } from './slices/ionLens'
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +27,8 @@ export const store = configureStore({
     chain: chainReducer,
     counter: counterReducer,
     currency: currencyReducer,
+    ionLens: ionLensReducer,
+    ionPool: ionPoolReducer,
     netApy: netApyReducer,
     positions: positionsReducer,
     price: priceReducer,
