@@ -1,6 +1,7 @@
 import BridgeChart from '@/components/Bridge/BridgeChart'
 import { BridgeForm } from '@/components/Bridge/BridgeForm'
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
+import MarketsTable from '@/components/Bridge/MarketsTable'
 import { Flex } from '@chakra-ui/react'
 
 export default function Bridge() {
@@ -19,6 +20,8 @@ export default function Bridge() {
         {/* Right: Chart and Markets Table */}
         <Flex direction="column" w="60%" p={6}>
           <BridgeChart />
+          <Flex h={9} />
+          <MarketsTable />
         </Flex>
       </Flex>
     </Flex>

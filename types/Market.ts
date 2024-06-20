@@ -13,6 +13,7 @@ export interface MarketContracts {
 }
 
 export interface Market {
+  id: number
   contracts: MarketContracts
   collateralAsset: TokenKey
   lenderAsset: TokenKey

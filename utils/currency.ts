@@ -1,5 +1,5 @@
-import { formatUnits } from 'viem'
-import { bigIntToEth, bigIntToNumber, bigIntToUsd } from './bigint'
+import { bigIntToEth, bigIntToUsd } from './bigint'
+import { numberToEth, numberToUsd } from './number'
 
 /**
  * Converts a value to a formatted currency string based on the given currency code.
@@ -7,13 +7,17 @@ import { bigIntToEth, bigIntToNumber, bigIntToUsd } from './bigint'
  * @param value - The value to be converted.
  * @returns The formatted currency string.
  */
-export function currencySwitch(currency: string, value: bigint, price: bigint) {
+export function currencySwitch(currency: string, value: bigint | number, price: bigint) {
   switch (currency) {
     case 'USD':
-      const usdValue = (value * price) / BigInt(1e8)
-      return bigIntToUsd(usdValue)
+      if (typeof value === 'bigint') {
+        const usdValue = (value * price) / BigInt(1e8)
+        return bigIntToUsd(usdValue)
+      } else {
+        return numberToUsd(value, price)
+      }
     case 'ETH':
-      return bigIntToEth(value)
+      return typeof value === 'bigint' ? bigIntToEth(value) : numberToEth(value)
     default:
       return ''
   }

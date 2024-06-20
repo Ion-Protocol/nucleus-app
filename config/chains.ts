@@ -17,6 +17,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
     availableTokens: [TokenKey.WETH, TokenKey.WSTETH],
     markets: {
       [MarketKey.WEETH_WSTETH]: {
+        id: 0,
         collateralAsset: TokenKey.WEETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -25,6 +26,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
         },
       },
       [MarketKey.RSETH_WSTETH]: {
+        id: 1,
         collateralAsset: TokenKey.RSETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -33,6 +35,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
         },
       },
       [MarketKey.RSWETH_WSTETH]: {
+        id: 2,
         collateralAsset: TokenKey.RSWETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -41,6 +44,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
         },
       },
       [MarketKey.EZETH_WETH]: {
+        id: 3,
         collateralAsset: TokenKey.EZETH,
         lenderAsset: TokenKey.WETH,
         contracts: {
@@ -60,6 +64,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
     availableTokens: [TokenKey.WETH, TokenKey.WSTETH],
     markets: {
       [MarketKey.WEETH_WSTETH]: {
+        id: 0,
         collateralAsset: TokenKey.WEETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -68,6 +73,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
         },
       },
       [MarketKey.RSETH_WSTETH]: {
+        id: 1,
         collateralAsset: TokenKey.RSETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -76,6 +82,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
         },
       },
       [MarketKey.RSWETH_WSTETH]: {
+        id: 2,
         collateralAsset: TokenKey.RSWETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -84,6 +91,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
         },
       },
       [MarketKey.EZETH_WETH]: {
+        id: 3,
         collateralAsset: TokenKey.EZETH,
         lenderAsset: TokenKey.WETH,
         contracts: {

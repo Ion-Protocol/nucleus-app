@@ -9,6 +9,31 @@ export function numToPercent(value: number, options?: { fractionDigits?: number 
 }
 
 /**
+ * Converts a number value to USD currency.
+ *
+ * @param value - The number value to convert.
+ * @param price - The price to use for conversion.
+ * @returns The converted value as a string in USD currency format.
+ */
+export function numberToUsd(value: number, price: bigint): string {
+  const usdValue = (value * Number(price)) / 1e8
+  return usdValue.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  })
+}
+
+/**
+ * Converts a number value to a string representation in ETH.
+ * @param value - The number value to convert.
+ * @returns The string representation of the number value in ETH.
+ */
+export function numberToEth(value: number): string {
+  return `${value.toFixed(3)} ETH`
+}
+
+/**
  * Generates an array of evenly spaced floats.
  *
  * @param {number} max - The maximum number (inclusive) for the array.

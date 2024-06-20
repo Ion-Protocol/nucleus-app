@@ -21,14 +21,7 @@ export const positionsApi = createApi({
         if (!Array.isArray(response)) {
           return []
         }
-        return response.map((data: any) => ({
-          marketId: data.market_id,
-          totalDebt: data.total_debt,
-          totalCollateral: data.total_collateral,
-          totalSupplied: data.total_supplied,
-          protocolExchangeRate: data.protocol_exchange_rate,
-          supplyAssetExchangeRate: data.supply_asset_exchange_rate,
-        }))
+        return response as Position[]
       },
       keepUnusedDataFor: 5 * 60, // Keep data in cache for 5 minutes (number is in seconds)
     }),

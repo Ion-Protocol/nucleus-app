@@ -118,5 +118,11 @@ export const semanticTokens = {
         _dark: 'primary.600',
       },
     },
+    table: {
+      background: {
+        default: 'neutral.50',
+        _dark: 'midnight.890',
+      },
+    },
   },
 }
