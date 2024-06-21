@@ -2,6 +2,7 @@ import { RootState } from '@/store'
 import { NetApyItem } from '@/types/NetApyItem'
 import { TimeRange } from '@/types/TimeRange'
 import { formatTimestamps } from '@/utils/date'
+import { applyGaussianSmoothing } from '@/utils/math'
 import { numToPercent } from '@/utils/number'
 import { createSelector } from '@reduxjs/toolkit'
 import { format, subMonths, subWeeks, subYears } from 'date-fns'
@@ -90,12 +91,16 @@ export const selectEvenlySpacedNetApyData = createSelector(
   }
 )
 
+export const selectSmoothedNetApyData = createSelector([selectEvenlySpacedNetApyData], (history) => {
+  return applyGaussianSmoothing(history, 10, 2)
+})
+
 /**
  * Selects the net APY data with formatting.
  *
  * @returns An array of net APY data objects with formatted values.
  */
-export const selectNetApyDataWithFormatting = createSelector([selectEvenlySpacedNetApyData], (history) => {
+export const selectNetApyDataWithFormatting = createSelector([selectSmoothedNetApyData], (history) => {
   const dateFormat = 'MMM d'
   return history.map((item) => {
     return {

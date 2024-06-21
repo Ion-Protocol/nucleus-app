@@ -1,5 +1,5 @@
 import { RootState } from '@/store'
-import { selectFormattedTimeRangeDates, selectNetApyDataWithFormatting } from '@/store/slices/netApy'
+import { selectFormattedTimeRangeDates, selectNetApyData, selectNetApyDataWithFormatting } from '@/store/slices/netApy'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: NetApyChartOwnProps) => {

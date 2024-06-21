@@ -20,7 +20,8 @@ export function useStoreInitializer() {
   const endTime = useAppSelector(selectNetApyEndTime)
 
   const bridgeKey = useAppSelector(selectBridgeKey) as BridgeKey
-  const vaultAddress = bridgesConfig[bridgeKey].contracts.boringVault
+  // const vaultAddress = bridgesConfig[bridgeKey].contracts.boringVault
+  const vaultAddress = '0x5e6d7C88f4Be6387f0a9006562d10f8d1C89e84E'
 
   // Loads all data
   // Although the backend api supports filtering by timeRange we will do it in the frontend
