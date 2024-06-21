@@ -53,6 +53,8 @@ export const selectPositionsTableData = createSelector(
         formattedTotalSupplied,
         formattedApy,
         formattedUtilizationRate,
+        lenderAsset: market.lenderAsset,
+        collateralAsset: market.collateralAsset,
       }
     })
     return formattedPositions

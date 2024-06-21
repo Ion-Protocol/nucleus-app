@@ -5,6 +5,8 @@ import { Loading } from './Loading'
 import { NoData } from './NoData'
 import { MarketsTableConnector } from './connector'
 import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
+import { DoubleIcon } from '@/components/shared/DoubleIcon'
+import { TokenIcon } from '@/components/config/tokenIcons'
 
 function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
   const noData = tableData.length === 0
@@ -41,6 +43,12 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
                 >
                   <Td borderColor="border">
                     <Flex align="center" gap={2}>
+                      <DoubleIcon
+                        icons={[
+                          <TokenIcon fontSize="20px" tokenKey={p.lenderAsset} key={0} />,
+                          <TokenIcon fontSize="20px" tokenKey={p.collateralAsset} key={1} />,
+                        ]}
+                      />
                       <Text variant="large" fontWeight="bold">
                         {p.formattedMarket}
                       </Text>
