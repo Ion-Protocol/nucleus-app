@@ -1,11 +1,11 @@
 import { RootState } from '@/store'
-import { selectPositionsLoading, selectPositionsTableData } from '@/store/slices/positions'
+import { selectPositionsLoadingWithDependencies, selectPositionsTableData } from '@/store/slices/positions'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: MarketsTableOwnProps) => {
   const tableData = selectPositionsTableData(state)
-  const loading = selectPositionsLoading(state)
+  const loading = selectPositionsLoadingWithDependencies(state)
   return { tableData, loading }
 }
 

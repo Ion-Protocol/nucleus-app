@@ -1,7 +1,9 @@
-import { Flex, Skeleton, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from '@chakra-ui/react'
-import { IonTh } from './IonTh'
-import { MarketsTableConnector } from './connector'
+import { Flex, Table, TableContainer, Tbody, Thead, Tr } from '@chakra-ui/react'
 import { IonTd } from './IonTd'
+import { IonTh } from './IonTh'
+import { Loading } from './Loading'
+import { NoData } from './NoData'
+import { MarketsTableConnector } from './connector'
 
 function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
   const noData = tableData.length === 0
@@ -20,30 +22,9 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
           </Thead>
           <Tbody>
             {loading ? (
-              Array.from({ length: 4 }).map((_, index) => (
-                <Tr key={index}>
-                  <Td>
-                    <Skeleton height="20px" />
-                  </Td>
-                  <Td>
-                    <Skeleton height="20px" />
-                  </Td>
-                  <Td>
-                    <Skeleton height="20px" />
-                  </Td>
-                  <Td>
-                    <Skeleton height="20px" />
-                  </Td>
-                </Tr>
-              ))
+              <Loading />
             ) : noData ? (
-              <Tr>
-                <Td colSpan={4} border="none">
-                  <Text variant="xl" color="secondaryText" textAlign="center" mt={10}>
-                    No positions found
-                  </Text>
-                </Td>
-              </Tr>
+              <NoData />
             ) : (
               tableData.map((p) => (
                 <Tr
