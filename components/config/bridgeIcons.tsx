@@ -1,4 +1,4 @@
-import { SeiIcon } from '@/components/icons/Sei'
+import { SeiIcon } from '@/components/shared/icons/Sei'
 import { BridgeKey } from '@/config/bridges'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'

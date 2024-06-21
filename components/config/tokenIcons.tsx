@@ -1,14 +1,14 @@
 import { TokenKey } from '@/config/token'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
-import { EthereumIcon } from '../icons/Ethereum'
-import { RswethIcon } from '../icons/Rsweth'
-import { SeiIcon } from '../icons/Sei'
-import { TokenEzethIcon } from '../icons/TokenEzeth'
-import { TokenRsethIcon } from '../icons/TokenRseth'
-import { TokenWeethIcon } from '../icons/TokenWeeth'
-import { TokenWethIcon } from '../icons/TokenWeth'
-import { WstethIcon } from '../icons/Wsteth'
+import { EthereumIcon } from '../shared/icons/Ethereum'
+import { RswethIcon } from '../shared/icons/Rsweth'
+import { SeiIcon } from '../shared/icons/Sei'
+import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
+import { TokenRsethIcon } from '../shared/icons/TokenRseth'
+import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
+import { TokenWethIcon } from '../shared/icons/TokenWeth'
+import { WstethIcon } from '../shared/icons/Wsteth'
 
 export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element> = {
   [TokenKey.ETH]: (props) => <EthereumIcon {...props} />,

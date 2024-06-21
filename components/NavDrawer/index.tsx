@@ -1,9 +1,9 @@
 import { Box, Text, Image, Flex } from '@chakra-ui/react'
 import { Logo } from './Logo'
 import { NavItem } from './NavItem'
-import { DashboardIcon } from '../icons/Dashboard'
-import { BridgeNavIcon } from '../icons/Bridge'
-import { PortfolioIcon } from '../icons/Portfolio'
+import { DashboardIcon } from '../shared/icons/Dashboard'
+import { BridgeNavIcon } from '../shared/icons/Bridge'
+import { PortfolioIcon } from '../shared/icons/Portfolio'
 import NavCollapse from './NavCollapse'
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
 

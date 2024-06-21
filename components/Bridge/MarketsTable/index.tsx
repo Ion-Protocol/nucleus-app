@@ -1,9 +1,10 @@
-import { Flex, Table, TableContainer, Tbody, Thead, Tr } from '@chakra-ui/react'
+import { Text, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react'
 import { IonTd } from './IonTd'
 import { IonTh } from './IonTh'
 import { Loading } from './Loading'
 import { NoData } from './NoData'
 import { MarketsTableConnector } from './connector'
+import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
 
 function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
   const noData = tableData.length === 0
@@ -38,7 +39,14 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
                     },
                   }}
                 >
-                  <IonTd>{p.formattedMarket}</IonTd>
+                  <Td borderColor="border">
+                    <Flex align="center" gap={2}>
+                      <Text variant="large" fontWeight="bold">
+                        {p.formattedMarket}
+                      </Text>
+                      <OpenNewTabIcon fontSize="10px" />
+                    </Flex>
+                  </Td>
                   <IonTd textAlign="right">{p.formattedTotalSupplied}</IonTd>
                   <IonTd textAlign="right">{p.formattedApy}</IonTd>
                   <IonTd textAlign="right">{p.formattedUtilizationRate}</IonTd>

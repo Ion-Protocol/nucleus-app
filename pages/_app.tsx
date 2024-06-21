@@ -1,4 +1,3 @@
-import ErrorModal from '@/components/modals/ErrorModal'
 import { Layout } from '@/components/layouts/Layout'
 import { queryClient } from '@/config/queryClient'
 import { wagmiConfig } from '@/config/wagmi'
@@ -12,8 +11,9 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { WagmiProvider } from 'wagmi'
-import SuccessModal from '@/components/modals/SuccessModal'
 import { suppressErrors } from '@/utils/supressErrors'
+import ErrorModal from '@/components/shared/modals/ErrorModal'
+import SuccessModal from '@/components/shared/modals/SuccessModal'
 
 suppressErrors()
 

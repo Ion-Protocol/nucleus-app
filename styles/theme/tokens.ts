@@ -124,5 +124,15 @@ export const semanticTokens = {
         _dark: 'midnight.890',
       },
     },
+    tooltip: {
+      background: {
+        default: 'neutral.800',
+        _dark: 'midnight.50',
+      },
+      color: {
+        default: 'neutral.50',
+        _dark: 'neutral.800',
+      },
+    },
   },
 }
