@@ -18,6 +18,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
     markets: {
       [MarketKey.WEETH_WSTETH]: {
         id: 0,
+        key: MarketKey.WEETH_WSTETH,
         collateralAsset: TokenKey.WEETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -27,6 +28,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
       },
       [MarketKey.RSETH_WSTETH]: {
         id: 1,
+        key: MarketKey.RSETH_WSTETH,
         collateralAsset: TokenKey.RSETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -36,6 +38,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
       },
       [MarketKey.RSWETH_WSTETH]: {
         id: 2,
+        key: MarketKey.RSWETH_WSTETH,
         collateralAsset: TokenKey.RSWETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -45,6 +48,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
       },
       [MarketKey.EZETH_WETH]: {
         id: 3,
+        key: MarketKey.EZETH_WETH,
         collateralAsset: TokenKey.EZETH,
         lenderAsset: TokenKey.WETH,
         contracts: {
@@ -65,6 +69,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
     markets: {
       [MarketKey.WEETH_WSTETH]: {
         id: 0,
+        key: MarketKey.WEETH_WSTETH,
         collateralAsset: TokenKey.WEETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -74,6 +79,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
       },
       [MarketKey.RSETH_WSTETH]: {
         id: 1,
+        key: MarketKey.RSETH_WSTETH,
         collateralAsset: TokenKey.RSETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -83,6 +89,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
       },
       [MarketKey.RSWETH_WSTETH]: {
         id: 2,
+        key: MarketKey.RSWETH_WSTETH,
         collateralAsset: TokenKey.RSWETH,
         lenderAsset: TokenKey.WSTETH,
         contracts: {
@@ -92,6 +99,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
       },
       [MarketKey.EZETH_WETH]: {
         id: 3,
+        key: MarketKey.EZETH_WETH,
         collateralAsset: TokenKey.EZETH,
         lenderAsset: TokenKey.WETH,
         contracts: {

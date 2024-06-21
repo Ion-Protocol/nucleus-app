@@ -4,12 +4,12 @@ import { Token } from '@/types/Token'
 export enum TokenKey {
   ETH = 'eth',
   WETH = 'weth',
-  WEETH = 'weeth',
-  WSTETH = 'wsteth',
+  WEETH = 'weETH',
+  WSTETH = 'wstETH',
   SEI = 'sei',
-  RSETH = 'rseth',
-  RSWETH = 'rsweth',
-  EZETH = 'ezeth',
+  RSETH = 'rsETH',
+  RSWETH = 'rswETH',
+  EZETH = 'ezETH',
 }
 
 async function oneAsBigInt(): Promise<bigint> {

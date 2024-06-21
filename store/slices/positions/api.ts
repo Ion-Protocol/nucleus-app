@@ -1,4 +1,4 @@
-import { Position } from '@/types/Position' // Ensure this path is correct
+import { Position } from '@/types/Position'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const baseQuery = fetchBaseQuery({
@@ -8,7 +8,6 @@ const baseQuery = fetchBaseQuery({
 export const positionsApi = createApi({
   reducerPath: 'positionsApi',
   baseQuery,
-  tagTypes: ['Position'],
   endpoints: (builder) => ({
     getPositions: builder.query<Position[], { address: string }>({
       query: ({ address }) => ({

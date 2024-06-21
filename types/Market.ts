@@ -14,6 +14,7 @@ export interface MarketContracts {
 
 export interface Market {
   id: number
+  key: MarketKey
   contracts: MarketContracts
   collateralAsset: TokenKey
   lenderAsset: TokenKey

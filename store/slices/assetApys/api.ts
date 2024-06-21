@@ -1,4 +1,5 @@
-import { AssetApys } from '@/types/AssetApys'
+import { TokenKey } from '@/config/token'
+import { AssetApys } from '@/types/AssetApy'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const baseQuery = fetchBaseQuery({
@@ -14,7 +15,13 @@ export const assetApysApi = createApi({
         url: 'v1/bigbrother/apy',
       }),
       transformResponse: (response: any) => {
-        return response as AssetApys
+        return {
+          [TokenKey.EZETH]: response[TokenKey.EZETH],
+          [TokenKey.RSETH]: response[TokenKey.RSETH],
+          [TokenKey.RSWETH]: response[TokenKey.RSWETH],
+          [TokenKey.WEETH]: response[TokenKey.WEETH],
+          [TokenKey.WSTETH]: response[TokenKey.WSTETH],
+        }
       },
       keepUnusedDataFor: 5 * 60, // Keep data in cache for 5 minutes (number is in seconds)
     }),

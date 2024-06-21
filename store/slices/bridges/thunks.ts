@@ -45,7 +45,7 @@ export const fetchBridgeTvl = createAsyncThunk<
   const nativeTokenBalancesPromise = Promise.all(
     acceptedTokens.map((tokenKey) => getTotalAssetBalanceWithPools({ tokenKey, chainKey, vaultAddress }))
   )
-  // Token exchange rates are ETH per token, or ETH/Token (e.g. ETH/wstETH, ETH/weETH, etc.)
+  // Token exchange rates are in ETH/token (e.g. ETH/wstETH, ETH/weETH, etc.)
   const tokenExchangeRatesPromise = Promise.all(acceptedTokens.map((tokenKey) => tokensConfig[tokenKey].getPrice()))
 
   try {
@@ -63,9 +63,9 @@ export const fetchBridgeTvl = createAsyncThunk<
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to fetch TVL for bridge ${bridgesConfig[bridgeKey].name}.`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    const errorStack = error.stack ? `\nStack Trace:\n${error.stack}` : '' // Check if stack trace exists and append it
+    console.error(`${errorMessage}\n${errorStack}`)
+    dispatch(setError(errorMessage))
     return rejectWithValue(errorMessage)
   }
 })
@@ -198,7 +198,7 @@ export const performDeposit = createAsyncThunk<
     const depositAmountAsString = selectBridgeFrom(state, bridgeKey)
     const depositAmount = BigInt(parseFloat(depositAmountAsString) * WAD.number)
 
-    const minimumMint = depositAmount / BigInt(1.01 * WAD.number) / WAD.bigint
+    const minimumMint = (depositAmount * BigInt(1.01 * WAD.number)) / WAD.bigint
 
     if (userAddress) {
       const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey, userAddress })

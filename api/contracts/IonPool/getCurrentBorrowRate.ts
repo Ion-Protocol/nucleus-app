@@ -15,12 +15,12 @@ export async function getCurrentBorrowRate({
   marketKey: MarketKey
 }): Promise<bigint> {
   const contractAddress = chainsConfig[chainKey].markets[marketKey].contracts.ionPool
-  const totalSupply = (await readContract(wagmiConfig, {
+  const currentBorrowRate = (await readContract(wagmiConfig, {
     abi: IonPool.abi as Abi,
     address: contractAddress,
     functionName: 'getCurrentBorrowRate',
     args: [ilkIndex],
-  })) as bigint
+  })) as [bigint, bigint]
 
-  return totalSupply
+  return currentBorrowRate[0]
 }

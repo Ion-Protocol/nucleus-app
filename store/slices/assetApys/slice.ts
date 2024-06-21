@@ -1,12 +1,14 @@
-import { AssetApys } from '@/types/AssetApys'
+import { TokenKey } from '@/config/token'
 import { createSlice } from '@reduxjs/toolkit'
 import { assetApysApi } from './api'
+
+type AssetApy = Partial<Record<TokenKey, number>>
 
 // ==================
 // 1. STATE INTERFACE
 // ==================
 export interface AssetApysState {
-  data: AssetApys
+  data: AssetApy
   loading: boolean
   error: string | null
 }
@@ -16,11 +18,11 @@ export interface AssetApysState {
 // ==================
 const initialState: AssetApysState = {
   data: {
-    ezETH: 0,
-    rsETH: 0,
-    rswETH: 0,
-    weETH: 0,
-    wstETH: 0,
+    [TokenKey.EZETH]: 0,
+    [TokenKey.RSETH]: 0,
+    [TokenKey.RSWETH]: 0,
+    [TokenKey.WEETH]: 0,
+    [TokenKey.WSTETH]: 0,
   },
   loading: true,
   error: null,

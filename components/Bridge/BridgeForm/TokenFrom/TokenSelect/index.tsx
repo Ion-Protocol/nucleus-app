@@ -25,7 +25,7 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props)
       </MenuButton>
 
       {/* Token List */}
-      <MenuList bg="backgroundSecondary">
+      <MenuList bg="backgroundSecondary" zIndex={5}>
         {tokens.map((token) => (
           <MenuItem key={token.key} bg="none" onClick={() => onChange(token.key)} _hover={{ bg: 'hoverSecondary' }}>
             <Flex align="center" gap={3}>
