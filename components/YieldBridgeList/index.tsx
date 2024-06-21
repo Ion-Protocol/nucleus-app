@@ -6,7 +6,7 @@ function YieldBridgeList({ bridges, loading }: YieldBridgeListConnector.Props) {
   return (
     <Flex wrap="wrap" justifyContent="flex-start" alignItems="flex-start" gap={6} w="100%">
       {bridges.map((bridge, index) => (
-        <YieldBridgeItem key={index} bridge={bridge} loading={loading} />
+        <YieldBridgeItem key={index} bridge={bridge} loading={loading} disabled={bridge.comingSoon} />
       ))}
     </Flex>
   )

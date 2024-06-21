@@ -9,7 +9,7 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "prepare": "husky",
-    "convert-icons": "node scripts/convertSvgToChakraIcon.js && prettier --write components/icons/*.tsx"
+    "convert-icons": "node scripts/convertSvgToChakraIcon.js && prettier --write components/shared/icons/*.tsx"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",

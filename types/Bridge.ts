@@ -11,6 +11,7 @@ export interface Bridge {
   destinationChains: ChainKey[]
   contracts: Contracts
   acceptedTokens: TokenKey[]
+  comingSoon?: boolean
 }
 
 export interface BridgeUI extends Bridge {

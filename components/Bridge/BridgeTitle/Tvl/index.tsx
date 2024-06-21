@@ -7,7 +7,7 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
     <Flex border="1px solid" borderColor="border" borderRadius="5px" py={2} px={3} direction="column" gap={2}>
       <Flex gap={2} align="center">
         <Text variant="large">Total Value Locked</Text>
-        <Tooltip label="Lorem ipsum dolor sit amet, consectetur adipiscing.">
+        <Tooltip label="Total value of assets backing the native yield asset.">
           <InfoOutlineIcon color="neutral.600" />
         </Tooltip>
       </Flex>

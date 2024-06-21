@@ -25,7 +25,7 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
         <Table variant="simple">
           <Thead bg="table.background" borderTop="1px solid" borderTopColor="borderSubtle" h="60px">
             <Tr>
-              <IonTh tooltip="The market of the position">Market</IonTh>
+              <IonTh tooltip="All markets that the native yield token earns from.">Market</IonTh>
               <IonTh tooltip="The total supplied asset on the market">Total Supplied</IonTh>
               <IonTh tooltip="The overall annual percentage yield of the supplied asset on the market">APY</IonTh>
               <IonTh tooltip="The utilization rate of the supplied asset">Utilization Rate</IonTh>

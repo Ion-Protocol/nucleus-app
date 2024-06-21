@@ -2,9 +2,11 @@ import { SeiIcon } from '@/components/shared/icons/Sei'
 import { BridgeKey } from '@/config/bridges'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
+import { MorphIcon } from '../shared/icons/Morph'
 
 export const bridgeIconMap: Record<BridgeKey, (props: ChakraProps) => JSX.Element> = {
   [BridgeKey.SEI]: (props) => <SeiIcon {...props} />,
+  [BridgeKey.MORPH]: (props) => <MorphIcon {...props} />,
 }
 
 interface BridgeIconMapProps extends ChakraProps {

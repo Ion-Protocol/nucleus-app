@@ -31,10 +31,16 @@ export function NavDrawer() {
           <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
           <NavCollapse title="Bridge" leftIcon={<BridgeNavIcon />}>
             {bridges.map((key) => (
-              <NavItem key={key} title={bridgesConfig[key].name} href={`/bridge/${key}`} />
+              <NavItem
+                key={key}
+                title={bridgesConfig[key].name}
+                href={`/bridge/${key}`}
+                disabled={bridgesConfig[key].comingSoon}
+                comingSoon={bridgesConfig[key].comingSoon}
+              />
             ))}
           </NavCollapse>
-          <NavItem title="Portfolio (coming soon)" href="/portfolio" leftIcon={<PortfolioIcon />} disabled />
+          <NavItem title="Portfolio" href="/portfolio" leftIcon={<PortfolioIcon />} disabled comingSoon />
         </Flex>
       </Flex>
       <Divider />

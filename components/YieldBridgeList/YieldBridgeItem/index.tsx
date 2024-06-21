@@ -6,13 +6,16 @@ import { useRouter } from 'next/router'
 interface YieldBridgeItemProps {
   bridge: BridgeUI
   loading?: boolean
+  disabled?: boolean
 }
 
-export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
+export function YieldBridgeItem({ bridge, loading, disabled }: YieldBridgeItemProps) {
   const router = useRouter()
 
   function handleClick() {
-    router.push(`/bridge/${bridge.key}`)
+    if (!disabled) {
+      router.push(`/bridge/${bridge.key}`)
+    }
   }
 
   return (
@@ -23,15 +26,20 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
       w="350px"
       borderRadius="16px"
       overflow="hidden"
-      cursor="pointer"
-      _hover={{ bg: 'hover' }}
-      _active={{ bg: 'active' }}
+      cursor={disabled ? 'not-allowed' : 'pointer'}
+      _hover={{ bg: disabled ? 'default' : 'hover' }}
+      _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
     >
       {/* Text Section */}
       <Flex w="225px" py={6} pl={6} direction="column" justify="center">
-        {/* Bridge Name */}
-        <Text variant="header3">{bridge.name}</Text>
+        <Flex align="center" gap={3}>
+          {/* Bridge Name */}
+          <Text variant="header3">{bridge.name}</Text>
+
+          {/* Coming soon marker */}
+          {bridge.comingSoon && <Text color="secondaryText">Coming soon</Text>}
+        </Flex>
 
         {/* Bridge Description */}
         <Text>{bridge.description}</Text>
@@ -42,7 +50,7 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
           <Flex direction="column">
             <Text>TVL</Text>
             <Skeleton isLoaded={!loading} w="100px">
-              <Text variant="large">{bridge.tvl.formatted}</Text>
+              <Text variant="large">{bridge.comingSoon ? '-' : bridge.tvl.formatted}</Text>
             </Skeleton>
           </Flex>
 
@@ -50,7 +58,7 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
           <Flex direction="column">
             <Text>APY</Text>
             <Skeleton isLoaded={!loading}>
-              <Text variant="large">{bridge.apy.formatted}</Text>
+              <Text variant="large">{bridge.comingSoon ? '-' : bridge.apy.formatted}</Text>
             </Skeleton>
           </Flex>
         </Flex>

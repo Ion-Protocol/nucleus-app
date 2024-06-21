@@ -12,7 +12,7 @@ function BridgeChart({ latestFormattedNetApy, loading }: BridgeChartConnector.Pr
         <Flex direction="column" gap={2}>
           <Flex gap={2}>
             <Text variant="large">Historical Net APYs</Text>
-            <Tooltip label="Lorem ipsum dolor sit amet, consectetur adipiscing.">
+            <Tooltip label="The historical annualized returns of the native yield token over time.">
               <InfoOutlineIcon color="secondaryText" />
             </Tooltip>
           </Flex>

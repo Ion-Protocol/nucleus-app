@@ -88,6 +88,7 @@ export const selectFormattedBridgeDataByKey = (key: BridgeKey) =>
       description.length > descriptionLength ? `${description.slice(0, descriptionLength)}...` : description
 
     return {
+      ...bridgesConfig[key as BridgeKey],
       key: key as BridgeKey,
       tvl: {
         raw: rawTvl,

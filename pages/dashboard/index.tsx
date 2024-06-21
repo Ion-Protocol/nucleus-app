@@ -8,7 +8,7 @@ export default function Dashboard() {
       {/* Page title */}
       <Flex direction="column" gap={1}>
         <Text variant="header1">Dashboard</Text>
-        <Text>Lorem ipsum dolor sit amet, consectetur adipiscing.</Text>
+        <Text>Explore all yield bridges backed by Ion native yield.</Text>
       </Flex>
 
       <Flex h={9} />
