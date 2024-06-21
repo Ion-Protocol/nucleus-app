@@ -46,7 +46,17 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
               </Tr>
             ) : (
               tableData.map((p) => (
-                <Tr key={p.marketId} borderTop="1px solid" borderTopColor="red">
+                <Tr
+                  key={p.marketId}
+                  borderTop="1px solid"
+                  borderTopColor="red"
+                  sx={{
+                    '&:hover': {
+                      bg: 'hover',
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
                   <IonTd>{p.formattedMarket}</IonTd>
                   <IonTd textAlign="right">{p.formattedTotalSupplied}</IonTd>
                   <IonTd textAlign="right">{p.formattedApy}</IonTd>
