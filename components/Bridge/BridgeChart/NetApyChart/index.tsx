@@ -33,7 +33,12 @@ function NetApyChart({ netApyData, formattedTimeRangeDates }: NetApyChartConnect
             </defs>
             <CartesianGrid horizontal={false} vertical={false} />
             <XAxis dataKey="index" height={0} />
-            <YAxis dataKey="netApy" width={0} type="number" domain={['dataMin - 0.01', 'dataMax']} />
+            <YAxis
+              dataKey="netApy"
+              width={0}
+              type="number"
+              domain={[(dataMin: number) => Math.max(0, dataMin - 0.01), 'dataMax']}
+            />
             <Tooltip
               content={({ active, payload, label }) => <ChartTooltip active={active} payload={payload} label={label} />}
             />

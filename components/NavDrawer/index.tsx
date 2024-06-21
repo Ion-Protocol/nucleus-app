@@ -1,16 +1,16 @@
-import { Box, Text, Image, Flex, Divider } from '@chakra-ui/react'
-import { Logo } from './Logo'
-import { NavItem } from './NavItem'
-import { DashboardIcon } from '../shared/icons/Dashboard'
-import { BridgeNavIcon } from '../shared/icons/Bridge'
-import { PortfolioIcon } from '../shared/icons/Portfolio'
-import NavCollapse from './NavCollapse'
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
-import { DocsIcon } from '../shared/icons/Docs'
+import { Divider, Flex } from '@chakra-ui/react'
+import { BridgeNavIcon } from '../shared/icons/Bridge'
+import { DashboardIcon } from '../shared/icons/Dashboard'
 import { DiscordIcon } from '../shared/icons/Discord'
+import { DocsIcon } from '../shared/icons/Docs'
+import { PortfolioIcon } from '../shared/icons/Portfolio'
 import { TermsIcon } from '../shared/icons/Terms'
-import { OpenNewTabIcon } from '../shared/icons/OpenNewTab'
 import { FooterLink } from './FooterLink'
+import { Logo } from './Logo'
+import NavCollapse from './NavCollapse'
+import { NavItem } from './NavItem'
+import { discordUrl, docsUrl } from '@/config/constants'
 
 export function NavDrawer() {
   const bridges = Object.keys(bridgesConfig) as BridgeKey[]
@@ -39,8 +39,8 @@ export function NavDrawer() {
       </Flex>
       <Divider />
       <Flex pt={6} direction="column">
-        <FooterLink title="Docs" href="https://docs.ionbridge.io" icon={<DocsIcon />} openNewTab />
-        <FooterLink title="Discord" href="https://discord.gg/2Y9F2xh" icon={<DiscordIcon />} openNewTab />
+        <FooterLink title="Docs" href={docsUrl} icon={<DocsIcon />} openNewTab />
+        <FooterLink title="Discord" href={discordUrl} icon={<DiscordIcon />} openNewTab />
         <FooterLink title="Terms & Conditions" icon={<TermsIcon />} />
       </Flex>
     </Flex>

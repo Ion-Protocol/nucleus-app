@@ -92,7 +92,7 @@ export const selectEvenlySpacedNetApyData = createSelector(
 )
 
 export const selectSmoothedNetApyData = createSelector([selectEvenlySpacedNetApyData], (history) => {
-  return applyGaussianSmoothing(history, 10, 2)
+  return applyGaussianSmoothing(history, 10, 2, (item) => item.netApy)
 })
 
 /**

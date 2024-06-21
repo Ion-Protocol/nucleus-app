@@ -1,5 +1,3 @@
-import { NetApyItem } from '@/types/NetApyItem'
-
 /**
  * Generates a Gaussian kernel of a specified size and standard deviation (sigma).
  * The kernel weights are normalized so that their sum equals 1.
@@ -22,20 +20,25 @@ function gaussianKernel(size: number, sigma: number): number[] {
 }
 
 /**
- * Applies Gaussian smoothing to the `netApy` values in the data.
- * The Gaussian kernel is used to compute a weighted sum of the `netApy` values,
- * producing a smoothed result.
- * @param {NetApyItem[]} data - The array of NetApyItem objects to be smoothed.
+ * Applies Gaussian smoothing to the values in the data, as extracted by the provided valueExtractor function.
+ * The Gaussian kernel is used to compute a weighted sum of the extracted values, producing a smoothed result.
+ * @param {T[]} data - The array of objects to be smoothed.
  * @param {number} kernelSize - The size of the Gaussian kernel.
  * @param {number} sigma - The standard deviation of the Gaussian distribution.
- * @returns {NetApyItem[]} - The smoothed array of NetApyItem objects.
+ * @param {(item: T) => number} valueExtractor - A function to extract the value to be smoothed from each object.
+ * @returns {T[]} - The array of objects with the smoothed values.
  */
-export function applyGaussianSmoothing(data: NetApyItem[], kernelSize: number, sigma: number): NetApyItem[] {
+export function applyGaussianSmoothing<T>(
+  data: T[],
+  kernelSize: number,
+  sigma: number,
+  valueExtractor: (item: T) => number
+): T[] {
   if (data.length === 0) return []
 
   const kernel = gaussianKernel(kernelSize, sigma)
   const halfSize = Math.floor(kernelSize / 2)
-  const smoothedData: NetApyItem[] = []
+  const smoothedData: T[] = []
 
   for (let i = 0; i < data.length; i++) {
     let weightedSum = 0
@@ -44,13 +47,14 @@ export function applyGaussianSmoothing(data: NetApyItem[], kernelSize: number, s
     for (let j = 0; j < kernelSize; j++) {
       const dataIndex = i + j - halfSize
       if (dataIndex >= 0 && dataIndex < data.length) {
-        weightedSum += data[dataIndex].netApy * kernel[j]
+        weightedSum += valueExtractor(data[dataIndex]) * kernel[j]
         weightTotal += kernel[j]
       }
     }
 
-    const smoothedNetApy = weightedSum / weightTotal
-    smoothedData.push({ ...data[i], netApy: smoothedNetApy })
+    const smoothedValue = weightedSum / weightTotal
+    const smoothedItem = { ...data[i], netApy: smoothedValue }
+    smoothedData.push(smoothedItem)
   }
 
   return smoothedData

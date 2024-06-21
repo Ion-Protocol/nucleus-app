@@ -11,9 +11,28 @@ import { selectPrice } from '../price'
 import { selectIonPoolLoading } from '../ionPool'
 import { selectIonLensLoading } from '../ionLens'
 import { selectAssetApysLoading } from '../assetApys'
+import { MarketKey } from '@/types/Market'
+import { ionAppV2UrlBase } from '@/config/constants'
 
 export const selectPositions = (state: RootState) => state.positions.data
 export const selectPositionsLoading = (state: RootState) => state.positions.loading
+
+/**
+ * Selects the market URL based on the selected chain.
+ * Example: https://www.app.ionprotocol.io/lend?collateralAsset=weETH&lenderAsset=wstETH&marketId=0
+ *
+ * @returns A record of market keys and their corresponding URLs.
+ */
+export const selectMarketUrls = createSelector([selectChain], (chainKey) => {
+  const marketUrlMap: Record<MarketKey, string> = {} as Record<MarketKey, string>
+
+  Object.values(chainsConfig[chainKey].markets).forEach((market) => {
+    marketUrlMap[market.key] =
+      `${ionAppV2UrlBase}/lend?collateralAsset=${market.collateralAsset}&lenderAsset=${market.lenderAsset}&marketId=${market.id}`
+  })
+
+  return marketUrlMap
+})
 
 /**
  * Selects and formats the positions table data.
@@ -27,8 +46,8 @@ export const selectPositionsLoading = (state: RootState) => state.positions.load
  * @returns {Array} The formatted positions table data.
  */
 export const selectPositionsTableData = createSelector(
-  [selectPositions, selectChain, selectPrice, selectCurrency, selectUtilizationRates, selectApys],
-  (positions, chainKey, price, currency, utilizationRates, apys) => {
+  [selectPositions, selectChain, selectPrice, selectCurrency, selectUtilizationRates, selectApys, selectMarketUrls],
+  (positions, chainKey, price, currency, utilizationRates, apys, marketUrls) => {
     const markets = Object.values(chainsConfig[chainKey].markets)
 
     const formattedPositions = positions.map((position) => {
@@ -46,6 +65,7 @@ export const selectPositionsTableData = createSelector(
       const formattedTotalSupplied = utils.currencySwitch(currency, position.totalSupplied, price)
       const formattedApy = numToPercent(apy, { fractionDigits: 1 })
       const formattedUtilizationRate = numToPercent(utilizationRate, { fractionDigits: 1 })
+      const marketUrl = marketUrls[market.key]
 
       return {
         ...position,
@@ -55,6 +75,7 @@ export const selectPositionsTableData = createSelector(
         formattedUtilizationRate,
         lenderAsset: market.lenderAsset,
         collateralAsset: market.collateralAsset,
+        marketUrl,
       }
     })
     return formattedPositions

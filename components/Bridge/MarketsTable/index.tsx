@@ -7,9 +7,17 @@ import { MarketsTableConnector } from './connector'
 import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
 import { DoubleIcon } from '@/components/shared/DoubleIcon'
 import { TokenIcon } from '@/components/config/tokenIcons'
+import { useRouter } from 'next/router'
+import { MarketKey } from '@/types/Market'
 
 function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
   const noData = tableData.length === 0
+  const router = useRouter()
+
+  function handleClickRow(index: number) {
+    const url = tableData[index].marketUrl
+    window.open(url, '_blank')
+  }
 
   return (
     <Flex direction="column">
@@ -29,7 +37,7 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
             ) : noData ? (
               <NoData />
             ) : (
-              tableData.map((p) => (
+              tableData.map((p, i) => (
                 <Tr
                   key={p.marketId}
                   borderTop="1px solid"
@@ -40,6 +48,8 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
                       cursor: 'pointer',
                     },
                   }}
+                  h="60px"
+                  onClick={() => handleClickRow(i)}
                 >
                   <Td borderColor="border">
                     <Flex align="center" gap={2}>
