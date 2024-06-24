@@ -1,12 +1,17 @@
 import { RootState } from '@/store'
-import { selectFormattedTimeRangeDates, selectNetApyData, selectNetApyDataWithFormatting } from '@/store/slices/netApy'
+import {
+  selectFormattedTimeRangeDates,
+  selectNetApyDataWithFormatting,
+  selectNetApyLoading,
+} from '@/store/slices/netApy'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: NetApyChartOwnProps) => {
   const dataWithFormatting = selectNetApyDataWithFormatting(state)
   const formattedTimeRangeDates = selectFormattedTimeRangeDates(state)
+  const loading = selectNetApyLoading(state)
 
-  return { netApyData: dataWithFormatting, formattedTimeRangeDates }
+  return { netApyData: dataWithFormatting, formattedTimeRangeDates, loading }
 }
 
 const mapDispatch = {}

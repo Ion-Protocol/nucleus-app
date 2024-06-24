@@ -3,9 +3,11 @@ import { Flex, Text, useColorMode } from '@chakra-ui/react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { ChartTooltip } from './ChartTooltip'
 import { GridBackground } from './GridBackground'
+import { Loading } from './Loading'
 import { NetApyChartConnector } from './connector'
+import { AnimatePresence } from 'framer-motion'
 
-function NetApyChart({ netApyData, formattedTimeRangeDates }: NetApyChartConnector.Props) {
+function NetApyChart({ netApyData, formattedTimeRangeDates, loading }: NetApyChartConnector.Props) {
   const { colorMode } = useColorMode()
   const lineColor = getColorFromToken('chart.line', colorMode)
 
@@ -13,6 +15,7 @@ function NetApyChart({ netApyData, formattedTimeRangeDates }: NetApyChartConnect
     <Flex direction="column">
       <Flex h="225px" direction="column" align="center" position="relative">
         <GridBackground />
+        <AnimatePresence>{loading && <Loading />}</AnimatePresence>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             width={500}
