@@ -1,6 +1,6 @@
 import { ChainKey, chainsConfig } from '@/config/chains'
 import { useAppDispatch } from '@/store/hooks'
-import { setChainKey } from '@/store/slices/chain'
+import { setChainKey } from '@/store/slices/chain/slice'
 import { useEffect, useMemo } from 'react'
 import { useChainId } from 'wagmi'
 
