@@ -4,7 +4,7 @@ import { TokenFromConnector } from './connector'
 import { IonCard } from '@/components/IonCard'
 import { useState } from 'react'
 
-function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
+function TokenFrom({ inputValue, onChange, tokenBalance }: TokenFromConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
 
   return (
@@ -12,7 +12,7 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
       {/* Top Row */}
       <Flex justify="space-between">
         <Text>From</Text>
-        <Text color="secondaryText">Balance: N/A</Text>
+        <Text color="secondaryText">Balance: {tokenBalance}</Text>
       </Flex>
 
       {/* Bottom Row */}

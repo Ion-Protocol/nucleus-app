@@ -1,6 +1,8 @@
 import { BridgeKey } from '@/config/bridges'
+import { TokenKey } from '@/config/token'
 import { RootState } from '@/store'
-import { selectBridgeFrom } from '@/store/slices/bridges'
+import { selectFormattedTokenBalance } from '@/store/slices/balance'
+import { selectBridgeFrom, selectBridgeTokenKey } from '@/store/slices/bridges'
 import { setBridgeFrom } from '@/store/slices/bridges/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 
@@ -8,9 +10,12 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
   const bridgeKey = state.router.query?.bridge as BridgeKey
 
   const inputValue = selectBridgeFrom(state, bridgeKey)
+  const selectedTokenKey = selectBridgeTokenKey(state, bridgeKey) || TokenKey.ETH
+  const tokenBalance = selectFormattedTokenBalance(selectedTokenKey)(state)
 
   return {
     inputValue,
+    tokenBalance,
   }
 }
 
