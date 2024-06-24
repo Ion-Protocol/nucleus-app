@@ -20,7 +20,7 @@ const initialState: NetApyState = {
   history: [],
   loading: true,
   error: null,
-  timeRange: TimeRange.Month,
+  timeRange: TimeRange.All,
 }
 
 // ==================

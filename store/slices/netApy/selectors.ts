@@ -79,7 +79,7 @@ export const selectEvenlySpacedNetApyData = createSelector(
         interval = Math.round(YEAR_MS / pointCount)
         break
       case TimeRange.All:
-        startTime = new Date(history[0].timeStamp)
+        startTime = new Date(history[0]?.timeStamp || 0)
         interval = Math.round((currentTime.getTime() - startTime.getTime()) / pointCount)
         break
       default:
