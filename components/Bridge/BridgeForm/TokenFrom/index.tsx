@@ -1,8 +1,8 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import TokenSelect from './TokenSelect'
 import { TokenFromConnector } from './connector'
-import { IonCard } from '@/components/IonCard'
 import { useState } from 'react'
+import { IonCard } from '@/components/shared/IonCard'
 
 function TokenFrom({ inputValue, onChange, tokenBalance }: TokenFromConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)

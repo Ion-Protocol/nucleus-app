@@ -2,7 +2,7 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { TokenKey } from '@/config/token'
 import { Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { TokenToConnector } from './connector'
-import { IonCard } from '@/components/IonCard'
+import { IonCard } from '@/components/shared/IonCard'
 
 function TokenTo({ to }: TokenToConnector.Props) {
   return (
