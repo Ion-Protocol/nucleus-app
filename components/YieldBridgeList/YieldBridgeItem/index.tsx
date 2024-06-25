@@ -1,6 +1,7 @@
 import { BridgeIcon } from '@/components/config/bridgeIcons'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { BridgeUI } from '@/types/Bridge'
-import { Flex, Skeleton, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
 interface YieldBridgeItemProps {
@@ -49,17 +50,17 @@ export function YieldBridgeItem({ bridge, loading, disabled }: YieldBridgeItemPr
           {/* TVL */}
           <Flex direction="column">
             <Text>TVL</Text>
-            <Skeleton isLoaded={!loading} w="100px">
+            <IonSkeleton isLoaded={!loading} w="100px">
               <Text variant="large">{bridge.comingSoon ? '-' : bridge.tvl.formatted}</Text>
-            </Skeleton>
+            </IonSkeleton>
           </Flex>
 
           {/* APY */}
           <Flex direction="column">
             <Text>APY</Text>
-            <Skeleton isLoaded={!loading}>
+            <IonSkeleton isLoaded={!loading}>
               <Text variant="large">{bridge.comingSoon ? '-' : bridge.apy.formatted}</Text>
-            </Skeleton>
+            </IonSkeleton>
           </Flex>
         </Flex>
       </Flex>

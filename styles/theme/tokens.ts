@@ -134,5 +134,15 @@ export const semanticTokens = {
         _dark: 'neutral.800',
       },
     },
+    skeleton: {
+      startColor: {
+        default: 'neutral.500',
+        _dark: 'midnight.400',
+      },
+      endColor: {
+        default: 'neutral.200',
+        _dark: 'midnight.800',
+      },
+    },
   },
 }

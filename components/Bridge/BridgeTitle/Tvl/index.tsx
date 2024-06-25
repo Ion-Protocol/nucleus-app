@@ -1,5 +1,6 @@
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
-import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react'
+import { Flex, Text, Tooltip } from '@chakra-ui/react'
 import { TvlConnector } from './connector'
 
 function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
@@ -11,9 +12,9 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
           <InfoOutlineIcon color="neutral.600" />
         </Tooltip>
       </Flex>
-      <Skeleton isLoaded={!loading}>
+      <IonSkeleton isLoaded={!loading}>
         <Text variant="xxl">{tvlFormatted}</Text>
-      </Skeleton>
+      </IonSkeleton>
     </Flex>
   )
 }

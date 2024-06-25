@@ -1,4 +1,5 @@
-import { Tr, Td, Skeleton } from '@chakra-ui/react'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { Td, Tr } from '@chakra-ui/react'
 
 export function Loading() {
   return (
@@ -6,16 +7,16 @@ export function Loading() {
       {Array.from({ length: 4 }).map((_, index) => (
         <Tr key={index}>
           <Td>
-            <Skeleton height="20px" />
+            <IonSkeleton height="20px" />
           </Td>
           <Td>
-            <Skeleton height="20px" />
+            <IonSkeleton height="20px" />
           </Td>
           <Td>
-            <Skeleton height="20px" />
+            <IonSkeleton height="20px" />
           </Td>
           <Td>
-            <Skeleton height="20px" />
+            <IonSkeleton height="20px" />
           </Td>
         </Tr>
       ))}

@@ -33,10 +33,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
   const balances: Record<TokenKey, string> = {} as Record<TokenKey, string>
 
   if (!address) {
-    const errorMessage = 'Address not found in state'
-    console.error(errorMessage)
-    dispatch(setError(errorMessage))
-    return rejectWithValue(errorMessage)
+    return rejectWithValue('No address found in state.')
   }
 
   try {
