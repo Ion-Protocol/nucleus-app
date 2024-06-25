@@ -1,19 +1,14 @@
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
+import { BridgeKey } from '@/config/bridges'
 import { setAddress } from '@/store/slices/account'
-import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '@/store/slices/bridges/thunks'
-import { fetchEthPrice } from '@/store/slices/price'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
+import { init } from '../init'
 import { useGetAssetApysQuery } from '../slices/assetApys/api'
-import { fetchLiquidityForAllMarkets } from '../slices/ionLens'
-import { fetchCurrentBorrowRateForAllMarkets, fetchTotalSupplyForAllMarkets } from '../slices/ionPool'
 import { selectNetApyEndTime } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
 import { useGetPositionsQuery } from '../slices/positions/api'
 import { selectBridgeKey } from '../slices/router'
-import { fetchAllTokenBalances } from '../slices/balance'
-import { init } from '../init'
 
 export function useStoreInitializer() {
   const dispatch = useAppDispatch()
