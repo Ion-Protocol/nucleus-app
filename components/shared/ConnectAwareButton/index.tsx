@@ -6,7 +6,6 @@ interface ConnectAwareButtonProps extends ButtonProps, PropsWithChildren {}
 
 export function ConnectAwareButton({ children, ...props }: ConnectAwareButtonProps) {
   const { isConnected } = useAccount()
-  console.log(props)
   const disabled = props.isDisabled || !isConnected
   return (
     <Tooltip label={!isConnected && 'You need to connect your wallet first'}>
