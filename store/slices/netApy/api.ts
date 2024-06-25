@@ -34,7 +34,7 @@ export const netApyApi = createApi({
           }))
           .sort((a, b) => a.timeStamp - b.timeStamp)
       },
-      keepUnusedDataFor: 5 * 60, // Keep data in cache for 5 minutes (number is in seconds)
+      keepUnusedDataFor: 15 * 60, // Keep data in cache for 15 minutes (number is in seconds)
     }),
   }),
 })
