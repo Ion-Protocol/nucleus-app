@@ -1,10 +1,10 @@
 import { RootState } from '@/store'
-import { clearError, selectErrorMessage } from '@/store/slices/status'
+import { clearError, selectError, selectErrorMessage, selectErrorTitle } from '@/store/slices/status'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   return {
-    errorMessage: selectErrorMessage(state),
+    error: selectError(state),
   }
 }
 

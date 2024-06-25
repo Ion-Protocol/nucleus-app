@@ -3,7 +3,7 @@ import { RootState } from '@/store'
 import { MarketKey } from '@/types/Market'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectChain } from '../chain'
-import { setError } from '../status'
+import { setErrorMessage } from '../status'
 import { getCurrentBorrowRate } from '@/api/contracts/IonPool/getCurrentBorrowRate'
 
 export type FetchIonPoolResult = Record<MarketKey, string>
@@ -42,7 +42,7 @@ export const fetchTotalSupplyForAllMarkets = createAsyncThunk<
     const errorMessage = 'Failed to fetch total supply for all markets.'
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })
@@ -82,7 +82,7 @@ export const fetchCurrentBorrowRateForAllMarkets = createAsyncThunk<
     const errorMessage = 'Failed to fetch total supply for all markets.'
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })

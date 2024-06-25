@@ -5,7 +5,7 @@ import { RootState } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
-import { setError } from '../status'
+import { setErrorMessage } from '../status'
 
 export interface fetchAllTokenBalancesResult {
   balances: Record<TokenKey, string>
@@ -64,7 +64,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
     const errorMessage = `Failed to fetch token balance for address ${address}.`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })

@@ -7,7 +7,7 @@ import { utils } from '@/utils'
 import { WAD } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
-import { setError, setSuccess } from '../status'
+import { setErrorMessage, setErrorTitle, setSuccess } from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
 import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 
@@ -65,7 +65,7 @@ export const fetchBridgeTvl = createAsyncThunk<
     const errorMessage = `Failed to fetch TVL for bridge ${bridgesConfig[bridgeKey].name}.`
     const errorStack = error.stack ? `\nStack Trace:\n${error.stack}` : '' // Check if stack trace exists and append it
     console.error(`${errorMessage}\n${errorStack}`)
-    dispatch(setError(errorMessage))
+    dispatch(setErrorMessage(errorMessage))
     return rejectWithValue(errorMessage)
   }
 })
@@ -87,7 +87,7 @@ export const fetchBridgeApy = createAsyncThunk<
     const errorMessage = `Failed to fetch APY for bridge ${bridgeKey}`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })
@@ -165,7 +165,7 @@ export const fetchBridgeRate = createAsyncThunk<
     const errorMessage = `Failed to fetch rate for bridge ${bridgeKey}`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })
@@ -213,7 +213,8 @@ export const performDeposit = createAsyncThunk<
     const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })

@@ -6,13 +6,19 @@ import { selectNetApyLoading } from '../netApy'
 import { selectBalancesLoading } from '../balance'
 
 interface StatusState {
-  error: string | null
+  error: {
+    title: string | null
+    message: string | null
+  }
   success: string | null
   termsModalOpen: boolean
 }
 
 const initialState: StatusState = {
-  error: null,
+  error: {
+    title: null,
+    message: null,
+  },
   success: null,
   termsModalOpen: false,
 }
@@ -21,11 +27,14 @@ const statusSlice = createSlice({
   name: 'status',
   initialState,
   reducers: {
-    setError(state, action: PayloadAction<string | null>) {
-      state.error = action.payload
+    setErrorMessage(state, action: PayloadAction<string | null>) {
+      state.error.message = action.payload
+    },
+    setErrorTitle(state, action: PayloadAction<string | null>) {
+      state.error.title = action.payload
     },
     clearError(state) {
-      state.error = null
+      state.error = { title: null, message: null }
     },
     setSuccess(state, action: PayloadAction<string | null>) {
       state.success = action.payload
@@ -48,8 +57,11 @@ export const selectLoading = createSelector(
   (balancesLoading, priceLoading, bridgesLoading) => balancesLoading || priceLoading || bridgesLoading
 )
 
-export const { setError, clearError, setSuccess, clearSuccess, openTermsModal, closeTermsModal } = statusSlice.actions
-export const selectErrorMessage = (state: RootState) => state.status.error
+export const { setErrorMessage, setErrorTitle, clearError, setSuccess, clearSuccess, openTermsModal, closeTermsModal } =
+  statusSlice.actions
+export const selectError = (state: RootState) => state.status.error
+export const selectErrorMessage = (state: RootState) => state.status.error.message
+export const selectErrorTitle = (state: RootState) => state.status.error.title
 export const selectSuccessMessage = (state: RootState) => state.status.success
 export const selectTermsModalOpen = (state: RootState) => state.status.termsModalOpen
 export const statusReducer = statusSlice.reducer

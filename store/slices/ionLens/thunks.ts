@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { RootState } from '@/store'
 import { MarketKey } from '@/types/Market'
 import { selectChain } from '../chain'
-import { setError } from '../status'
+import { setErrorMessage } from '../status'
 import { liquidity } from '@/api/contracts/IonLens/liquidity'
 import { chainsConfig } from '@/config/chains'
 
@@ -43,7 +43,7 @@ export const fetchLiquidityForAllMarkets = createAsyncThunk<
     const errorMessage = 'Failed to fetch liquidity for all markets.'
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })

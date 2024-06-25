@@ -52,6 +52,10 @@ export const semanticTokens = {
       default: 'shadow.light',
       _dark: 'shadow.dark',
     },
+    link: {
+      default: 'primary.500',
+      _dark: 'primary.300',
+    },
     success: {
       main: {
         default: 'green.dark',
@@ -82,16 +86,16 @@ export const semanticTokens = {
     },
     error: {
       main: {
-        default: 'red.dark',
-        _dark: 'red.dark',
+        default: 'red.main',
+        _dark: 'red.main',
       },
       iconBg: {
-        default: 'red.medium',
-        _dark: 'red.veryDark',
+        default: 'red.light',
+        _dark: 'red.light',
       },
       background: {
-        default: 'red.light',
-        _dark: 'midnight.850',
+        default: 'red.lighter',
+        _dark: 'red.lighter',
       },
     },
     timeRange: {
@@ -142,6 +146,12 @@ export const semanticTokens = {
       endColor: {
         default: 'neutral.200',
         _dark: 'midnight.800',
+      },
+    },
+    code: {
+      background: {
+        default: 'neutral.50',
+        _dark: 'midnight.890',
       },
     },
   },

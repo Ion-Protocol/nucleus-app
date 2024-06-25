@@ -21,6 +21,13 @@ export const textStyles = {
     fontSize: '22px',
     fontWeight: 'bold',
   },
+  bigParagraph: {
+    fontSize: '22px',
+  },
+  smallParagraphBold: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+  },
   medium: {
     fontSize: '14px',
   },

@@ -60,9 +60,9 @@ export const colors = {
     dark: '#F2A818',
   },
   red: {
-    light: '#FBEDED',
-    medium: '#F2C7C7',
-    dark: '#D14343',
+    main: '#D14343',
+    light: '#D1434360',
+    lighter: '#D143432a',
   },
   shadow: {
     light: '#0000000D',
