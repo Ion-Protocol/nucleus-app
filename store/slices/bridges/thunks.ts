@@ -158,6 +158,10 @@ export const fetchBridgeRate = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('bridges/fetchBridgeRate', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
+    const bridge = bridgesConfig[bridgeKey]
+    if (bridge.comingSoon) {
+      return { bridgeKey, result: { rate: '0' } }
+    }
     const rateAsBigInt = await getRate(bridgeKey)
     return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
