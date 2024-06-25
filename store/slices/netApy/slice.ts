@@ -17,7 +17,17 @@ export interface NetApyState {
 // 2. INITIAL STATE
 // ==================
 const initialState: NetApyState = {
-  history: [],
+  // We initialize with a single data point to change the chart animation when the data loads
+  history: [
+    {
+      lenderAddress: '',
+      supplyAmount: [],
+      netApy: 0,
+      lenderApy: [],
+      allocation: [],
+      timeStamp: 0,
+    },
+  ],
   loading: true,
   error: null,
   timeRange: TimeRange.All,
