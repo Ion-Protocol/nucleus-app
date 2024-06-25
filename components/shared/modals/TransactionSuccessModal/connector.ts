@@ -1,15 +1,20 @@
 import { RootState } from '@/store'
-import { clearSuccess, selectSuccessMessage } from '@/store/slices/status'
+import {
+  clearTransactionSuccess,
+  selectTransactionSuccessHash,
+  selectTransactionSuccessMessage,
+} from '@/store/slices/status'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   return {
-    message: selectSuccessMessage(state),
+    message: selectTransactionSuccessMessage(state),
+    txHash: selectTransactionSuccessHash(state),
   }
 }
 
 const mapDispatch = {
-  onClose: clearSuccess,
+  onClose: clearTransactionSuccess,
 }
 
 const connector = connect(mapState, mapDispatch)

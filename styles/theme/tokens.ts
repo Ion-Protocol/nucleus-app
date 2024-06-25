@@ -58,16 +58,16 @@ export const semanticTokens = {
     },
     success: {
       main: {
-        default: 'green.dark',
-        _dark: 'green.dark',
+        default: 'green.main',
+        _dark: 'green.main',
       },
       iconBg: {
-        default: 'green.medium',
-        _dark: 'green.veryDark',
+        default: 'green.light',
+        _dark: 'green.light',
       },
       background: {
-        default: 'green.light',
-        _dark: 'midnight.850',
+        default: 'green.lighter',
+        _dark: 'green.lighter',
       },
     },
     warning: {
@@ -152,6 +152,12 @@ export const semanticTokens = {
       background: {
         default: 'neutral.50',
         _dark: 'midnight.890',
+      },
+    },
+    clip: {
+      background: {
+        default: 'neutral.200',
+        _dark: 'midnight.600',
       },
     },
   },

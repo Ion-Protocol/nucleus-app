@@ -10,7 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react'
-import { SuccessModalConnector } from '../SuccessModal/connector'
+import { SuccessModalConnector } from '../TransactionSuccessModal/connector'
 
 /**
  * Renders an success modal component.

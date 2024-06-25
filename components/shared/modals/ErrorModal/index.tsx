@@ -1,6 +1,8 @@
 import {
   Button,
+  Code,
   Flex,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,13 +10,10 @@ import {
   ModalFooter,
   ModalOverlay,
   Text,
-  Link,
-  Code,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { FullErrorIcon } from '../../FullErrorIcon'
 import { ErrorModalConnector } from './connector'
-import { set } from 'date-fns'
 
 /**
  * Renders an error modal component.
@@ -44,7 +43,7 @@ function ErrorModal({ error, clearError }: ErrorModalConnector.Props) {
     <>
       <Modal isOpen={!!error.message} onClose={handleClose} isCentered size={isFullModalOpen ? 'xl' : 'md'}>
         <ModalOverlay />
-        <ModalContent bg="backgroundSecondary">
+        <ModalContent bg="backgroundSecondary" border="1px solid" borderColor="border">
           <ModalCloseButton color="neutral.600" />
           <ModalBody>
             <Flex direction="column" align="center" pt={9} gap={3}>

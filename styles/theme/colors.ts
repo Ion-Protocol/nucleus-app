@@ -50,9 +50,9 @@ export const colors = {
     900: '#00344b',
   },
   green: {
-    light: '#E6F9F3',
-    medium: '#B4EBDB',
-    dark: '#05BB85',
+    main: '#05BB85',
+    light: '#05BB8560',
+    lighter: '#05BB852a',
   },
   yellow: {
     light: '#FEF7E8',

@@ -1,11 +1,12 @@
-import { useMediaQuery } from '@chakra-ui/react'
-import { PropsWithChildren } from 'react'
-import { MobileLayout } from './MobileLayout'
-import { TabletLayout } from './TabletLayout'
+import { ModalsContainer } from '@/components/shared/modals'
+import { useChainChangeEffect } from '@/hooks/useChainChangeEffect'
 import { useRouteChangeEffect } from '@/hooks/useRouteChangeEffect'
 import { useStoreInitializer } from '@/store/hooks/useStoreInitializer'
+import { useMediaQuery } from '@chakra-ui/react'
+import { PropsWithChildren } from 'react'
 import { DesktopLayout } from './DesktopLayout'
-import { useChainChangeEffect } from '@/hooks/useChainChangeEffect'
+import { MobileLayout } from './MobileLayout'
+import { TabletLayout } from './TabletLayout'
 
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
@@ -16,11 +17,20 @@ export function Layout({ children }: PropsWithChildren) {
   const [isTablet] = useMediaQuery('(min-width: 769px) and (max-width: 1024px)')
   const [isMobile] = useMediaQuery('(max-width: 768px)')
 
+  let LayoutComponent = null
+
   if (isDesktop) {
-    return <DesktopLayout>{children}</DesktopLayout>
+    LayoutComponent = DesktopLayout
   } else if (isTablet) {
-    return <TabletLayout>{children}</TabletLayout>
+    LayoutComponent = TabletLayout
   } else if (isMobile) {
-    return <MobileLayout>{children}</MobileLayout>
+    LayoutComponent = MobileLayout
   }
+
+  return (
+    <>
+      <ModalsContainer />
+      {LayoutComponent && <LayoutComponent>{children}</LayoutComponent>}
+    </>
+  )
 }

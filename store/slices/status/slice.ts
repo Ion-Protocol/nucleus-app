@@ -10,7 +10,10 @@ interface StatusState {
     title: string | null
     message: string | null
   }
-  success: string | null
+  transaction: {
+    successMessage: string | null
+    txHash: string | null
+  }
   termsModalOpen: boolean
 }
 
@@ -19,7 +22,10 @@ const initialState: StatusState = {
     title: null,
     message: null,
   },
-  success: null,
+  transaction: {
+    successMessage: null,
+    txHash: null,
+  },
   termsModalOpen: false,
 }
 
@@ -36,11 +42,15 @@ const statusSlice = createSlice({
     clearError(state) {
       state.error = { title: null, message: null }
     },
-    setSuccess(state, action: PayloadAction<string | null>) {
-      state.success = action.payload
+    setTransactionSuccessMessage(state, action: PayloadAction<string | null>) {
+      state.transaction.successMessage = action.payload
     },
-    clearSuccess(state) {
-      state.success = null
+    setTransactionTxHash(state, action: PayloadAction<string | null>) {
+      state.transaction.txHash = action.payload
+    },
+    clearTransactionSuccess(state) {
+      state.transaction.successMessage = null
+      state.transaction.txHash = null
     },
     openTermsModal(state) {
       state.termsModalOpen = true
@@ -57,11 +67,20 @@ export const selectLoading = createSelector(
   (balancesLoading, priceLoading, bridgesLoading) => balancesLoading || priceLoading || bridgesLoading
 )
 
-export const { setErrorMessage, setErrorTitle, clearError, setSuccess, clearSuccess, openTermsModal, closeTermsModal } =
-  statusSlice.actions
+export const {
+  setErrorMessage,
+  setErrorTitle,
+  clearError,
+  setTransactionSuccessMessage,
+  setTransactionTxHash,
+  clearTransactionSuccess,
+  openTermsModal,
+  closeTermsModal,
+} = statusSlice.actions
 export const selectError = (state: RootState) => state.status.error
 export const selectErrorMessage = (state: RootState) => state.status.error.message
 export const selectErrorTitle = (state: RootState) => state.status.error.title
-export const selectSuccessMessage = (state: RootState) => state.status.success
+export const selectTransactionSuccessMessage = (state: RootState) => state.status.transaction.successMessage
+export const selectTransactionSuccessHash = (state: RootState) => state.status.transaction.txHash
 export const selectTermsModalOpen = (state: RootState) => state.status.termsModalOpen
 export const statusReducer = statusSlice.reducer

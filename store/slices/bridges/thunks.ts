@@ -7,7 +7,13 @@ import { utils } from '@/utils'
 import { WAD } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
-import { setErrorMessage, setErrorTitle, setSuccess } from '../status'
+import {
+  selectTransactionSuccessHash,
+  setErrorMessage,
+  setErrorTitle,
+  setTransactionSuccessMessage,
+  setTransactionTxHash,
+} from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
 import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 
@@ -206,7 +212,8 @@ export const performDeposit = createAsyncThunk<
 
     if (userAddress) {
       const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey, userAddress })
-      dispatch(setSuccess('Deposit successful!'))
+      dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
+      dispatch(setTransactionTxHash(txHash))
       dispatch(setBridgeFrom(''))
       return { txHash }
     } else {
