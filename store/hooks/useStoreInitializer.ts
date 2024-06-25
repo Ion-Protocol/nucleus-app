@@ -13,6 +13,7 @@ import { useGetNetApyQuery } from '../slices/netApy/api'
 import { useGetPositionsQuery } from '../slices/positions/api'
 import { selectBridgeKey } from '../slices/router'
 import { fetchAllTokenBalances } from '../slices/balance'
+import { init } from '../init'
 
 export function useStoreInitializer() {
   const dispatch = useAppDispatch()
@@ -36,15 +37,6 @@ export function useStoreInitializer() {
   }, [address, dispatch])
 
   useEffect(() => {
-    dispatch(fetchEthPrice())
-    dispatch(fetchLiquidityForAllMarkets())
-    dispatch(fetchTotalSupplyForAllMarkets())
-    dispatch(fetchCurrentBorrowRateForAllMarkets())
-    dispatch(fetchAllTokenBalances())
-    Object.values(BridgeKey).forEach((key) => {
-      dispatch(fetchBridgeTvl(key))
-      dispatch(fetchBridgeApy(key))
-      dispatch(fetchBridgeRate(key))
-    })
+    init(dispatch)
   }, [dispatch])
 }
