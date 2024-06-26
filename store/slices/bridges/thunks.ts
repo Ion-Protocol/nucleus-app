@@ -3,13 +3,15 @@ import { deposit } from '@/api/contracts/Teller/deposit'
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
-import { WAD } from '@/utils/bigint'
+import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
+import { selectTokenBalance } from '../balance'
 import { netApyApi } from '../netApy/api'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
 import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
+import { setInputError } from './slice'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -107,7 +109,7 @@ export const fetchBridgeApy = createAsyncThunk<
 /**
  * Sets the "from" value for a bridge.
  *
- * This is in a thunk because it needs to access RootState.
+ * This is in a thunk because it needs to access RootState to get the bridgeKey.
  *
  * @param from - The value to set as the "from" value for the bridge.
  * @param options - The options object containing the state and reject value.
@@ -132,7 +134,42 @@ export const setBridgeFrom = createAsyncThunk<
     fromFormatted = ''
   }
 
+  const tokenKey = selectBridgeTokenKey(state, bridgeKey)
+  const tokenBalance = selectTokenBalance(tokenKey)(state)
+  const tokenBalanceAsNumber = bigIntToNumber(BigInt(tokenBalance))
+
+  dispatch(setInputError(parseFloat(fromFormatted) > parseFloat(tokenBalanceAsNumber) ? 'Insufficient balance' : null))
+
   return { bridgeKey, from: fromFormatted }
+})
+
+/**
+ * Sets the bridge from the maximum token balance.
+ *
+ * This is in a thunk because it needs to access RootState to get the bridgeKey.
+ *
+ * @param _ - The payload (not used).
+ * @param getState - A function to get the current state.
+ * @param rejectWithValue - A function to reject the promise with a value.
+ * @param dispatch - A function to dispatch actions.
+ * @returns A promise that resolves to an object containing the bridge key and the maximum token balance.
+ * @throws An error if the bridge key is missing in the router query.
+ */
+export const setBridgeFromMax = createAsyncThunk<
+  { bridgeKey: BridgeKey; from: string },
+  void,
+  { state: RootState; rejectValue: string }
+>('bridges/setBridgeFromMax', async (_, { getState, rejectWithValue, dispatch }) => {
+  const state = getState() as RootState
+  const bridgeKey = state.router.query?.bridge as BridgeKey
+  if (!bridgeKey) {
+    throw new Error('Bridge key is missing in router query')
+  }
+  const tokenKey = selectBridgeTokenKey(state, bridgeKey)
+  const tokenBalance = selectTokenBalance(tokenKey)(state)
+  const tokenBalanceAsNumber = bigIntToNumber(BigInt(tokenBalance))
+
+  return { bridgeKey, from: tokenBalanceAsNumber }
 })
 
 /**

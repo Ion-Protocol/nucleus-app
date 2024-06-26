@@ -20,6 +20,7 @@ export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
   sourceChain: ChainKey
+  inputError: string | null
   destinationChain: ChainKey
   deposit: {
     pending: boolean
@@ -50,6 +51,7 @@ export const initialState: BridgesState = {
   overallLoading: true,
   sourceChain: ChainKey.ETHEREUM,
   destinationChain: ChainKey.ETHEREUM,
+  inputError: null,
   deposit: {
     pending: false,
     error: null,

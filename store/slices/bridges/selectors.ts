@@ -11,6 +11,7 @@ import { selectPrice } from '../price'
 import { BridgesState } from './initialState'
 
 export const selectBridgesState = (state: RootState): BridgesState => state.bridges
+export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
 export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.overallLoading)
 export const selectBridgeSourceChain = createSelector([selectBridgesState], (bridgesState) => bridgesState.sourceChain)
 export const selectBridgeDestinationChain = createSelector(
@@ -148,9 +149,9 @@ export const selectBridgeFrom = (state: RootState, key: BridgeKey): string => {
  * @param key - The key of the bridge.
  * @returns The token of the bridge, or undefined if the bridge does not exist.
  */
-export const selectBridgeTokenKey = (state: RootState, key: BridgeKey): TokenKey | undefined => {
+export const selectBridgeTokenKey = (state: RootState, key: BridgeKey): TokenKey => {
   const bridgesState = selectBridgesState(state)
-  return bridgesState.data[key]?.selectedToken
+  return bridgesState.data[key]?.selectedToken || TokenKey.ETH
 }
 
 /**

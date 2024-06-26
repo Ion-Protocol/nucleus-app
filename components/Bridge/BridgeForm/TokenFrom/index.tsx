@@ -4,14 +4,14 @@ import { TokenFromConnector } from './connector'
 import { useState } from 'react'
 import { IonCard } from '@/components/shared/IonCard'
 
-function TokenFrom({ inputValue, onChange, tokenBalance }: TokenFromConnector.Props) {
+function TokenFrom({ inputValue, onChange, tokenBalance, onMax, error }: TokenFromConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
 
   return (
     <IonCard variant="elevate" bg={isFocused ? 'selectedSecondary' : 'backgroundSecondary'}>
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text>From</Text>
+        <Text color={error ? 'error.main' : 'text'}>From</Text>
         <Text color="secondaryText">Balance: {tokenBalance}</Text>
       </Flex>
 
@@ -28,17 +28,17 @@ function TokenFrom({ inputValue, onChange, tokenBalance }: TokenFromConnector.Pr
           size="lg"
           placeholder="Amount"
           fontWeight="bold"
+          color={error ? 'error.main' : 'text'}
         />
+        {error && <Text color="error.main">{error}</Text>}
+        <Flex gap={3} align="center">
+          {/* Max Button */}
+          <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
+            <Text>MAX</Text>
+          </Button>
 
-        {/* Max Button */}
-        {/* <Button variant="outline" color="secondaryText" size="sm">
-          MAX
-        </Button> */}
-
-        <Divider orientation="vertical" />
-
-        {/* Token Select */}
-        <Flex>
+          <Divider orientation="vertical" h="36px" borderColor="border" />
+          {/* Token Select */}
           <TokenSelect />
         </Flex>
       </Flex>

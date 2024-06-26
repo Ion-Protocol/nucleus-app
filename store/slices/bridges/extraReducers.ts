@@ -10,6 +10,7 @@ import {
   fetchBridgeTvl,
   performDeposit,
   setBridgeFrom,
+  setBridgeFromMax,
   setBridgeToken,
 } from './thunks'
 
@@ -111,6 +112,16 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     // Bridge From Input
     ///////////////////////////////
     .addCase(setBridgeFrom.fulfilled, (state, action) => {
+      const { bridgeKey, from } = action.payload
+      if (state.data[bridgeKey]) {
+        state.data[bridgeKey].from = from
+      }
+    })
+
+    ///////////////////////////////
+    // Bridge From Max Input
+    ///////////////////////////////
+    .addCase(setBridgeFromMax.fulfilled, (state, action) => {
       const { bridgeKey, from } = action.payload
       if (state.data[bridgeKey]) {
         state.data[bridgeKey].from = from
