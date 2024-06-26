@@ -3,13 +3,17 @@ import {
   clearTransactionSuccess,
   selectTransactionSuccessHash,
   selectTransactionSuccessMessage,
+  selectTruncatedTransactionSuccessHash,
 } from '@/store/slices/status'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   return {
     message: selectTransactionSuccessMessage(state),
-    txHash: selectTransactionSuccessHash(state),
+    txHash: {
+      raw: selectTransactionSuccessHash(state),
+      formatted: selectTruncatedTransactionSuccessHash(state),
+    },
   }
 }
 

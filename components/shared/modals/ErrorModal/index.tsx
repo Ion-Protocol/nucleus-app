@@ -59,6 +59,7 @@ function ErrorModal({ error, clearError }: ErrorModalConnector.Props) {
                   wordBreak="break-word"
                   border="1px solid"
                   borderColor="border"
+                  borderRadius="8px"
                   bg="code.background"
                 >
                   {error.message}

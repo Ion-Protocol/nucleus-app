@@ -251,7 +251,7 @@ export const performDeposit = createAsyncThunk<
     const depositAmountAsString = selectBridgeFrom(state, bridgeKey)
     const depositAmount = BigInt(parseFloat(depositAmountAsString) * WAD.number)
 
-    const minimumMint = (depositAmount * BigInt(1.01 * WAD.number)) / WAD.bigint
+    const minimumMint = depositAmount / BigInt(1.1 * WAD.number) / WAD.bigint
 
     if (userAddress) {
       const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey, userAddress })

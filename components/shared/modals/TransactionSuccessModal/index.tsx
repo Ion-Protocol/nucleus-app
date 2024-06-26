@@ -10,9 +10,8 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { FullSuccessIcon } from '../../FullSuccessIcon'
-import { IonTag } from '../../IonTag'
+import { TxHashTag } from '../../IonTag'
 import { SuccessModalConnector } from './connector'
-import { useState } from 'react'
 
 function TransactionSuccessModal({ message, txHash, onClose }: SuccessModalConnector.Props) {
   const handleClose = () => {
@@ -29,9 +28,7 @@ function TransactionSuccessModal({ message, txHash, onClose }: SuccessModalConne
             <Flex direction="column" align="center" pt={9} gap={3}>
               <FullSuccessIcon />
               <Text variant="bigParagraph">Transaction Complete</Text>
-              <IonTag txHash={txHash || '0x0'} gap={1}>
-                {txHash}
-              </IonTag>
+              <TxHashTag txHash={txHash} gap={1} />
               <Flex direction="column" align="center" gap={2}>
                 <Text textAlign="center" variant="smallParagraphBold">
                   {message}

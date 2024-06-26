@@ -2,17 +2,20 @@ import { Tag, TagProps, Text, Tooltip } from '@chakra-ui/react'
 import { PropsWithChildren, useState } from 'react'
 import { ClipIcon } from '../icons/ClipIcon'
 
-interface IonTagProps extends TagProps, PropsWithChildren {
-  txHash: string
+interface TxHashTagProps extends TagProps, PropsWithChildren {
+  txHash: {
+    raw: string | null
+    formatted: string | null
+  }
 }
 
-export function IonTag({ children, txHash, ...props }: IonTagProps) {
+export function TxHashTag({ children, txHash, ...props }: TxHashTagProps) {
   const [showTooltip, setShowTooltip] = useState(false)
 
   const handleCopy = () => {
-    if (!txHash) return
+    if (!txHash.raw) return
     navigator.clipboard
-      .writeText(txHash)
+      .writeText(txHash.raw)
       .then(() => {
         setShowTooltip(true)
         setTimeout(() => setShowTooltip(false), 3000)
@@ -26,7 +29,7 @@ export function IonTag({ children, txHash, ...props }: IonTagProps) {
     <Tooltip label="Copied!" isOpen={showTooltip} placement="right" shouldWrapChildren>
       <Tag borderRadius="100px" px={3} bg="clip.background" cursor="pointer" onClick={handleCopy} {...props}>
         <ClipIcon />
-        <Text>{txHash}</Text>
+        <Text>{txHash.formatted}</Text>
       </Tag>
     </Tooltip>
   )

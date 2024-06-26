@@ -1,9 +1,9 @@
 import { RootState } from '@/store'
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { selectPriceLoading } from '../price'
-import { selectBridgesLoading } from '../bridges'
-import { selectNetApyLoading } from '../netApy'
 import { selectBalancesLoading } from '../balance'
+import { selectBridgesLoading } from '../bridges'
+import { selectPriceLoading } from '../price'
+import { truncateTxHash } from '@/utils/string'
 
 interface StatusState {
   error: {
@@ -81,6 +81,9 @@ export const selectError = (state: RootState) => state.status.error
 export const selectErrorMessage = (state: RootState) => state.status.error.message
 export const selectErrorTitle = (state: RootState) => state.status.error.title
 export const selectTransactionSuccessMessage = (state: RootState) => state.status.transaction.successMessage
-export const selectTransactionSuccessHash = (state: RootState) => state.status.transaction.txHash
 export const selectTermsModalOpen = (state: RootState) => state.status.termsModalOpen
 export const statusReducer = statusSlice.reducer
+export const selectTransactionSuccessHash = (state: RootState) => state.status.transaction.txHash
+export const selectTruncatedTransactionSuccessHash = createSelector(selectTransactionSuccessHash, (txHash) =>
+  txHash ? truncateTxHash(txHash) : null
+)
