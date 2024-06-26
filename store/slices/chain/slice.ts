@@ -20,6 +20,8 @@ const chainSlice = createSlice({
   },
 })
 
-export const selectChain = (state: RootState) => state.chain.chainKey
+export const selectChain = (state: RootState) => {
+  return state.chain.chainKey
+}
 export const { setChainKey } = chainSlice.actions
 export const chainReducer = chainSlice.reducer
