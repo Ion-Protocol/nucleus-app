@@ -3,17 +3,11 @@ import { deposit } from '@/api/contracts/Teller/deposit'
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
-import { utils } from '@/utils'
 import { WAD } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
-import {
-  selectTransactionSuccessHash,
-  setErrorMessage,
-  setErrorTitle,
-  setTransactionSuccessMessage,
-  setTransactionTxHash,
-} from '../status'
+import { netApyApi } from '../netApy/api'
+import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
 import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
 
@@ -77,17 +71,29 @@ export const fetchBridgeTvl = createAsyncThunk<
 })
 
 export interface FetchBridgeApyResult {
-  apy: string
+  apy: number
 }
+
 export const fetchBridgeApy = createAsyncThunk<
   { bridgeKey: BridgeKey; result: FetchBridgeApyResult },
   BridgeKey,
   { rejectValue: string; state: RootState }
 >('bridges/fetchBridgeApy', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
-    await utils.sleep(0)
-    const apy = BigInt(2.234234 * 1e18).toString()
-    return { bridgeKey, result: { apy } }
+    // const address = bridgesConfig[bridgeKey].contracts.boringVault
+    const address = '0x5e6d7C88f4Be6387f0a9006562d10f8d1C89e84E'
+    const resultAction = await dispatch(netApyApi.endpoints.getLatestNetApy.initiate({ address }))
+
+    if ('error' in resultAction) {
+      throw new Error('Error getting net apy for bridge')
+    }
+
+    const { data: netApyItem } = resultAction
+    if (netApyItem) {
+      return { bridgeKey, result: { apy: netApyItem.netApy } }
+    } else {
+      return { bridgeKey, result: { apy: 0 } }
+    }
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to fetch APY for bridge ${bridgeKey}`

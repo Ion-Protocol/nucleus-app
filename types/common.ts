@@ -1,4 +1,4 @@
 export interface UIDataObject {
-  raw: bigint
+  raw: bigint | number
   formatted: string
 }

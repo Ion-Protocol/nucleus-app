@@ -3,9 +3,16 @@
  * @param value - The number to convert.
  * @returns The percentage string representation of the number.
  */
-export function numToPercent(value: number, options?: { fractionDigits?: number }): string {
+export function numToPercent(value: number | string, options?: { fractionDigits?: number }): string {
+  const numValue = parseFloat(value as string)
+
+  if (isNaN(numValue)) {
+    throw new TypeError('Value must be a number or a string that can be converted to a number')
+  }
+
+  if (numValue === 0) return '0%'
   const { fractionDigits = 2 } = options || {}
-  return `${value.toFixed(fractionDigits)}%`
+  return `${numValue.toFixed(fractionDigits)}%`
 }
 
 /**

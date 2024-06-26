@@ -1,14 +1,14 @@
 import { BridgeKey, bridgesConfig } from '@/config/bridges'
+import { TokenKey } from '@/config/token'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
 import { BridgeUI } from '@/types/Bridge'
 import { utils } from '@/utils'
-import { bigIntToPercent } from '@/utils/bigint'
+import { numToPercent } from '@/utils/number'
 import { createSelector } from 'reselect'
 import { selectPrice } from '../price'
 import { BridgesState } from './initialState'
-import { TokenKey } from '@/config/token'
 
 export const selectBridgesState = (state: RootState): BridgesState => state.bridges
 export const selectBridgesLoading = createSelector([selectBridgesState], (bridgesState) => bridgesState.overallLoading)
@@ -35,8 +35,18 @@ export const selectBridgeTVLByKey = (key: BridgeKey) =>
  * @returns The APY value as a string, or undefined if the bridge key is not found.
  */
 export const selectBridgeAPYByKey = (key: BridgeKey) =>
-  createSelector([selectBridgesState], (bridgesState): bigint | undefined => {
-    return BigInt(bridgesState.data[key].apy.value)
+  createSelector([selectBridgesState], (bridgesState): number | undefined => {
+    return bridgesState.data[key].apy.value as number
+  })
+
+/**
+ * Selects the loading state of a specific bridge identified by the given key.
+ * @param key - The key of the bridge.
+ * @returns The loading state of the bridge.
+ */
+export const selectBridgeLoadingByKey = (key: BridgeKey) =>
+  createSelector([selectBridgesState], (bridgesState) => {
+    return bridgesState.data[key].tvl.loading || bridgesState.data[key].apy.loading
   })
 
 /**
@@ -63,8 +73,7 @@ export const selectFormattedBridgeTVLByKey = (key: BridgeKey) => {
  */
 export const selectFormattedBridgeAPYByKey = (key: BridgeKey) => {
   return createSelector([selectBridgeAPYByKey(key)], (apy) => {
-    const apyAsBigInt = BigInt(apy || '0')
-    return bigIntToPercent(apyAsBigInt)
+    return numToPercent((apy || 0) * 100)
   })
 }
 
@@ -77,7 +86,7 @@ export const selectFormattedBridgeAPYByKey = (key: BridgeKey) => {
 export const selectFormattedBridgeDataByKey = (key: BridgeKey) =>
   createSelector([(state: RootState) => state], (state) => {
     const rawTvl = selectBridgeTVLByKey(key)(state)
-    const rawApy = selectBridgeAPYByKey(key)(state)
+    const rawApy = selectBridgeAPYByKey(key)(state) || 0
     const formattedTvl = selectFormattedBridgeTVLByKey(key as BridgeKey)(state)
     const formattedApy = selectFormattedBridgeAPYByKey(key as BridgeKey)(state)
 
@@ -113,6 +122,14 @@ export const selectAllBridges = createSelector([(state: RootState) => state], (s
   return Object.keys(bridges.data).map((key) => selectFormattedBridgeDataByKey(key as BridgeKey)(state))
 })
 
+export const selectBridgeByKey = (key: BridgeKey) =>
+  createSelector(
+    (state: RootState) => state,
+    (state) => {
+      return selectFormattedBridgeDataByKey(key)(state)
+    }
+  )
+
 /**
  * Selects the 'from' value of a bridge identified by the given key.
  *
@@ -145,7 +162,7 @@ export const selectBridgeTokenKey = (state: RootState, key: BridgeKey): TokenKey
  */
 export const selectBridgeRate = (state: RootState, key: BridgeKey): string | undefined => {
   const bridgesState = selectBridgesState(state)
-  return bridgesState.data[key]?.rate.value
+  return bridgesState.data[key]?.rate.value as string
 }
 
 export const selectDepositPending = createSelector([(state: RootState) => state], (state) => {

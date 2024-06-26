@@ -36,7 +36,33 @@ export const netApyApi = createApi({
       },
       keepUnusedDataFor: 15 * 60, // Keep data in cache for 15 minutes (number is in seconds)
     }),
+    getLatestNetApy: builder.query<NetApyItem, { address: string }>({
+      query: ({ address }) => {
+        return {
+          url: 'v1/bigbrother/net_apy',
+          params: {
+            address,
+            start_time: 1000,
+            end_time: 'now',
+          },
+        }
+      },
+      transformResponse: (response: any) => {
+        if (!response || Array.isArray(response)) {
+          return {} as NetApyItem
+        }
+        return {
+          lenderAddress: response.lender_address,
+          supplyAmount: response.supply_amount,
+          netApy: response.net_apy,
+          lenderApy: response.lender_apy,
+          allocation: response.allocation,
+          timeStamp: response.time_stamp * 1000,
+        }
+      },
+      keepUnusedDataFor: 15 * 60, // Keep data in cache for 15 minutes (number is in seconds)
+    }),
   }),
 })
 
-export const { useGetNetApyQuery } = netApyApi
+export const { useGetNetApyQuery, useGetLatestNetApyQuery } = netApyApi

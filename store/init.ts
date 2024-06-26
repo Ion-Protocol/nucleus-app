@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { AppDispatch } from '.'
 import { fetchAllTokenBalances } from './slices/balance'
 import { fetchLiquidityForAllMarkets } from './slices/ionLens'
@@ -13,7 +13,10 @@ export function init(dispatch: AppDispatch) {
   dispatch(fetchCurrentBorrowRateForAllMarkets())
   dispatch(fetchAllTokenBalances())
 
-  Object.values(BridgeKey).forEach((key) => {
+  const bridgeKeys = Object.keys(bridgesConfig).filter(
+    (bridgeKey) => !bridgesConfig[bridgeKey as BridgeKey].comingSoon
+  ) as BridgeKey[]
+  bridgeKeys.forEach((key) => {
     dispatch(fetchBridgeTvl(key))
     dispatch(fetchBridgeApy(key))
     dispatch(fetchBridgeRate(key))

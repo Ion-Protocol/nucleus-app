@@ -1,16 +1,10 @@
 import { BridgeIcon } from '@/components/config/bridgeIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { BridgeUI } from '@/types/Bridge'
 import { Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { YieldBridgeItemConnector } from './connector'
 
-interface YieldBridgeItemProps {
-  bridge: BridgeUI
-  loading?: boolean
-  disabled?: boolean
-}
-
-export function YieldBridgeItem({ bridge, loading, disabled }: YieldBridgeItemProps) {
+function YieldBridgeItem({ bridge, disabled, loading }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
   function handleClick() {
@@ -72,3 +66,5 @@ export function YieldBridgeItem({ bridge, loading, disabled }: YieldBridgeItemPr
     </Flex>
   )
 }
+
+export default YieldBridgeItemConnector.Connector(YieldBridgeItem)

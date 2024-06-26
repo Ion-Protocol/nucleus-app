@@ -3,7 +3,7 @@ import { ChainKey } from '@/config/chains'
 import { TokenKey } from '@/config/token'
 
 export interface AsyncMetric {
-  value: string
+  value: string | number
   loading: boolean
 }
 
