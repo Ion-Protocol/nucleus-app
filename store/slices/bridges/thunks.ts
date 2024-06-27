@@ -201,6 +201,12 @@ export interface FetchBridgeRateResult {
   rate: string
 }
 
+/**
+ * Fetches the bridge rate for a given bridge key.
+ * @param bridgeKey - The key of the bridge.
+ * @returns A promise that resolves to an object containing the bridge key and the fetched bridge rate.
+ * @throws If there is an error while fetching the rate.
+ */
 export const fetchBridgeRate = createAsyncThunk<
   { bridgeKey: BridgeKey; result: FetchBridgeRateResult },
   BridgeKey,
@@ -251,10 +257,8 @@ export const performDeposit = createAsyncThunk<
     const depositAmountAsString = selectBridgeFrom(state, bridgeKey)
     const depositAmount = BigInt(parseFloat(depositAmountAsString) * WAD.number)
 
-    const minimumMint = depositAmount / BigInt(1.1 * WAD.number) / WAD.bigint
-
     if (userAddress) {
-      const txHash = await deposit({ depositAsset, depositAmount, minimumMint }, { bridgeKey, userAddress })
+      const txHash = await deposit({ depositAsset, depositAmount }, { bridgeKey, userAddress })
       dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
       dispatch(setTransactionTxHash(txHash))
       dispatch(setBridgeFrom(''))
