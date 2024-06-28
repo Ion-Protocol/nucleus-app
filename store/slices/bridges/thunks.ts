@@ -83,8 +83,7 @@ export const fetchBridgeApy = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('bridges/fetchBridgeApy', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
-    // const address = bridgesConfig[bridgeKey].contracts.boringVault
-    const address = '0x5e6d7C88f4Be6387f0a9006562d10f8d1C89e84E'
+    const address = bridgesConfig[bridgeKey].contracts.boringVault
     const resultAction = await dispatch(netApyApi.endpoints.getLatestNetApy.initiate({ address }))
 
     if ('error' in resultAction) {

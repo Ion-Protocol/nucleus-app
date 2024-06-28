@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { RootState } from '@/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
@@ -15,7 +15,7 @@ interface RouterState {
 const initialState: RouterState = {
   path: null,
   query: {
-    bridge: null,
+    bridge: Object.keys(bridgesConfig)[0] as BridgeKey,
   },
 }
 
