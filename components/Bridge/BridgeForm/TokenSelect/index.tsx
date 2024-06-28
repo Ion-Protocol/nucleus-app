@@ -1,9 +1,17 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
+import { TokenKey } from '@/config/token'
+import { Bridges } from '@/store/slices/bridges'
+import { Token } from '@/types/Token'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
-import { TokenSelectConnector } from './connector'
 
-function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props) {
+interface TokenSelectProps {
+  tokens: Token[]
+  selected: Token
+  onChange: (tokenKey: TokenKey) => void
+}
+
+function TokenSelect({ selected, tokens, onChange }: TokenSelectProps) {
   return (
     <Menu>
       <MenuButton
@@ -39,4 +47,4 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectConnector.Props)
   )
 }
 
-export default TokenSelectConnector.Connector(TokenSelect)
+export default TokenSelect

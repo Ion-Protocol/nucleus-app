@@ -10,8 +10,9 @@ import { selectTokenBalance } from '../balance'
 import { netApyApi } from '../netApy/api'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
-import { selectBridgeFrom, selectBridgeTokenKey } from './selectors'
+import { selectBridgeFrom, selectFromTokenKeyForBridge, selectToTokenKeyForBridge } from './selectors'
 import { setInputError } from './slice'
+import { selectBridgeKey } from '../router'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -41,7 +42,7 @@ export const fetchBridgeTvl = createAsyncThunk<
   const chainKey = state.chain.chainKey
 
   const vaultAddress = bridgesConfig[bridgeKey].contracts.boringVault
-  const acceptedTokens = bridgesConfig[bridgeKey].acceptedTokens
+  const acceptedTokens = bridgesConfig[bridgeKey].sourceTokens
 
   // Native token balances are in their native units (e.g. wstETH, weETH, etc.)
   const nativeTokenBalancesPromise = Promise.all(
@@ -134,7 +135,7 @@ export const setBridgeFrom = createAsyncThunk<
     fromFormatted = ''
   }
 
-  const tokenKey = selectBridgeTokenKey(state, bridgeKey)
+  const tokenKey = selectFromTokenKeyForBridge(state, bridgeKey)
   const tokenBalance = selectTokenBalance(tokenKey)(state)
   const tokenBalanceAsNumber = bigIntToNumber(BigInt(tokenBalance))
 
@@ -161,40 +162,12 @@ export const setBridgeFromMax = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >('bridges/setBridgeFromMax', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState() as RootState
-  const bridgeKey = state.router.query?.bridge as BridgeKey
-  if (!bridgeKey) {
-    throw new Error('Bridge key is missing in router query')
-  }
-  const tokenKey = selectBridgeTokenKey(state, bridgeKey)
+  const bridgeKey = selectBridgeKey(state) as BridgeKey
+  const tokenKey = selectFromTokenKeyForBridge(state, bridgeKey)
   const tokenBalance = selectTokenBalance(tokenKey)(state)
   const tokenBalanceAsNumber = bigIntToNumber(BigInt(tokenBalance))
 
   return { bridgeKey, from: tokenBalanceAsNumber }
-})
-
-/**
- * Sets the bridge token.
- *
- * @param token - The token to set.
- * @param options - The options object.
- * @param options.state - The root state of the Redux store.
- * @param options.rejectValue - The value to reject with if the async action fails.
- * @returns A promise that resolves to an object containing the bridge key and token.
- * @throws An error if the bridge key is missing in the router query.
- */
-export const setBridgeToken = createAsyncThunk<
-  { bridgeKey: BridgeKey; tokenKey: TokenKey },
-  TokenKey,
-  { state: RootState; rejectValue: string }
->('bridges/setBridgeToken', async (tokenKey, { getState, rejectWithValue, dispatch }) => {
-  const state = getState() as RootState
-  const bridgeKey = state.router.query?.bridge as BridgeKey
-
-  if (!bridgeKey) {
-    throw new Error('Bridge key is missing in router query')
-  }
-
-  return { bridgeKey, tokenKey }
 })
 
 export interface FetchBridgeRateResult {
@@ -251,7 +224,7 @@ export const performDeposit = createAsyncThunk<
     const state = getState()
     const userAddress = selectAddress(state)
 
-    const depositAssetKey = selectBridgeTokenKey(state, bridgeKey)
+    const depositAssetKey = selectFromTokenKeyForBridge(state, bridgeKey)
     const depositAsset = tokensConfig[depositAssetKey as TokenKey].address
 
     const depositAmountAsString = selectBridgeFrom(state, bridgeKey)

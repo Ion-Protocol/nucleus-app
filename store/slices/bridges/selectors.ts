@@ -146,12 +146,26 @@ export const selectBridgeFrom = (state: RootState, key: BridgeKey): string => {
 /**
  * Retrieves the token of a specific bridge from the state.
  * @param state - The root state of the application.
- * @param key - The key of the bridge.
+ * @param bridgeKey - The key of the bridge.
  * @returns The token of the bridge, or undefined if the bridge does not exist.
  */
-export const selectBridgeTokenKey = (state: RootState, key: BridgeKey): TokenKey => {
+export const selectToTokenKeyForBridge = (state: RootState, bridgeKey: BridgeKey): TokenKey => {
   const bridgesState = selectBridgesState(state)
-  return bridgesState.data[key]?.selectedToken || TokenKey.ETH
+  return bridgesState.data[bridgeKey]?.selectedToToken || bridgesConfig[bridgeKey].destinationTokens[0]
+}
+
+/**
+ * Selects the `TokenKey` associated with a specific `BridgeKey` from the state.
+ * If the `BridgeKey` does not exist in the state, it returns `null`.
+ * If the `BridgeKey` exists but does not have a selected `TokenKey`, it returns the first `TokenKey` from the `sourceTokens` array in the `bridgesConfig`.
+ *
+ * @param state - The root state of the application.
+ * @param bridgeKey - The key of the bridge.
+ * @returns The selected `TokenKey` or `null`.
+ */
+export const selectFromTokenKeyForBridge = (state: RootState, bridgeKey: BridgeKey): TokenKey => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.data[bridgeKey]?.selectedFromToken || bridgesConfig[bridgeKey].sourceTokens[0]
 }
 
 /**

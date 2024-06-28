@@ -1,10 +1,9 @@
-import { TokenIcon } from '@/components/config/tokenIcons'
-import { TokenKey } from '@/config/token'
-import { Divider, Flex, Input, Text } from '@chakra-ui/react'
-import { TokenToConnector } from './connector'
 import { IonCard } from '@/components/shared/IonCard'
+import { Flex, Input, Text } from '@chakra-ui/react'
+import TokenSelect from '../TokenSelect'
+import { TokenToConnector } from './connector'
 
-function TokenTo({ to }: TokenToConnector.Props) {
+function TokenTo({ to, tokens, selectedToken, onChangeToken }: TokenToConnector.Props) {
   return (
     <IonCard variant="elevate">
       {/* Top Row */}
@@ -29,12 +28,9 @@ function TokenTo({ to }: TokenToConnector.Props) {
           fontWeight="bold"
         />
 
-        <Divider orientation="vertical" />
-        <Flex align="center" gap={2} ml={1} mr={3}>
-          <TokenIcon fontSize="28px" tokenKey={TokenKey.SEI} />
-          <Text fontWeight="bold" fontSize="xl" pt="4px">
-            SEI
-          </Text>
+        <Flex gap={3} align="center">
+          {/* Token Select */}
+          <TokenSelect tokens={tokens} selected={selectedToken} onChange={onChangeToken} />
         </Flex>
       </Flex>
     </IonCard>

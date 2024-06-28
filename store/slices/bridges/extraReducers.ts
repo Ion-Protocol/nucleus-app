@@ -11,7 +11,6 @@ import {
   performDeposit,
   setBridgeFrom,
   setBridgeFromMax,
-  setBridgeToken,
 } from './thunks'
 
 /**
@@ -125,16 +124,6 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       const { bridgeKey, from } = action.payload
       if (state.data[bridgeKey]) {
         state.data[bridgeKey].from = from
-      }
-    })
-
-    ///////////////////////////////
-    // Selected Token
-    ///////////////////////////////
-    .addCase(setBridgeToken.fulfilled, (state, action) => {
-      const { bridgeKey, tokenKey } = action.payload
-      if (state.data[bridgeKey]) {
-        state.data[bridgeKey].selectedToken = tokenKey
       }
     })
 }

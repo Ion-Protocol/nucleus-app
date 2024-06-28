@@ -1,7 +1,7 @@
 import { createIcon } from '@chakra-ui/react'
 
-export const MorphIcon = createIcon({
-  displayName: 'MorphIcon',
+export const MorphLogo = createIcon({
+  displayName: 'MorphLogo',
   viewBox: '0 0 129 142',
   path: (
     <>
