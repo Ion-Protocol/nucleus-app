@@ -1,18 +1,16 @@
 import { BridgeIcon } from '@/components/config/bridgeIcons'
-import { BridgeUI } from '@/types/Bridge'
-import { Flex, Skeleton, Text } from '@chakra-ui/react'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { YieldBridgeItemConnector } from './connector'
 
-interface YieldBridgeItemProps {
-  bridge: BridgeUI
-  loading?: boolean
-}
-
-export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
+function YieldBridgeItem({ bridge, disabled, loading }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
   function handleClick() {
-    router.push(`/bridge/${bridge.key}`)
+    if (!disabled) {
+      router.push(`/bridge/${bridge.key}`)
+    }
   }
 
   return (
@@ -23,15 +21,20 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
       w="350px"
       borderRadius="16px"
       overflow="hidden"
-      cursor="pointer"
-      _hover={{ bg: 'hover' }}
-      _active={{ bg: 'active' }}
+      cursor={disabled ? 'not-allowed' : 'pointer'}
+      _hover={{ bg: disabled ? 'default' : 'hover' }}
+      _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
     >
       {/* Text Section */}
       <Flex w="225px" py={6} pl={6} direction="column" justify="center">
-        {/* Bridge Name */}
-        <Text variant="header3">{bridge.name}</Text>
+        <Flex align="center" gap={3}>
+          {/* Bridge Name */}
+          <Text variant="header3">{bridge.name}</Text>
+
+          {/* Coming soon marker */}
+          {bridge.comingSoon && <Text color="secondaryText">Coming soon</Text>}
+        </Flex>
 
         {/* Bridge Description */}
         <Text>{bridge.description}</Text>
@@ -41,17 +44,17 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
           {/* TVL */}
           <Flex direction="column">
             <Text>TVL</Text>
-            <Skeleton isLoaded={!loading} w="100px">
-              <Text variant="large">{bridge.tvl.formatted}</Text>
-            </Skeleton>
+            <IonSkeleton isLoaded={!loading} w="100px">
+              <Text variant="large">{bridge.comingSoon ? '-' : bridge.tvl.formatted}</Text>
+            </IonSkeleton>
           </Flex>
 
           {/* APY */}
           <Flex direction="column">
             <Text>APY</Text>
-            <Skeleton isLoaded={!loading}>
-              <Text variant="large">{bridge.apy.formatted}</Text>
-            </Skeleton>
+            <IonSkeleton isLoaded={!loading}>
+              <Text variant="large">{bridge.comingSoon ? '-' : bridge.apy.formatted}</Text>
+            </IonSkeleton>
           </Flex>
         </Flex>
       </Flex>
@@ -63,3 +66,5 @@ export function YieldBridgeItem({ bridge, loading }: YieldBridgeItemProps) {
     </Flex>
   )
 }
+
+export default YieldBridgeItemConnector.Connector(YieldBridgeItem)

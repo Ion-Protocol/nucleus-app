@@ -7,9 +7,10 @@ interface NavItemProps extends ChakraProps {
   href: string
   leftIcon?: ReactElement
   disabled?: boolean
+  comingSoon?: boolean
 }
 
-export function NavItem({ title, href, leftIcon, disabled }: NavItemProps) {
+export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItemProps) {
   const router = useRouter()
   const isSelected = router.asPath === href
 
@@ -43,7 +44,7 @@ export function NavItem({ title, href, leftIcon, disabled }: NavItemProps) {
       >
         <Box w="36px">{iconWithSize}</Box>
         <Text userSelect="none" variant="large">
-          {title}
+          {title} {comingSoon && '(coming soon)'}
         </Text>
       </Flex>
     </Link>

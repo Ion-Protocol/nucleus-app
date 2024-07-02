@@ -1,9 +1,9 @@
-import { TokenUsdIcon } from '@/components/icons/TokenUsd'
+import { TokenUsdIcon } from '@/components/shared/icons/TokenUsd'
 import { Currency } from '@/types/Currency'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { CurrencySelectConnector } from './connector'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import { EthereumIcon } from '@/components/icons/Ethereum'
+import { EthereumIcon } from '@/components/shared/icons/Ethereum'
 
 export const currencyIconMap: Record<Currency, React.ReactElement> = {
   [Currency.USD]: <TokenUsdIcon />,

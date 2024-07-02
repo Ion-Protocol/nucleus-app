@@ -1,47 +1,70 @@
+import { balanceOf } from '@/api/contracts/erc20/balanceOf'
+import { TokenKey, tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { readContract } from '@wagmi/core'
-import { erc20Abi } from 'viem'
-import { setError } from '../status'
+import { getBalance } from 'wagmi/actions'
+import { selectAddress } from '../account'
+import { setErrorMessage } from '../status'
 
-export interface FetchWeETHBalanceResult {
-  balance: string
+export interface fetchAllTokenBalancesResult {
+  balances: Record<TokenKey, string>
 }
 
 /**
- * /////////////////////////////////////////////////////////////////////
- * This thunk is here just to demonstrate how to read from the contract.
- * It's unlikely that we will need this specific thunk.
- * /////////////////////////////////////////////////////////////////////
+ * Async thunk to fetch the balances of all tokens for the current user's address.
  *
- * Fetches the balance of the WeETH token for the current account.
+ * This function retrieves the user's address from the state, and then concurrently fetches the
+ * balance for each token defined in the tokensConfig. If successful, it returns an object
+ * containing all token balances. If an error occurs, it logs the error, dispatches it to the error
+ * slice, and rejects the thunk with an error message.
  *
- * @returns A promise that resolves to an object containing the balance of the WeETH token.
- * @throws If there is an error while fetching the balance.
+ * @returns {Promise<fetchAllTokenBalancesResult>} - An object containing the balances of all tokens.
+ *
+ * @throws {string} - An error message indicating the failure to fetch token balances.
  */
-export const fetchWeETHBalance = createAsyncThunk<
-  FetchWeETHBalanceResult,
+export const fetchAllTokenBalances = createAsyncThunk<
+  fetchAllTokenBalancesResult,
   void,
   { rejectValue: string; state: RootState }
->('balances/fetchWeETHBalance', async (_, { getState, rejectWithValue, dispatch }) => {
+>('balances/fetchAllTokenBalances', async (_, { getState, rejectWithValue, dispatch }) => {
+  const state = getState()
+  const address = selectAddress(state)
+  const balances: Record<TokenKey, string> = {} as Record<TokenKey, string>
+
+  if (!address) {
+    return rejectWithValue('No address found in state.')
+  }
+
   try {
-    const state = getState()
-    const address = state.account.address
-    if (!address) return { balance: BigInt(0).toString() }
-    const balance = await readContract(wagmiConfig, {
-      abi: erc20Abi,
-      address: '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',
-      functionName: 'balanceOf',
-      args: [address],
+    const balancePromises = Object.keys(tokensConfig).map(async (tokenKey) => {
+      if (tokenKey === TokenKey.ETH) {
+        // Fetch ETH balance
+        const { value: balance } = await getBalance(wagmiConfig, { address })
+        return { tokenKey: tokenKey as TokenKey, balance: balance.toString() }
+      } else {
+        // Fetch ERC20 token balance
+        const token = tokensConfig[tokenKey as TokenKey]
+        const tokenAddress = token.address
+
+        const balance = await balanceOf({ balanceAddress: address, tokenAddress })
+        return { tokenKey: tokenKey as TokenKey, balance: balance.toString() }
+      }
     })
-    return { balance: balance.toString() }
+
+    const results = await Promise.all(balancePromises)
+
+    results.forEach((result) => {
+      balances[result.tokenKey] = result.balance
+    })
+
+    return { balances }
   } catch (e) {
     const error = e as Error
-    const errorMessage = 'Failed to fetch WeETH balance.'
+    const errorMessage = `Failed to fetch token balance for address ${address}.`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setError(fullErrorMessage))
+    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })

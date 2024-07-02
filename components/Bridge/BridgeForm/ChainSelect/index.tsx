@@ -7,7 +7,7 @@ function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectCon
   return (
     <Menu>
       <MenuButton
-        variant="outline"
+        variant="elevate"
         as={Button}
         rightIcon={<ChevronDownIcon />}
         textAlign="left"

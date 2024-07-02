@@ -1,0 +1,271 @@
+{
+  "abi": [
+    { "type": "constructor", "inputs": [], "stateMutability": "nonpayable" },
+    {
+      "type": "function",
+      "name": "debt",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "debtCeiling",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "debtUnaccrued",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dust",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "gem",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" },
+        { "name": "user", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getIlkIndex",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkAddress", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "uint8", "internalType": "uint8" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "ilkCount",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "interestRateModule",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "isOperator",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "user", "type": "address", "internalType": "address" },
+        { "name": "operator", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lastRateUpdate",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "liquidity",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "queryPoolSlot",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "slot", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "value", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "rateUnaccrued",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "spot",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" }
+      ],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "supplyCap",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "totalNormalizedDebt",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        { "name": "ilkIndex", "type": "uint8", "internalType": "uint8" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "totalUnbackedDebt",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "unbackedDebt",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        },
+        {
+          "name": "unbackedDebtor",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "whitelist",
+      "inputs": [
+        {
+          "name": "pool",
+          "type": "address",
+          "internalType": "contract IIonPool"
+        }
+      ],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    { "type": "error", "name": "InvalidFieldSlot", "inputs": [] },
+    { "type": "error", "name": "SloadFailed", "inputs": [] }
+  ]
+}

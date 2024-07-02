@@ -1,9 +1,9 @@
-import { Button } from '@chakra-ui/react'
+import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { SubmitConnector } from './connector'
 
 function Submit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
   return (
-    <Button
+    <ConnectAwareButton
       h="fit-content"
       p={2}
       isLoading={loading}
@@ -13,7 +13,7 @@ function Submit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
       _active={disabled || loading ? {} : undefined}
     >
       Submit
-    </Button>
+    </ConnectAwareButton>
   )
 }
 

@@ -1,22 +1,27 @@
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
-import TokenSelect from './TokenSelect'
+import TokenSelect from '../TokenSelect'
 import { TokenFromConnector } from './connector'
+import { useState } from 'react'
+import { IonCard } from '@/components/shared/IonCard'
 
-function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
+function TokenFrom({
+  error,
+  inputValue,
+  onChange,
+  onChangeToken,
+  onMax,
+  selectedToken,
+  tokenBalance,
+  tokens,
+}: TokenFromConnector.Props) {
+  const [isFocused, setIsFocused] = useState(false)
+
   return (
-    <Flex
-      direction="column"
-      border="1px solid"
-      borderColor="border"
-      borderRadius="8px"
-      p={4}
-      bg="backgroundSecondary"
-      gap={4}
-    >
+    <IonCard variant="elevate" bg={isFocused ? 'selectedSecondary' : 'backgroundSecondary'}>
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text>From</Text>
-        <Text color="secondaryText">Balance: N/A</Text>
+        <Text color={error ? 'error.main' : 'text'}>From</Text>
+        <Text color="secondaryText">Balance: {tokenBalance}</Text>
       </Flex>
 
       {/* Bottom Row */}
@@ -25,26 +30,28 @@ function TokenFrom({ inputValue, onChange }: TokenFromConnector.Props) {
         <Input
           value={inputValue}
           onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           type="number"
           variant="unstyled"
           size="lg"
           placeholder="Amount"
           fontWeight="bold"
+          color={error ? 'error.main' : 'text'}
         />
+        {error && <Text color="error.main">{error}</Text>}
+        <Flex gap={3} align="center">
+          {/* Max Button */}
+          <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
+            <Text>MAX</Text>
+          </Button>
 
-        {/* Max Button */}
-        {/* <Button variant="outline" color="secondaryText" size="sm">
-          MAX
-        </Button> */}
-
-        <Divider orientation="vertical" />
-
-        {/* Token Select */}
-        <Flex>
-          <TokenSelect />
+          <Divider orientation="vertical" h="36px" borderColor="border" />
+          {/* Token Select */}
+          <TokenSelect tokens={tokens} selected={selectedToken} onChange={onChangeToken} />
         </Flex>
       </Flex>
-    </Flex>
+    </IonCard>
   )
 }
 

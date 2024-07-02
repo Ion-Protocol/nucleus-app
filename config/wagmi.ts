@@ -44,4 +44,5 @@ export const wagmiConfig = createConfig({
   chains,
   connectors,
   transports: { [mainnet.id]: http(), [tenderlyStaging.id]: http() },
+  ssr: true,
 })

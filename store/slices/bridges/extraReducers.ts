@@ -10,7 +10,7 @@ import {
   fetchBridgeTvl,
   performDeposit,
   setBridgeFrom,
-  setBridgeToken,
+  setBridgeFromMax,
 } from './thunks'
 
 /**
@@ -30,15 +30,12 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       bridge.tvl.loading = true
       state.overallLoading = true
     })
-    .addCase(
-      fetchBridgeTvl.fulfilled,
-      (state, action: PayloadAction<{ bridgeKey: BridgeKey; result: FetchBridgeTvlResult }>) => {
-        const bridge = state.data[action.payload.bridgeKey]
-        bridge.tvl.loading = false
-        bridge.tvl.value = action.payload.result.tvl
-        state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
-      }
-    )
+    .addCase(fetchBridgeTvl.fulfilled, (state, action: PayloadAction<FetchBridgeTvlResult>) => {
+      const bridge = state.data[action.payload.bridgeKey]
+      bridge.tvl.loading = false
+      bridge.tvl.value = action.payload.tvl
+      state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
+    })
     .addCase(fetchBridgeTvl.rejected, (state, action) => {
       const bridge = state.data[action.meta.arg]
       bridge.tvl.loading = false
@@ -121,12 +118,12 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     })
 
     ///////////////////////////////
-    // Selected Token
+    // Bridge From Max Input
     ///////////////////////////////
-    .addCase(setBridgeToken.fulfilled, (state, action) => {
-      const { bridgeKey, tokenKey } = action.payload
+    .addCase(setBridgeFromMax.fulfilled, (state, action) => {
+      const { bridgeKey, from } = action.payload
       if (state.data[bridgeKey]) {
-        state.data[bridgeKey].selectedToken = tokenKey
+        state.data[bridgeKey].from = from
       }
     })
 }

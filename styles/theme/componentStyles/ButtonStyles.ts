@@ -1,7 +1,12 @@
 import { ComponentStyleConfig, StyleFunctionProps } from '@chakra-ui/react'
+import { getColorFromToken } from '../helpers/getColorFromToken'
 
 const buttonGradient = (props: StyleFunctionProps) => {
   return `linear-gradient(101.87deg, ${props.theme.colors.primary[600]} 2.85%, ${props.theme.colors.primary[800]} 100.03%)`
+}
+
+const getSelectedSecondaryColor = (props: StyleFunctionProps) => {
+  return getColorFromToken('shadow', props.colorMode)
 }
 
 export const ButtonStyles: ComponentStyleConfig = {
@@ -33,6 +38,12 @@ export const ButtonStyles: ComponentStyleConfig = {
       border: '2px solid',
       borderColor: 'border',
       backgroundColor: 'backgroundSecondary',
+    }),
+    elevate: (props) => ({
+      textStyle: 'button',
+      border: 'none',
+      backgroundColor: 'backgroundSecondary',
+      boxShadow: `0px 4px 10px 0px ${getSelectedSecondaryColor(props)}`,
     }),
     borderless: (props) => ({
       backgroundColor: 'transparent',

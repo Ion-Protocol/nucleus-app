@@ -3,7 +3,7 @@ import { RootState } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { readContract } from '@wagmi/core'
 import { Abi, erc20Abi } from 'viem'
-import { setError } from '../status'
+import { setErrorMessage } from '../status'
 import Chainlink from '@/contracts/Chainlink.json'
 import { contractAddresses } from '@/config/contracts'
 
@@ -16,8 +16,8 @@ export interface FetchPriceResult {
  *
  * @returns A promise that resolves to the fetched price.
  */
-export const fetchPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue: string; state: RootState }>(
-  'price/fetchPrice',
+export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue: string; state: RootState }>(
+  'price/fetchEthPrice',
   async (_, { getState, rejectWithValue, dispatch }) => {
     try {
       const result = (await readContract(wagmiConfig, {
@@ -34,7 +34,7 @@ export const fetchPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue
       const errorMessage = 'Failed to fetch WeETH balance.'
       const fullErrorMessage = `${errorMessage}\n${error.message}`
       console.error(fullErrorMessage)
-      dispatch(setError(fullErrorMessage))
+      dispatch(setErrorMessage(fullErrorMessage))
       return rejectWithValue(errorMessage)
     }
   }

@@ -21,6 +21,13 @@ export const textStyles = {
     fontSize: '22px',
     fontWeight: 'bold',
   },
+  bigParagraph: {
+    fontSize: '22px',
+  },
+  smallParagraphBold: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+  },
   medium: {
     fontSize: '14px',
   },
@@ -29,6 +36,10 @@ export const textStyles = {
   },
   xl: {
     fontSize: '16px',
+  },
+  xxl: {
+    fontSize: '18px',
+    fontWeight: 'bold',
   },
   caption: {
     fontSize: '12px',

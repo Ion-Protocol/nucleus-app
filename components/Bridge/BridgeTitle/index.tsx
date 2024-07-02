@@ -1,15 +1,22 @@
 import { BridgeIcon } from '@/components/config/bridgeIcons'
 import { Flex, Text } from '@chakra-ui/react'
 import { BridgeTitleConnector } from './connector'
+import Tvl from './Tvl'
 
 function BridgeTitle({ bridgeKey, name, description, ...props }: BridgeTitleConnector.Props) {
   return (
-    <Flex direction="column" gap={1} w="600px" maxH="125px" {...props}>
-      <Flex align="center" gap={3}>
-        <Text variant="header1">Bridge {name}</Text>
-        <BridgeIcon bridgeKey={bridgeKey} fontSize="40px" />
+    <Flex align="center" justify="space-between" w="100%" {...props}>
+      <Flex direction="column" gap={2} w="700px">
+        <Flex align="center" gap={3}>
+          <Text variant="header1">Bridge {name}</Text>
+          <BridgeIcon bridgeKey={bridgeKey} fontSize="32px" />
+        </Flex>
+        <Text>{description}</Text>
+        <Text>
+          Select your deposit asset and select the destination chain that you want to mint the native yield token on.
+        </Text>
       </Flex>
-      <Text>{description}</Text>
+      <Tvl />
     </Flex>
   )
 }

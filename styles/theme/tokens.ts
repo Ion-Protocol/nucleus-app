@@ -28,6 +28,10 @@ export const semanticTokens = {
       default: 'primary.50',
       _dark: 'midnight.800',
     },
+    selectedSecondary: {
+      default: 'neutral.50',
+      _dark: 'midnight.700',
+    },
     hover: {
       default: 'primary.50',
       _dark: 'midnight.800',
@@ -44,18 +48,26 @@ export const semanticTokens = {
       default: 'neutral.500',
       _dark: 'midnight.400',
     },
+    shadow: {
+      default: 'shadow.light',
+      _dark: 'shadow.dark',
+    },
+    link: {
+      default: 'primary.500',
+      _dark: 'primary.300',
+    },
     success: {
       main: {
-        default: 'green.dark',
-        _dark: 'green.dark',
+        default: 'green.main',
+        _dark: 'green.main',
       },
       iconBg: {
-        default: 'green.medium',
-        _dark: 'green.veryDark',
+        default: 'green.light',
+        _dark: 'green.light',
       },
       background: {
-        default: 'green.light',
-        _dark: 'midnight.850',
+        default: 'green.lighter',
+        _dark: 'green.lighter',
       },
     },
     warning: {
@@ -74,16 +86,78 @@ export const semanticTokens = {
     },
     error: {
       main: {
-        default: 'red.dark',
-        _dark: 'red.dark',
+        default: 'red.main',
+        _dark: 'red.main',
       },
       iconBg: {
-        default: 'red.medium',
-        _dark: 'red.veryDark',
+        default: 'red.light',
+        _dark: 'red.light',
       },
       background: {
-        default: 'red.light',
-        _dark: 'midnight.850',
+        default: 'red.lighter',
+        _dark: 'red.lighter',
+      },
+    },
+    timeRange: {
+      background: {
+        default: 'neutral.50',
+        _dark: 'midnight.890',
+      },
+      unselectedText: {
+        default: 'neutral.500',
+        _dark: 'neutral.600',
+      },
+      selectedBackground: {
+        default: 'white',
+        _dark: 'midnight.700',
+      },
+    },
+    chart: {
+      grid: {
+        default: 'neutral.200',
+        _dark: 'midnight.500',
+      },
+      line: {
+        default: 'primary.600',
+        _dark: 'primary.600',
+      },
+    },
+    table: {
+      background: {
+        default: 'neutral.50',
+        _dark: 'midnight.890',
+      },
+    },
+    tooltip: {
+      background: {
+        default: 'neutral.800',
+        _dark: 'midnight.50',
+      },
+      color: {
+        default: 'neutral.50',
+        _dark: 'neutral.800',
+      },
+    },
+    skeleton: {
+      startColor: {
+        default: 'neutral.500',
+        _dark: 'midnight.400',
+      },
+      endColor: {
+        default: 'neutral.200',
+        _dark: 'midnight.800',
+      },
+    },
+    code: {
+      background: {
+        default: 'neutral.50',
+        _dark: 'midnight.890',
+      },
+    },
+    clip: {
+      background: {
+        default: 'neutral.200',
+        _dark: 'midnight.600',
       },
     },
   },

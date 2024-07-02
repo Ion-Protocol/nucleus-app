@@ -1,12 +1,10 @@
 import { RootState } from '@/store'
-import { selectAllBridges } from '@/store/slices/bridges'
-import { clearError, selectErrorMessage, selectLoading } from '@/store/slices/status'
+import { selectAllBridges, selectBridgesLoading } from '@/store/slices/bridges'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   return {
     bridges: selectAllBridges(state),
-    loading: selectLoading(state),
   }
 }
 

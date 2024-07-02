@@ -1,9 +1,9 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { ChainKey } from '@/config/chains'
 import { TokenKey } from '@/config/token'
 
 export interface AsyncMetric {
-  value: string
+  value: string | number
   loading: boolean
 }
 
@@ -13,13 +13,15 @@ export interface BridgeData {
   rate: AsyncMetric
   error: string | null
   from: string
-  selectedToken: TokenKey
+  selectedFromToken: TokenKey | null
+  selectedToToken: TokenKey | null
 }
 
 export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
   sourceChain: ChainKey
+  inputError: string | null
   destinationChain: ChainKey
   deposit: {
     pending: boolean
@@ -38,7 +40,8 @@ const initializeData = (): { [key in BridgeKey]: BridgeData } => {
       rate: { value: BigInt(0).toString(), loading: false },
       error: null,
       from: '',
-      selectedToken: TokenKey.WETH,
+      selectedFromToken: bridgesConfig[key].sourceTokens[0],
+      selectedToToken: bridgesConfig[key].destinationTokens[0],
     }
   })
 
@@ -50,6 +53,7 @@ export const initialState: BridgesState = {
   overallLoading: true,
   sourceChain: ChainKey.ETHEREUM,
   destinationChain: ChainKey.ETHEREUM,
+  inputError: null,
   deposit: {
     pending: false,
     error: null,

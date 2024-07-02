@@ -7,7 +7,7 @@ export const uiConfig = {
     },
     bridge: {
       title: {
-        descriptionLenth: 175,
+        descriptionLenth: 300,
       },
     },
   },

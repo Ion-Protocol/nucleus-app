@@ -1,12 +1,12 @@
-import { RootState } from '@/store'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { fetchWeETHBalance, FetchWeETHBalanceResult } from './thunks'
+import { TokenKey, tokensConfig } from '@/config/token'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { fetchAllTokenBalances, fetchAllTokenBalancesResult } from './thunks'
 
 // ==================
 // 1. STATE INTERFACE
 // ==================
 export interface BalancesState {
-  data: string
+  data: Record<TokenKey, string>
   loading: boolean
   error: string | null
 }
@@ -15,8 +15,14 @@ export interface BalancesState {
 // 2. INITIAL STATE
 // ==================
 const initialState: BalancesState = {
-  data: BigInt(0).toString(),
-  loading: true,
+  data: Object.keys(tokensConfig).reduce(
+    (acc, tokenKey) => {
+      acc[tokenKey as TokenKey] = '0'
+      return acc
+    },
+    {} as Record<TokenKey, string>
+  ),
+  loading: false,
   error: null,
 }
 
@@ -29,16 +35,17 @@ const balancesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchWeETHBalance.pending, (state) => {
+      // Liquidity
+      .addCase(fetchAllTokenBalances.pending, (state) => {
         state.loading = true
       })
-      .addCase(fetchWeETHBalance.fulfilled, (state, action: PayloadAction<FetchWeETHBalanceResult>) => {
+      .addCase(fetchAllTokenBalances.fulfilled, (state, action: PayloadAction<fetchAllTokenBalancesResult>) => {
         state.loading = false
-        state.data = action.payload.balance
+        state.data = action.payload.balances
       })
-      .addCase(fetchWeETHBalance.rejected, (state, action: PayloadAction<string | undefined>) => {
+      .addCase(fetchAllTokenBalances.rejected, (state, action: PayloadAction<string | undefined>) => {
         state.loading = false
-        state.error = action.payload || 'Failed to fetch WE-ETH balance'
+        state.error = action.payload || 'Failed to fetch token balances'
       })
   },
 })

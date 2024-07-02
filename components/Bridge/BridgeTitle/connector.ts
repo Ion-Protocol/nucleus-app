@@ -5,10 +5,8 @@ import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
-  const { bridgeKey } = ownProps
+  const bridgeKey = state.router.query?.bridge as BridgeKey
   const bridge = bridgesConfig[bridgeKey]
-
-  if (!bridge) return { name: '', description: '' }
 
   const descriptionLength = uiConfig.pages.bridge.title.descriptionLenth
   const truncatedDescription =
@@ -17,6 +15,7 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
       : bridge.description
 
   return {
+    bridgeKey,
     name: bridge.name,
     description: truncatedDescription,
   }
@@ -28,9 +27,7 @@ const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface BridgeTitleOwnProps {
-  bridgeKey: BridgeKey
-}
+interface BridgeTitleOwnProps {}
 
 interface BridgeTitleProps extends BridgeTitleOwnProps, PropsFromRedux, ChakraProps {}
 

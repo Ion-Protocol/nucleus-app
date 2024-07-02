@@ -1,19 +1,25 @@
-import { BridgeChart } from '@/components/Bridge/BridgeChart'
+import BridgeChart from '@/components/Bridge/BridgeChart'
 import { BridgeForm } from '@/components/Bridge/BridgeForm'
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
-import { BridgeKey } from '@/config/bridges'
+import MarketsTable from '@/components/Bridge/MarketsTable'
+import { useAppSelector } from '@/store/hooks'
+import { selectBridgeKey } from '@/store/slices/router'
 import { Flex } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 
 export default function Bridge() {
-  const router = useRouter()
-  const { bridge: bridgeKey } = router.query as { bridge: BridgeKey }
+  // Make sure the router query properly contains the bridge key before loading the bridge page.
+  // This should only take one-ish iteration to complete, so there is no visible loading state.
+  // Now we can assert that bridgeKey is not null for every child component.
+  const bridgeKey = useAppSelector(selectBridgeKey)
+  if (bridgeKey === null) {
+    return <></>
+  }
 
   return (
     <Flex direction="column" h="100%">
       {/* Title & Description */}
-      <Flex direction="column" h="122px" borderBottom="1px solid" borderColor="border" justify="center">
-        <BridgeTitle bridgeKey={bridgeKey} ml={9} />
+      <Flex h="150px" w="100%" borderBottom="1px solid" borderColor="border">
+        <BridgeTitle mx={9} />
       </Flex>
 
       {/* Bottom */}
@@ -22,8 +28,10 @@ export default function Bridge() {
         <BridgeForm px={9} pt={9} w="40%" minW="300px" borderRight="1px solid" borderColor="border" />
 
         {/* Right: Chart and Markets Table */}
-        <Flex direction="column" w="60%">
+        <Flex direction="column" w="60%" p={6}>
           <BridgeChart />
+          <Flex h={9} />
+          <MarketsTable />
         </Flex>
       </Flex>
     </Flex>
