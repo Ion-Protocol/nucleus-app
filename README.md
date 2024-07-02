@@ -48,3 +48,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Contributing
+
+To contribute, please follow these steps:
+
+1. **Fork the repository**: Click the "Fork" button at the top of this repository to create your own copy.
+
+2. **Clone your fork**: Clone your forked repository to your local machine.
+   ```bash
+   git clone https://github.com/your-username/ion-yield-bridge.git
+   ```
