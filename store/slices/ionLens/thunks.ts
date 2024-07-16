@@ -4,7 +4,7 @@ import { MarketKey } from '@/types/Market'
 import { selectChain } from '../chain'
 import { setErrorMessage } from '../status'
 import { liquidity } from '@/api/contracts/IonLens/liquidity'
-import { chainsConfig } from '@/config/chains'
+import { selectChainConfig } from '../bridges'
 
 export type FetchIonLensResult = Record<MarketKey, string>
 
@@ -22,10 +22,11 @@ export const fetchLiquidityForAllMarkets = createAsyncThunk<
   const state = getState()
 
   const chainKey = selectChain(state)
+  const chainConfig = selectChainConfig(state)
 
   try {
     const liquidityPromises = Object.values(MarketKey).map(async (marketKey) => {
-      const ionPool = chainsConfig[chainKey].markets[marketKey].contracts.ionPool
+      const ionPool = chainConfig.markets[marketKey].contracts.ionPool
       const liquidityValue = await liquidity({ ionPool })
       return { marketKey, liquidity: liquidityValue.toString() }
     })

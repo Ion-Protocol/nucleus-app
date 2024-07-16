@@ -1,6 +1,6 @@
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
+import { BridgeKey } from '@/config/bridges'
 import { RootState } from '@/store'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // Add fields to RouterQuery as needed
 export interface RouterQuery {
@@ -9,14 +9,12 @@ export interface RouterQuery {
 
 interface RouterState {
   path: string | null
-  query: RouterQuery
+  query: RouterQuery | null
 }
 
 const initialState: RouterState = {
   path: null,
-  query: {
-    bridge: Object.keys(bridgesConfig)[0] as BridgeKey,
-  },
+  query: null,
 }
 
 const routerSlice = createSlice({
@@ -37,7 +35,20 @@ const routerSlice = createSlice({
 
 export const { setPath, clearPath, setQuery } = routerSlice.actions
 export const selectRouterPath = (state: RootState) => state.router.path
-export const selectRouterQuery = (state: RootState) => state.router.query
-export const selectBridgeKey = (state: RootState) => state.router.query.bridge
+
+export const selectRouterQuery = (state: RootState) => {
+  if (!state.router.query) {
+    throw new Error(`Router query not found. It's possible it just hasn't loaded yet.`)
+  }
+  return state.router.query
+}
+
+export const selectBridgeKey = createSelector([selectRouterQuery], (routerQuery) => {
+  const bridgeKey = routerQuery.bridge
+  if (!bridgeKey) {
+    throw new Error(`Bridge key not found in router query. It's possible it just hasn't loaded yet.`)
+  }
+  return bridgeKey
+})
 
 export const routerReducer = routerSlice.reducer

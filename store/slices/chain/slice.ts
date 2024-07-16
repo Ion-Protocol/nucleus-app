@@ -7,7 +7,7 @@ interface ChainState {
 }
 
 const initialState: ChainState = {
-  chainKey: ChainKey.ETHEREUM,
+  chainKey: ChainKey.MAINNET,
 }
 
 const chainSlice = createSlice({

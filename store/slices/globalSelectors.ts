@@ -1,12 +1,11 @@
 import { MarketKey } from '@/types/Market'
 import { calculateApy, calculateUtilizationRate } from '@/utils/rates'
 import { createSelector } from '@reduxjs/toolkit'
+import { selectAssetApys } from './assetApys'
+import { selectChainConfig } from './bridges'
+import { selectChain } from './chain'
 import { selectLiquidities } from './ionLens'
 import { selectAnnualBorrowRates, selectTotalSupplies } from './ionPool'
-import { selectAssetApys } from './assetApys'
-import { selectChain } from './chain'
-import { chainsConfig } from '@/config/chains'
-import { TokenKey } from '@/config/token'
 
 /**
  * Selects the utilization rates for each market.
@@ -44,13 +43,13 @@ export const selectUtilizationRates = createSelector(
  * @throws {Error} - If no APY is found for a lender asset.
  */
 export const selectApys = createSelector(
-  [selectChain, selectAnnualBorrowRates, selectAssetApys, selectUtilizationRates],
-  (chainKey, borrowRates, assetApys, utilizationRates) => {
+  [selectChainConfig, selectChain, selectAnnualBorrowRates, selectAssetApys, selectUtilizationRates],
+  (chainConfig, chainKey, borrowRates, assetApys, utilizationRates) => {
     const apys: Record<MarketKey, number> = {} as Record<MarketKey, number>
 
     Object.keys(borrowRates).forEach((key) => {
       const marketKey = key as MarketKey
-      const lenderAsset = chainsConfig[chainKey].markets[marketKey].lenderAsset
+      const lenderAsset = chainConfig.markets[marketKey].lenderAsset
       const lenderAssetApy = assetApys[lenderAsset] || 0
       apys[marketKey] = calculateApy(borrowRates[marketKey], lenderAssetApy, utilizationRates[marketKey])
     })

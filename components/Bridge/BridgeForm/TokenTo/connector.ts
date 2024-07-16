@@ -1,7 +1,8 @@
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
+import { BridgeKey } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import {
+  selectBridgeConfig,
   selectBridgeFrom,
   selectBridgeRate,
   selectToTokenKeyForBridge,
@@ -24,7 +25,8 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   const toFormatted = bigIntToNumber(toAsBigInt, { minimumFractionDigits: 0, maximumFractionDigits: 4 })
 
   // Look up list of available token keys from the bridges config
-  const tokenKeys = bridgesConfig[bridgeKey].destinationTokens
+  const bridgeConfig = selectBridgeConfig(state)
+  const tokenKeys = bridgeConfig.destinationTokens
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
   // Look up selected token key in state

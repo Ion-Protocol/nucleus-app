@@ -1,8 +1,9 @@
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
+import { BridgeKey } from '@/config/bridges'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
+  selectBridgeConfig,
   selectBridgeFrom,
   selectFromTokenKeyForBridge,
   selectInputError,
@@ -15,7 +16,8 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
   const bridgeKey = selectBridgeKey(state) as BridgeKey
   const inputValue = selectBridgeFrom(state, bridgeKey)
-  const tokenKeys = bridgesConfig[bridgeKey].sourceTokens
+  const bridgeConfig = selectBridgeConfig(state)
+  const tokenKeys = bridgeConfig.sourceTokens
   const tokens = tokenKeys.map((key) => tokensConfig[key])
   const selectedTokenKey = selectFromTokenKeyForBridge(state, bridgeKey) || tokenKeys[0]
   const selectedToken = tokensConfig[selectedTokenKey]

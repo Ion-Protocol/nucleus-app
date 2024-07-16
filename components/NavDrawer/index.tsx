@@ -1,4 +1,6 @@
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
+import { discordUrl, docsUrl } from '@/config/constants'
+import { useAppSelector } from '@/store/hooks'
+import { selectBridges } from '@/store/slices/bridges'
 import { Divider, Flex } from '@chakra-ui/react'
 import { BridgeNavIcon } from '../shared/icons/Bridge'
 import { DashboardIcon } from '../shared/icons/Dashboard'
@@ -10,10 +12,9 @@ import { FooterLink } from './FooterLink'
 import { Logo } from './Logo'
 import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
-import { discordUrl, docsUrl } from '@/config/constants'
 
 export function NavDrawer() {
-  const bridges = Object.keys(bridgesConfig) as BridgeKey[]
+  const bridges = useAppSelector(selectBridges)
 
   return (
     <Flex
@@ -30,13 +31,13 @@ export function NavDrawer() {
         <Flex direction="column" mt={6} gap={1}>
           <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
           <NavCollapse title="Bridge" leftIcon={<BridgeNavIcon />}>
-            {bridges.map((key) => (
+            {bridges.map((bridge) => (
               <NavItem
-                key={key}
-                title={bridgesConfig[key].name}
-                href={`/bridge/${key}`}
-                disabled={bridgesConfig[key].comingSoon}
-                comingSoon={bridgesConfig[key].comingSoon}
+                key={bridge.key}
+                title={bridge.name}
+                href={`/bridge/${bridge.key}`}
+                disabled={bridge.comingSoon}
+                comingSoon={bridge.comingSoon}
               />
             ))}
           </NavCollapse>

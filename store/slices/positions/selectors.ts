@@ -1,4 +1,3 @@
-import { chainsConfig } from '@/config/chains'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { utils } from '@/utils'
@@ -13,6 +12,7 @@ import { selectIonLensLoading } from '../ionLens'
 import { selectAssetApysLoading } from '../assetApys'
 import { MarketKey } from '@/types/Market'
 import { ionAppV2UrlBase } from '@/config/constants'
+import { selectChainConfig } from '../bridges'
 
 export const selectPositions = (state: RootState) => state.positions.data
 export const selectPositionsLoading = (state: RootState) => state.positions.loading
@@ -23,10 +23,10 @@ export const selectPositionsLoading = (state: RootState) => state.positions.load
  *
  * @returns A record of market keys and their corresponding URLs.
  */
-export const selectMarketUrls = createSelector([selectChain], (chainKey) => {
+export const selectMarketUrls = createSelector([selectChain, selectChainConfig], (chainKey, chainConfig) => {
   const marketUrlMap: Record<MarketKey, string> = {} as Record<MarketKey, string>
 
-  Object.values(chainsConfig[chainKey].markets).forEach((market) => {
+  Object.values(chainConfig.markets).forEach((market) => {
     marketUrlMap[market.key] =
       `${ionAppV2UrlBase}/lend?collateralAsset=${market.collateralAsset}&lenderAsset=${market.lenderAsset}&marketId=${market.id}`
   })
@@ -46,9 +46,17 @@ export const selectMarketUrls = createSelector([selectChain], (chainKey) => {
  * @returns {Array} The formatted positions table data.
  */
 export const selectPositionsTableData = createSelector(
-  [selectPositions, selectChain, selectPrice, selectCurrency, selectUtilizationRates, selectApys, selectMarketUrls],
-  (positions, chainKey, price, currency, utilizationRates, apys, marketUrls) => {
-    const markets = Object.values(chainsConfig[chainKey].markets)
+  [
+    selectChainConfig,
+    selectPositions,
+    selectPrice,
+    selectCurrency,
+    selectUtilizationRates,
+    selectApys,
+    selectMarketUrls,
+  ],
+  (chainConfig, positions, price, currency, utilizationRates, apys, marketUrls) => {
+    const markets = Object.values(chainConfig.markets)
 
     const formattedPositions = positions.map((position) => {
       const market = markets.find((m) => m.id === position.marketId)

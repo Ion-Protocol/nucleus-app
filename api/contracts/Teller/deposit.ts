@@ -1,5 +1,4 @@
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { wagmiConfig } from '@/config/wagmi'
 import TellerWithMultiAssetSupport from '@/contracts/TellerWithMultiAssetSupport.json'
 import { Abi } from 'viem'
@@ -16,18 +15,24 @@ export async function deposit(
     depositAsset: `0x${string}`
     depositAmount: bigint
   },
-  { bridgeKey, userAddress }: { bridgeKey: BridgeKey; userAddress: `0x${string}` }
+  {
+    userAddress,
+    tellerContractAddress,
+    boringVaultAddress,
+    accountantAddress,
+  }: {
+    userAddress: `0x${string}`
+    tellerContractAddress: `0x${string}`
+    boringVaultAddress: `0x${string}`
+    accountantAddress: `0x${string}`
+  }
 ) {
-  const bridge = bridgesConfig[bridgeKey]
-  const callingContractAddress = bridge.contracts.teller
-  const allowanceContractAddress = bridge.contracts.boringVault
-
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
   const allowanceAsBigInt = await allowance({
     tokenAddress: depositAsset,
-    spenderAddress: allowanceContractAddress,
+    spenderAddress: boringVaultAddress,
     userAddress,
   })
 
@@ -37,7 +42,7 @@ export async function deposit(
   if (depositAmount > allowanceAsBigInt) {
     await approve({
       tokenAddress: depositAsset,
-      spenderAddress: allowanceContractAddress,
+      spenderAddress: boringVaultAddress,
       amount: depositAmount,
     })
   }
@@ -45,7 +50,7 @@ export async function deposit(
   ////////////////////////////////
   // Calculate Minimum Mint
   ////////////////////////////////
-  const rate = await getRateInQuote({ quote: depositAsset }, { bridgeKey })
+  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
   const minimumMint = calculateMinimumMint(depositAmount, rate)
 
   ////////////////////////////////
@@ -53,7 +58,7 @@ export async function deposit(
   ////////////////////////////////
   await simulateContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: callingContractAddress,
+    address: tellerContractAddress,
     functionName: 'deposit',
     args: [depositAsset, depositAmount, minimumMint],
   })
@@ -63,7 +68,7 @@ export async function deposit(
   ////////////////////////////////
   const hash = await writeContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: callingContractAddress,
+    address: tellerContractAddress,
     functionName: 'deposit',
     args: [depositAsset, depositAmount, minimumMint],
   })
