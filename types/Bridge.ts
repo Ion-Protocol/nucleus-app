@@ -1,7 +1,7 @@
-import { BridgeKey } from '@/config/bridges'
 import { TokenKey } from '@/config/token'
 import { UIDataObject } from './common'
 import { Contracts } from './Contracts'
+import { BridgeKey } from '@/config/chains'
 
 export interface Bridge {
   name: string

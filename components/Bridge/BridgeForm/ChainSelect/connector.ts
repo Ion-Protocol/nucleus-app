@@ -1,4 +1,4 @@
-import { ChainKey } from '@/config/bridges'
+import { ChainKey } from '@/config/chains'
 import { RootState } from '@/store'
 import {
   selectBridgeDestinationChain,

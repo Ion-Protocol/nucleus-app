@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey } from '@/config/chains'
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import {
@@ -26,20 +26,15 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     // TVL
     ///////////////////////////////
     .addCase(fetchBridgeTvl.pending, (state, action) => {
-      const bridge = state.data[action.meta.arg]
-      bridge.tvl.loading = true
       state.overallLoading = true
     })
     .addCase(fetchBridgeTvl.fulfilled, (state, action: PayloadAction<FetchBridgeTvlResult>) => {
-      const bridge = state.data[action.payload.bridgeKey]
+      const bridge = state.data[action.payload.bridgeKey as BridgeKey]
       bridge.tvl.loading = false
       bridge.tvl.value = action.payload.tvl
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
     })
-    .addCase(fetchBridgeTvl.rejected, (state, action) => {
-      const bridge = state.data[action.meta.arg]
-      bridge.tvl.loading = false
-      bridge.error = action.error.message || 'Failed to fetch TVL'
+    .addCase(fetchBridgeTvl.rejected, (state: BridgesState, action) => {
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
     })
 
@@ -47,8 +42,6 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     // APY
     ///////////////////////////////
     .addCase(fetchBridgeApy.pending, (state, action) => {
-      const bridge = state.data[action.meta.arg]
-      bridge.apy.loading = true
       state.overallLoading = true
     })
     .addCase(
@@ -61,9 +54,6 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       }
     )
     .addCase(fetchBridgeApy.rejected, (state, action) => {
-      const bridge = state.data[action.meta.arg]
-      bridge.apy.loading = false
-      bridge.error = action.error.message || 'Failed to fetch APY'
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
     })
 
@@ -71,23 +61,17 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     // Rate
     ///////////////////////////////
     .addCase(fetchBridgeRate.pending, (state, action) => {
-      const bridge = state.data[action.meta.arg]
-      bridge.rate.loading = true
       state.overallLoading = true
     })
     .addCase(
       fetchBridgeRate.fulfilled,
       (state, action: PayloadAction<{ bridgeKey: BridgeKey; result: FetchBridgeRateResult }>) => {
         const bridge = state.data[action.payload.bridgeKey]
-        bridge.rate.loading = false
         bridge.rate.value = action.payload.result.rate
         state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
       }
     )
     .addCase(fetchBridgeRate.rejected, (state, action) => {
-      const bridge = state.data[action.meta.arg]
-      bridge.rate.loading = false
-      bridge.error = action.error.message || 'Failed to fetch rate'
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
     })
 
@@ -102,7 +86,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     })
     .addCase(performDeposit.rejected, (state, action) => {
       state.deposit.pending = false
-      const bridge = state.data[action.meta.arg]
+      const bridge = state.data[action.meta.arg as BridgeKey]
       bridge.rate.loading = false
       bridge.error = action.error.message || 'Failed to deposit'
     })
@@ -112,8 +96,8 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     ///////////////////////////////
     .addCase(setBridgeFrom.fulfilled, (state, action) => {
       const { bridgeKey, from } = action.payload
-      if (state.data[bridgeKey]) {
-        state.data[bridgeKey].from = from
+      if (state.data[bridgeKey as BridgeKey]) {
+        state.data[bridgeKey as BridgeKey].from = from
       }
     })
 
@@ -122,8 +106,8 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     ///////////////////////////////
     .addCase(setBridgeFromMax.fulfilled, (state, action) => {
       const { bridgeKey, from } = action.payload
-      if (state.data[bridgeKey]) {
-        state.data[bridgeKey].from = from
+      if (state.data[bridgeKey as BridgeKey]) {
+        state.data[bridgeKey as BridgeKey].from = from
       }
     })
 }

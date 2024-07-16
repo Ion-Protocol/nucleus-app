@@ -1,10 +1,10 @@
 import { RootState } from '@/store'
-import { selectAllBridges, selectBridgesLoading } from '@/store/slices/bridges'
+import { selectAllBridgeKeys } from '@/store/slices/bridges'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   return {
-    bridges: selectAllBridges(state),
+    bridgeKeys: selectAllBridgeKeys(),
   }
 }
 

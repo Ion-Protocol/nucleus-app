@@ -7,7 +7,8 @@ import { numberToEth, numberToUsd } from './number'
  * @param value - The value to be converted.
  * @returns The formatted currency string.
  */
-export function currencySwitch(currency: string, value: bigint | number, price: bigint) {
+export function currencySwitch(currency: string, value: bigint | number | null, price: bigint): string | null {
+  if (!value) return null
   switch (currency) {
     case 'USD':
       if (typeof value === 'bigint') {

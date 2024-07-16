@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey } from '@/config/chains'
 import { RootState } from '@/store'
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
@@ -10,11 +10,13 @@ export interface RouterQuery {
 interface RouterState {
   path: string | null
   query: RouterQuery | null
+  loading: boolean
 }
 
 const initialState: RouterState = {
   path: null,
   query: null,
+  loading: false,
 }
 
 const routerSlice = createSlice({
@@ -37,17 +39,11 @@ export const { setPath, clearPath, setQuery } = routerSlice.actions
 export const selectRouterPath = (state: RootState) => state.router.path
 
 export const selectRouterQuery = (state: RootState) => {
-  if (!state.router.query) {
-    throw new Error(`Router query not found. It's possible it just hasn't loaded yet.`)
-  }
   return state.router.query
 }
 
-export const selectBridgeKey = createSelector([selectRouterQuery], (routerQuery) => {
-  const bridgeKey = routerQuery.bridge
-  if (!bridgeKey) {
-    throw new Error(`Bridge key not found in router query. It's possible it just hasn't loaded yet.`)
-  }
+export const selectBridgeKey = createSelector([selectRouterQuery], (routerQuery): BridgeKey => {
+  const bridgeKey = routerQuery?.bridge || BridgeKey.MORPH
   return bridgeKey
 })
 

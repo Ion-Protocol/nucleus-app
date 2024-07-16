@@ -1,5 +1,5 @@
 import { balanceOf } from '@/api/contracts/erc20/balanceOf'
-import { ChainKey, chainsConfig } from '@/config/bridges'
+import { ChainKey, chainsConfig } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { MarketKey } from '@/types/Market'
 import { WAD } from '@/utils/bigint'

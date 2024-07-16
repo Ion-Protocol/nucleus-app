@@ -1,4 +1,4 @@
-import { BridgeKey, ChainKey } from '@/config/bridges'
+import { BridgeKey, ChainKey } from '@/config/chains'
 import { TokenKey } from '@/config/token'
 
 export interface AsyncMetric {
@@ -17,7 +17,7 @@ export interface BridgeData {
 }
 
 export type BridgesState = {
-  data: { [bridgeKey in BridgeKey]: BridgeData } | null
+  data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
   sourceChain: ChainKey
   inputError: string | null
@@ -28,8 +28,24 @@ export type BridgesState = {
   }
 }
 
+const initialBridgeData: BridgeData = {
+  tvl: { value: 0, loading: true },
+  apy: { value: 0, loading: true },
+  rate: { value: 0, loading: true },
+  error: null,
+  from: '',
+  selectedFromToken: null,
+  selectedToToken: null,
+}
+
 export const initialState: BridgesState = {
-  data: null,
+  data: Object.values(BridgeKey).reduce(
+    (acc, key) => {
+      acc[key as BridgeKey] = { ...initialBridgeData }
+      return acc
+    },
+    {} as { [bridgeKey in BridgeKey]: BridgeData }
+  ),
   overallLoading: true,
   sourceChain: ChainKey.MAINNET,
   destinationChain: ChainKey.MAINNET,

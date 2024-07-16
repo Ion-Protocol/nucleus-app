@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import {
@@ -16,8 +16,8 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   const bridgeKey = selectBridgeKey(state) as BridgeKey
 
   // Calculate "to" value
-  const from = selectBridgeFrom(state, bridgeKey)
-  const rate = selectBridgeRate(state, bridgeKey)
+  const from = selectBridgeFrom(state)
+  const rate = selectBridgeRate(state)
   const fromAsNumber = parseFloat(from)
   const fromAsBigInt = fromAsNumber ? BigInt(fromAsNumber * WAD.number) : BigInt(0)
   const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
@@ -30,7 +30,7 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
   // Look up selected token key in state
-  const selectedTokenKey = selectToTokenKeyForBridge(state, bridgeKey) || tokenKeys[0]
+  const selectedTokenKey = selectToTokenKeyForBridge(state) || tokenKeys[0]
   const selectedToken = tokensConfig[selectedTokenKey]
 
   return {

@@ -1,6 +1,6 @@
 import { discordUrl, docsUrl } from '@/config/constants'
 import { useAppSelector } from '@/store/hooks'
-import { selectBridges } from '@/store/slices/bridges'
+import { selectBridgesAsArray } from '@/store/slices/bridges'
 import { Divider, Flex } from '@chakra-ui/react'
 import { BridgeNavIcon } from '../shared/icons/Bridge'
 import { DashboardIcon } from '../shared/icons/Dashboard'
@@ -14,7 +14,7 @@ import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
 
 export function NavDrawer() {
-  const bridges = useAppSelector(selectBridges)
+  const bridges = useAppSelector(selectBridgesAsArray)
 
   return (
     <Flex

@@ -61,12 +61,6 @@ const statusSlice = createSlice({
   },
 })
 
-// A selector to get global loading state
-export const selectLoading = createSelector(
-  [selectBalancesLoading, selectPriceLoading, selectBridgesLoading],
-  (balancesLoading, priceLoading, bridgesLoading) => balancesLoading || priceLoading || bridgesLoading
-)
-
 export const {
   setErrorMessage,
   setErrorTitle,

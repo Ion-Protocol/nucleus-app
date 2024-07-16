@@ -1,7 +1,7 @@
 import { setAddress } from '@/store/slices/account'
 import { deferExecution } from '@/utils/misc'
 import { useEffect } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useGetAssetApysQuery } from '../slices/assetApys/api'
 import { fetchAllTokenBalances } from '../slices/balance'
@@ -18,6 +18,7 @@ import { fetchEthPrice } from '../slices/price'
 export function useStoreInitializer() {
   const { address } = useAccount()
   const dispatch = useAppDispatch()
+  const chainId = useChainId()
 
   const chainKey = useAppSelector(selectChain)
   const endTime = useAppSelector(selectNetApyEndTime)
@@ -30,7 +31,7 @@ export function useStoreInitializer() {
   // Although the backend api supports filtering by timeRange we will do it in the frontend
   // This will save on loading time and cache storage in the frontend
   useGetNetApyQuery({ address: vaultAddress, startTime: 1000, endTime })
-  useGetPositionsQuery({ address: vaultAddress })
+  useGetPositionsQuery({ address: vaultAddress, chainId })
   useGetAssetApysQuery({})
 
   useEffect(() => {

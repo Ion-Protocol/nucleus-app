@@ -1,6 +1,6 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
 import { deposit } from '@/api/contracts/Teller/deposit'
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { WAD, bigIntToNumber } from '@/utils/bigint'

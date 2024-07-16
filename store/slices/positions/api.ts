@@ -9,11 +9,12 @@ export const positionsApi = createApi({
   reducerPath: 'positionsApi',
   baseQuery,
   endpoints: (builder) => ({
-    getPositions: builder.query<Position[], { address: string }>({
-      query: ({ address }) => ({
-        url: 'v1/bigbrother/positions',
+    getPositions: builder.query<Position[], { address: string; chainId: number }>({
+      query: ({ address, chainId }) => ({
+        url: 'v2/bigbrother/positions',
         params: {
           address,
+          chain_id: chainId,
         },
       }),
       transformResponse: (response: any) => {

@@ -1,15 +1,33 @@
-import { BridgeKey } from '@/config/bridges'
+import { BridgeKey } from '@/config/chains'
+import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
-import { selectBridgeByKey, selectBridgeLoadingByKey } from '@/store/slices/bridges'
+import {
+  selectBridgeConfigByKey,
+  selectBridgeLoadingByKey,
+  selectFormattedBridgeTvlByKey,
+  selectFromattedBridgeApyKey,
+} from '@/store/slices/bridges'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const { bridgeKey } = ownProps
-  const bridge = selectBridgeByKey(bridgeKey)(state)
-  const disabled = bridge.comingSoon
-  const loading = selectBridgeLoadingByKey(bridgeKey)(state)
+  const bridgeConfig = selectBridgeConfigByKey(bridgeKey)(state)
+  const disabled = bridgeConfig.comingSoon
+  const loading = selectBridgeLoadingByKey(state)
+  const tvl = selectFormattedBridgeTvlByKey(bridgeKey)(state)
+  const apy = selectFromattedBridgeApyKey(bridgeKey)(state)
+
+  const maxDescriptionLength = uiConfig.pages.dashboard.yieldBridges.descriptionLength
+  let description = bridgeConfig.description
+  if (description && description.length > maxDescriptionLength) {
+    description = `${description.slice(0, maxDescriptionLength)}...`
+  }
+
   return {
-    bridge,
+    bridgeConfig,
+    tvl,
+    apy,
+    description,
     disabled,
     loading,
   }

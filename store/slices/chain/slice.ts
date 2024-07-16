@@ -21,6 +21,7 @@ const chainSlice = createSlice({
 })
 
 export const selectChain = (state: RootState) => {
+  if (!state) return ChainKey.MAINNET
   return state.chain.chainKey
 }
 export const { setChainKey } = chainSlice.actions
