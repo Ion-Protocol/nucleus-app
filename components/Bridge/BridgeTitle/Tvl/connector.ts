@@ -1,11 +1,11 @@
 import { RootState } from '@/store'
-import { selectActiveFormattedBridgeTvl, selectBridgesLoading } from '@/store/slices/bridges'
+import { selectActiveFormattedBridgeTvl, selectBridgesLoading, selectTvlLoading } from '@/store/slices/bridges'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: TvlOwnProps) => {
   const tvlFormatted = selectActiveFormattedBridgeTvl(state)
-  const loading = selectBridgesLoading(state)
+  const loading = selectTvlLoading(state)
 
   return {
     tvlFormatted,

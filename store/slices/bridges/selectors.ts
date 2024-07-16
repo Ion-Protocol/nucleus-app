@@ -23,6 +23,8 @@ export const selectBridgeDestinationChain = createSelector(
   (bridgesState) => bridgesState.destinationChain
 )
 
+export const selectTvlLoading = (state: RootState) => state.bridges.tvlLoading
+
 export const selectChainConfig = createSelector([selectChain], (chainKey) => {
   return chainsConfig[chainKey]
 })

@@ -19,6 +19,7 @@ export interface BridgeData {
 export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
+  tvlLoading: boolean
   sourceChain: ChainKey
   inputError: string | null
   destinationChain: ChainKey
@@ -47,6 +48,7 @@ export const initialState: BridgesState = {
     {} as { [bridgeKey in BridgeKey]: BridgeData }
   ),
   overallLoading: true,
+  tvlLoading: true,
   sourceChain: ChainKey.MAINNET,
   destinationChain: ChainKey.MAINNET,
   inputError: null,
