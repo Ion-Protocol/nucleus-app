@@ -1,11 +1,11 @@
 import { wagmiConfig } from '@/config/wagmi'
+import Chainlink from '@/contracts/Chainlink.json'
 import { RootState } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { readContract } from '@wagmi/core'
-import { Abi, erc20Abi } from 'viem'
+import { Abi } from 'viem'
+import { selectChainConfig } from '../bridges'
 import { setErrorMessage } from '../status'
-import Chainlink from '@/contracts/Chainlink.json'
-import { contractAddresses } from '@/config/contracts'
 
 export interface FetchPriceResult {
   price: string
@@ -19,10 +19,13 @@ export interface FetchPriceResult {
 export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue: string; state: RootState }>(
   'price/fetchEthPrice',
   async (_, { getState, rejectWithValue, dispatch }) => {
+    const state = getState()
+    const chainConfig = selectChainConfig(state)
+    const chainlinkAddress = chainConfig.contracts.chainlink
     try {
       const result = (await readContract(wagmiConfig, {
         abi: Chainlink.abi as Abi,
-        address: contractAddresses.chainlink,
+        address: chainlinkAddress,
         functionName: 'latestRoundData',
         args: [],
       })) as Array<bigint>

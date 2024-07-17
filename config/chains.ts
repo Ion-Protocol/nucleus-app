@@ -227,7 +227,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     id: 11155111,
     name: 'Sepolia',
     contracts: {
-      chainlink: '0x447Fd5eC2D383091C22B8549cb231a3bAD6d3fAf',
+      chainlink: '0xceA6Aa74E6A86a7f85B571Ce1C34f1A60B77CD29',
       ionLens: '0x0',
     },
     bridges: {

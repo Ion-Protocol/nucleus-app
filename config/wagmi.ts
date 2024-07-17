@@ -46,6 +46,6 @@ if (process.env.NEXT_PUBLIC_SHOW_SEPOLIA) {
 export const wagmiConfig = createConfig({
   chains,
   connectors,
-  transports: { [mainnet.id]: http(), [tenderlyStaging.id]: http() },
+  transports: { [mainnet.id]: http(), [tenderlyStaging.id]: http(), [sepolia.id]: http() },
   ssr: true,
 })
