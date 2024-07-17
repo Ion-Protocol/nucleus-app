@@ -41,6 +41,7 @@ export interface ChainConfig {
   name: string
   markets: Record<MarketKey, Market>
   bridges: Partial<Record<BridgeKey, Bridge>>
+  contracts: Record<string, `0x${string}`>
 }
 
 export const chainsConfig: Record<ChainKey, ChainConfig> = {
@@ -51,6 +52,10 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.MAINNET]: {
     id: 1,
     name: 'Ethereum',
+    contracts: {
+      chainlink: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+      ionLens: '0xe89AF12af000C4f76a57A3aD16ef8277a727DC81',
+    },
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
@@ -134,6 +139,10 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.TENDERLY_MAINNET]: {
     id: 99099127,
     name: 'Ion Testnet',
+    contracts: {
+      chainlink: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+      ionLens: '0xe89AF12af000C4f76a57A3aD16ef8277a727DC81',
+    },
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
@@ -217,6 +226,10 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.SEPOLIA]: {
     id: 11155111,
     name: 'Sepolia',
+    contracts: {
+      chainlink: '0x447Fd5eC2D383091C22B8549cb231a3bAD6d3fAf',
+      ionLens: '0x0',
+    },
     bridges: {
       [BridgeKey.OPTIMISM]: {
         name: 'Optimism',

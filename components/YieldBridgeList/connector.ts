@@ -4,7 +4,7 @@ import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   return {
-    bridgeKeys: selectAllBridgeKeys(),
+    bridgeKeys: selectAllBridgeKeys(state),
   }
 }
 

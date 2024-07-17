@@ -17,7 +17,7 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
   const bridgeKey = selectBridgeKey(state)
   const inputValue = selectBridgeFrom(state)
   const bridgeConfig = selectBridgeConfig(state)
-  const tokenKeys = bridgeConfig.sourceTokens
+  const tokenKeys = bridgeConfig?.sourceTokens || []
   const tokens = tokenKeys.map((key) => tokensConfig[key])
   const selectedTokenKey = selectFromTokenKeyForBridge(state) || tokenKeys[0]
   const selectedToken = tokensConfig[selectedTokenKey]

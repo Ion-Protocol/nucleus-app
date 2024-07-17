@@ -5,7 +5,7 @@ import { useAccount, useChainId } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useGetAssetApysQuery } from '../slices/assetApys/api'
 import { fetchAllTokenBalances } from '../slices/balance'
-import { selectBridgeConfig, selectBridgeKeys } from '../slices/bridges'
+import { selectBridgeConfig, selectBridgeKeys, selectChainConfig } from '../slices/bridges'
 import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
 import { selectChain } from '../slices/chain'
 import { fetchLiquidityForAllMarkets } from '../slices/ionLens'
@@ -14,18 +14,26 @@ import { selectNetApyEndTime } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
 import { useGetPositionsQuery } from '../slices/positions/api'
 import { fetchEthPrice } from '../slices/price'
+import { useRouter } from 'next/router'
+import { BridgeKey } from '@/config/chains'
+import { Bridge } from '@/types/Bridge'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
   const dispatch = useAppDispatch()
   const chainId = useChainId()
+  // const router = useRouter()
+  // const bridgeKey = router.query.bridge as BridgeKey
 
   const chainKey = useAppSelector(selectChain)
   const endTime = useAppSelector(selectNetApyEndTime)
   const bridgeKeys = useAppSelector(selectBridgeKeys)
   const bridgeConfig = useAppSelector(selectBridgeConfig)
+  // const chainConfig = useAppSelector(selectChainConfig)
+  // const bridgeConfig = chainConfig.bridges[bridgeKey] as Bridge
 
-  const vaultAddress = bridgeConfig.contracts.boringVault
+  // const vaultAddress = bridgeConfig.contracts.boringVault
+  const vaultAddress = '0x0'
 
   // Loads all data
   // Although the backend api supports filtering by timeRange we will do it in the frontend

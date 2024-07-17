@@ -1,13 +1,13 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { BridgeKey } from '@/config/chains'
-import { TokenKey, tokensConfig } from '@/config/token'
+import { TokenKey } from '@/config/token'
 import { RootState } from '@/store'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
-import { selectChain, selectChainId } from '../chain'
+import { selectChain, selectChainId, selectToken, selectTokenAddress } from '../chain'
 import { netApyApi } from '../netApy/api'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
@@ -43,15 +43,27 @@ export const fetchBridgeTvl = createAsyncThunk<
   const chainKey = selectChain(state)
   const bridgeConfig = selectBridgeConfig(state)
 
-  const vaultAddress = bridgeConfig.contracts.boringVault
-  const acceptedTokens = bridgeConfig.sourceTokens
+  const vaultAddress = bridgeConfig?.contracts.boringVault
+  const acceptedTokens = bridgeConfig?.sourceTokens || []
+
+  if (!vaultAddress) {
+    return { tvl: '0', bridgeKey }
+  }
 
   // Native token balances are in their native units (e.g. wstETH, weETH, etc.)
   const nativeTokenBalancesPromise = Promise.all(
-    acceptedTokens.map((tokenKey) => getTotalAssetBalanceWithPools({ tokenKey, chainKey, vaultAddress }))
+    acceptedTokens.map((tokenKey) => {
+      const tokenAddress = selectTokenAddress(tokenKey)(state)
+      return getTotalAssetBalanceWithPools({ tokenKey, chainKey, vaultAddress, tokenAddress })
+    })
   )
   // Token exchange rates are in ETH/token (e.g. ETH/wstETH, ETH/weETH, etc.)
-  const tokenExchangeRatesPromise = Promise.all(acceptedTokens.map((tokenKey) => tokensConfig[tokenKey].getPrice()))
+  const tokenExchangeRatesPromise = Promise.all(
+    acceptedTokens.map((tokenKey) => {
+      const token = selectToken(tokenKey)(state)
+      return token.getPrice()
+    })
+  )
 
   try {
     const [nativeTokenBalances, tokenExchangeRates] = await Promise.all([
@@ -88,7 +100,15 @@ export const fetchBridgeApy = createAsyncThunk<
     const state = getState()
     const chainId = selectChainId(state)
     const bridgeConfig = selectBridgeConfig(state)
-    const address = bridgeConfig.contracts.boringVault
+    const address = bridgeConfig?.contracts.boringVault
+    if (!address) {
+      return {
+        bridgeKey,
+        result: {
+          apy: 0,
+        },
+      }
+    }
     const resultAction = await dispatch(netApyApi.endpoints.getLatestNetApy.initiate({ address, chainId }))
 
     if ('error' in resultAction) {
@@ -195,10 +215,11 @@ export const fetchBridgeRate = createAsyncThunk<
   try {
     const state = getState()
     const bridge = selectBridgeConfig(state)
-    if (bridge.comingSoon) {
+    const accountantAddress = bridge?.contracts.accountant
+    if (bridge?.comingSoon || !accountantAddress) {
       return { bridgeKey, result: { rate: '0' } }
     }
-    const rateAsBigInt = await getRate(bridge.contracts.accountant)
+    const rateAsBigInt = await getRate(accountantAddress)
     return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
     const error = e as Error
@@ -233,17 +254,17 @@ export const performDeposit = createAsyncThunk<
     const userAddress = selectAddress(state)
 
     const depositAssetKey = selectFromTokenKeyForBridge(state)
-    const depositAsset = tokensConfig[depositAssetKey as TokenKey].address
+    const depositAsset = selectTokenAddress(depositAssetKey as TokenKey)(state)
 
     const depositAmountAsString = selectBridgeFrom(state)
     const depositAmount = BigInt(parseFloat(depositAmountAsString) * WAD.number)
 
-    const bridge = selectBridgeConfig(state)
-    const tellerContractAddress = bridge.contracts.teller
-    const boringVaultAddress = bridge.contracts.boringVault
-    const accountantAddress = bridge.contracts.accountant
+    const bridgeConfig = selectBridgeConfig(state)
+    const tellerContractAddress = bridgeConfig?.contracts.teller
+    const boringVaultAddress = bridgeConfig?.contracts.boringVault
+    const accountantAddress = bridgeConfig?.contracts.accountant
 
-    if (userAddress) {
+    if (userAddress && tellerContractAddress && boringVaultAddress && accountantAddress) {
       const txHash = await deposit(
         { depositAsset, depositAmount },
         { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }

@@ -2,6 +2,7 @@ import { ChainKey } from '@/config/chains'
 import { RootState } from '@/store'
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { selectChainConfig } from '../bridges'
+import { TokenKey, tokensConfig } from '@/config/token'
 
 interface ChainState {
   chainKey: ChainKey
@@ -34,5 +35,16 @@ export const selectChainId = (state: RootState) => {
   if (!state) return 1
   return state.chain.chainId
 }
+
+export const selectToken = (tokenKey: TokenKey) =>
+  createSelector([selectChain], (chain) => {
+    return tokensConfig[tokenKey].chains[chain]
+  })
+
+export const selectTokenAddress = (tokenKey: TokenKey) =>
+  createSelector([selectChain], (chain) => {
+    return tokensConfig[tokenKey].chains[chain].address
+  })
+
 export const { setChainKey, setChainId } = chainSlice.actions
 export const chainReducer = chainSlice.reducer

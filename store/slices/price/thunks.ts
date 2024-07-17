@@ -31,7 +31,7 @@ export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectVa
       return { price: ethPrice.toString() }
     } catch (e) {
       const error = e as Error
-      const errorMessage = 'Failed to fetch WeETH balance.'
+      const errorMessage = 'Failed to fetch ETH price.'
       const fullErrorMessage = `${errorMessage}\n${error.message}`
       console.error(fullErrorMessage)
       dispatch(setErrorMessage(fullErrorMessage))

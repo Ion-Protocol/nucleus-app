@@ -26,7 +26,7 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
 
   // Look up list of available token keys from the bridges config
   const bridgeConfig = selectBridgeConfig(state)
-  const tokenKeys = bridgeConfig.destinationTokens
+  const tokenKeys = bridgeConfig?.destinationTokens || []
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
   // Look up selected token key in state

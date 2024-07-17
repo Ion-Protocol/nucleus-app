@@ -38,14 +38,13 @@ export async function getTotalAssetBalanceWithPools({
   tokenKey,
   chainKey,
   vaultAddress,
+  tokenAddress,
 }: {
   tokenKey: TokenKey
   chainKey: ChainKey
   vaultAddress: `0x${string}`
+  tokenAddress: `0x${string}`
 }) {
-  // Setup: Get the token address from the token key
-  const tokenAddress = tokensConfig[tokenKey].address
-
   // Step 1: Get all pool addresses where the lender asset is the token key
   const poolAddresses = getPoolsForLenderAsset(chainKey, tokenKey)
 

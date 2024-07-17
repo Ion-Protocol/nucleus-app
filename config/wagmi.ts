@@ -8,7 +8,7 @@ import {
   walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { createConfig, http } from 'wagmi'
-import { Chain, mainnet } from 'wagmi/chains'
+import { Chain, mainnet, sepolia } from 'wagmi/chains'
 import { tenderlyStaging } from './tenderlyChain'
 
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
@@ -36,8 +36,11 @@ const connectors = connectorsForWallets(
 
 const chains = [mainnet] as [Chain, ...Chain[]]
 
-if (process.env.NEXT_PUBLIC_SHOW_TESTNET) {
+if (process.env.NEXT_PUBLIC_SHOW_TENDERLY) {
   chains.push(tenderlyStaging)
+}
+if (process.env.NEXT_PUBLIC_SHOW_SEPOLIA) {
+  chains.push(sepolia)
 }
 
 export const wagmiConfig = createConfig({

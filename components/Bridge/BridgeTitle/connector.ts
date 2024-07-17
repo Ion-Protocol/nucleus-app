@@ -10,14 +10,13 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   const bridgeConfig = selectBridgeConfig(state)
 
   const descriptionLength = uiConfig.pages.bridge.title.descriptionLenth
+  const description = bridgeConfig?.description || ''
   const truncatedDescription =
-    bridgeConfig.description.length > descriptionLength
-      ? bridgeConfig.description.substring(0, descriptionLength) + '...'
-      : bridgeConfig.description
+    description.length > descriptionLength ? description.substring(0, descriptionLength) + '...' : description
 
   return {
     bridgeKey,
-    name: bridgeConfig.name,
+    name: bridgeConfig?.name,
     description: truncatedDescription,
   }
 }

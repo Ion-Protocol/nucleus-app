@@ -36,7 +36,8 @@ export const selectMarketsConfig = createSelector([selectChainConfig], (chainCon
 
 export const selectBridgeConfig = createSelector(
   [selectChainConfig, selectBridgeKey],
-  (chainConfig, bridgeKey): Bridge & { key: BridgeKey } => {
+  (chainConfig, bridgeKey): (Bridge & { key: BridgeKey }) | null => {
+    if (!bridgeKey) return null
     const bridgeConfig = chainConfig.bridges[bridgeKey] as Bridge
     return { ...bridgeConfig, key: bridgeKey }
   }
@@ -62,7 +63,7 @@ export const selectBridgesAsArray = createSelector(
 export const selectChainsNamesAndKeys = createSelector([(state: RootState) => state], () => {
   return Object.keys(chainsConfig).map((key) => {
     return {
-      key,
+      key: key as ChainKey,
       name: chainsConfig[key as ChainKey].name,
     }
   })
@@ -78,7 +79,8 @@ export const selectBridgesData = createSelector([selectBridgesState], (bridgesSt
 
 export const selectBridgeData = createSelector(
   [selectBridgesData, selectBridgeKey],
-  (bridgesData, bridgeKey): BridgeData => {
+  (bridgesData, bridgeKey): BridgeData | null => {
+    if (!bridgeKey) return null
     return bridgesData?.[bridgeKey] as BridgeData
   }
 )
@@ -91,11 +93,16 @@ export const selectBridgeData = createSelector(
  */
 export const selectBridgeTvlByKey = (bridgeKey: BridgeKey) =>
   createSelector([selectBridgesData], (bridgesData) => {
-    return BigInt(bridgesData[bridgeKey].tvl.value)
+    const tvl = bridgesData[bridgeKey].tvl.value
+    if (!tvl) return BigInt(0)
+    return BigInt(tvl)
   })
 
 export const selectActiveBridgeTvl = createSelector([selectBridgesData, selectBridgeKey], (bridgesData, bridgeKey) => {
-  return BigInt(bridgesData[bridgeKey].tvl.value)
+  if (!bridgeKey) return BigInt(0)
+  const tvl = bridgesData[bridgeKey].tvl.value
+  if (!tvl) return BigInt(0)
+  return BigInt(tvl)
 })
 
 /**
@@ -117,7 +124,7 @@ export const selectBridgeApyKey = (bridgeKey: BridgeKey) =>
 export const selectBridgeLoadingByKey = createSelector(
   [selectBridgesData, selectBridgeKey],
   (bridgesData, bridgeKey): boolean => {
-    if (!bridgesData) return false
+    if (!bridgesData || !bridgeKey) return false
     return bridgesData[bridgeKey].tvl.loading || bridgesData[bridgeKey].apy.loading
   }
 )
@@ -165,7 +172,8 @@ export const selectAllBridgeKeys = createSelector([selectChainConfig], (chainCon
  * @param key - The key of the bridge.
  * @returns The 'from' value of the bridge, or undefined if the bridge does not exist.
  */
-export const selectBridgeFrom = createSelector([selectBridgeData], (bridgeData) => {
+export const selectBridgeFrom = createSelector([selectBridgeData], (bridgeData): string => {
+  if (!bridgeData) return ''
   return bridgeData.from
 })
 
@@ -175,7 +183,8 @@ export const selectBridgeFrom = createSelector([selectBridgeData], (bridgeData) 
  * @param bridgeKey - The key of the bridge.
  * @returns The token of the bridge, or undefined if the bridge does not exist.
  */
-export const selectToTokenKeyForBridge = createSelector([selectBridgeData], (bridgeData) => {
+export const selectToTokenKeyForBridge = createSelector([selectBridgeData], (bridgeData): TokenKey | null => {
+  if (!bridgeData) return null
   return bridgeData.selectedToToken
 })
 
@@ -190,7 +199,8 @@ export const selectToTokenKeyForBridge = createSelector([selectBridgeData], (bri
  */
 export const selectFromTokenKeyForBridge = createSelector(
   [selectBridgeData, selectBridgeConfig],
-  (bridgeData, bridgeConfig): TokenKey => {
+  (bridgeData, bridgeConfig): TokenKey | null => {
+    if (!bridgeData || !bridgeConfig) return null
     return bridgeData.selectedFromToken || bridgeConfig.sourceTokens[0]
   }
 )
@@ -202,7 +212,8 @@ export const selectFromTokenKeyForBridge = createSelector(
  * @param key - The key of the bridge.
  * @returns The rate of the bridge, or undefined if the bridge does not exist.
  */
-export const selectBridgeRate = createSelector([selectBridgeData], (bridgeData) => {
+export const selectBridgeRate = createSelector([selectBridgeData], (bridgeData): string | number | null => {
+  if (!bridgeData) return null
   return bridgeData.rate.value
 })
 
