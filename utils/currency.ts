@@ -8,9 +8,7 @@ import { numberToEth, numberToUsd } from './number'
  * @returns The formatted currency string.
  */
 export function currencySwitch(currency: string, value: bigint | number | null, price: bigint): string | null {
-  if (!value) {
-    value = 0
-  }
+  if (!value) return null
   switch (currency) {
     case 'USD':
       if (typeof value === 'bigint') {

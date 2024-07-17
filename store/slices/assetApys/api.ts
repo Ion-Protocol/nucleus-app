@@ -10,9 +10,12 @@ export const assetApysApi = createApi({
   reducerPath: 'assetApysApi',
   baseQuery,
   endpoints: (builder) => ({
-    getAssetApys: builder.query<AssetApys, {}>({
-      query: () => ({
-        url: 'v1/bigbrother/apy',
+    getAssetApys: builder.query<AssetApys, { chainId: number }>({
+      query: ({ chainId }) => ({
+        url: 'v2/bigbrother/apy',
+        params: {
+          chain_id: chainId,
+        },
       }),
       transformResponse: (response: any) => {
         return {

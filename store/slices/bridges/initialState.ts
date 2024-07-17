@@ -2,7 +2,7 @@ import { BridgeKey, ChainKey } from '@/config/chains'
 import { TokenKey } from '@/config/token'
 
 export interface AsyncMetric {
-  value: string | number
+  value: string | number | null
   loading: boolean
 }
 
@@ -20,6 +20,7 @@ export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
   tvlLoading: boolean
+  apyLoading: boolean
   sourceChain: ChainKey
   inputError: string | null
   destinationChain: ChainKey
@@ -31,7 +32,7 @@ export type BridgesState = {
 
 const initialBridgeData: BridgeData = {
   tvl: { value: 0, loading: true },
-  apy: { value: 0, loading: true },
+  apy: { value: null, loading: true },
   rate: { value: 0, loading: true },
   error: null,
   from: '',
@@ -49,6 +50,7 @@ export const initialState: BridgesState = {
   ),
   overallLoading: true,
   tvlLoading: true,
+  apyLoading: true,
   sourceChain: ChainKey.MAINNET,
   destinationChain: ChainKey.MAINNET,
   inputError: null,

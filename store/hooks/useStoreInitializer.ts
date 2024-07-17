@@ -30,9 +30,9 @@ export function useStoreInitializer() {
   // Loads all data
   // Although the backend api supports filtering by timeRange we will do it in the frontend
   // This will save on loading time and cache storage in the frontend
-  useGetNetApyQuery({ address: vaultAddress, startTime: 1000, endTime })
+  useGetNetApyQuery({ address: vaultAddress, startTime: 1000, endTime, chainId })
   useGetPositionsQuery({ address: vaultAddress, chainId })
-  useGetAssetApysQuery({})
+  useGetAssetApysQuery({ chainId })
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))

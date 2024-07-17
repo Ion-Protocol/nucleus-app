@@ -24,6 +24,7 @@ export const selectBridgeDestinationChain = createSelector(
 )
 
 export const selectTvlLoading = (state: RootState) => state.bridges.tvlLoading
+export const selectApyLoading = (state: RootState) => state.bridges.apyLoading
 
 export const selectChainConfig = createSelector([selectChain], (chainKey) => {
   return chainsConfig[chainKey]
@@ -149,7 +150,8 @@ export const selectActiveFormattedBridgeTvl = createSelector(
  */
 export const selectFromattedBridgeApyKey = (bridgeKey: BridgeKey) =>
   createSelector([selectBridgeApyKey(bridgeKey)], (apy) => {
-    return numToPercent((apy || 0) * 100) || '-'
+    if (!apy) return '-'
+    return numToPercent(apy * 100)
   })
 
 export const selectAllBridgeKeys = createSelector([selectChainConfig], (chainConfig): BridgeKey[] => {

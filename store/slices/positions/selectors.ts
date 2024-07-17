@@ -70,7 +70,7 @@ export const selectPositionsTableData = createSelector(
       const utilizationRate = utilizationRates[market.key]
 
       const formattedMarket = `${lenderAsset} | ${collateralAsset}`
-      const formattedTotalSupplied = utils.currencySwitch(currency, position.totalSupplied, price)
+      const formattedTotalSupplied = utils.currencySwitch(currency, position.totalSupplied, price) || '-'
       const formattedApy = numToPercent(apy, { fractionDigits: 1 })
       const formattedUtilizationRate = numToPercent(utilizationRate, { fractionDigits: 1 })
       const marketUrl = marketUrls[market.key]

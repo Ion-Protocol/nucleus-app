@@ -7,7 +7,7 @@ import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
-import { selectChain } from '../chain'
+import { selectChain, selectChainId } from '../chain'
 import { netApyApi } from '../netApy/api'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
@@ -86,9 +86,10 @@ export const fetchBridgeApy = createAsyncThunk<
 >('bridges/fetchBridgeApy', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
+    const chainId = selectChainId(state)
     const bridgeConfig = selectBridgeConfig(state)
     const address = bridgeConfig.contracts.boringVault
-    const resultAction = await dispatch(netApyApi.endpoints.getLatestNetApy.initiate({ address }))
+    const resultAction = await dispatch(netApyApi.endpoints.getLatestNetApy.initiate({ address, chainId }))
 
     if ('error' in resultAction) {
       throw new Error('Error getting net apy for bridge')

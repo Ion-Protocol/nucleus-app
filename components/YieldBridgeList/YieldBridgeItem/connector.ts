@@ -3,17 +3,18 @@ import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import {
   selectBridgeConfigByKey,
-  selectBridgeLoadingByKey,
   selectFormattedBridgeTvlByKey,
   selectFromattedBridgeApyKey,
+  selectTvlLoading,
 } from '@/store/slices/bridges'
+import { selectNetApyLoading } from '@/store/slices/netApy'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const { bridgeKey } = ownProps
   const bridgeConfig = selectBridgeConfigByKey(bridgeKey)(state)
   const disabled = bridgeConfig.comingSoon
-  const loading = selectBridgeLoadingByKey(state)
+  const loading = selectTvlLoading(state) || selectNetApyLoading(state)
   const tvl = selectFormattedBridgeTvlByKey(bridgeKey)(state)
   const apy = selectFromattedBridgeApyKey(bridgeKey)(state)
 

@@ -10,13 +10,14 @@ export const netApyApi = createApi({
   baseQuery,
   tagTypes: ['NetApy'],
   endpoints: (builder) => ({
-    getNetApy: builder.query<NetApyItem[], { address: string; startTime: number; endTime: number }>({
-      query: ({ address, startTime, endTime }) => ({
-        url: 'v1/bigbrother/net_apy',
+    getNetApy: builder.query<NetApyItem[], { address: string; startTime: number; endTime: number; chainId: number }>({
+      query: ({ address, startTime, endTime, chainId }) => ({
+        url: 'v2/bigbrother/net_apy',
         params: {
           address,
           start_time: Math.floor(startTime / 1000),
           end_time: Math.floor(endTime / 1000),
+          chain_id: chainId,
         },
       }),
       transformResponse: (response: any) => {
@@ -36,14 +37,15 @@ export const netApyApi = createApi({
       },
       keepUnusedDataFor: 15 * 60, // Keep data in cache for 15 minutes (number is in seconds)
     }),
-    getLatestNetApy: builder.query<NetApyItem, { address: string }>({
-      query: ({ address }) => {
+    getLatestNetApy: builder.query<NetApyItem, { address: string; chainId: number }>({
+      query: ({ address, chainId }) => {
         return {
-          url: 'v1/bigbrother/net_apy',
+          url: 'v2/bigbrother/net_apy',
           params: {
             address,
             start_time: 1000,
             end_time: 'now',
+            chain_id: chainId,
           },
         }
       },

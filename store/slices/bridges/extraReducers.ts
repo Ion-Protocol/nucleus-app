@@ -41,19 +41,18 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     // APY
     ///////////////////////////////
     .addCase(fetchBridgeApy.pending, (state, action) => {
-      state.overallLoading = true
+      state.apyLoading = true
     })
     .addCase(
       fetchBridgeApy.fulfilled,
       (state, action: PayloadAction<{ bridgeKey: BridgeKey; result: FetchBridgeApyResult }>) => {
+        state.apyLoading = false
         const bridge = state.data[action.payload.bridgeKey]
-        bridge.apy.loading = false
         bridge.apy.value = action.payload.result.apy
-        state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
       }
     )
     .addCase(fetchBridgeApy.rejected, (state, action) => {
-      state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading)
+      state.apyLoading = false
     })
 
     ///////////////////////////////
