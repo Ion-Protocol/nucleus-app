@@ -12,9 +12,17 @@ import { netApyApi } from '../netApy/api'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
-import { selectBridgeConfig, selectBridgeFrom, selectChainConfig, selectFromTokenKeyForBridge } from './selectors'
+import {
+  selectBridgeConfig,
+  selectBridgeFrom,
+  selectChainConfig,
+  selectDepositAmountAsBigInt,
+  selectDepositAssetAddress,
+  selectFromTokenKeyForBridge,
+} from './selectors'
 import { setInputError } from './slice'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
+import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -259,11 +267,9 @@ export const performDeposit = createAsyncThunk<
 
     const depositAssetKey = selectFromTokenKeyForBridge(state)
     const depositAsset = selectTokenAddress(depositAssetKey as TokenKey)(state)
-
-    const depositAmountAsString = selectBridgeFrom(state)
-    const depositAmount = BigInt(parseFloat(depositAmountAsString) * WAD.number)
-
+    const depositAmount = selectDepositAmountAsBigInt(state)
     const bridgeConfig = selectBridgeConfig(state)
+
     const tellerContractAddress = bridgeConfig?.contracts.teller
     const boringVaultAddress = bridgeConfig?.contracts.boringVault
     const accountantAddress = bridgeConfig?.contracts.accountant
@@ -291,8 +297,9 @@ export const performDeposit = createAsyncThunk<
   }
 })
 
-interface FetchPreviewFeeResult {
-  fee: bigint
+export interface FetchPreviewFeeResult {
+  fee: string
+  bridgeKey: BridgeKey
 }
 
 /**
@@ -309,17 +316,26 @@ export const fetchPreviewFee = createAsyncThunk<
   BridgeKey,
   { rejectValue: string; state: RootState }
 >('bridges/fetchPreviewFee', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
-  console.log('fetch Preview fee')
   try {
     const state = getState()
     const bridgeConfig = selectBridgeConfig(state)
     const chainKey = selectChainKey(state)
+    const depositAmount = selectDepositAmountAsBigInt(state)
+    const depositAsset = selectDepositAssetAddress(state)
 
     const tellerContractAddress = bridgeConfig?.contracts.teller
+    const accountantContractAddress = bridgeConfig?.contracts.accountant
     const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
     const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
 
-    if (tellerContractAddress && layerZeroChainSelector && wethAddress) {
+    if (
+      tellerContractAddress &&
+      accountantContractAddress &&
+      depositAmount &&
+      depositAsset &&
+      layerZeroChainSelector &&
+      wethAddress
+    ) {
       const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
         chainSelector: layerZeroChainSelector,
         destinationChainReceiver: tellerContractAddress,
@@ -327,17 +343,25 @@ export const fetchPreviewFee = createAsyncThunk<
         messageGas: 1_000_000,
         data: '',
       }
+
+      const exchangeRate = await getRateInQuoteSafe(
+        { quote: depositAsset },
+        { contractAddress: accountantContractAddress }
+      )
+
+      const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
+
       const fee = await previewFee(
-        { shareAmount: 0, bridgeData: previewFeeBridgeData },
+        { shareAmount, bridgeData: previewFeeBridgeData },
         { contractAddress: tellerContractAddress }
       )
-      return { fee }
+      return { fee: fee.toString(), bridgeKey }
     } else {
       return rejectWithValue('Missing contract address or layer zero chain selector')
     }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to get preview fee for bridge ${bridgeKey}`
+    const errorMessage = `Failed to get preview fee`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
     dispatch(setErrorTitle('Preview Fee failed'))

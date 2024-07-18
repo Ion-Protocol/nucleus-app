@@ -1,5 +1,5 @@
 import { BridgeKey, ChainKey, chainsConfig } from '@/config/chains'
-import { TokenKey } from '@/config/token'
+import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
 import { Bridge } from '@/types/Bridge'
@@ -10,6 +10,8 @@ import { selectChainKey } from '../chain'
 import { selectPrice } from '../price'
 import { selectBridgeKey } from '../router'
 import { BridgeData } from './initialState'
+import { Address } from 'viem'
+import { WAD } from '@/utils/bigint'
 
 export const selectBridgesState = (state: RootState) => state.bridges
 export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
@@ -230,6 +232,33 @@ export const selectFromTokenKeyForBridge = createSelector(
 )
 
 /**
+ * Selects the deposit amount as a BigInt.
+ *
+ * @param selectBridgeFrom - The selector function to get the bridge from.
+ * @param depositAmountAsString - The deposit amount as a string.
+ * @returns The deposit amount as a BigInt.
+ */
+export const selectDepositAmountAsBigInt = createSelector([selectBridgeFrom], (depositAmountAsString): bigint => {
+  return BigInt(parseFloat(depositAmountAsString) * WAD.number)
+})
+
+/**
+ * Selects the deposit asset address for a given token key and chain key.
+ * Returns the address if both tokenKey and chainKey are valid, otherwise returns null.
+ *
+ * @param {Function} selectFromTokenKeyForBridge - The selector function to retrieve the token key for the bridge.
+ * @param {Function} selectChainKey - The selector function to retrieve the chain key.
+ * @returns {Address | null} - The deposit asset address or null.
+ */
+export const selectDepositAssetAddress = createSelector(
+  [selectFromTokenKeyForBridge, selectChainKey],
+  (tokenKey, chainKey): Address | null => {
+    if (!tokenKey || !chainKey) return null
+    return tokensConfig[tokenKey]?.chains[chainKey]?.address
+  }
+)
+
+/**
  * Retrieves the rate of a specific bridge from the state.
  *
  * @param state - The root state of the application.
@@ -249,8 +278,4 @@ export const selectDepositPending = createSelector([(state: RootState) => state]
 export const selectDepositError = createSelector([(state: RootState) => state], (state) => {
   const bridges = selectBridgesState(state)
   return bridges.deposit.error
-})
-
-export const selectIonPoolContractAddress = createSelector([], () => {
-  //
 })

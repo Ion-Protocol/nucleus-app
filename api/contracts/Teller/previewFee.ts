@@ -14,7 +14,7 @@ export namespace CrossChainTellerBase {
 }
 
 export async function previewFee(
-  { shareAmount, bridgeData }: { shareAmount: number; bridgeData: CrossChainTellerBase.BridgeData },
+  { shareAmount, bridgeData }: { shareAmount: bigint; bridgeData: CrossChainTellerBase.BridgeData },
   { contractAddress }: { contractAddress: Address }
 ): Promise<bigint> {
   const fee = (await readContract(wagmiConfig, {

@@ -5,9 +5,11 @@ import {
   FetchBridgeApyResult,
   FetchBridgeRateResult,
   FetchBridgeTvlResult,
+  FetchPreviewFeeResult,
   fetchBridgeApy,
   fetchBridgeRate,
   fetchBridgeTvl,
+  fetchPreviewFee,
   performDeposit,
   setBridgeFrom,
   setBridgeFromMax,
@@ -71,6 +73,21 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     )
     .addCase(fetchBridgeRate.rejected, (state, action) => {
       state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
+    })
+
+    ///////////////////////////////
+    // Preview Fee
+    ///////////////////////////////
+    .addCase(fetchPreviewFee.pending, (state) => {
+      state.previewFeeLoading = true
+    })
+    .addCase(fetchPreviewFee.fulfilled, (state, action: PayloadAction<FetchPreviewFeeResult>) => {
+      const bridge = state.data[action.payload.bridgeKey]
+      bridge.previewFee = action.payload.fee
+      state.previewFeeLoading = false
+    })
+    .addCase(fetchPreviewFee.rejected, (state) => {
+      state.previewFeeLoading = false
     })
 
     ///////////////////////////////
