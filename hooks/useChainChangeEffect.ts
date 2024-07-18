@@ -1,11 +1,13 @@
 import { useAppDispatch } from '@/store/hooks'
 import { setChainId } from '@/store/slices/chain'
+import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useChainId } from 'wagmi'
 
 export function useChainChangeEffect() {
   const chainId = useChainId()
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const [previousChainId, setPreviousChainId] = useState<number | null>(null)
 
   useEffect(() => {
@@ -26,9 +28,12 @@ export function useChainChangeEffect() {
     // Update local storage with the new chain ID and update the application state.
     // This prevents false detections of chain changes caused by the initial incorrect value provided by `wagmi`.
     if (previousChainId !== null && chainId !== previousChainId) {
+      // TODO: Handle side effect the redux way when chainId changes in state
+      router.push('/dashboard')
+
       localStorage.setItem('connectedChainId', chainId.toString())
       setPreviousChainId(chainId)
       dispatch(setChainId(chainId))
     }
-  }, [chainId, previousChainId, dispatch])
+  }, [chainId, previousChainId, dispatch, router])
 }

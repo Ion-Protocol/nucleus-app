@@ -103,7 +103,7 @@ export const fetchBridgeApy = createAsyncThunk<
     const state = getState()
     const chainId = selectChainId(state)
     const bridgeConfig = selectBridgeConfig(state)
-    const address = bridgeConfig?.contracts.boringVault
+    const address = bridgeConfig?.contracts?.boringVault
     if (!address || !chainId) {
       return {
         bridgeKey,
@@ -218,7 +218,7 @@ export const fetchBridgeRate = createAsyncThunk<
   try {
     const state = getState()
     const bridge = selectBridgeConfig(state)
-    const accountantAddress = bridge?.contracts.accountant
+    const accountantAddress = bridge?.contracts?.accountant
     if (bridge?.comingSoon || !accountantAddress) {
       return { bridgeKey, result: { rate: '0' } }
     }
