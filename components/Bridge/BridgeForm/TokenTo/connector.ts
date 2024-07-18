@@ -30,7 +30,7 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
   // Look up selected token key in state
-  const selectedTokenKey = selectToTokenKeyForBridge(state) || tokenKeys[0]
+  const selectedTokenKey = selectToTokenKeyForBridge(state) || (Object.keys(tokensConfig)[0] as TokenKey)
   const selectedToken = tokensConfig[selectedTokenKey]
 
   return {

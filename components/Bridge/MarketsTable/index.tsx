@@ -1,21 +1,21 @@
-import { Text, Flex, Table, TableContainer, Tbody, Td, Thead, Tr } from '@chakra-ui/react'
+import { TokenIcon } from '@/components/config/tokenIcons'
+import { DoubleIcon } from '@/components/shared/DoubleIcon'
+import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
+import { Flex, Table, TableContainer, Tbody, Td, Text, Thead, Tr } from '@chakra-ui/react'
 import { IonTd } from './IonTd'
 import { IonTh } from './IonTh'
 import { Loading } from './Loading'
 import { NoData } from './NoData'
 import { MarketsTableConnector } from './connector'
-import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
-import { DoubleIcon } from '@/components/shared/DoubleIcon'
-import { TokenIcon } from '@/components/config/tokenIcons'
-import { useRouter } from 'next/router'
-import { MarketKey } from '@/types/Market'
 
 function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
-  const noData = tableData.length === 0
-  const router = useRouter()
+  const noData = !tableData || tableData?.length === 0
 
   function handleClickRow(index: number) {
-    const url = tableData[index].marketUrl
+    const url = tableData?.[index]?.marketUrl
+    if (!url) {
+      throw new Error('Market URL not found')
+    }
     window.open(url, '_blank')
   }
 
@@ -37,39 +37,42 @@ function MarketsTable({ tableData, loading }: MarketsTableConnector.Props) {
             ) : noData ? (
               <NoData />
             ) : (
-              tableData.map((p, i) => (
-                <Tr
-                  key={p.marketId}
-                  borderTop="1px solid"
-                  borderTopColor="red"
-                  sx={{
-                    '&:hover': {
-                      bg: 'hover',
-                      cursor: 'pointer',
-                    },
-                  }}
-                  h="60px"
-                  onClick={() => handleClickRow(i)}
-                >
-                  <Td borderColor="border">
-                    <Flex align="center" gap={2}>
-                      <DoubleIcon
-                        icons={[
-                          <TokenIcon fontSize="20px" tokenKey={p.lenderAsset} key={0} />,
-                          <TokenIcon fontSize="20px" tokenKey={p.collateralAsset} key={1} />,
-                        ]}
-                      />
-                      <Text variant="large" fontWeight="bold">
-                        {p.formattedMarket}
-                      </Text>
-                      <OpenNewTabIcon fontSize="10px" />
-                    </Flex>
-                  </Td>
-                  <IonTd textAlign="right">{p.formattedTotalSupplied}</IonTd>
-                  <IonTd textAlign="right">{p.formattedApy}</IonTd>
-                  <IonTd textAlign="right">{p.formattedUtilizationRate}</IonTd>
-                </Tr>
-              ))
+              tableData.map(
+                (pos, i) =>
+                  pos && (
+                    <Tr
+                      key={pos.marketId}
+                      borderTop="1px solid"
+                      borderTopColor="red"
+                      sx={{
+                        '&:hover': {
+                          bg: 'hover',
+                          cursor: 'pointer',
+                        },
+                      }}
+                      h="60px"
+                      onClick={() => handleClickRow(i)}
+                    >
+                      <Td borderColor="border">
+                        <Flex align="center" gap={2}>
+                          <DoubleIcon
+                            icons={[
+                              <TokenIcon fontSize="20px" tokenKey={pos.lenderAsset} key={0} />,
+                              <TokenIcon fontSize="20px" tokenKey={pos.collateralAsset} key={1} />,
+                            ]}
+                          />
+                          <Text variant="large" fontWeight="bold">
+                            {pos.formattedMarket}
+                          </Text>
+                          <OpenNewTabIcon fontSize="10px" />
+                        </Flex>
+                      </Td>
+                      <IonTd textAlign="right">{pos.formattedTotalSupplied}</IonTd>
+                      <IonTd textAlign="right">{pos.formattedApy}</IonTd>
+                      <IonTd textAlign="right">{pos.formattedUtilizationRate}</IonTd>
+                    </Tr>
+                  )
+              )
             )}
           </Tbody>
         </Table>

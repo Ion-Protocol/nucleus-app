@@ -3,8 +3,7 @@ import { totalSupply } from '@/api/contracts/IonPool/totalSupply'
 import { RootState } from '@/store'
 import { MarketKey } from '@/types/Market'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { selectBridgeConfig, selectMarketsConfig } from '../bridges'
-import { selectChain } from '../chain'
+import { selectMarketsConfig } from '../bridges'
 import { setErrorMessage } from '../status'
 
 export type FetchIonPoolResult = Record<MarketKey, string>
@@ -22,12 +21,12 @@ export const fetchTotalSupplyForAllMarkets = createAsyncThunk<
 >('price/fetchTotalSupply', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
 
-  const chainKey = selectChain(state)
   const marketsConfig = selectMarketsConfig(state)
 
   try {
     const totalSupplyPromises = Object.values(MarketKey).map(async (marketKey) => {
-      const contractAddress = marketsConfig[marketKey].contracts.ionPool
+      const contractAddress = marketsConfig?.[marketKey]?.contracts.ionPool
+      if (!contractAddress) return { marketKey, supply: '0' }
       const supply = await totalSupply({ contractAddress })
       return { marketKey, supply: supply.toString() }
     })
@@ -63,14 +62,16 @@ export const fetchCurrentBorrowRateForAllMarkets = createAsyncThunk<
 >('price/fetchCurrentBorrowRateForAllMarkets', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
 
-  const chainKey = selectChain(state)
   const ilkIndex = 0
-  const bridgeConfig = selectBridgeConfig(state)
   const marketsConfig = selectMarketsConfig(state)
+  if (!marketsConfig) {
+    return rejectWithValue('Markets config not found.')
+  }
 
   try {
-    const currentBorrowRatePromises = Object.values(MarketKey).map(async (marketKey) => {
-      const contractAddress = marketsConfig[marketKey].contracts.ionPool
+    const currentBorrowRatePromises = Object.keys(marketsConfig).map(async (marketKey) => {
+      const contractAddress = marketsConfig[marketKey as MarketKey]?.contracts.ionPool
+      if (!contractAddress) return { marketKey, currentBorrowRate: '0' }
       const currentBorrowRate = await getCurrentBorrowRate({ ilkIndex }, { contractAddress })
       return { marketKey, currentBorrowRate: currentBorrowRate.toString() }
     })

@@ -1,10 +1,9 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { liquidity } from '@/api/contracts/IonLens/liquidity'
 import { RootState } from '@/store'
 import { MarketKey } from '@/types/Market'
-import { selectChain } from '../chain'
-import { setErrorMessage } from '../status'
-import { liquidity } from '@/api/contracts/IonLens/liquidity'
+import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectChainConfig } from '../bridges'
+import { setErrorMessage } from '../status'
 
 export type FetchIonLensResult = Record<MarketKey, string>
 
@@ -21,12 +20,14 @@ export const fetchLiquidityForAllMarkets = createAsyncThunk<
 >('price/fetchLiquidityForAllMarkets', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
 
-  const chainKey = selectChain(state)
   const chainConfig = selectChainConfig(state)
 
   try {
     const liquidityPromises = Object.values(MarketKey).map(async (marketKey) => {
-      const ionPool = chainConfig.markets[marketKey].contracts.ionPool
+      const ionPool = chainConfig?.markets[marketKey]?.contracts.ionPool
+      if (!ionPool) {
+        return { marketKey, liquidity: '0' }
+      }
       const liquidityValue = await liquidity({ ionPool })
       return { marketKey, liquidity: liquidityValue.toString() }
     })

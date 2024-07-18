@@ -21,7 +21,7 @@ const initialState: IonLensState = {
     [MarketKey.RSWETH_WSTETH]: '0',
     [MarketKey.EZETH_WETH]: '0',
   },
-  loading: true,
+  loading: false,
   error: null,
 }
 

@@ -13,21 +13,25 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const { bridgeKey } = ownProps
   const bridgeConfig = selectBridgeConfigByKey(bridgeKey)(state)
-  const disabled = bridgeConfig.comingSoon
+  const disabled = bridgeConfig?.comingSoon
   const loading = selectTvlLoading(state) || selectNetApyLoading(state)
   const tvl = selectFormattedBridgeTvlByKey(bridgeKey)(state)
   const apy = selectFromattedBridgeApyKey(bridgeKey)(state)
+  const name = bridgeConfig?.name || ''
+  const comingSoon = bridgeConfig?.comingSoon || false
 
   const maxDescriptionLength = uiConfig.pages.dashboard.yieldBridges.descriptionLength
-  let description = bridgeConfig.description
+  let description = bridgeConfig?.description || ''
   if (description && description.length > maxDescriptionLength) {
     description = `${description.slice(0, maxDescriptionLength)}...`
   }
 
   return {
-    bridgeConfig,
     tvl,
     apy,
+    name,
+    comingSoon,
+    bridgeKey,
     description,
     disabled,
     loading,

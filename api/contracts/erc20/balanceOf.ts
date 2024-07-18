@@ -15,8 +15,8 @@ export async function balanceOf({
   balanceAddress: `0x${string}`
   tokenAddress: `0x${string}`
 }) {
-  if (tokenAddress === '0x0') {
-    throw new Error(`Error calling balanceOf(): tokenAddress cannot be "0x0".`)
+  if (tokenAddress === '0x') {
+    throw new Error(`Error calling balanceOf(): tokenAddress cannot be "0x".`)
   }
 
   const balanceOfAsBigInt = await readContract(wagmiConfig, {

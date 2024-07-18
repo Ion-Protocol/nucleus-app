@@ -7,12 +7,12 @@ import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
-import { selectChain, selectChainId, selectToken, selectTokenAddress } from '../chain'
+import { selectChainKey, selectChainId, selectToken, selectTokenAddress } from '../chain'
 import { netApyApi } from '../netApy/api'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
-import { selectBridgeConfig, selectBridgeFrom, selectFromTokenKeyForBridge } from './selectors'
+import { selectBridgeConfig, selectBridgeFrom, selectChainConfig, selectFromTokenKeyForBridge } from './selectors'
 import { setInputError } from './slice'
 
 export interface FetchBridgeTvlResult {
@@ -40,13 +40,14 @@ export const fetchBridgeTvl = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('balances/fetchBridgeTvl', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
-  const chainKey = selectChain(state)
-  const bridgeConfig = selectBridgeConfig(state)
+  const chainKey = selectChainKey(state)
+  const chainConfig = selectChainConfig(state)
+  const bridgeConfig = chainConfig?.bridges[bridgeKey]
 
   const vaultAddress = bridgeConfig?.contracts.boringVault
   const acceptedTokens = bridgeConfig?.sourceTokens || []
 
-  if (!vaultAddress) {
+  if (!vaultAddress || !chainKey) {
     return { tvl: '0', bridgeKey }
   }
 
@@ -54,6 +55,7 @@ export const fetchBridgeTvl = createAsyncThunk<
   const nativeTokenBalancesPromise = Promise.all(
     acceptedTokens.map((tokenKey) => {
       const tokenAddress = selectTokenAddress(tokenKey)(state)
+      if (!tokenAddress) return BigInt(0)
       return getTotalAssetBalanceWithPools({ tokenKey, chainKey, vaultAddress, tokenAddress })
     })
   )
@@ -61,6 +63,7 @@ export const fetchBridgeTvl = createAsyncThunk<
   const tokenExchangeRatesPromise = Promise.all(
     acceptedTokens.map((tokenKey) => {
       const token = selectToken(tokenKey)(state)
+      if (!token) return BigInt(0)
       return token.getPrice()
     })
   )
@@ -101,7 +104,7 @@ export const fetchBridgeApy = createAsyncThunk<
     const chainId = selectChainId(state)
     const bridgeConfig = selectBridgeConfig(state)
     const address = bridgeConfig?.contracts.boringVault
-    if (!address) {
+    if (!address || !chainId) {
       return {
         bridgeKey,
         result: {
@@ -264,7 +267,7 @@ export const performDeposit = createAsyncThunk<
     const boringVaultAddress = bridgeConfig?.contracts.boringVault
     const accountantAddress = bridgeConfig?.contracts.accountant
 
-    if (userAddress && tellerContractAddress && boringVaultAddress && accountantAddress) {
+    if (userAddress && tellerContractAddress && boringVaultAddress && accountantAddress && depositAsset) {
       const txHash = await deposit(
         { depositAsset, depositAmount },
         { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }

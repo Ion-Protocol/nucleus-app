@@ -7,6 +7,7 @@ export function IonConnectButton() {
       {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
         const ready = mounted
         const connected = ready && account && chain
+
         return (
           <div
             {...(!ready && {
@@ -24,9 +25,9 @@ export function IonConnectButton() {
               }
               if (chain.unsupported) {
                 return (
-                  <button onClick={openChainModal} type="button">
+                  <Button onClick={openChainModal} type="button">
                     Wrong network
-                  </button>
+                  </Button>
                 )
               }
               return (

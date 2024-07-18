@@ -28,7 +28,7 @@ const initialState: NetApyState = {
       timeStamp: 0,
     },
   ],
-  loading: true,
+  loading: false,
   error: null,
   timeRange: TimeRange.All,
 }

@@ -18,7 +18,7 @@ export function getPoolsForLenderAsset(chainKey: ChainKey, lenderAssetKey: Token
   for (const marketKey in marketsForChain) {
     const market = marketsForChain[marketKey as MarketKey]
 
-    if (market.lenderAsset === lenderAssetKey) {
+    if (market?.lenderAsset === lenderAssetKey) {
       ionPoolAddresses.push(market.contracts.ionPool)
     }
   }

@@ -31,9 +31,9 @@ export type BridgesState = {
 }
 
 const initialBridgeData: BridgeData = {
-  tvl: { value: 0, loading: true },
-  apy: { value: null, loading: true },
-  rate: { value: 0, loading: true },
+  tvl: { value: 0, loading: false },
+  apy: { value: null, loading: false },
+  rate: { value: 0, loading: false },
   error: null,
   from: '',
   selectedFromToken: null,
@@ -48,9 +48,9 @@ export const initialState: BridgesState = {
     },
     {} as { [bridgeKey in BridgeKey]: BridgeData }
   ),
-  overallLoading: true,
-  tvlLoading: true,
-  apyLoading: true,
+  overallLoading: false,
+  tvlLoading: false,
+  apyLoading: false,
   sourceChain: ChainKey.MAINNET,
   destinationChain: ChainKey.MAINNET,
   inputError: null,

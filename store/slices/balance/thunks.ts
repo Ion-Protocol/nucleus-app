@@ -6,7 +6,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
 import { setErrorMessage } from '../status'
-import { selectTokenAddress } from '../chain'
+import { selectChainKey, selectTokenAddress } from '../chain'
+import { ChainKey } from '@/config/chains'
 
 export interface fetchAllTokenBalancesResult {
   balances: Record<TokenKey, string>
@@ -30,6 +31,8 @@ export const fetchAllTokenBalances = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('balances/fetchAllTokenBalances', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
+  const chain = selectChainKey(state)
+
   const address = selectAddress(state)
   const balances: Record<TokenKey, string> = {} as Record<TokenKey, string>
 
@@ -46,6 +49,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
       } else {
         // Fetch ERC20 token balance
         const tokenAddress = selectTokenAddress(tokenKey as TokenKey)(state)
+        if (!tokenAddress) return { tokenKey: tokenKey as TokenKey, balance: '0' }
 
         const balance = await balanceOf({ balanceAddress: address, tokenAddress })
         return { tokenKey: tokenKey as TokenKey, balance: balance.toString() }

@@ -3,10 +3,12 @@ import { BridgeKey } from '@/config/chains'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
 import { MorphLogo } from '../shared/icons/Morph'
+import { OptimismIcon } from '../shared/icons/Optimism'
 
 export const bridgeIconMap: Partial<Record<BridgeKey, (props: ChakraProps) => JSX.Element>> = {
   [BridgeKey.SEI]: (props) => <SeiIcon {...props} />,
   [BridgeKey.MORPH]: (props) => <MorphLogo {...props} />,
+  [BridgeKey.OPTIMISM]: (props) => <OptimismIcon {...props} />,
 }
 
 interface BridgeIconMapProps extends ChakraProps {

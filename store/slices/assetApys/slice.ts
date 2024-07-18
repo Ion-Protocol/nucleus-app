@@ -24,7 +24,7 @@ const initialState: AssetApysState = {
     [TokenKey.WEETH]: 0,
     [TokenKey.WSTETH]: 0,
   },
-  loading: true,
+  loading: false,
   error: null,
 }
 

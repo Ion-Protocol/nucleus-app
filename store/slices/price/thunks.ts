@@ -21,7 +21,10 @@ export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectVa
   async (_, { getState, rejectWithValue, dispatch }) => {
     const state = getState()
     const chainConfig = selectChainConfig(state)
-    const chainlinkAddress = chainConfig.contracts.chainlink
+    const chainlinkAddress = chainConfig?.contracts.chainlink
+    if (!chainlinkAddress) {
+      return rejectWithValue('Chainlink contract address not found.')
+    }
     try {
       const result = (await readContract(wagmiConfig, {
         abi: Chainlink.abi as Abi,

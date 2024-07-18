@@ -52,7 +52,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
         getPrice: oneAsBigInt,
       },
       [ChainKey.SEPOLIA]: {
-        address: '0x',
+        address: '0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9',
         getPrice: oneAsBigInt,
       },
     },

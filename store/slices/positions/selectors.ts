@@ -3,7 +3,7 @@ import { RootState } from '@/store'
 import { utils } from '@/utils'
 import { numToPercent } from '@/utils/number'
 import { createSelector } from '@reduxjs/toolkit'
-import { selectChain } from '../chain'
+import { selectChainKey } from '../chain'
 import { selectCurrency } from '../currency'
 import { selectApys, selectUtilizationRates } from '../globalSelectors'
 import { selectPrice } from '../price'
@@ -23,8 +23,10 @@ export const selectPositionsLoading = (state: RootState) => state.positions.load
  *
  * @returns A record of market keys and their corresponding URLs.
  */
-export const selectMarketUrls = createSelector([selectChain, selectChainConfig], (chainKey, chainConfig) => {
+export const selectMarketUrls = createSelector([selectChainKey, selectChainConfig], (chainKey, chainConfig) => {
   const marketUrlMap: Record<MarketKey, string> = {} as Record<MarketKey, string>
+
+  if (!chainConfig) return null
 
   Object.values(chainConfig.markets).forEach((market) => {
     marketUrlMap[market.key] =
@@ -56,13 +58,12 @@ export const selectPositionsTableData = createSelector(
     selectMarketUrls,
   ],
   (chainConfig, positions, price, currency, utilizationRates, apys, marketUrls) => {
+    if (!chainConfig) return null
     const markets = Object.values(chainConfig.markets)
 
     const formattedPositions = positions.map((position) => {
       const market = markets.find((m) => m.id === position.marketId)
-      if (!market) {
-        throw new Error(`Market not found for marketId ${position.marketId}`)
-      }
+      if (!market) return null
 
       const lenderAsset = tokensConfig[market.lenderAsset].name
       const collateralAsset = tokensConfig[market.collateralAsset].name
@@ -73,7 +74,7 @@ export const selectPositionsTableData = createSelector(
       const formattedTotalSupplied = utils.currencySwitch(currency, position.totalSupplied, price) || '-'
       const formattedApy = numToPercent(apy, { fractionDigits: 1 })
       const formattedUtilizationRate = numToPercent(utilizationRate, { fractionDigits: 1 })
-      const marketUrl = marketUrls[market.key]
+      const marketUrl = marketUrls?.[market.key]
 
       return {
         ...position,

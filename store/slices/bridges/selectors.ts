@@ -6,7 +6,7 @@ import { Bridge } from '@/types/Bridge'
 import { utils } from '@/utils'
 import { numToPercent } from '@/utils/number'
 import { createSelector } from 'reselect'
-import { selectChain } from '../chain'
+import { selectChainKey } from '../chain'
 import { selectPrice } from '../price'
 import { selectBridgeKey } from '../router'
 import { BridgeData } from './initialState'
@@ -26,18 +26,19 @@ export const selectBridgeDestinationChain = createSelector(
 export const selectTvlLoading = (state: RootState) => state.bridges.tvlLoading
 export const selectApyLoading = (state: RootState) => state.bridges.apyLoading
 
-export const selectChainConfig = createSelector([selectChain], (chainKey) => {
+export const selectChainConfig = createSelector([selectChainKey], (chainKey) => {
+  if (!chainKey) return null
   return chainsConfig[chainKey]
 })
 
 export const selectMarketsConfig = createSelector([selectChainConfig], (chainConfig) => {
-  return chainConfig.markets
+  return chainConfig?.markets
 })
 
 export const selectBridgeConfig = createSelector(
   [selectChainConfig, selectBridgeKey],
   (chainConfig, bridgeKey): (Bridge & { key: BridgeKey }) | null => {
-    if (!bridgeKey) return null
+    if (!bridgeKey || !chainConfig) return null
     const bridgeConfig = chainConfig.bridges[bridgeKey] as Bridge
     return { ...bridgeConfig, key: bridgeKey }
   }
@@ -45,6 +46,7 @@ export const selectBridgeConfig = createSelector(
 
 export const selectBridgeConfigByKey = (bridgeKey: BridgeKey) => {
   return createSelector([selectChainConfig], (chainConfig) => {
+    if (!chainConfig) return null
     const bridgeConfig = chainConfig.bridges[bridgeKey]
     return { ...bridgeConfig, key: bridgeKey }
   })
@@ -53,6 +55,7 @@ export const selectBridgeConfigByKey = (bridgeKey: BridgeKey) => {
 export const selectBridgesAsArray = createSelector(
   [selectChainConfig],
   (chainConfig): (Bridge & { key: BridgeKey })[] => {
+    if (!chainConfig) return []
     return Object.keys(chainConfig.bridges).map((key) => ({
       key: key as BridgeKey,
       ...(chainConfig.bridges[key as BridgeKey] as Bridge),
@@ -70,6 +73,7 @@ export const selectChainsNamesAndKeys = createSelector([(state: RootState) => st
 })
 
 export const selectBridgeKeys = createSelector([selectChainConfig], (chainConfig): BridgeKey[] => {
+  if (!chainConfig) return []
   return Object.keys(chainConfig.bridges) as BridgeKey[]
 })
 
@@ -162,6 +166,7 @@ export const selectFromattedBridgeApyKey = (bridgeKey: BridgeKey) =>
   })
 
 export const selectAllBridgeKeys = createSelector([selectChainConfig], (chainConfig): BridgeKey[] => {
+  if (!chainConfig) return []
   return Object.keys(chainConfig.bridges) as BridgeKey[]
 })
 
@@ -201,7 +206,7 @@ export const selectFromTokenKeyForBridge = createSelector(
   [selectBridgeData, selectBridgeConfig],
   (bridgeData, bridgeConfig): TokenKey | null => {
     if (!bridgeData || !bridgeConfig) return null
-    return bridgeData.selectedFromToken || bridgeConfig.sourceTokens[0]
+    return bridgeData.selectedFromToken || bridgeConfig?.sourceTokens?.[0]
   }
 )
 

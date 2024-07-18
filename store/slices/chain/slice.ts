@@ -1,50 +1,50 @@
-import { ChainKey } from '@/config/chains'
+import { ChainKey, chainsConfig } from '@/config/chains'
+import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { selectChainConfig } from '../bridges'
-import { TokenKey, tokensConfig } from '@/config/token'
 
 interface ChainState {
-  chainKey: ChainKey
-  chainId: number
+  chainKey: ChainKey | null
+  chainId: number | null
 }
 
 const initialState: ChainState = {
-  chainKey: ChainKey.MAINNET,
-  chainId: 1,
+  chainKey: null,
+  chainId: null,
 }
 
 const chainSlice = createSlice({
   name: 'chain',
   initialState,
   reducers: {
-    setChainKey(state, action: PayloadAction<ChainKey>) {
-      state.chainKey = action.payload
-    },
     setChainId(state, action: PayloadAction<number>) {
       state.chainId = action.payload
     },
   },
 })
 
-export const selectChain = (state: RootState) => {
-  if (!state) return ChainKey.MAINNET
-  return state.chain.chainKey
-}
-export const selectChainId = (state: RootState) => {
-  if (!state) return 1
+// export const selectChain = (state: RootState): ChainKey | null => {
+//   return state.chain.chainKey
+// }
+export const selectChainId = (state: RootState): number | null => {
   return state.chain.chainId
 }
 
-export const selectToken = (tokenKey: TokenKey) =>
-  createSelector([selectChain], (chain) => {
+export const selectChainKey = createSelector([selectChainId], (chainId): ChainKey | null => {
+  return (Object.keys(chainsConfig).find((key) => chainsConfig[key as ChainKey].id === chainId) as ChainKey) || null
+})
+
+export const selectToken = (tokenKey: TokenKey | null) =>
+  createSelector([selectChainKey], (chain) => {
+    if (!chain || !tokenKey) return null
     return tokensConfig[tokenKey].chains[chain]
   })
 
-export const selectTokenAddress = (tokenKey: TokenKey) =>
-  createSelector([selectChain], (chain) => {
+export const selectTokenAddress = (tokenKey: TokenKey | null) =>
+  createSelector([selectChainKey], (chain) => {
+    if (!chain || !tokenKey) return null
     return tokensConfig[tokenKey].chains[chain].address
   })
 
-export const { setChainKey, setChainId } = chainSlice.actions
+export const { setChainId } = chainSlice.actions
 export const chainReducer = chainSlice.reducer
