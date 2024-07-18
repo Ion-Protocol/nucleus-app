@@ -1,8 +1,7 @@
-import { ChainIcon } from '@/components/config/chainIcons'
+import { BridgeIcon } from '@/components/config/bridgeIcons'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { ChainSelectConnector } from './connector'
-import { ChainKey } from '@/config/chains'
 
 function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectConnector.Props) {
   return (
@@ -15,7 +14,7 @@ function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectCon
         color={!selected ? 'disabled' : undefined}
       >
         <Flex align="center" gap={3}>
-          {selected && <ChainIcon chainKey={selected.key} />}
+          {selected && <BridgeIcon bridgeKey={selected.key} />}
           <Text variant="medium">{selected ? selected.name : placeholder}</Text>
         </Flex>
       </MenuButton>
@@ -23,7 +22,7 @@ function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectCon
         {chains.map((chain) => (
           <MenuItem key={chain.key} bg="none" onClick={() => onChange(chain.key)} _hover={{ bg: 'hoverSecondary' }}>
             <Flex align="center" gap={3}>
-              <ChainIcon chainKey={chain.key} />
+              <BridgeIcon bridgeKey={chain.key} />
               <Text variant="medium">{chain.name}</Text>
             </Flex>
           </MenuItem>

@@ -21,9 +21,9 @@ export type BridgesState = {
   overallLoading: boolean
   tvlLoading: boolean
   apyLoading: boolean
-  sourceChain: ChainKey
+  sourceBridge: BridgeKey | null
   inputError: string | null
-  destinationChain: ChainKey
+  destinationBridge: BridgeKey | null
   deposit: {
     pending: boolean
     error: string | null
@@ -51,8 +51,8 @@ export const initialState: BridgesState = {
   overallLoading: false,
   tvlLoading: false,
   apyLoading: false,
-  sourceChain: ChainKey.MAINNET,
-  destinationChain: ChainKey.MAINNET,
+  sourceBridge: null,
+  destinationBridge: null,
   inputError: null,
   deposit: {
     pending: false,

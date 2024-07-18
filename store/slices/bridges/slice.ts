@@ -9,10 +9,10 @@ const bridgesSlice = createSlice({
   initialState,
   reducers: {
     setSourceChain: (state, action) => {
-      state.sourceChain = action.payload
+      state.sourceBridge = action.payload
     },
     setDestinationChain: (state, action) => {
-      state.destinationChain = action.payload
+      state.destinationBridge = action.payload
     },
     setInputError: (state, action) => {
       state.inputError = action.payload

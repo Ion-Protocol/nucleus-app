@@ -17,10 +17,10 @@ export const selectBridgesLoading = createSelector(
   [selectBridgesState],
   (bridgesState): boolean => bridgesState.overallLoading
 )
-export const selectBridgeSourceChain = createSelector([selectBridgesState], (bridgesState) => bridgesState.sourceChain)
-export const selectBridgeDestinationChain = createSelector(
+export const selectSourceBridge = createSelector([selectBridgesState], (bridgesState) => bridgesState.sourceBridge)
+export const selectDestinationBridge = createSelector(
   [selectBridgesState],
-  (bridgesState) => bridgesState.destinationChain
+  (bridgesState) => bridgesState.destinationBridge
 )
 
 export const selectTvlLoading = (state: RootState) => state.bridges.tvlLoading
@@ -63,14 +63,33 @@ export const selectBridgesAsArray = createSelector(
   }
 )
 
-export const selectChainsNamesAndKeys = createSelector([(state: RootState) => state], () => {
-  return Object.keys(chainsConfig).map((key) => {
-    return {
-      key: key as ChainKey,
-      name: chainsConfig[key as ChainKey].name,
-    }
-  })
-})
+export const selectSourceBridges = createSelector(
+  [selectBridgeConfig, selectChainConfig],
+  (bridgeConfig, chainConfig) => {
+    if (!bridgeConfig || !chainConfig || !bridgeConfig.sourceBridges) return []
+    return bridgeConfig.sourceBridges.map((bridgeKey) => {
+      let name = chainConfig.bridges[bridgeKey]?.name
+      if (bridgeKey === BridgeKey.ETHEREUM) {
+        name = 'Ethereum'
+      }
+      return { key: bridgeKey, name }
+    })
+  }
+)
+
+export const selectDestinationBridges = createSelector(
+  [selectBridgeConfig, selectChainConfig],
+  (bridgeConfig, chainConfig) => {
+    if (!bridgeConfig || !chainConfig || !bridgeConfig.destinationBridges) return []
+    return bridgeConfig.destinationBridges.map((bridgeKey) => {
+      let name = chainConfig.bridges[bridgeKey]?.name
+      if (bridgeKey === BridgeKey.ETHEREUM) {
+        name = 'Ethereum'
+      }
+      return { key: bridgeKey, name }
+    })
+  }
+)
 
 export const selectBridgeKeys = createSelector([selectChainConfig], (chainConfig): BridgeKey[] => {
   if (!chainConfig) return []

@@ -1,9 +1,10 @@
 import { ChainKey } from '@/config/chains'
 import { RootState } from '@/store'
 import {
-  selectBridgeDestinationChain,
-  selectBridgeSourceChain,
-  selectChainsNamesAndKeys,
+  selectDestinationBridge,
+  selectSourceBridge,
+  selectDestinationBridges,
+  selectSourceBridges,
   setDestinationChain,
   setSourceChain,
 } from '@/store/slices/bridges'
@@ -12,15 +13,16 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role } = ownProps
 
-  const chains = selectChainsNamesAndKeys(state)
-  const selectChain = role === 'source' ? selectBridgeSourceChain : selectBridgeDestinationChain
-  const selected = selectChain(state) || ChainKey.MAINNET
-  const selectedChain = selected && chains.find((chain) => chain.key === selected)
+  const selectBridges = role === 'source' ? selectSourceBridges : selectDestinationBridges
+  const bridges = selectBridges(state)
+  const selectChain = role === 'source' ? selectSourceBridge : selectDestinationBridge
+  const selected = selectChain(state) || bridges[0]?.key || null
+  const selectedChain = selected && bridges.find((bridge) => bridge.key === selected)
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
 
   return {
-    chains,
+    chains: bridges,
     selected: selectedChain,
     placeholder,
   }

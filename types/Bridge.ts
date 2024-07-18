@@ -6,8 +6,8 @@ import { BridgeKey } from '@/config/chains'
 export interface Bridge {
   name: string
   description: string
-  sourceChains: BridgeKey[]
-  destinationChains: BridgeKey[]
+  sourceBridges: BridgeKey[]
+  destinationBridges: BridgeKey[]
   contracts: Contracts
   sourceTokens: TokenKey[]
   destinationTokens: TokenKey[]
