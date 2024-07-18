@@ -19,7 +19,7 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
   const bridgeConfig = selectBridgeConfig(state)
   const tokenKeys = bridgeConfig?.sourceTokens || []
   const tokens = tokenKeys.map((key) => tokensConfig[key])
-  const selectedTokenKey = selectFromTokenKeyForBridge(state) || (Object.keys(tokensConfig)[0] as TokenKey)
+  const selectedTokenKey = selectFromTokenKeyForBridge(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
   const formattedTokenBalance = selectFormattedTokenBalance(selectedTokenKey)(state)
 
