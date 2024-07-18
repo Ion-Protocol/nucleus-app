@@ -1,4 +1,5 @@
 import { useAppDispatch } from '@/store/hooks'
+import { setSelectedToToken } from '@/store/slices/bridges'
 import { setChainId } from '@/store/slices/chain'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'

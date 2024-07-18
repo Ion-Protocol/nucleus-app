@@ -6,7 +6,7 @@ import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakr
 
 interface TokenSelectProps {
   tokens: Token[]
-  selected: Token
+  selected: Token | null
   onChange: (tokenKey: TokenKey) => void
 }
 
@@ -26,7 +26,7 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectProps) {
         {/* Token Selector Button */}
         <Flex align="center" gap={2}>
           {selected && <TokenIcon fontSize="28px" tokenKey={selected.key} />}
-          <Text variant="xl">{selected.name}</Text>
+          <Text variant="xl">{selected?.name}</Text>
           <ChevronDownIcon />
         </Flex>
       </MenuButton>

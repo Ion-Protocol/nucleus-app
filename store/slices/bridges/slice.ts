@@ -25,7 +25,7 @@ const bridgesSlice = createSlice({
       if (!bridgeKey) return
       state.data[bridgeKey].selectedFromToken = action.payload.tokenKey
     },
-    setSelectedToToken: (state, action: PayloadAction<{ bridgeKey: BridgeKey; tokenKey: TokenKey }>) => {
+    setSelectedToToken: (state, action: PayloadAction<{ bridgeKey: BridgeKey; tokenKey: TokenKey | null }>) => {
       state.data[action.payload.bridgeKey].selectedToToken = action.payload.tokenKey
     },
   },

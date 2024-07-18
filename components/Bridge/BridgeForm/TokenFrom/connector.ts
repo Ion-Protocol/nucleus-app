@@ -1,7 +1,7 @@
 import { BridgeKey } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
-import { selectFormattedTokenBalance } from '@/store/slices/balance'
+import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
   selectBridgeConfig,
   selectBridgeFrom,
@@ -26,6 +26,7 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
   return {
     inputValue,
     tokenBalance: formattedTokenBalance,
+    loadingTokenBalance: selectBalancesLoading(state),
     error: selectInputError(state),
     tokens,
     selectedToken,

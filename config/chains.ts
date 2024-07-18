@@ -242,7 +242,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceBridges: [BridgeKey.ETHEREUM],
         destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.OPTIMISM],
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
-        destinationTokens: [TokenKey.MRPH],
+        destinationTokens: [TokenKey.WETH, TokenKey.WSTETH],
         description: 'TBD',
       },
     },

@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import { Button, Divider, Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 import TokenSelect from '../TokenSelect'
 import { TokenFromConnector } from './connector'
 import { useState } from 'react'
@@ -12,6 +12,7 @@ function TokenFrom({
   onMax,
   selectedToken,
   tokenBalance,
+  loadingTokenBalance,
   tokens,
 }: TokenFromConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
@@ -21,7 +22,12 @@ function TokenFrom({
       {/* Top Row */}
       <Flex justify="space-between">
         <Text color={error ? 'error.main' : 'text'}>From</Text>
-        <Text color="secondaryText">Balance: {tokenBalance}</Text>
+        <Flex color="secondaryText" gap={1}>
+          <Text>Balance: </Text>
+          <Skeleton isLoaded={!loadingTokenBalance}>
+            <Text>{tokenBalance}</Text>
+          </Skeleton>
+        </Flex>
       </Flex>
 
       {/* Bottom Row */}
