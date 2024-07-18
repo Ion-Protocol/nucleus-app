@@ -28,6 +28,7 @@ const bridgesSlice = createSlice({
     setSelectedToToken: (state, action: PayloadAction<{ bridgeKey: BridgeKey; tokenKey: TokenKey | null }>) => {
       state.data[action.payload.bridgeKey].selectedToToken = action.payload.tokenKey
     },
+    setBridgeFromDebounceComplete: () => {}, // only used as an action to trigger a side effect
   },
   extraReducers,
 })
@@ -39,6 +40,7 @@ export const {
   clearInputError,
   setSelectedFromToken,
   setSelectedToToken,
+  setBridgeFromDebounceComplete,
 } = bridgesSlice.actions
 export const bridgesReducer = bridgesSlice.reducer
 

@@ -1,7 +1,7 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { BridgeKey } from '@/config/chains'
-import { TokenKey } from '@/config/token'
+import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
@@ -14,6 +14,7 @@ import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransa
 import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
 import { selectBridgeConfig, selectBridgeFrom, selectChainConfig, selectFromTokenKeyForBridge } from './selectors'
 import { setInputError } from './slice'
+import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -251,7 +252,7 @@ export const performDeposit = createAsyncThunk<
   PerformDepositResult,
   BridgeKey,
   { rejectValue: string; state: RootState }
->('bridges/deposit', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+>('bridges/performDeposit', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
     const userAddress = selectAddress(state)
@@ -285,6 +286,61 @@ export const performDeposit = createAsyncThunk<
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
     dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorMessage(fullErrorMessage))
+    return rejectWithValue(errorMessage)
+  }
+})
+
+interface FetchPreviewFeeResult {
+  fee: bigint
+}
+
+/**
+ * Fetches the preview fee for a bridge.
+ *
+ * @param bridgeKey - The key of the bridge.
+ * @param getState - A function to get the current state of the store.
+ * @param rejectWithValue - A function to reject the promise with a value.
+ * @param dispatch - A function to dispatch actions to the store.
+ * @returns A promise that resolves to the preview fee result.
+ */
+export const fetchPreviewFee = createAsyncThunk<
+  FetchPreviewFeeResult,
+  BridgeKey,
+  { rejectValue: string; state: RootState }
+>('bridges/fetchPreviewFee', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+  console.log('fetch Preview fee')
+  try {
+    const state = getState()
+    const bridgeConfig = selectBridgeConfig(state)
+    const chainKey = selectChainKey(state)
+
+    const tellerContractAddress = bridgeConfig?.contracts.teller
+    const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
+    const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
+
+    if (tellerContractAddress && layerZeroChainSelector && wethAddress) {
+      const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
+        chainSelector: layerZeroChainSelector,
+        destinationChainReceiver: tellerContractAddress,
+        bridgeFeeToken: wethAddress,
+        messageGas: 1_000_000,
+        data: '',
+      }
+      const fee = await previewFee(
+        { shareAmount: 0, bridgeData: previewFeeBridgeData },
+        { contractAddress: tellerContractAddress }
+      )
+      return { fee }
+    } else {
+      return rejectWithValue('Missing contract address or layer zero chain selector')
+    }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to get preview fee for bridge ${bridgeKey}`
+    const fullErrorMessage = `${errorMessage}\n${error.message}`
+    console.error(fullErrorMessage)
+    dispatch(setErrorTitle('Preview Fee failed'))
     dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }

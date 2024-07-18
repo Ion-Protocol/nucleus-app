@@ -233,9 +233,10 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.OPTIMISM]: {
         name: 'Optimism',
+        layerZeroChainSelector: 40232,
         comingSoon: false,
         contracts: {
-          teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
+          teller: '0xffea4fb47ac7fa102648770304605920ce35660c',
           accountant: '0x28bdf277598d9f4dc0df2d16764764695cb3bbec',
           boringVault: '0x262031e2f50b8faea37b09445ad941e6256f1919',
         },

@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { debounceMiddleware } from './middleware/debounceMiddleware'
 import { accountReducer } from './slices/account/slice'
 import { assetApysReducer } from './slices/assetApys'
 import { assetApysApi } from './slices/assetApys/api'
@@ -16,6 +17,10 @@ import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
+import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
+
+const regularMiddlewares = [netApyApi.middleware, positionsApi.middleware, assetApysApi.middleware, debounceMiddleware]
+const sideEffectMiddlewares = [previewFeeMiddleware]
 
 export const store = configureStore({
   reducer: {
@@ -39,8 +44,7 @@ export const store = configureStore({
     [positionsApi.reducerPath]: positionsApi.reducer,
     [assetApysApi.reducerPath]: assetApysApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(netApyApi.middleware, positionsApi.middleware, assetApysApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(regularMiddlewares).concat(sideEffectMiddlewares),
 })
 
 export type RootState = ReturnType<typeof store.getState>

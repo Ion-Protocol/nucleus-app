@@ -14,6 +14,7 @@ export interface BridgeData {
   from: string
   selectedFromToken: TokenKey | null
   selectedToToken: TokenKey | null
+  previewFee: number | null
 }
 
 export type BridgesState = {
@@ -38,6 +39,7 @@ const initialBridgeData: BridgeData = {
   from: '',
   selectedFromToken: null,
   selectedToToken: null,
+  previewFee: null,
 }
 
 export const initialState: BridgesState = {
