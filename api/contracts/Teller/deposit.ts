@@ -27,6 +27,7 @@ export async function deposit(
     accountantAddress: `0x${string}`
   }
 ) {
+  console.log('deposit!')
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////

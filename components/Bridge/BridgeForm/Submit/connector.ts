@@ -20,30 +20,10 @@ const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
 }
 
 const mapDispatch = {
-  performDeposit,
+  onSubmit: performDeposit,
 }
 
-const mergeProps = (
-  stateProps: ReturnType<typeof mapState>,
-  dispatchProps: typeof mapDispatch,
-  ownProps: SubmitOwnProps
-) => {
-  const { bridgeKey } = stateProps
-
-  const onSubmit = () => {
-    if (bridgeKey) {
-      dispatchProps.performDeposit(bridgeKey)
-    }
-  }
-
-  return {
-    ...stateProps,
-    ...ownProps,
-    onSubmit,
-  }
-}
-
-const connector = connect(mapState, mapDispatch, mergeProps)
+const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 

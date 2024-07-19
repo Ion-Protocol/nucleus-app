@@ -290,7 +290,6 @@ export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (prev
 export const selectFormattedPreviewFee = createSelector(
   [selectPreviewFeeAsBigInt, selectPrice, selectCurrency],
   (previewFee, price, currency): string => {
-    console.log('🚀 ~ currency:', currency)
     if (!previewFee) return '-'
     const formattedPreviewFee = utils.currencySwitch(currency, previewFee, price, { usdDigits: 2, ethDigits: 4 })
     return formattedPreviewFee || '-'

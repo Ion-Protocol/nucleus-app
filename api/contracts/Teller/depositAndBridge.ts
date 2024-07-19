@@ -62,7 +62,7 @@ export async function depositAndBridge(
   await simulateContract(wagmiConfig, {
     abi: CrossChainTellerBaseAbi.abi as Abi,
     address: tellerContractAddress,
-    functionName: 'deposit',
+    functionName: 'depositAndBridge',
     args: [depositAsset, depositAmount, minimumMint, bridgeData],
   })
 

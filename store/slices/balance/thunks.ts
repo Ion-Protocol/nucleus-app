@@ -40,8 +40,12 @@ export const fetchAllTokenBalances = createAsyncThunk<
     return rejectWithValue('No address found in state.')
   }
 
+  const tokenKeys = Object.keys(tokensConfig).filter((key) => {
+    return tokensConfig[key as TokenKey].chains[chain as ChainKey].address !== '0x'
+  })
+
   try {
-    const balancePromises = Object.keys(tokensConfig).map(async (tokenKey) => {
+    const balancePromises = tokenKeys.map(async (tokenKey) => {
       if (tokenKey === TokenKey.ETH) {
         // Fetch ETH balance
         const { value: balance } = await getBalance(wagmiConfig, { address })

@@ -18,7 +18,9 @@ import {
   selectChainConfig,
   selectDepositAmountAsBigInt,
   selectDepositAssetAddress,
+  selectDestinationBridge,
   selectFromTokenKeyForBridge,
+  selectSourceBridge,
 } from './selectors'
 import { setInputError } from './slice'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
@@ -169,7 +171,7 @@ export const setBridgeFrom = createAsyncThunk<
     throw new Error('Bridge key is missing in router query')
   }
 
-  let fromFormatted = parseFloat(from).toString()
+  let fromFormatted = from.trim()
 
   if (isNaN(parseFloat(fromFormatted))) {
     fromFormatted = ''
@@ -257,115 +259,83 @@ export interface PerformDepositResult {
  * @param dispatch - A function to dispatch actions.
  * @returns A promise that resolves to the transaction hash of the deposit.
  */
-export const performDeposit = createAsyncThunk<
-  PerformDepositResult,
-  BridgeKey,
-  { rejectValue: string; state: RootState }
->('bridges/performDeposit', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
-  try {
-    const state = getState()
-    const userAddress = selectAddress(state)
+export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rejectValue: string; state: RootState }>(
+  'bridges/performDeposit',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
+      const userAddress = selectAddress(state)
 
-    const depositAssetKey = selectFromTokenKeyForBridge(state)
-    const depositAsset = selectTokenAddress(depositAssetKey as TokenKey)(state)
-    const depositAmount = selectDepositAmountAsBigInt(state)
-    const bridgeConfig = selectBridgeConfig(state)
+      const depositAssetKey = selectFromTokenKeyForBridge(state)
+      const depositAsset = selectTokenAddress(depositAssetKey as TokenKey)(state)
+      const depositAmount = selectDepositAmountAsBigInt(state)
+      const bridgeConfig = selectBridgeConfig(state)
+      const chainKey = selectChainKey(state)
+      const sourceBridgeKey = selectSourceBridge(state)
+      const destinationBridgeKey = selectDestinationBridge(state)
 
-    const tellerContractAddress = bridgeConfig?.contracts.teller
-    const boringVaultAddress = bridgeConfig?.contracts.boringVault
-    const accountantAddress = bridgeConfig?.contracts.accountant
+      const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
+      const tellerContractAddress = bridgeConfig?.contracts.teller
+      const boringVaultAddress = bridgeConfig?.contracts.boringVault
+      const accountantAddress = bridgeConfig?.contracts.accountant
+      const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
 
-    if (userAddress && tellerContractAddress && boringVaultAddress && accountantAddress && depositAsset) {
-      const txHash = await deposit(
-        { depositAsset, depositAmount },
-        { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }
-      )
-      dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
-      dispatch(setTransactionTxHash(txHash))
-      dispatch(setBridgeFrom(''))
-      return { txHash }
-    } else {
-      return { txHash: '0x0' }
-    }
-  } catch (e) {
-    const error = e as Error
-    const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Deposit Failed'))
-    dispatch(setErrorMessage(fullErrorMessage))
-    return rejectWithValue(errorMessage)
-  }
-})
+      if (
+        layerZeroChainSelector &&
+        wethAddress &&
+        userAddress &&
+        tellerContractAddress &&
+        boringVaultAddress &&
+        accountantAddress &&
+        sourceBridgeKey &&
+        destinationBridgeKey &&
+        depositAsset
+      ) {
+        const depositBridgeData: CrossChainTellerBase.BridgeData = {
+          chainSelector: layerZeroChainSelector,
+          destinationChainReceiver: userAddress,
+          bridgeFeeToken: wethAddress,
+          messageGas: 100000,
+          data: '',
+        }
 
-/**
- * Performs a deposit for a bridge.
- *
- * @param bridgeKey - The key of the bridge.
- * @param getState - A function to get the current state of the application.
- * @param rejectWithValue - A function to reject the async thunk with a value.
- * @param dispatch - A function to dispatch actions.
- * @returns A promise that resolves to the transaction hash of the deposit.
- */
-export const performDepositAndBridge = createAsyncThunk<
-  PerformDepositResult,
-  BridgeKey,
-  { rejectValue: string; state: RootState }
->('bridges/performDepositAndBridge', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
-  try {
-    const state = getState()
-    const userAddress = selectAddress(state)
+        let txHash: `0x${string}`
+        if (sourceBridgeKey === destinationBridgeKey) {
+          // If the source chain and and destination chains are the same.
+          // For example, both are Ethereum.
+          // Deposit without bridging.
+          txHash = await deposit(
+            { depositAsset, depositAmount },
+            { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }
+          )
+        } else {
+          // If the source chain and and destination chains are different.
+          // For example, the source is Ethereum and the destination is Optimism.
+          // Deposit with bridging.
+          txHash = await depositAndBridge(
+            { depositAsset, depositAmount, bridgeData: depositBridgeData },
+            { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }
+          )
+        }
 
-    const depositAssetKey = selectFromTokenKeyForBridge(state)
-    const depositAsset = selectTokenAddress(depositAssetKey as TokenKey)(state)
-    const depositAmount = selectDepositAmountAsBigInt(state)
-    const bridgeConfig = selectBridgeConfig(state)
-    const chainKey = selectChainKey(state)
-
-    const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
-    const tellerContractAddress = bridgeConfig?.contracts.teller
-    const boringVaultAddress = bridgeConfig?.contracts.boringVault
-    const accountantAddress = bridgeConfig?.contracts.accountant
-    const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
-
-    if (
-      layerZeroChainSelector &&
-      wethAddress &&
-      userAddress &&
-      tellerContractAddress &&
-      boringVaultAddress &&
-      accountantAddress &&
-      depositAsset
-    ) {
-      const depositBridgeData: CrossChainTellerBase.BridgeData = {
-        chainSelector: layerZeroChainSelector,
-        destinationChainReceiver: userAddress,
-        bridgeFeeToken: wethAddress,
-        messageGas: 1_000_000,
-        data: '',
+        dispatch(setTransactionTxHash(txHash))
+        dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
+        dispatch(setBridgeFrom(''))
+        return { txHash }
+      } else {
+        return { txHash: '0x0' }
       }
-
-      const txHash = await depositAndBridge(
-        { depositAsset, depositAmount, bridgeData: depositBridgeData },
-        { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }
-      )
-      dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
-      dispatch(setTransactionTxHash(txHash))
-      dispatch(setBridgeFrom(''))
-      return { txHash }
-    } else {
-      return { txHash: '0x0' }
+    } catch (e) {
+      const error = e as Error
+      const errorMessage = `Failed to deposit`
+      const fullErrorMessage = `${errorMessage}\n${error.message}`
+      console.error(fullErrorMessage)
+      dispatch(setErrorTitle('Deposit Failed'))
+      dispatch(setErrorMessage(fullErrorMessage))
+      return rejectWithValue(errorMessage)
     }
-  } catch (e) {
-    const error = e as Error
-    const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Deposit Failed'))
-    dispatch(setErrorMessage(fullErrorMessage))
-    return rejectWithValue(errorMessage)
   }
-})
+)
 
 export interface FetchPreviewFeeResult {
   fee: string

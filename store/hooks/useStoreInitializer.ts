@@ -26,16 +26,16 @@ export function useStoreInitializer() {
   const bridgeKeys = useAppSelector(selectBridgeKeys)
   const bridgeConfig = useAppSelector(selectBridgeConfig)
 
-  const vaultAddress = bridgeConfig?.contracts?.boringVault || '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC'
+  const vaultAddress = bridgeConfig?.contracts?.boringVault || null
 
   // Loads all data
   // Although the backend api supports filtering by timeRange we will do it in the frontend
   // This will save on loading time and cache storage in the frontend
   useGetNetApyQuery(
-    { address: vaultAddress, startTime: 1000, endTime, chainId: chainId ?? 0 },
-    { skip: chainId === null }
+    { address: vaultAddress || '0x0', startTime: 1000, endTime, chainId: chainId ?? 0 },
+    { skip: chainId === null || vaultAddress === null }
   )
-  useGetPositionsQuery({ address: vaultAddress, chainId: chainId ?? 0 }, { skip: chainId === null })
+  useGetPositionsQuery({ address: vaultAddress || '0x0', chainId: chainId ?? 0 }, { skip: chainId === null })
   useGetAssetApysQuery({ chainId: chainId ?? 0 }, { skip: chainId === null })
 
   useEffect(() => {
@@ -45,13 +45,13 @@ export function useStoreInitializer() {
   useEffect(() => {
     deferExecution(() => {
       dispatch(fetchEthPrice())
+      dispatch(fetchAllTokenBalances())
 
       const shouldSkipContracts = chainKey === ChainKey.SEPOLIA || chainKey === null
       if (!shouldSkipContracts) {
         dispatch(fetchLiquidityForAllMarkets())
         dispatch(fetchTotalSupplyForAllMarkets())
         dispatch(fetchCurrentBorrowRateForAllMarkets())
-        dispatch(fetchAllTokenBalances())
 
         bridgeKeys.forEach((key) => {
           dispatch(fetchBridgeTvl(key))

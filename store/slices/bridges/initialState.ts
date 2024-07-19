@@ -55,8 +55,8 @@ export const initialState: BridgesState = {
   apyLoading: false,
   previewFeeLoading: false,
   previewFee: null,
-  sourceBridge: null,
-  destinationBridge: null,
+  sourceBridge: BridgeKey.ETHEREUM,
+  destinationBridge: BridgeKey.ETHEREUM,
   inputError: null,
   deposit: {
     pending: false,
