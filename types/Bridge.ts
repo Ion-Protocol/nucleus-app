@@ -5,7 +5,7 @@ import { BridgeKey } from '@/config/chains'
 
 export interface Bridge {
   name: string
-  layerZeroChainSelector?: number
+  layerZeroChainSelector: number
   description: string
   sourceBridges: BridgeKey[]
   destinationBridges: BridgeKey[]

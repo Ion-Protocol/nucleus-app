@@ -281,7 +281,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
 
       if (
-        layerZeroChainSelector &&
+        layerZeroChainSelector !== undefined &&
         wethAddress &&
         userAddress &&
         tellerContractAddress &&
@@ -323,6 +323,8 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         dispatch(setBridgeFrom(''))
         return { txHash }
       } else {
+        dispatch(setErrorTitle('Deposit Failed'))
+        dispatch(setErrorMessage('Some required values are missing'))
         return { txHash: '0x0' }
       }
     } catch (e) {

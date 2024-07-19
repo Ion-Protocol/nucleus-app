@@ -69,6 +69,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.MORPH],
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.MRPH],
+        layerZeroChainSelector: 0,
         description:
           'Morph provides the tools and infrastructure necessary for developers to create decentralized applications (DApps) that are not only powerful but also intuitive and easy to use for the everyday consumer.',
       },
@@ -84,6 +85,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.SEI],
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.SEI],
+        layerZeroChainSelector: 0,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
       },
@@ -156,6 +158,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.MORPH],
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.MRPH],
+        layerZeroChainSelector: 0,
         description:
           'Morph provides the tools and infrastructure necessary for developers to create decentralized applications (DApps) that are not only powerful but also intuitive and easy to use for the everyday consumer.',
       },
@@ -171,6 +174,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.SEI],
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.SEI],
+        layerZeroChainSelector: 0,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
       },
