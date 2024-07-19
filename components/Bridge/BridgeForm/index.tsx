@@ -5,6 +5,7 @@ import TokenTo from './TokenTo'
 import { selectDestinationBridge, selectSourceBridge } from '@/store/slices/bridges'
 import { useAppSelector } from '@/store/hooks'
 import Submit from './Submit'
+import Summary from './Summary'
 
 interface BridgeFormProps extends ChakraProps {}
 
@@ -19,6 +20,7 @@ export function BridgeForm({ ...props }: BridgeFormProps) {
       <Divider />
       <ChainSelect role="destination" />
       <TokenTo />
+      <Summary />
       <Divider />
       {sourceChain === destinationChain && (
         <Text fontSize="sm" color="secondaryText">

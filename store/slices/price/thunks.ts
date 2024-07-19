@@ -1,10 +1,10 @@
+import { ChainKey, chainsConfig } from '@/config/chains'
 import { wagmiConfig } from '@/config/wagmi'
 import Chainlink from '@/contracts/Chainlink.json'
 import { RootState } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { readContract } from '@wagmi/core'
 import { Abi } from 'viem'
-import { selectChainConfig } from '../bridges'
 import { setErrorMessage } from '../status'
 
 export interface FetchPriceResult {
@@ -13,6 +13,7 @@ export interface FetchPriceResult {
 
 /**
  * Fetches the price of ETH using the Chainlink oracle.
+ * Always fetches the price on the mainnet even when not connected to mainnet.
  *
  * @returns A promise that resolves to the fetched price.
  */
@@ -20,17 +21,15 @@ export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectVa
   'price/fetchEthPrice',
   async (_, { getState, rejectWithValue, dispatch }) => {
     const state = getState()
-    const chainConfig = selectChainConfig(state)
-    const chainlinkAddress = chainConfig?.contracts.chainlink
-    if (!chainlinkAddress) {
-      return rejectWithValue('Chainlink contract address not found.')
-    }
+    const chainlinkAddress = chainsConfig[ChainKey.MAINNET].contracts.chainlink
+
     try {
       const result = (await readContract(wagmiConfig, {
         abi: Chainlink.abi as Abi,
         address: chainlinkAddress,
         functionName: 'latestRoundData',
         args: [],
+        chainId: 1,
       })) as Array<bigint>
 
       const ethPrice = result[1] as bigint

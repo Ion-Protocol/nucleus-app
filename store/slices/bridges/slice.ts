@@ -29,6 +29,9 @@ const bridgesSlice = createSlice({
       state.data[action.payload.bridgeKey].selectedToToken = action.payload.tokenKey
     },
     setBridgeFromDebounceComplete: () => {}, // only used as an action to trigger a side effect
+    clearPreviewFee: (state) => {
+      state.previewFee = null
+    },
   },
   extraReducers,
 })
@@ -41,6 +44,7 @@ export const {
   setSelectedFromToken,
   setSelectedToToken,
   setBridgeFromDebounceComplete,
+  clearPreviewFee,
 } = bridgesSlice.actions
 export const bridgesReducer = bridgesSlice.reducer
 

@@ -14,7 +14,6 @@ export interface BridgeData {
   from: string
   selectedFromToken: TokenKey | null
   selectedToToken: TokenKey | null
-  previewFee: string | null
 }
 
 export type BridgesState = {
@@ -23,6 +22,7 @@ export type BridgesState = {
   tvlLoading: boolean
   apyLoading: boolean
   previewFeeLoading: boolean
+  previewFee: string | null
   sourceBridge: BridgeKey | null
   inputError: string | null
   destinationBridge: BridgeKey | null
@@ -40,7 +40,6 @@ const initialBridgeData: BridgeData = {
   from: '',
   selectedFromToken: null,
   selectedToToken: null,
-  previewFee: null,
 }
 
 export const initialState: BridgesState = {
@@ -55,6 +54,7 @@ export const initialState: BridgesState = {
   tvlLoading: false,
   apyLoading: false,
   previewFeeLoading: false,
+  previewFee: null,
   sourceBridge: null,
   destinationBridge: null,
   inputError: null,

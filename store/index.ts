@@ -18,9 +18,10 @@ import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
 import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
+import { chainChangeMiddleware } from './middleware/effects/chainChangeMiddleware'
 
 const regularMiddlewares = [netApyApi.middleware, positionsApi.middleware, assetApysApi.middleware, debounceMiddleware]
-const sideEffectMiddlewares = [previewFeeMiddleware]
+const sideEffectMiddlewares = [previewFeeMiddleware, chainChangeMiddleware]
 
 export const store = configureStore({
   reducer: {

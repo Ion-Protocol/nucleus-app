@@ -27,6 +27,7 @@ export const selectDestinationBridge = createSelector(
 
 export const selectTvlLoading = (state: RootState) => state.bridges.tvlLoading
 export const selectApyLoading = (state: RootState) => state.bridges.apyLoading
+export const selectPreviewFeeLoading = (state: RootState) => state.bridges.previewFeeLoading
 
 export const selectChainConfig = createSelector([selectChainKey], (chainKey) => {
   if (!chainKey) return null
@@ -239,6 +240,7 @@ export const selectFromTokenKeyForBridge = createSelector(
  * @returns The deposit amount as a BigInt.
  */
 export const selectDepositAmountAsBigInt = createSelector([selectBridgeFrom], (depositAmountAsString): bigint => {
+  if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
   return BigInt(parseFloat(depositAmountAsString) * WAD.number)
 })
 
@@ -279,3 +281,18 @@ export const selectDepositError = createSelector([(state: RootState) => state], 
   const bridges = selectBridgesState(state)
   return bridges.deposit.error
 })
+
+export const selectPreviewFee = (state: RootState): string | null => state.bridges.previewFee
+export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (previewFee): bigint | null => {
+  return previewFee ? BigInt(previewFee) : null
+})
+
+export const selectFormattedPreviewFee = createSelector(
+  [selectPreviewFeeAsBigInt, selectPrice, selectCurrency],
+  (previewFee, price, currency): string => {
+    console.log('🚀 ~ currency:', currency)
+    if (!previewFee) return '-'
+    const formattedPreviewFee = utils.currencySwitch(currency, previewFee, price, { usdDigits: 2, ethDigits: 4 })
+    return formattedPreviewFee || '-'
+  }
+)

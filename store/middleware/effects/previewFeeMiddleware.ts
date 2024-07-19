@@ -12,9 +12,7 @@ export const previewFeeMiddleware: Middleware =
   (next) =>
   (action) => {
     if (setBridgeFromDebounceComplete.match(action)) {
-      const state = getState()
-      const bridgeKey = state.bridges.bridgeKey
-      dispatch(fetchPreviewFee(bridgeKey))
+      dispatch(fetchPreviewFee())
     }
     return next(action)
   }

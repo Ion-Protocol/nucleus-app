@@ -82,8 +82,7 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       state.previewFeeLoading = true
     })
     .addCase(fetchPreviewFee.fulfilled, (state, action: PayloadAction<FetchPreviewFeeResult>) => {
-      const bridge = state.data[action.payload.bridgeKey]
-      bridge.previewFee = action.payload.fee
+      state.previewFee = action.payload.fee
       state.previewFeeLoading = false
     })
     .addCase(fetchPreviewFee.rejected, (state) => {

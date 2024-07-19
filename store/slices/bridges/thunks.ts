@@ -299,7 +299,6 @@ export const performDeposit = createAsyncThunk<
 
 export interface FetchPreviewFeeResult {
   fee: string
-  bridgeKey: BridgeKey
 }
 
 /**
@@ -311,61 +310,60 @@ export interface FetchPreviewFeeResult {
  * @param dispatch - A function to dispatch actions to the store.
  * @returns A promise that resolves to the preview fee result.
  */
-export const fetchPreviewFee = createAsyncThunk<
-  FetchPreviewFeeResult,
-  BridgeKey,
-  { rejectValue: string; state: RootState }
->('bridges/fetchPreviewFee', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
-  try {
-    const state = getState()
-    const bridgeConfig = selectBridgeConfig(state)
-    const chainKey = selectChainKey(state)
-    const depositAmount = selectDepositAmountAsBigInt(state)
-    const depositAsset = selectDepositAssetAddress(state)
+export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { rejectValue: string; state: RootState }>(
+  'bridges/fetchPreviewFee',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
+      const bridgeConfig = selectBridgeConfig(state)
+      const chainKey = selectChainKey(state)
+      const depositAmount = selectDepositAmountAsBigInt(state)
+      const depositAsset = selectDepositAssetAddress(state)
 
-    const tellerContractAddress = bridgeConfig?.contracts.teller
-    const accountantContractAddress = bridgeConfig?.contracts.accountant
-    const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
-    const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
+      const tellerContractAddress = bridgeConfig?.contracts.teller
+      const accountantContractAddress = bridgeConfig?.contracts.accountant
+      const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
+      const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
 
-    if (
-      tellerContractAddress &&
-      accountantContractAddress &&
-      depositAmount &&
-      depositAsset &&
-      layerZeroChainSelector &&
-      wethAddress
-    ) {
-      const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
-        chainSelector: layerZeroChainSelector,
-        destinationChainReceiver: tellerContractAddress,
-        bridgeFeeToken: wethAddress,
-        messageGas: 1_000_000,
-        data: '',
+      if (
+        tellerContractAddress &&
+        accountantContractAddress &&
+        depositAmount &&
+        depositAsset &&
+        layerZeroChainSelector &&
+        wethAddress
+      ) {
+        const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
+          chainSelector: layerZeroChainSelector,
+          destinationChainReceiver: tellerContractAddress,
+          bridgeFeeToken: wethAddress,
+          messageGas: 1_000_000,
+          data: '',
+        }
+
+        const exchangeRate = await getRateInQuoteSafe(
+          { quote: depositAsset },
+          { contractAddress: accountantContractAddress }
+        )
+
+        const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
+
+        const fee = await previewFee(
+          { shareAmount, bridgeData: previewFeeBridgeData },
+          { contractAddress: tellerContractAddress }
+        )
+        return { fee: fee.toString() }
+      } else {
+        return rejectWithValue('Missing contract address or layer zero chain selector')
       }
-
-      const exchangeRate = await getRateInQuoteSafe(
-        { quote: depositAsset },
-        { contractAddress: accountantContractAddress }
-      )
-
-      const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
-
-      const fee = await previewFee(
-        { shareAmount, bridgeData: previewFeeBridgeData },
-        { contractAddress: tellerContractAddress }
-      )
-      return { fee: fee.toString(), bridgeKey }
-    } else {
-      return rejectWithValue('Missing contract address or layer zero chain selector')
+    } catch (e) {
+      const error = e as Error
+      const errorMessage = `Failed to get preview fee`
+      const fullErrorMessage = `${errorMessage}\n${error.message}`
+      console.error(fullErrorMessage)
+      dispatch(setErrorTitle('Preview Fee failed'))
+      dispatch(setErrorMessage(fullErrorMessage))
+      return rejectWithValue(errorMessage)
     }
-  } catch (e) {
-    const error = e as Error
-    const errorMessage = `Failed to get preview fee`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Preview Fee failed'))
-    dispatch(setErrorMessage(fullErrorMessage))
-    return rejectWithValue(errorMessage)
   }
-})
+)
