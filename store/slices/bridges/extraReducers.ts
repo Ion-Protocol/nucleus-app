@@ -11,6 +11,7 @@ import {
   fetchBridgeTvl,
   fetchPreviewFee,
   performDeposit,
+  performDepositAndBridge,
   setBridgeFrom,
   setBridgeFromMax,
 } from './thunks'
@@ -99,6 +100,22 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       state.deposit.pending = false
     })
     .addCase(performDeposit.rejected, (state, action) => {
+      state.deposit.pending = false
+      const bridge = state.data[action.meta.arg as BridgeKey]
+      bridge.rate.loading = false
+      bridge.error = action.error.message || 'Failed to deposit'
+    })
+
+    ///////////////////////////////
+    // Deposit and Bridge
+    ///////////////////////////////
+    .addCase(performDepositAndBridge.pending, (state, action) => {
+      state.deposit.pending = true
+    })
+    .addCase(performDepositAndBridge.fulfilled, (state) => {
+      state.deposit.pending = false
+    })
+    .addCase(performDepositAndBridge.rejected, (state, action) => {
       state.deposit.pending = false
       const bridge = state.data[action.meta.arg as BridgeKey]
       bridge.rate.loading = false

@@ -23,6 +23,7 @@ import {
 import { setInputError } from './slice'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
+import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -277,6 +278,75 @@ export const performDeposit = createAsyncThunk<
     if (userAddress && tellerContractAddress && boringVaultAddress && accountantAddress && depositAsset) {
       const txHash = await deposit(
         { depositAsset, depositAmount },
+        { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }
+      )
+      dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
+      dispatch(setTransactionTxHash(txHash))
+      dispatch(setBridgeFrom(''))
+      return { txHash }
+    } else {
+      return { txHash: '0x0' }
+    }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to deposit for bridge ${bridgeKey}`
+    const fullErrorMessage = `${errorMessage}\n${error.message}`
+    console.error(fullErrorMessage)
+    dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorMessage(fullErrorMessage))
+    return rejectWithValue(errorMessage)
+  }
+})
+
+/**
+ * Performs a deposit for a bridge.
+ *
+ * @param bridgeKey - The key of the bridge.
+ * @param getState - A function to get the current state of the application.
+ * @param rejectWithValue - A function to reject the async thunk with a value.
+ * @param dispatch - A function to dispatch actions.
+ * @returns A promise that resolves to the transaction hash of the deposit.
+ */
+export const performDepositAndBridge = createAsyncThunk<
+  PerformDepositResult,
+  BridgeKey,
+  { rejectValue: string; state: RootState }
+>('bridges/performDepositAndBridge', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
+  try {
+    const state = getState()
+    const userAddress = selectAddress(state)
+
+    const depositAssetKey = selectFromTokenKeyForBridge(state)
+    const depositAsset = selectTokenAddress(depositAssetKey as TokenKey)(state)
+    const depositAmount = selectDepositAmountAsBigInt(state)
+    const bridgeConfig = selectBridgeConfig(state)
+    const chainKey = selectChainKey(state)
+
+    const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
+    const tellerContractAddress = bridgeConfig?.contracts.teller
+    const boringVaultAddress = bridgeConfig?.contracts.boringVault
+    const accountantAddress = bridgeConfig?.contracts.accountant
+    const wethAddress = chainKey ? tokensConfig?.weth.chains[chainKey].address : null
+
+    if (
+      layerZeroChainSelector &&
+      wethAddress &&
+      userAddress &&
+      tellerContractAddress &&
+      boringVaultAddress &&
+      accountantAddress &&
+      depositAsset
+    ) {
+      const depositBridgeData: CrossChainTellerBase.BridgeData = {
+        chainSelector: layerZeroChainSelector,
+        destinationChainReceiver: userAddress,
+        bridgeFeeToken: wethAddress,
+        messageGas: 1_000_000,
+        data: '',
+      }
+
+      const txHash = await depositAndBridge(
+        { depositAsset, depositAmount, bridgeData: depositBridgeData },
         { userAddress, tellerContractAddress, boringVaultAddress, accountantAddress }
       )
       dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
