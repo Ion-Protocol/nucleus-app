@@ -1,5 +1,5 @@
 import { FunkitBuyConnector } from './connector'
-import { Button, Text } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { FunkitPaymentsIconLine, useFunkitCheckout, useConnectModal } from '@funkit/connect'
 import { Abi, erc20Abi } from 'viem'
@@ -8,6 +8,7 @@ import { getRateInQuote } from '@/api/contracts/Accountant/getRateInQuote'
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
 import TellerWithMultiAssetSupport from '@/contracts/TellerWithMultiAssetSupport.json'
 import { bridgesConfig } from '@/config/bridges'
+import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 
 const VERB = 'Get and bridge'
 
@@ -62,9 +63,8 @@ function FunkitBuy({
   }, [beginCheckout, bridgeKey, fromAmount, fromTokenInfo.address, fromTokenInfo.key, fromTokenInfo.name])
 
   return showFunkitBuy ? (
-    <Button
+    <ConnectAwareButton
       h="fit-content"
-      variant="outline"
       display="flex"
       alignItems="center"
       gap="2"
@@ -79,7 +79,7 @@ function FunkitBuy({
         {VERB} {fromTokenInfo.name}
       </Text>
       <FunkitPaymentsIconLine />
-    </Button>
+    </ConnectAwareButton>
   ) : null
 }
 

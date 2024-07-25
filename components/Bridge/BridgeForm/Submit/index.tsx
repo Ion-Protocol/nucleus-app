@@ -2,7 +2,7 @@ import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { SubmitConnector } from './connector'
 
 function Submit({ onSubmit, inputError, loading, disabled }: SubmitConnector.Props) {
-  return (
+  return inputError ? null : (
     <ConnectAwareButton
       h="fit-content"
       p={2}
