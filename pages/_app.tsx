@@ -24,6 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
           funkitConfig={funkitConfig}
           theme={lightTheme({
             accentColor: 'linear-gradient(101.87deg, #01B0D1 2.85%, #00869d 100.03%)',
+            borderRadius: 'small',
             customColors: {
               notificationPrimary: 'var(--chakra-colors-primary-50)',
             },
