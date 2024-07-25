@@ -5,6 +5,7 @@ import TokenTo from './TokenTo'
 import { selectBridgeDestinationChain, selectBridgeSourceChain } from '@/store/slices/bridges'
 import { useAppSelector } from '@/store/hooks'
 import Submit from './Submit'
+import FunkitBuy from './FunkitBuy'
 
 interface BridgeFormProps extends ChakraProps {}
 
@@ -26,6 +27,7 @@ export function BridgeForm({ ...props }: BridgeFormProps) {
         </Text>
       )}
       <Submit />
+      <FunkitBuy />
     </Flex>
   )
 }

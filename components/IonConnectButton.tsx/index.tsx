@@ -1,5 +1,5 @@
 import { Box, Button, Image, Text } from '@chakra-ui/react'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { ConnectButton } from '@funkit/connect'
 
 export function IonConnectButton() {
   return (

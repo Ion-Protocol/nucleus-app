@@ -1,20 +1,22 @@
 import { BridgeKey } from '@/config/bridges'
 import { RootState } from '@/store'
-import { selectBridgeFrom, selectDepositError, selectDepositPending } from '@/store/slices/bridges'
+import { selectBridgeFrom, selectDepositError, selectDepositPending, selectInputError } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
   const bridgeKey = state.router.query?.bridge as BridgeKey
   const loading = selectDepositPending(state)
-  const error = selectDepositError(state)
+  const inputError = selectInputError(state)
+  const depositError = selectDepositError(state)
   const from = selectBridgeFrom(state, bridgeKey)
-  const disabled = !from.trim()
+  const disabled = !from.trim() || !!inputError
 
   return {
     bridgeKey,
     loading,
-    error,
+    inputError,
+    depositError,
     disabled,
   }
 }
