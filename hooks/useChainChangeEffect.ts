@@ -1,5 +1,4 @@
 import { useAppDispatch } from '@/store/hooks'
-import { setSelectedToToken } from '@/store/slices/bridges'
 import { setChainId } from '@/store/slices/chain'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -12,24 +11,27 @@ export function useChainChangeEffect() {
   const [previousChainId, setPreviousChainId] = useState<number | null>(null)
 
   useEffect(() => {
-    // Load initial chain ID from local storage on component mount
-    // This ensures that the application starts with the correct chain ID even after a page refresh.
-    // Without this, the initial chain ID would incorrectly be 1 (mainnet) even if connected to a different chain.
-    // This is due to the nature of SSR in Next.js and the fact that `wagmi` does not provide the correct chain ID on the first render.
-    const storedChainId = localStorage.getItem('connectedChainId')
-    if (storedChainId) {
-      setPreviousChainId(parseInt(storedChainId))
-      dispatch(setChainId(parseInt(storedChainId)))
+    // Ensure this code runs only in the browser
+    if (typeof window !== 'undefined') {
+      const storedChainId = localStorage.getItem('connectedChainId')
+      if (storedChainId && !isNaN(parseInt(storedChainId))) {
+        const parsedChainId = parseInt(storedChainId)
+        setPreviousChainId(parsedChainId)
+        dispatch(setChainId(parsedChainId))
+      } else {
+        // Optionally set a default chain ID if not found or invalid
+        const defaultChainId = 1 // mainnet as default
+        setPreviousChainId(defaultChainId)
+        dispatch(setChainId(defaultChainId))
+        localStorage.setItem('connectedChainId', defaultChainId.toString())
+      }
     }
   }, [dispatch])
 
   useEffect(() => {
-    // If the previous chain ID is not null and the current chain ID is different from the previous one,
-    // this indicates that the user has changed the chain and confirmed it in their wallet.
-    // Update local storage with the new chain ID and update the application state.
-    // This prevents false detections of chain changes caused by the initial incorrect value provided by `wagmi`.
-    if (previousChainId !== null && chainId !== previousChainId) {
-      // TODO: Handle side effect the redux way when chainId changes in state
+    // Ensure chainId is valid before proceeding
+    if (chainId !== null && previousChainId !== null && chainId !== previousChainId) {
+      // Handle side effect the redux way when chainId changes in state
       router.push('/dashboard')
 
       localStorage.setItem('connectedChainId', chainId.toString())
