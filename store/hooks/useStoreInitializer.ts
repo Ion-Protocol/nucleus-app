@@ -35,7 +35,10 @@ export function useStoreInitializer() {
     { address: vaultAddress || '0x0', startTime: 1000, endTime, chainId: chainId ?? 0 },
     { skip: chainId === null || vaultAddress === null }
   )
-  useGetPositionsQuery({ address: vaultAddress || '0x0', chainId: chainId ?? 0 }, { skip: chainId === null })
+  useGetPositionsQuery(
+    { address: vaultAddress || '0x0', chainId: chainId ?? 0 },
+    { skip: chainId === null || vaultAddress === null }
+  )
   useGetAssetApysQuery({ chainId: chainId ?? 0 }, { skip: chainId === null })
 
   useEffect(() => {
