@@ -1,5 +1,9 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
+import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
+import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
+import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
+import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 import { BridgeKey } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
@@ -7,14 +11,12 @@ import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
-import { selectChainKey, selectChainId, selectToken, selectTokenAddress } from '../chain'
+import { selectChainId, selectChainKey, selectTokenAddress } from '../chain'
 import { netApyApi } from '../netApy/api'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
-import { calculateTvl, getTotalAssetBalanceWithPools } from './helpers'
 import {
   selectBridgeConfig,
-  selectBridgeFrom,
   selectChainConfig,
   selectDepositAmountAsBigInt,
   selectDepositAssetAddress,
@@ -23,9 +25,6 @@ import {
   selectSourceBridge,
 } from './selectors'
 import { setInputError } from './slice'
-import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
-import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
-import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -37,9 +36,10 @@ export interface FetchBridgeTvlResult {
  *
  * This action:
  * 1. Retrieves the current chain key from the state.
- * 2. Fetches native token balances and exchange rates for the specified bridge.
- * 3. Calculates the TVL in ETH and returns it as a string along with the bridge key.
- * 4. Logs and dispatches an error if the fetch fails, and rejects with an error message.
+ * 2. Fetches the total supply of shares and the exchange rate from the contracts.
+ * 3. Calculates the TVL using the formula: TVL = totalSupply * exchangeRate.
+ * 4. Returns the TVL as a string along with the bridge key.
+ * 5. Logs and dispatches an error if the fetch fails, and rejects with an error message.
  *
  * @param {BridgeKey} bridgeKey - The key identifying the bridge for which TVL is being fetched.
  * @param {Object} thunkAPI - An object containing getState, rejectWithValue, and dispatch functions provided by Redux Toolkit.
@@ -52,51 +52,31 @@ export const fetchBridgeTvl = createAsyncThunk<
   { rejectValue: string; state: RootState }
 >('balances/fetchBridgeTvl', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
-  const chainKey = selectChainKey(state)
   const chainConfig = selectChainConfig(state)
   const bridgeConfig = chainConfig?.bridges[bridgeKey]
 
   const vaultAddress = bridgeConfig?.contracts.boringVault
-  const acceptedTokens = bridgeConfig?.sourceTokens || []
-
-  if (!vaultAddress || !chainKey) {
+  const accountantAddress = bridgeConfig?.contracts.accountant
+  if (!vaultAddress || !accountantAddress) {
     return { tvl: '0', bridgeKey }
   }
 
-  // Native token balances are in their native units (e.g. wstETH, weETH, etc.)
-  const nativeTokenBalancesPromise = Promise.all(
-    acceptedTokens.map((tokenKey) => {
-      const tokenAddress = selectTokenAddress(tokenKey)(state)
-      if (!tokenAddress) return BigInt(0)
-      return getTotalAssetBalanceWithPools({ tokenKey, chainKey, vaultAddress, tokenAddress })
-    })
-  )
-  // Token exchange rates are in ETH/token (e.g. ETH/wstETH, ETH/weETH, etc.)
-  const tokenExchangeRatesPromise = Promise.all(
-    acceptedTokens.map((tokenKey) => {
-      const token = selectToken(tokenKey)(state)
-      if (!token) return BigInt(0)
-      return token.getPrice()
-    })
-  )
-
   try {
-    const [nativeTokenBalances, tokenExchangeRates] = await Promise.all([
-      nativeTokenBalancesPromise,
-      tokenExchangeRatesPromise,
-    ])
+    // Fetch total supply of shares
+    const totalSupply = await getTotalSupply(vaultAddress)
 
-    // Calcualtes TVL and converts the native tokens to ETH
-    const tvlInEth = calculateTvl(nativeTokenBalances, tokenExchangeRates)
+    // Fetch exchange rate
+    const exchangeRate = await getRate(accountantAddress)
 
+    // Calculate TVL
+    const tvlInEth = (totalSupply * exchangeRate) / BigInt(1e18) // Adjust for 18 decimals
     const tvlAsString = tvlInEth.toString()
 
     return { tvl: tvlAsString, bridgeKey }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to fetch TVL.`
-    const errorStack = error.stack ? `\nStack Trace:\n${error.stack}` : '' // Check if stack trace exists and append it
-    console.error(`${errorMessage}\n${errorStack}`)
+    const errorMessage = `Failed to fetch TVL.\n${error.message}`
+    console.error(`${errorMessage}\n${error.stack}`)
     dispatch(setErrorMessage(errorMessage))
     return rejectWithValue(errorMessage)
   }

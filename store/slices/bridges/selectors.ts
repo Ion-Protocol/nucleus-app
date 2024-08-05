@@ -99,6 +99,14 @@ export const selectBridgeKeys = createSelector([selectChainConfig], (chainConfig
   return Object.keys(chainConfig.bridges) as BridgeKey[]
 })
 
+export const selectAvailableBridgeKeys = createSelector(
+  [selectBridgeKeys, selectChainConfig],
+  (bridgeKeys, chainConfig): BridgeKey[] => {
+    if (!chainConfig) return []
+    return bridgeKeys.filter((key) => chainConfig.bridges[key]?.comingSoon === false)
+  }
+)
+
 export const selectBridgesData = createSelector([selectBridgesState], (bridgesState) => {
   return bridgesState.data
 })
@@ -125,9 +133,9 @@ export const selectBridgeTvlByKey = (bridgeKey: BridgeKey) =>
   })
 
 export const selectActiveBridgeTvl = createSelector([selectBridgesData, selectBridgeKey], (bridgesData, bridgeKey) => {
-  if (!bridgeKey) return BigInt(0)
+  if (bridgeKey === null) return null
   const tvl = bridgesData[bridgeKey].tvl.value
-  if (!tvl) return BigInt(0)
+  if (tvl === null) return null
   return BigInt(tvl)
 })
 

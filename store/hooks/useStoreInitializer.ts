@@ -1,11 +1,12 @@
 import { setAddress } from '@/store/slices/account'
 import { ChainKey } from '@/types/ChainKey'
+import { deferExecution } from '@/utils/misc'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useGetAssetApysQuery } from '../slices/assetApys/api'
 import { fetchAllTokenBalances } from '../slices/balance'
-import { selectBridgeConfig, selectBridgeKeys } from '../slices/bridges'
+import { selectAvailableBridgeKeys, selectBridgeConfig } from '../slices/bridges'
 import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
 import { selectChainId, selectChainKey } from '../slices/chain'
 import { fetchLiquidityForAllMarkets } from '../slices/ionLens'
@@ -14,7 +15,6 @@ import { selectNetApyEndTime } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
 import { useGetPositionsQuery } from '../slices/positions/api'
 import { fetchEthPrice } from '../slices/price'
-import { deferExecution } from '@/utils/misc'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -23,7 +23,7 @@ export function useStoreInitializer() {
   const chainId = useAppSelector(selectChainId)
   const chainKey = useAppSelector(selectChainKey)
   const endTime = useAppSelector(selectNetApyEndTime)
-  const bridgeKeys = useAppSelector(selectBridgeKeys)
+  const bridgeKeys = useAppSelector(selectAvailableBridgeKeys)
   const bridgeConfig = useAppSelector(selectBridgeConfig)
 
   const vaultAddress = bridgeConfig?.contracts?.boringVault || null

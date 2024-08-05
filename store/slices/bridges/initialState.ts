@@ -33,9 +33,9 @@ export type BridgesState = {
 }
 
 const initialBridgeData: BridgeData = {
-  tvl: { value: 0, loading: false },
+  tvl: { value: null, loading: false },
   apy: { value: null, loading: false },
-  rate: { value: 0, loading: false },
+  rate: { value: null, loading: false },
   error: null,
   from: '',
   selectedFromToken: null,

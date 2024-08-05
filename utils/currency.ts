@@ -16,7 +16,7 @@ export function currencySwitch(
   opts?: { usdDigits?: number; ethDigits?: number }
 ): string | null {
   const { usdDigits = 0, ethDigits = 0 } = opts || {}
-  if (!value) return null
+  if (value === null) return null
 
   switch (currency) {
     case 'USD':
