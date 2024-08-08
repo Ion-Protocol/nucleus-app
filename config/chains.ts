@@ -3,7 +3,6 @@ import { TokenKey } from './token'
 
 export enum ChainKey {
   MAINNET = 'mainnet',
-  SEPOLIA = 'sepolia',
   TENDERLY_MAINNET = 'tenderly_mainnet',
 }
 
@@ -13,9 +12,9 @@ export enum BridgeKey {
   ETHEREUM = 'ethereum',
   SEI = 'sei',
   MORPH = 'morph',
-  OPTIMISM = 'optimism',
+  OPTIMISM_SEPOLIA_LAYER_ZERO = 'optimism_sepolia_layer_zero',
+  OPTIMISM_SEPOLIA_OPSTACK = 'optimism_sepolia_opstack',
 }
-
 export interface ChainConfig {
   id: number
   name: string
@@ -33,7 +32,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
-        chainId: 2710,
+        deployedOn: 1,
         comingSoon: false,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -50,7 +49,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.SEI]: {
         name: 'Sei',
-        chainId: 1329,
+        deployedOn: 1,
         comingSoon: true,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -78,7 +77,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
-        chainId: 2710,
+        deployedOn: 99099127, // tenderly chain id
         comingSoon: false,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -95,7 +94,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.SEI]: {
         name: 'Sei',
-        chainId: 1329,
+        deployedOn: 99099127, // tenderly chain id
         comingSoon: true,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -110,20 +109,9 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
       },
-    },
-  },
-
-  ////////////////////////////////////////
-  // Sepolia
-  ////////////////////////////////////////
-
-  [ChainKey.SEPOLIA]: {
-    id: 11155111,
-    name: 'Sepolia',
-    bridges: {
-      [BridgeKey.OPTIMISM]: {
-        name: 'Optimism',
-        chainId: 10,
+      [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: {
+        name: 'Optimism (LayerZero)',
+        deployedOn: 11155111, // Sepolia chain id
         layerZeroChainSelector: 40232,
         comingSoon: false,
         contracts: {
@@ -132,7 +120,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
           boringVault: '0x262031e2f50b8faea37b09445ad941e6256f1919',
         },
         sourceBridges: [BridgeKey.ETHEREUM],
-        destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.OPTIMISM],
+        destinationBridges: [BridgeKey.ETHEREUM, BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO],
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.WETH, TokenKey.WSTETH],
         description: 'TBD',

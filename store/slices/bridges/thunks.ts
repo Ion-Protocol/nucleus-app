@@ -62,10 +62,10 @@ export const fetchBridgeTvl = createAsyncThunk<
 
   try {
     // Fetch total supply of shares
-    const totalSupply = await getTotalSupply(vaultAddress)
+    const totalSupply = await getTotalSupply(vaultAddress, { chainId: bridgeConfig.deployedOn })
 
     // Fetch exchange rate
-    const exchangeRate = await getRate(accountantAddress)
+    const exchangeRate = await getRate(accountantAddress, { chainId: bridgeConfig.deployedOn })
 
     // Calculate TVL
     const tvlInEth = (totalSupply * exchangeRate) / BigInt(1e18) // Adjust for 18 decimals
@@ -169,7 +169,7 @@ export const fetchBridgeRate = createAsyncThunk<
     if (bridge?.comingSoon || !accountantAddress) {
       return { bridgeKey, result: { rate: '0' } }
     }
-    const rateAsBigInt = await getRate(accountantAddress)
+    const rateAsBigInt = await getRate(accountantAddress, { chainId: bridge.deployedOn })
     return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
     const error = e as Error

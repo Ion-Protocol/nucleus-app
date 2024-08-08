@@ -4,7 +4,7 @@ import { Contracts } from './Contracts'
 
 export interface Bridge {
   name: string
-  chainId: number
+  deployedOn: number // The chainId that the bridge contracts are deployed on
   layerZeroChainSelector: number
   description: string
   sourceBridges: BridgeKey[]
