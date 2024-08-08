@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { debounceMiddleware } from './middleware/debounceMiddleware'
+import { chainChangeMiddleware } from './middleware/effects/chainChangeMiddleware'
+import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
 import { accountReducer } from './slices/account/slice'
-import { assetApysReducer } from './slices/assetApys'
-import { assetApysApi } from './slices/assetApys/api'
 import { balancesReducer } from './slices/balance'
 import { bridgesReducer } from './slices/bridges'
 import { chainReducer } from './slices/chain/slice'
@@ -13,16 +13,13 @@ import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
-import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
-import { chainChangeMiddleware } from './middleware/effects/chainChangeMiddleware'
 
-const regularMiddlewares = [netApyApi.middleware, assetApysApi.middleware, debounceMiddleware]
+const regularMiddlewares = [netApyApi.middleware, debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, chainChangeMiddleware]
 
 export const store = configureStore({
   reducer: {
     account: accountReducer,
-    assetApys: assetApysReducer,
     balances: balancesReducer,
     bridges: bridgesReducer,
     chain: chainReducer,
@@ -35,7 +32,6 @@ export const store = configureStore({
 
     // API reducers
     [netApyApi.reducerPath]: netApyApi.reducer,
-    [assetApysApi.reducerPath]: assetApysApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(regularMiddlewares).concat(sideEffectMiddlewares),
 })

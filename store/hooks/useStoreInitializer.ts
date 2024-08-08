@@ -4,12 +4,10 @@ import { deferExecution } from '@/utils/misc'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { useGetAssetApysQuery } from '../slices/assetApys/api'
 import { fetchAllTokenBalances } from '../slices/balance'
 import { selectAvailableBridgeKeys, selectBridgeConfig } from '../slices/bridges'
 import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
 import { selectChainId, selectChainKey } from '../slices/chain'
-import { fetchLiquidityForAllMarkets } from '../slices/ionLens'
 import { selectNetApyEndTime } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
 import { fetchEthPrice } from '../slices/price'
@@ -33,7 +31,6 @@ export function useStoreInitializer() {
     { address: vaultAddress || '0x0', startTime: 1000, endTime, chainId: chainId ?? 0 },
     { skip: chainId === null || vaultAddress === null }
   )
-  useGetAssetApysQuery({ chainId: chainId ?? 0 }, { skip: chainId === null })
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))

@@ -16,31 +16,10 @@ export enum BridgeKey {
   OPTIMISM = 'optimism',
 }
 
-export enum MarketKey {
-  WEETH_WSTETH = 'weETH_wstETH',
-  RSETH_WSTETH = 'rsETH_wstETH',
-  RSWETH_WSTETH = 'rswETH_wstETH',
-  EZETH_WETH = 'ezETH_WETH',
-}
-
-export interface MarketContracts {
-  reserveOracle: `0x${string}`
-  ionPool: `0x${string}`
-}
-
-export interface Market {
-  id: number
-  key: MarketKey
-  contracts: MarketContracts
-  collateralAsset: TokenKey
-  lenderAsset: TokenKey
-}
-
 export interface ChainConfig {
   id: number
   name: string
   bridges: Partial<Record<BridgeKey, Bridge>>
-  contracts: Record<string, `0x${string}`>
 }
 
 export const chainsConfig: Record<ChainKey, ChainConfig> = {
@@ -51,10 +30,6 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.MAINNET]: {
     id: 1,
     name: 'Ethereum',
-    contracts: {
-      chainlink: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
-      ionLens: '0xe89AF12af000C4f76a57A3aD16ef8277a727DC81',
-    },
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
@@ -98,10 +73,6 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.TENDERLY_MAINNET]: {
     id: 99099127,
     name: 'Ion Testnet',
-    contracts: {
-      chainlink: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
-      ionLens: '0xe89AF12af000C4f76a57A3aD16ef8277a727DC81',
-    },
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
@@ -145,10 +116,6 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.SEPOLIA]: {
     id: 11155111,
     name: 'Sepolia',
-    contracts: {
-      chainlink: '0xceA6Aa74E6A86a7f85B571Ce1C34f1A60B77CD29',
-      ionLens: '0x0',
-    },
     bridges: {
       [BridgeKey.OPTIMISM]: {
         name: 'Optimism',

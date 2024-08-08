@@ -1,4 +1,4 @@
-import { ChainKey, chainsConfig } from '@/config/chains'
+import { contractAddresses } from '@/config/contracts'
 import { wagmiConfig } from '@/config/wagmi'
 import Chainlink from '@/contracts/Chainlink.json'
 import { RootState } from '@/store'
@@ -20,8 +20,7 @@ export interface FetchPriceResult {
 export const fetchEthPrice = createAsyncThunk<FetchPriceResult, void, { rejectValue: string; state: RootState }>(
   'price/fetchEthPrice',
   async (_, { getState, rejectWithValue, dispatch }) => {
-    const state = getState()
-    const chainlinkAddress = chainsConfig[ChainKey.MAINNET].contracts.chainlink
+    const chainlinkAddress = contractAddresses.chainlink
 
     try {
       const result = (await readContract(wagmiConfig, {
