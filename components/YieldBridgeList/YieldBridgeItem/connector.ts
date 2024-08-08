@@ -1,22 +1,15 @@
 import { BridgeKey } from '@/config/chains'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
-import {
-  selectBridgeConfigByKey,
-  selectFormattedBridgeTvlByKey,
-  selectFromattedBridgeApyKey,
-  selectTvlLoading,
-} from '@/store/slices/bridges'
-import { selectNetApyLoading } from '@/store/slices/netApy'
+import { selectBridgeConfigByKey, selectFormattedBridgeTvlByKey, selectTvlLoading } from '@/store/slices/bridges'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const { bridgeKey } = ownProps
   const bridgeConfig = selectBridgeConfigByKey(bridgeKey)(state)
   const disabled = bridgeConfig?.comingSoon
-  const loading = selectTvlLoading(state) || selectNetApyLoading(state)
+  const loading = selectTvlLoading(state)
   const tvl = selectFormattedBridgeTvlByKey(bridgeKey)(state)
-  const apy = selectFromattedBridgeApyKey(bridgeKey)(state)
   const name = bridgeConfig?.name || ''
   const comingSoon = bridgeConfig?.comingSoon || false
 
@@ -28,7 +21,6 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
 
   return {
     tvl,
-    apy,
     name,
     comingSoon,
     bridgeKey,

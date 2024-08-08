@@ -1,5 +1,6 @@
 import { RootState } from '@/store'
 import { utils } from '@/utils'
+import { bigIntToNumber } from '@/utils/bigint'
 
 /**
  * Selects the data property from the balances state.
@@ -36,6 +37,6 @@ export function selectPriceError(state: RootState): string | null {
 export function selectFormattedPrice(state: RootState): string {
   let price = selectPrice(state)
   const priceAsBigInt = BigInt(price)
-  const priceFormatted = utils.bigIntToNumber(priceAsBigInt)
+  const priceFormatted = bigIntToNumber(priceAsBigInt)
   return priceFormatted
 }

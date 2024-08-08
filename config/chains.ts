@@ -33,6 +33,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
+        chainId: 2710,
         comingSoon: false,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -49,6 +50,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.SEI]: {
         name: 'Sei',
+        chainId: 1329,
         comingSoon: true,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -76,6 +78,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.MORPH]: {
         name: 'Morph',
+        chainId: 2710,
         comingSoon: false,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -92,6 +95,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.SEI]: {
         name: 'Sei',
+        chainId: 1329,
         comingSoon: true,
         contracts: {
           teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
@@ -119,6 +123,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.OPTIMISM]: {
         name: 'Optimism',
+        chainId: 10,
         layerZeroChainSelector: 40232,
         comingSoon: false,
         contracts: {

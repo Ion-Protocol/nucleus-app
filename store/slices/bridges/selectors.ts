@@ -1,17 +1,16 @@
-import { BridgeKey, ChainKey, chainsConfig } from '@/config/chains'
+import { BridgeKey, chainsConfig } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
 import { Bridge } from '@/types/Bridge'
-import { utils } from '@/utils'
-import { numToPercent } from '@/utils/number'
+import { WAD } from '@/utils/bigint'
+import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
+import { Address } from 'viem'
 import { selectChainKey } from '../chain'
 import { selectPrice } from '../price'
 import { selectBridgeKey } from '../router'
 import { BridgeData } from './initialState'
-import { Address } from 'viem'
-import { WAD } from '@/utils/bigint'
 
 export const selectBridgesState = (state: RootState) => state.bridges
 export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
@@ -26,7 +25,6 @@ export const selectDestinationBridge = createSelector(
 )
 
 export const selectTvlLoading = (state: RootState) => state.bridges.tvlLoading
-export const selectApyLoading = (state: RootState) => state.bridges.apyLoading
 export const selectPreviewFeeLoading = (state: RootState) => state.bridges.previewFeeLoading
 
 export const selectChainConfig = createSelector([selectChainKey], (chainKey) => {
@@ -42,6 +40,10 @@ export const selectBridgeConfig = createSelector(
     return { ...bridgeConfig, key: bridgeKey }
   }
 )
+
+export const selectBridgeChainId = createSelector([selectBridgeConfig], (bridgeConfig): number | null => {
+  return bridgeConfig?.chainId || null
+})
 
 export const selectBridgeConfigByKey = (bridgeKey: BridgeKey) => {
   return createSelector([selectChainConfig], (chainConfig) => {
@@ -136,30 +138,6 @@ export const selectActiveBridgeTvl = createSelector([selectBridgesData, selectBr
 })
 
 /**
- * Selects the APY (Annual Percentage Yield) value for a given bridge key.
- * @param key - The key of the bridge.
- * @returns The APY value as a string, or undefined if the bridge key is not found.
- */
-export const selectBridgeApyKey = (bridgeKey: BridgeKey) =>
-  createSelector([selectBridgesData], (bridgesData): number | null => {
-    if (!bridgesData) return null
-    return bridgesData[bridgeKey].apy.value as number
-  })
-
-/**
- * Selects the loading state of a specific bridge identified by the given key.
- * @param key - The key of the bridge.
- * @returns The loading state of the bridge.
- */
-export const selectBridgeLoadingByKey = createSelector(
-  [selectBridgesData, selectBridgeKey],
-  (bridgesData, bridgeKey): boolean => {
-    if (!bridgesData || !bridgeKey) return false
-    return bridgesData[bridgeKey].tvl.loading || bridgesData[bridgeKey].apy.loading
-  }
-)
-
-/**
  * Selects the formatted total value locked (TVL) for a specific bridge key.
  *
  * @param key - The bridge key.
@@ -167,29 +145,17 @@ export const selectBridgeLoadingByKey = createSelector(
  */
 export const selectFormattedBridgeTvlByKey = (bridgeKey: BridgeKey) =>
   createSelector([selectBridgeTvlByKey(bridgeKey), selectPrice, selectCurrency], (tvl, price, currency) => {
-    const formattedTvl = utils.currencySwitch(currency, tvl, price)
+    const formattedTvl = currencySwitch(currency, tvl, price)
     return formattedTvl || '-'
   })
 
 export const selectActiveFormattedBridgeTvl = createSelector(
   [selectActiveBridgeTvl, selectPrice, selectCurrency],
   (tvl, price, currency) => {
-    const formattedTvl = utils.currencySwitch(currency, tvl, price)
+    const formattedTvl = currencySwitch(currency, tvl, price)
     return formattedTvl || '-'
   }
 )
-
-/**
- * Selects the formatted Annual Percentage Yield (APY) for a given bridge key.
- *
- * @param key - The bridge key.
- * @returns The formatted APY as a string.
- */
-export const selectFromattedBridgeApyKey = (bridgeKey: BridgeKey) =>
-  createSelector([selectBridgeApyKey(bridgeKey)], (apy) => {
-    if (!apy) return '-'
-    return numToPercent(apy * 100)
-  })
 
 export const selectAllBridgeKeys = createSelector([selectChainConfig], (chainConfig): BridgeKey[] => {
   if (!chainConfig) return []
@@ -295,7 +261,7 @@ export const selectFormattedPreviewFee = createSelector(
   [selectPreviewFeeAsBigInt, selectPrice, selectCurrency],
   (previewFee, price, currency): string => {
     if (!previewFee) return '-'
-    const formattedPreviewFee = utils.currencySwitch(currency, previewFee, price, { usdDigits: 2, ethDigits: 4 })
+    const formattedPreviewFee = currencySwitch(currency, previewFee, price, { usdDigits: 2, ethDigits: 4 })
     return formattedPreviewFee || '-'
   }
 )

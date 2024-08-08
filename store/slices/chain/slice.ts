@@ -23,9 +23,6 @@ const chainSlice = createSlice({
   },
 })
 
-// export const selectChain = (state: RootState): ChainKey | null => {
-//   return state.chain.chainKey
-// }
 export const selectChainId = (state: RootState): number | null => {
   return state.chain.chainId
 }

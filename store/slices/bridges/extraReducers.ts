@@ -2,12 +2,9 @@ import { BridgeKey } from '@/config/chains'
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import {
-  FetchBridgeApyResult,
   FetchBridgeRateResult,
   FetchBridgeTvlResult,
   FetchPreviewFeeResult,
-  PerformDepositResult,
-  fetchBridgeApy,
   fetchBridgeRate,
   fetchBridgeTvl,
   fetchPreviewFee,
@@ -18,7 +15,7 @@ import {
 
 /**
  * Defines the extra reducers for the bridges slice.
- * These reducers handle the state updates for fetching bridge TVL and APY.
+ * These reducers handle the state updates for fetching bridge TVL.
  *
  * @param builder - The ActionReducerMapBuilder for the BridgesState.
  */
@@ -41,24 +38,6 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     })
 
     ///////////////////////////////
-    // APY
-    ///////////////////////////////
-    .addCase(fetchBridgeApy.pending, (state, action) => {
-      state.apyLoading = true
-    })
-    .addCase(
-      fetchBridgeApy.fulfilled,
-      (state, action: PayloadAction<{ bridgeKey: BridgeKey; result: FetchBridgeApyResult }>) => {
-        state.apyLoading = false
-        const bridge = state.data[action.payload.bridgeKey]
-        bridge.apy.value = action.payload.result.apy
-      }
-    )
-    .addCase(fetchBridgeApy.rejected, (state, action) => {
-      state.apyLoading = false
-    })
-
-    ///////////////////////////////
     // Rate
     ///////////////////////////////
     .addCase(fetchBridgeRate.pending, (state, action) => {
@@ -69,11 +48,11 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
       (state, action: PayloadAction<{ bridgeKey: BridgeKey; result: FetchBridgeRateResult }>) => {
         const bridge = state.data[action.payload.bridgeKey]
         bridge.rate.value = action.payload.result.rate
-        state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
+        state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.rate.loading)
       }
     )
     .addCase(fetchBridgeRate.rejected, (state, action) => {
-      state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.apy.loading || b.rate.loading)
+      state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.rate.loading)
     })
 
     ///////////////////////////////

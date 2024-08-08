@@ -11,8 +11,7 @@ import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
-import { selectChainId, selectChainKey, selectTokenAddress } from '../chain'
-import { netApyApi } from '../netApy/api'
+import { selectChainKey, selectTokenAddress } from '../chain'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import {
@@ -78,50 +77,6 @@ export const fetchBridgeTvl = createAsyncThunk<
     const errorMessage = `Failed to fetch TVL.\n${error.message}`
     console.error(`${errorMessage}\n${error.stack}`)
     dispatch(setErrorMessage(errorMessage))
-    return rejectWithValue(errorMessage)
-  }
-})
-
-export interface FetchBridgeApyResult {
-  apy: number
-}
-
-export const fetchBridgeApy = createAsyncThunk<
-  { bridgeKey: BridgeKey; result: FetchBridgeApyResult },
-  BridgeKey,
-  { rejectValue: string; state: RootState }
->('bridges/fetchBridgeApy', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
-  try {
-    const state = getState()
-    const chainId = selectChainId(state)
-    const bridgeConfig = selectBridgeConfig(state)
-    const address = bridgeConfig?.contracts?.boringVault
-    if (!address || !chainId) {
-      return {
-        bridgeKey,
-        result: {
-          apy: 0,
-        },
-      }
-    }
-    const resultAction = await dispatch(netApyApi.endpoints.getLatestNetApy.initiate({ address, chainId }))
-
-    if ('error' in resultAction) {
-      throw new Error('Error getting net apy for bridge')
-    }
-
-    const { data: netApyItem } = resultAction
-    if (netApyItem) {
-      return { bridgeKey, result: { apy: netApyItem.netApy } }
-    } else {
-      return { bridgeKey, result: { apy: 0 } }
-    }
-  } catch (e) {
-    const error = e as Error
-    const errorMessage = `Failed to fetch APY for bridge ${bridgeKey}`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
 })

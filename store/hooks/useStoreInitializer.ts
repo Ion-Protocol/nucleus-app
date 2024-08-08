@@ -5,32 +5,17 @@ import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { fetchAllTokenBalances } from '../slices/balance'
-import { selectAvailableBridgeKeys, selectBridgeConfig } from '../slices/bridges'
-import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
-import { selectChainId, selectChainKey } from '../slices/chain'
-import { selectNetApyEndTime } from '../slices/netApy'
-import { useGetNetApyQuery } from '../slices/netApy/api'
+import { selectAvailableBridgeKeys } from '../slices/bridges'
+import { fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
+import { selectChainKey } from '../slices/chain'
 import { fetchEthPrice } from '../slices/price'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
   const dispatch = useAppDispatch()
 
-  const chainId = useAppSelector(selectChainId)
   const chainKey = useAppSelector(selectChainKey)
-  const endTime = useAppSelector(selectNetApyEndTime)
   const bridgeKeys = useAppSelector(selectAvailableBridgeKeys)
-  const bridgeConfig = useAppSelector(selectBridgeConfig)
-
-  const vaultAddress = bridgeConfig?.contracts?.boringVault || null
-
-  // Loads all data
-  // Although the backend api supports filtering by timeRange we will do it in the frontend
-  // This will save on loading time and cache storage in the frontend
-  useGetNetApyQuery(
-    { address: vaultAddress || '0x0', startTime: 1000, endTime, chainId: chainId ?? 0 },
-    { skip: chainId === null || vaultAddress === null }
-  )
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))
@@ -45,7 +30,6 @@ export function useStoreInitializer() {
       if (!shouldSkipContracts) {
         bridgeKeys.forEach((key) => {
           dispatch(fetchBridgeTvl(key))
-          dispatch(fetchBridgeApy(key))
           dispatch(fetchBridgeRate(key))
         })
       }

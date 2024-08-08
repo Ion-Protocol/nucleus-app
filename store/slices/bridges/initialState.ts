@@ -8,7 +8,6 @@ export interface AsyncMetric {
 
 export interface BridgeData {
   tvl: AsyncMetric
-  apy: AsyncMetric
   rate: AsyncMetric
   error: string | null
   from: string
@@ -20,7 +19,6 @@ export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
   tvlLoading: boolean
-  apyLoading: boolean
   previewFeeLoading: boolean
   previewFee: string | null
   sourceBridge: BridgeKey | null
@@ -34,7 +32,6 @@ export type BridgesState = {
 
 const initialBridgeData: BridgeData = {
   tvl: { value: null, loading: false },
-  apy: { value: null, loading: false },
   rate: { value: null, loading: false },
   error: null,
   from: '',
@@ -52,7 +49,6 @@ export const initialState: BridgesState = {
   ),
   overallLoading: false,
   tvlLoading: false,
-  apyLoading: false,
   previewFeeLoading: false,
   previewFee: null,
   sourceBridge: BridgeKey.ETHEREUM,

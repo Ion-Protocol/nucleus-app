@@ -7,14 +7,12 @@ import { balancesReducer } from './slices/balance'
 import { bridgesReducer } from './slices/bridges'
 import { chainReducer } from './slices/chain/slice'
 import { currencyReducer } from './slices/currency/slice'
-import { netApyReducer } from './slices/netApy'
-import { netApyApi } from './slices/netApy/api'
 import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
 
-const regularMiddlewares = [netApyApi.middleware, debounceMiddleware]
+const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, chainChangeMiddleware]
 
 export const store = configureStore({
@@ -24,14 +22,10 @@ export const store = configureStore({
     bridges: bridgesReducer,
     chain: chainReducer,
     currency: currencyReducer,
-    netApy: netApyReducer,
     price: priceReducer,
     router: routerReducer,
     status: statusReducer,
     ui: UIReducer,
-
-    // API reducers
-    [netApyApi.reducerPath]: netApyApi.reducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(regularMiddlewares).concat(sideEffectMiddlewares),
 })

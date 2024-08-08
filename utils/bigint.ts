@@ -29,16 +29,6 @@ export function bigIntToNumber(
 }
 
 /**
- * Converts a BigInt value to a percentage string.
- * @param value - The BigInt value to convert.
- * @returns The percentage string representation of the BigInt value.
- */
-export function bigIntToPercent(value: bigint, decimals = 18): string {
-  const numberValue = parseFloat(formatUnits(value, decimals)).toFixed(2)
-  return `${numberValue}%`
-}
-
-/**
  * Converts a bigint value to USD currency.
  *
  * @param value - The bigint value to convert.

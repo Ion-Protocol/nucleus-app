@@ -6,7 +6,6 @@ import { YieldBridgeItemConnector } from './connector'
 
 function YieldBridgeItem({
   tvl,
-  apy,
   name,
   comingSoon,
   bridgeKey,
@@ -48,21 +47,13 @@ function YieldBridgeItem({
         {/* Bridge Description */}
         <Text>{description}</Text>
 
-        {/* TVL & APY */}
+        {/* TVL */}
         <Flex mt={3} gap={6}>
           {/* TVL */}
           <Flex direction="column">
             <Text>TVL</Text>
             <IonSkeleton isLoaded={!loading} w="100px">
               <Text variant="large">{comingSoon ? '-' : tvl}</Text>
-            </IonSkeleton>
-          </Flex>
-
-          {/* APY */}
-          <Flex direction="column">
-            <Text>APY</Text>
-            <IonSkeleton isLoaded={!loading}>
-              <Text variant="large">{comingSoon ? '-' : apy}</Text>
             </IonSkeleton>
           </Flex>
         </Flex>
