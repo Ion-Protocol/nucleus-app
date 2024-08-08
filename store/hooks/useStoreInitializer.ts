@@ -10,10 +10,8 @@ import { selectAvailableBridgeKeys, selectBridgeConfig } from '../slices/bridges
 import { fetchBridgeApy, fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
 import { selectChainId, selectChainKey } from '../slices/chain'
 import { fetchLiquidityForAllMarkets } from '../slices/ionLens'
-import { fetchCurrentBorrowRateForAllMarkets, fetchTotalSupplyForAllMarkets } from '../slices/ionPool'
 import { selectNetApyEndTime } from '../slices/netApy'
 import { useGetNetApyQuery } from '../slices/netApy/api'
-import { useGetPositionsQuery } from '../slices/positions/api'
 import { fetchEthPrice } from '../slices/price'
 
 export function useStoreInitializer() {
@@ -35,10 +33,6 @@ export function useStoreInitializer() {
     { address: vaultAddress || '0x0', startTime: 1000, endTime, chainId: chainId ?? 0 },
     { skip: chainId === null || vaultAddress === null }
   )
-  useGetPositionsQuery(
-    { address: vaultAddress || '0x0', chainId: chainId ?? 0 },
-    { skip: chainId === null || vaultAddress === null }
-  )
   useGetAssetApysQuery({ chainId: chainId ?? 0 }, { skip: chainId === null })
 
   useEffect(() => {
@@ -52,10 +46,6 @@ export function useStoreInitializer() {
 
       const shouldSkipContracts = chainKey === ChainKey.SEPOLIA || chainKey === null
       if (!shouldSkipContracts) {
-        dispatch(fetchLiquidityForAllMarkets())
-        dispatch(fetchTotalSupplyForAllMarkets())
-        dispatch(fetchCurrentBorrowRateForAllMarkets())
-
         bridgeKeys.forEach((key) => {
           dispatch(fetchBridgeTvl(key))
           dispatch(fetchBridgeApy(key))

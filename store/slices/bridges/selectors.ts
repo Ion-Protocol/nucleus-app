@@ -34,10 +34,6 @@ export const selectChainConfig = createSelector([selectChainKey], (chainKey) => 
   return chainsConfig[chainKey]
 })
 
-export const selectMarketsConfig = createSelector([selectChainConfig], (chainConfig) => {
-  return chainConfig?.markets
-})
-
 export const selectBridgeConfig = createSelector(
   [selectChainConfig, selectBridgeKey],
   (chainConfig, bridgeKey): (Bridge & { key: BridgeKey }) | null => {
