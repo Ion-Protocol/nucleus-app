@@ -57,5 +57,5 @@ To contribute, please follow these steps:
 
 2. **Clone your fork**: Clone your forked repository to your local machine.
    ```bash
-   git clone https://github.com/your-username/ion-yield-bridge.git
+   git clone https://github.com/your-username/nucleus-app.git
    ```
