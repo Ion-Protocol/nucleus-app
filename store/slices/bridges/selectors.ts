@@ -1,4 +1,4 @@
-import { BridgeKey, chainsConfig } from '@/config/chains'
+import { BridgeKey, ChainKey, chainsConfig } from '@/config/chains'
 import { TokenKey, tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
@@ -32,6 +32,11 @@ export const selectChainConfig = createSelector([selectChainKey], (chainKey) => 
   return chainsConfig[chainKey]
 })
 
+export const selectChainKeyByChainId = (chainId: number | undefined) =>
+  Object.keys(chainsConfig).find(
+    (chainKey) => chainsConfig[chainKey as keyof typeof chainsConfig].id === chainId
+  ) as ChainKey | null
+
 export const selectBridgeConfig = createSelector(
   [selectChainConfig, selectBridgeKey],
   (chainConfig, bridgeKey): (Bridge & { key: BridgeKey }) | null => {
@@ -40,10 +45,6 @@ export const selectBridgeConfig = createSelector(
     return { ...bridgeConfig, key: bridgeKey }
   }
 )
-
-export const selectBridgeChainId = createSelector([selectBridgeConfig], (bridgeConfig): number | null => {
-  return bridgeConfig?.chainId || null
-})
 
 export const selectBridgeConfigByKey = (bridgeKey: BridgeKey) => {
   return createSelector([selectChainConfig], (chainConfig) => {

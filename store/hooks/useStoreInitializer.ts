@@ -26,13 +26,10 @@ export function useStoreInitializer() {
       dispatch(fetchEthPrice())
       dispatch(fetchAllTokenBalances())
 
-      const shouldSkipContracts = chainKey === ChainKey.SEPOLIA || chainKey === null
-      if (!shouldSkipContracts) {
-        bridgeKeys.forEach((key) => {
-          dispatch(fetchBridgeTvl(key))
-          dispatch(fetchBridgeRate(key))
-        })
-      }
+      bridgeKeys.forEach((key) => {
+        dispatch(fetchBridgeTvl(key))
+        dispatch(fetchBridgeRate(key))
+      })
     })
     // Reason for disabling the eslint rule: eslint is detecting that `state` is not in the dependency array but is used in the useEffect.
     // We don't need this useEffect to trigger when state changes. This would cause the useEffect to trigger constantly since state is an object.

@@ -12,6 +12,7 @@ function ChainSelect({ chains, onChange, selected, placeholder }: ChainSelectCon
         rightIcon={<ChevronDownIcon />}
         textAlign="left"
         color={!selected ? 'disabled' : undefined}
+        bg="none"
       >
         <Flex align="center" gap={3}>
           {selected && <BridgeIcon bridgeKey={selected.key} />}

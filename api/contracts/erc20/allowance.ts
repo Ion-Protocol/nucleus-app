@@ -10,20 +10,24 @@ import { readContract } from 'wagmi/actions'
  * @param userAddress - The address of the user.
  * @returns The allowance as a BigInt.
  */
-export async function allowance({
-  tokenAddress,
-  spenderAddress,
-  userAddress,
-}: {
-  tokenAddress: `0x${string}`
-  spenderAddress: `0x${string}`
-  userAddress: `0x${string}`
-}) {
+export async function allowance(
+  {
+    tokenAddress,
+    spenderAddress,
+    userAddress,
+  }: {
+    tokenAddress: `0x${string}`
+    spenderAddress: `0x${string}`
+    userAddress: `0x${string}`
+  },
+  { chainId }: { chainId: number }
+) {
   const allowanceAsBigInt = await readContract(wagmiConfig, {
     abi: erc20Abi,
     address: tokenAddress,
     functionName: 'allowance',
     args: [userAddress, spenderAddress],
+    chainId,
   })
 
   return allowanceAsBigInt

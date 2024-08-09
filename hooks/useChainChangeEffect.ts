@@ -31,9 +31,6 @@ export function useChainChangeEffect() {
   useEffect(() => {
     // Ensure chainId is valid before proceeding
     if (chainId !== null && previousChainId !== null && chainId !== previousChainId) {
-      // Handle side effect the redux way when chainId changes in state
-      router.push('/dashboard')
-
       localStorage.setItem('connectedChainId', chainId.toString())
       setPreviousChainId(chainId)
       dispatch(setChainId(chainId))

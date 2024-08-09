@@ -1,6 +1,6 @@
 import { BridgeKey } from '@/config/chains'
 import { RootState } from '@/store'
-import { selectBridgeFrom, selectDepositError, selectDepositPending } from '@/store/slices/bridges'
+import { selectBridgeConfig, selectBridgeFrom, selectDepositError, selectDepositPending } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 

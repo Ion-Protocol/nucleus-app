@@ -1,7 +1,7 @@
 import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { SubmitConnector } from './connector'
 
-function Submit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
+function Deposit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
   return (
     <ConnectAwareButton
       h="fit-content"
@@ -12,9 +12,9 @@ function Submit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
       _hover={disabled || loading ? {} : undefined}
       _active={disabled || loading ? {} : undefined}
     >
-      Submit
+      Mint
     </ConnectAwareButton>
   )
 }
 
-export default SubmitConnector.Connector(Submit)
+export default SubmitConnector.Connector(Deposit)

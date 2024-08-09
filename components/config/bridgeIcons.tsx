@@ -11,6 +11,7 @@ export const bridgeIconMap: Partial<Record<BridgeKey, (props: ChakraProps) => JS
   [BridgeKey.SEI]: (props) => <SeiIcon {...props} />,
   [BridgeKey.MORPH]: (props) => <MorphLogo {...props} />,
   [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: (props) => <OptimismIcon {...props} />,
+  [BridgeKey.OPTIMISM_SEPOLIA_OPSTACK]: (props) => <OptimismIcon {...props} />,
 }
 
 interface BridgeIconMapProps extends ChakraProps {

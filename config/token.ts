@@ -12,6 +12,7 @@ export enum TokenKey {
   RSWETH = 'rswETH',
   EZETH = 'ezETH',
   MRPH = 'MRPH',
+  OP = 'op',
 }
 
 async function oneAsBigInt(): Promise<bigint> {
@@ -182,6 +183,25 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
       [ChainKey.TENDERLY_MAINNET]: {
         address: '0x7B0C06043468469967DBA22d1AF33d77d44056c8',
+        getPrice: oneAsBigInt,
+      },
+      [ChainKey.SEPOLIA]: {
+        address: '0x',
+        getPrice: oneAsBigInt,
+      },
+    },
+  },
+  [TokenKey.OP]: {
+    key: TokenKey.OP,
+    name: 'Optimism',
+    symbol: 'OP',
+    chains: {
+      [ChainKey.MAINNET]: {
+        address: '0x',
+        getPrice: oneAsBigInt,
+      },
+      [ChainKey.TENDERLY_MAINNET]: {
+        address: '0x',
         getPrice: oneAsBigInt,
       },
       [ChainKey.SEPOLIA]: {

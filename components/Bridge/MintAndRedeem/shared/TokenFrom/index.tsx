@@ -18,10 +18,10 @@ function TokenFrom({
   const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <IonCard variant="elevate" bg={isFocused ? 'selectedSecondary' : 'backgroundSecondary'}>
+    <IonCard variant="elevate" bg={isFocused ? 'backgroundSecondary' : 'none'}>
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text color={error ? 'error.main' : 'text'}>From</Text>
+        <Text color={error ? 'error.main' : 'text'}>Deposit</Text>
         <Flex color="secondaryText" gap={1}>
           <Text>Balance: </Text>
           <Skeleton isLoaded={!loadingTokenBalance}>

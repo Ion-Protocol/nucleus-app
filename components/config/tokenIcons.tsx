@@ -10,6 +10,7 @@ import { TokenRsethIcon } from '../shared/icons/TokenRseth'
 import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { WstethIcon } from '../shared/icons/Wsteth'
+import { OptimismIcon } from '../shared/icons/Optimism'
 
 function DefaultIcon() {
   return <></>
@@ -25,6 +26,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.RSWETH]: (props) => <RswethIcon {...props} />,
   [TokenKey.EZETH]: (props) => <TokenEzethIcon {...props} />,
   [TokenKey.MRPH]: (props) => <MorphIcon />,
+  [TokenKey.OP]: (props) => <OptimismIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

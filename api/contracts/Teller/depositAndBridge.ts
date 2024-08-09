@@ -23,37 +23,47 @@ export async function depositAndBridge(
     tellerContractAddress,
     boringVaultAddress,
     accountantAddress,
+    chainId,
+    fee,
   }: {
     userAddress: `0x${string}`
     tellerContractAddress: `0x${string}`
     boringVaultAddress: `0x${string}`
     accountantAddress: `0x${string}`
+    chainId: number
+    fee: bigint
   }
 ) {
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
-  const allowanceAsBigInt = await allowance({
-    tokenAddress: depositAsset,
-    spenderAddress: boringVaultAddress,
-    userAddress,
-  })
+  const allowanceAsBigInt = await allowance(
+    {
+      tokenAddress: depositAsset,
+      spenderAddress: boringVaultAddress,
+      userAddress,
+    },
+    { chainId }
+  )
 
   ////////////////////////////////
   // Approve
   ////////////////////////////////
   if (depositAmount > allowanceAsBigInt) {
-    await approve({
-      tokenAddress: depositAsset,
-      spenderAddress: boringVaultAddress,
-      amount: depositAmount,
-    })
+    await approve(
+      {
+        tokenAddress: depositAsset,
+        spenderAddress: boringVaultAddress,
+        amount: depositAmount,
+      },
+      { chainId }
+    )
   }
 
   ////////////////////////////////
   // Calculate Minimum Mint
   ////////////////////////////////
-  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
+  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress, chainId })
   const minimumMint = calculateMinimumMint(depositAmount, rate)
 
   ////////////////////////////////
@@ -64,6 +74,8 @@ export async function depositAndBridge(
     address: tellerContractAddress,
     functionName: 'depositAndBridge',
     args: [depositAsset, depositAmount, minimumMint, bridgeData],
+    chainId,
+    value: fee,
   })
 
   ////////////////////////////////
@@ -74,6 +86,8 @@ export async function depositAndBridge(
     address: tellerContractAddress,
     functionName: 'depositAndBridge',
     args: [depositAsset, depositAmount, minimumMint, bridgeData],
+    chainId,
+    value: fee,
   })
 
   ////////////////////////////////

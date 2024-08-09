@@ -1,23 +1,25 @@
-import { Box, BoxProps, useColorModeValue } from '@chakra-ui/react'
+import { getColorFromToken } from '@/styles/theme/helpers/getColorFromToken'
+import { Flex, FlexProps, useColorModeValue } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
 
-interface IonCardProps extends PropsWithChildren, BoxProps {
+interface IonCardProps extends PropsWithChildren, FlexProps {
   variant?: 'outline' | 'elevate'
 }
 
 export function IonCard({ variant = 'outline', children, ...props }: IonCardProps) {
-  const shadowColor = useColorModeValue('shadow.light', 'shadow.dark')
+  const shadowColor = useColorModeValue(getColorFromToken('shadow', 'light'), getColorFromToken('shadow', 'dark'))
 
   switch (variant) {
     case 'outline':
       return (
-        <Box borderRadius="8px" p={4} bg="backgroundSecondary" border="1px solid" borderColor="border" {...props}>
+        <Flex direction="column" borderRadius="8px" p={4} bg="none" border="1px solid" borderColor="border" {...props}>
           {children}
-        </Box>
+        </Flex>
       )
     case 'elevate':
       return (
-        <Box
+        <Flex
+          direction="column"
           borderRadius="8px"
           border="none"
           p={4}
@@ -26,7 +28,7 @@ export function IonCard({ variant = 'outline', children, ...props }: IonCardProp
           {...props}
         >
           {children}
-        </Box>
+        </Flex>
       )
     default:
       return null

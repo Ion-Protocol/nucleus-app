@@ -2,7 +2,7 @@ import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
 import { wagmiConfig } from '@/config/wagmi'
 import TellerWithMultiAssetSupport from '@/contracts/TellerWithMultiAssetSupport.json'
 import { Abi } from 'viem'
-import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
+import { simulateContract, waitForTransactionReceipt } from 'wagmi/actions'
 import { getRateInQuote } from '../Accountant/getRateInQuote'
 import { allowance } from '../erc20/allowance'
 import { approve } from '../erc20/approve'
@@ -20,38 +20,45 @@ export async function deposit(
     tellerContractAddress,
     boringVaultAddress,
     accountantAddress,
+    chainId,
   }: {
     userAddress: `0x${string}`
     tellerContractAddress: `0x${string}`
     boringVaultAddress: `0x${string}`
     accountantAddress: `0x${string}`
+    chainId: number
   }
 ) {
-  console.log('deposit!')
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
-  const allowanceAsBigInt = await allowance({
-    tokenAddress: depositAsset,
-    spenderAddress: boringVaultAddress,
-    userAddress,
-  })
+  const allowanceAsBigInt = await allowance(
+    {
+      tokenAddress: depositAsset,
+      spenderAddress: boringVaultAddress,
+      userAddress,
+    },
+    { chainId }
+  )
 
   ////////////////////////////////
   // Approve
   ////////////////////////////////
   if (depositAmount > allowanceAsBigInt) {
-    await approve({
-      tokenAddress: depositAsset,
-      spenderAddress: boringVaultAddress,
-      amount: depositAmount,
-    })
+    await approve(
+      {
+        tokenAddress: depositAsset,
+        spenderAddress: boringVaultAddress,
+        amount: depositAmount,
+      },
+      { chainId }
+    )
   }
 
   ////////////////////////////////
   // Calculate Minimum Mint
   ////////////////////////////////
-  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
+  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress, chainId }) // Updated to include chainId
   const minimumMint = calculateMinimumMint(depositAmount, rate)
 
   ////////////////////////////////
@@ -67,18 +74,18 @@ export async function deposit(
   ////////////////////////////////
   // Write
   ////////////////////////////////
-  const hash = await writeContract(wagmiConfig, {
-    abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: tellerContractAddress,
-    functionName: 'deposit',
-    args: [depositAsset, depositAmount, minimumMint],
-  })
+  // const hash = await writeContract(wagmiConfig, {
+  //   abi: TellerWithMultiAssetSupport.abi as Abi,
+  //   address: tellerContractAddress,
+  //   functionName: 'deposit',
+  //   args: [depositAsset, depositAmount, minimumMint],
+  // })
 
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
   const { blockHash } = await waitForTransactionReceipt(wagmiConfig, {
-    hash,
+    hash: '0x',
   })
 
   return blockHash

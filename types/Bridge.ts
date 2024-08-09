@@ -12,5 +12,6 @@ export interface Bridge {
   contracts: Contracts
   sourceTokens: TokenKey[]
   destinationTokens: TokenKey[]
+  nativeToken: TokenKey
   comingSoon?: boolean
 }

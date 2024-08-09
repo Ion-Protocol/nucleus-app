@@ -1,5 +1,6 @@
-import { BridgeForm } from '@/components/Bridge/BridgeForm'
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
+import Tvl from '@/components/Bridge/BridgeTitle/Tvl'
+import { MintAndRedeem } from '@/components/Bridge/MintAndRedeem'
 import { useAppSelector } from '@/store/hooks'
 import { selectBridgeKey } from '@/store/slices/router'
 import { Flex } from '@chakra-ui/react'
@@ -14,16 +15,24 @@ export default function Bridge() {
   }
 
   return (
-    <Flex direction="column" h="100%">
-      {/* Title & Description */}
-      <Flex h="150px" w="100%" borderBottom="1px solid" borderColor="border">
-        <BridgeTitle mx={9} />
-      </Flex>
+    <Flex direction="column" w="100%" align="center">
+      <Flex direction="column" h="100%" pt={20}>
+        {/* Title & Description */}
+        <BridgeTitle />
 
-      {/* Bottom */}
-      <Flex h="100%">
-        {/* Left: Main Bridge Form */}
-        <BridgeForm px={9} pt={9} w="40%" minW="300px" borderRight="1px solid" borderColor="border" />
+        {/* Spacer */}
+        <Flex h={8} />
+
+        {/* TVL */}
+        <Flex gap={6}>
+          <Tvl />
+        </Flex>
+
+        {/* Spacer */}
+        <Flex h={8} />
+
+        {/* Mint and Redeem */}
+        <MintAndRedeem />
       </Flex>
     </Flex>
   )

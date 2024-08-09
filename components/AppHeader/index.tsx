@@ -1,7 +1,7 @@
 import { Button, Flex, IconButton, useColorMode } from '@chakra-ui/react'
-import { IonConnectButton } from '../IonConnectButton.tsx'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import CurrencySelect from './CurrencySelect'
+import { IonConnectButton } from '../shared/IonConnectButton.tsx'
 
 export function AppHeader() {
   const { colorMode, toggleColorMode } = useColorMode()
