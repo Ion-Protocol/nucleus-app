@@ -1,5 +1,4 @@
 import { RootState } from '@/store'
-import { utils } from '@/utils'
 import { bigIntToNumber } from '@/utils/bigint'
 
 /**
