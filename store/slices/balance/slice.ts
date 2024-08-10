@@ -32,7 +32,11 @@ const initialState: BalancesState = {
 const balancesSlice = createSlice({
   name: 'balances',
   initialState,
-  reducers: {},
+  reducers: {
+    clearBalances: (state) => {
+      state.data = initialState.data
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Liquidity
@@ -50,4 +54,5 @@ const balancesSlice = createSlice({
   },
 })
 
+export const { clearBalances } = balancesSlice.actions
 export const balancesReducer = balancesSlice.reducer

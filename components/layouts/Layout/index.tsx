@@ -7,10 +7,12 @@ import { PropsWithChildren } from 'react'
 import { DesktopLayout } from './DesktopLayout'
 import { MobileLayout } from './MobileLayout'
 import { TabletLayout } from './TabletLayout'
+import { useDisconnectEffect } from '@/hooks/useDisconnectEffect'
 
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
   useChainChangeEffect()
+  useDisconnectEffect()
   useStoreInitializer()
 
   const [isDesktop] = useMediaQuery('(min-width: 1025px)')
