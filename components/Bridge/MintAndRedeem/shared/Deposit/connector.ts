@@ -9,7 +9,7 @@ const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
   const loading = selectDepositPending(state)
   const error = selectDepositError(state)
   const from = selectBridgeFrom(state)
-  const disabled = !from.trim() || parseInt(from) === 0
+  const disabled = !from.trim() || parseFloat(from) === 0
 
   return {
     bridgeKey,

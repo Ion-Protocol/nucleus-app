@@ -8,9 +8,9 @@ function Deposit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
       p={2}
       isLoading={loading}
       onClick={onSubmit}
-      isDisabled={disabled}
-      _hover={disabled || loading ? {} : undefined}
-      _active={disabled || loading ? {} : undefined}
+      isDisabled={disabled || loading}
+      _hover={!loading && !disabled ? {} : undefined}
+      _active={!loading && !disabled ? {} : undefined}
     >
       Mint
     </ConnectAwareButton>
