@@ -13,6 +13,7 @@ export enum BridgeKey {
   ETHEREUM = 'ethereum',
   SEI = 'sei',
   MORPH = 'morph',
+  BOBA = 'boba',
   OPTIMISM_SEPOLIA_LAYER_ZERO = 'optimism_sepolia_layer_zero',
   OPTIMISM_SEPOLIA_OPSTACK = 'optimism_sepolia_opstack',
 }
@@ -31,32 +32,14 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     id: 1,
     name: 'Ethereum',
     bridges: {
-      [BridgeKey.MORPH]: {
-        name: 'Morph',
-        deployedOn: 1,
-        comingSoon: false,
-        contracts: {
-          teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-          accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-          boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
-        },
-        sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.MORPH],
-        destinationBridges: [BridgeKey.ETHEREUM],
-        sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
-        destinationTokens: [TokenKey.MRPH],
-        nativeToken: TokenKey.MRPH,
-        layerZeroChainSelector: 0,
-        description:
-          'Morph provides the tools and infrastructure necessary for developers to create decentralized applications (DApps) that are not only powerful but also intuitive and easy to use for the everyday consumer.',
-      },
       [BridgeKey.SEI]: {
         name: 'Sei',
         deployedOn: 1,
-        comingSoon: true,
+        comingSoon: false,
         contracts: {
-          teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-          accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-          boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
+          teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
+          accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
+          boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
         },
         sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.SEI],
         destinationBridges: [BridgeKey.ETHEREUM],
@@ -66,6 +49,23 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         layerZeroChainSelector: 0,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
+      },
+      [BridgeKey.BOBA]: {
+        name: 'Boba',
+        deployedOn: 1,
+        comingSoon: false,
+        contracts: {
+          teller: '0x690a032B33d4d016bE5d41B00eB06814e167c525',
+          accountant: '0x78cba912751dB70CBd77C1111A4d1aDD077AD99A',
+          boringVault: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+        },
+        sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.BOBA],
+        destinationBridges: [BridgeKey.ETHEREUM],
+        sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
+        destinationTokens: [TokenKey.BOBA],
+        nativeToken: TokenKey.BOBA,
+        layerZeroChainSelector: 0,
+        description: 'WIP',
       },
     },
   },
@@ -78,40 +78,6 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     id: 99099127,
     name: 'Ion Testnet',
     bridges: {
-      // [BridgeKey.MORPH]: {
-      //   name: 'Morph',
-      //   deployedOn: 99099127, // tenderly chain id
-      //   comingSoon: false,
-      //   contracts: {
-      //     teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      //     accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-      //     boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
-      //   },
-      //   sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.MORPH],
-      //   destinationBridges: [BridgeKey.ETHEREUM],
-      //   sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
-      //   destinationTokens: [TokenKey.MRPH],
-      //   layerZeroChainSelector: 0,
-      //   description:
-      //     'Morph provides the tools and infrastructure necessary for developers to create decentralized applications (DApps) that are not only powerful but also intuitive and easy to use for the everyday consumer.',
-      // },
-      // [BridgeKey.SEI]: {
-      //   name: 'Sei',
-      //   deployedOn: 99099127, // tenderly chain id
-      //   comingSoon: true,
-      //   contracts: {
-      //     teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      //     accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-      //     boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
-      //   },
-      //   sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.SEI],
-      //   destinationBridges: [BridgeKey.ETHEREUM],
-      //   sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
-      //   destinationTokens: [TokenKey.SEI],
-      //   layerZeroChainSelector: 0,
-      //   description:
-      //     'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
-      // },
       [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: {
         name: 'Optimism Sepolia (LayerZero)',
         deployedOn: 11155111, // Sepolia chain id
@@ -157,40 +123,6 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     id: 11155111,
     name: 'Sepolia',
     bridges: {
-      // [BridgeKey.MORPH]: {
-      //   name: 'Morph',
-      //   deployedOn: 99099127, // tenderly chain id
-      //   comingSoon: false,
-      //   contracts: {
-      //     teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      //     accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-      //     boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
-      //   },
-      //   sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.MORPH],
-      //   destinationBridges: [BridgeKey.ETHEREUM],
-      //   sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
-      //   destinationTokens: [TokenKey.MRPH],
-      //   layerZeroChainSelector: 0,
-      //   description:
-      //     'Morph provides the tools and infrastructure necessary for developers to create decentralized applications (DApps) that are not only powerful but also intuitive and easy to use for the everyday consumer.',
-      // },
-      // [BridgeKey.SEI]: {
-      //   name: 'Sei',
-      //   deployedOn: 99099127, // tenderly chain id
-      //   comingSoon: true,
-      //   contracts: {
-      //     teller: '0x0000000000F45660Bb8Fc3F86da8854c63cF49e3',
-      //     accountant: '0x00000000004F96C07B83e86600D86F9479bB43fa',
-      //     boringVault: '0x0000000000E7Ab44153eEBEF2343ba5289F65dAC',
-      //   },
-      //   sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.SEI],
-      //   destinationBridges: [BridgeKey.ETHEREUM],
-      //   sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
-      //   destinationTokens: [TokenKey.SEI],
-      //   layerZeroChainSelector: 0,
-      //   description:
-      //     'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
-      // },
       [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: {
         name: 'Optimism Sepolia (LayerZero)',
         deployedOn: 11155111, // Sepolia chain id
