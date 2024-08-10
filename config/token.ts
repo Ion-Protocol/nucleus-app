@@ -14,6 +14,7 @@ export enum TokenKey {
   MRPH = 'MRPH',
   OP = 'op',
   BOBA = 'boba',
+  FRAX = 'frax',
 }
 
 async function oneAsBigInt(): Promise<bigint> {
@@ -218,6 +219,25 @@ export const tokensConfig: Record<TokenKey, Token> = {
     chains: {
       [ChainKey.MAINNET]: {
         address: '0x42bbfa2e77757c645eeaad1655e0911a7553efbc',
+        getPrice: oneAsBigInt,
+      },
+      [ChainKey.TENDERLY_MAINNET]: {
+        address: '0x',
+        getPrice: oneAsBigInt,
+      },
+      [ChainKey.SEPOLIA]: {
+        address: '0x',
+        getPrice: oneAsBigInt,
+      },
+    },
+  },
+  [TokenKey.FRAX]: {
+    key: TokenKey.FRAX,
+    name: 'Frax',
+    symbol: 'FRAX',
+    chains: {
+      [ChainKey.MAINNET]: {
+        address: '0x853d955acef822db058eb8505911ed77f175b99e',
         getPrice: oneAsBigInt,
       },
       [ChainKey.TENDERLY_MAINNET]: {

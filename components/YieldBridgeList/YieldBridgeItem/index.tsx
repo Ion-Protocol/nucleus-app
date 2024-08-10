@@ -1,6 +1,6 @@
 import { BridgeIcon } from '@/components/config/bridgeIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { Flex, Text } from '@chakra-ui/react'
+import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
 
@@ -39,24 +39,30 @@ function YieldBridgeItem({
         <Flex align="center" gap={3}>
           {/* Bridge Name */}
           <Text variant="header3">{name}</Text>
-
-          {/* Coming soon marker */}
-          {comingSoon && <Text color="secondaryText">Coming soon</Text>}
         </Flex>
 
         {/* Bridge Description */}
         <Text>{description}</Text>
 
-        {/* TVL */}
-        <Flex mt={3} gap={6}>
-          {/* TVL */}
-          <Flex direction="column">
-            <Text>TVL</Text>
-            <IonSkeleton isLoaded={!loading} w="100px">
-              <Text variant="large">{comingSoon ? '-' : tvl}</Text>
-            </IonSkeleton>
+        {!comingSoon ? (
+          // Not Coming Soon
+          <Flex mt={3} gap={6}>
+            {/* TVL */}
+            <Flex direction="column">
+              <Text>TVL</Text>
+              <IonSkeleton isLoaded={!loading} w="100px">
+                <Text variant="large">{comingSoon ? '-' : tvl}</Text>
+              </IonSkeleton>
+            </Flex>
           </Flex>
-        </Flex>
+        ) : (
+          // Coming Soon
+          <Flex mt={3}>
+            <Button pointerEvents="none">
+              <Text variant="large">COMING SOON</Text>
+            </Button>
+          </Flex>
+        )}
       </Flex>
 
       {/* Logo Section */}

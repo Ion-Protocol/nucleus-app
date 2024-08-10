@@ -14,6 +14,7 @@ export enum BridgeKey {
   SEI = 'sei',
   MORPH = 'morph',
   BOBA = 'boba',
+  FRAX = 'frax',
   OPTIMISM_SEPOLIA_LAYER_ZERO = 'optimism_sepolia_layer_zero',
   OPTIMISM_SEPOLIA_OPSTACK = 'optimism_sepolia_opstack',
 }
@@ -65,7 +66,26 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
         layerZeroChainSelector: 0,
-        description: 'WIP',
+        description:
+          'The Boba Network is a Layer 2 scaling solution for Ethereum that enhances transaction speed and reduces costs through optimistic rollups.',
+      },
+      [BridgeKey.FRAX]: {
+        name: 'Frax',
+        deployedOn: 1,
+        comingSoon: true,
+        contracts: {
+          teller: '0x',
+          accountant: '0x',
+          boringVault: '0x',
+        },
+        sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.FRAX],
+        destinationBridges: [BridgeKey.ETHEREUM],
+        sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
+        destinationTokens: [TokenKey.BOBA],
+        nativeToken: TokenKey.BOBA,
+        layerZeroChainSelector: 0,
+        description:
+          'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
       },
     },
   },
