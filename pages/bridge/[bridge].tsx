@@ -33,6 +33,9 @@ export default function Bridge() {
 
         {/* Mint and Redeem */}
         <MintAndRedeem />
+
+        {/* Bottom Spacer */}
+        <Flex h="100px" />
       </Flex>
     </Flex>
   )
