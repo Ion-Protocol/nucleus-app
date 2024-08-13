@@ -1,15 +1,20 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonCard } from '@/components/shared/IonCard'
-import { Flex, Input, Text } from '@chakra-ui/react'
+import { Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 import { TokenToConnector } from './connector'
 
-function TokenTo({ value, bridgeToken }: TokenToConnector.Props) {
+function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: TokenToConnector.Props) {
   return (
     <IonCard variant="elevate">
       {/* Top Row */}
       <Flex justify="space-between">
         <Text>Receive</Text>
-        <Text color="secondaryText">Balance: N/A</Text>
+        <Flex color="secondaryText" gap={1}>
+          <Text>Balance: </Text>
+          <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
+            <Text>{tokenBalance}</Text>
+          </Skeleton>
+        </Flex>
       </Flex>
 
       {/* Bottom Row */}

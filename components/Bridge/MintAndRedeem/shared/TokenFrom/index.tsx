@@ -24,7 +24,7 @@ function TokenFrom({
         <Text color={error ? 'error.main' : 'text'}>Deposit</Text>
         <Flex color="secondaryText" gap={1}>
           <Text>Balance: </Text>
-          <Skeleton isLoaded={!loadingTokenBalance}>
+          <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
             <Text>{tokenBalance}</Text>
           </Skeleton>
         </Flex>

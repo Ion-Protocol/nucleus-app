@@ -1,5 +1,6 @@
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
+import { selectBalancesLoading, selectFormattedTokenBalance, selectTokenBalance } from '@/store/slices/balance'
 import { selectBridgeConfig, selectBridgeFrom, selectBridgeRate } from '@/store/slices/bridges'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { ConnectedProps, connect } from 'react-redux'
@@ -16,12 +17,16 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
 
   // Look up list of available token keys from the bridges config
   const bridgeConfig = selectBridgeConfig(state)
-  const bridgeTokenKey = bridgeConfig?.nativeToken
+  const bridgeTokenKey = bridgeConfig?.nativeToken || null
   const bridgeToken = bridgeTokenKey ? tokensConfig[bridgeTokenKey] : null
+
+  const tokenBalance = selectFormattedTokenBalance(bridgeTokenKey)(state)
 
   return {
     value: valueFormatted,
     bridgeToken,
+    tokenBalance,
+    loadingTokenBalance: selectBalancesLoading(state),
   }
 }
 

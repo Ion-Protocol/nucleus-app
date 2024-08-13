@@ -25,9 +25,9 @@ export const selectTokenBalance = (tokenKey: TokenKey | null) =>
  * @param tokenKey - The key of the token.
  * @returns The formatted balance as a string.
  */
-export const selectFormattedTokenBalance = (tokenKey: TokenKey) =>
+export const selectFormattedTokenBalance = (tokenKey: TokenKey | null) =>
   createSelector([selectTokenBalance(tokenKey)], (balance): string => {
-    if (balance === null) return '-'
+    if (balance === null || tokenKey === null) return '-'
     const balanceAsBigInt = BigInt(balance)
     const balanceAsNumber = bigIntToNumber(balanceAsBigInt)
     return `${balanceAsNumber} ${tokensConfig[tokenKey]?.name}`

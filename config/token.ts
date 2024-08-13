@@ -104,11 +104,11 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'SEI',
     chains: {
       [ChainKey.MAINNET]: {
-        address: '0x9c1CB740f3b631ed53600058ae5B2f83E15d9fBF',
+        address: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
         getPrice: oneAsBigInt,
       },
       [ChainKey.TENDERLY_MAINNET]: {
-        address: '0x9c1CB740f3b631ed53600058ae5B2f83E15d9fBF',
+        address: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
         getPrice: oneAsBigInt,
       },
       [ChainKey.SEPOLIA]: {
@@ -218,11 +218,11 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'BOBA',
     chains: {
       [ChainKey.MAINNET]: {
-        address: '0x42bbfa2e77757c645eeaad1655e0911a7553efbc',
+        address: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
         getPrice: oneAsBigInt,
       },
       [ChainKey.TENDERLY_MAINNET]: {
-        address: '0x',
+        address: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
         getPrice: oneAsBigInt,
       },
       [ChainKey.SEPOLIA]: {
@@ -237,7 +237,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'FRAX',
     chains: {
       [ChainKey.MAINNET]: {
-        address: '0x853d955acef822db058eb8505911ed77f175b99e',
+        address: '0x',
         getPrice: oneAsBigInt,
       },
       [ChainKey.TENDERLY_MAINNET]: {
