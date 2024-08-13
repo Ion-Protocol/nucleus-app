@@ -1,5 +1,4 @@
 import { setAddress } from '@/store/slices/account'
-import { ChainKey } from '@/types/ChainKey'
 import { deferExecution } from '@/utils/misc'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'

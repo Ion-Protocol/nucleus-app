@@ -11,9 +11,10 @@ import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
+import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
 
 const regularMiddlewares = [debounceMiddleware]
-const sideEffectMiddlewares = [previewFeeMiddleware, chainChangeMiddleware]
+const sideEffectMiddlewares = [previewFeeMiddleware, chainChangeMiddleware, termsAcceptedMiddleware]
 
 export const store = configureStore({
   reducer: {

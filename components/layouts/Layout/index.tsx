@@ -1,5 +1,6 @@
 import { ModalsContainer } from '@/components/shared/modals'
 import { useChainChangeEffect } from '@/hooks/useChainChangeEffect'
+import { useDisconnectEffect } from '@/hooks/useDisconnectEffect'
 import { useRouteChangeEffect } from '@/hooks/useRouteChangeEffect'
 import { useStoreInitializer } from '@/store/hooks/useStoreInitializer'
 import { useMediaQuery } from '@chakra-ui/react'
@@ -7,12 +8,13 @@ import { PropsWithChildren } from 'react'
 import { DesktopLayout } from './DesktopLayout'
 import { MobileLayout } from './MobileLayout'
 import { TabletLayout } from './TabletLayout'
-import { useDisconnectEffect } from '@/hooks/useDisconnectEffect'
+import { useTermsEffect } from '@/hooks/useTermsEffect'
 
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
   useChainChangeEffect()
   useDisconnectEffect()
+  useTermsEffect()
   useStoreInitializer()
 
   const [isDesktop] = useMediaQuery('(min-width: 1025px)')
