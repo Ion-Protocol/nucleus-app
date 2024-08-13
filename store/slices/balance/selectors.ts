@@ -29,5 +29,5 @@ export const selectFormattedTokenBalance = (tokenKey: TokenKey) =>
   createSelector([selectTokenBalance(tokenKey)], (balance): string => {
     const balanceAsBigInt = BigInt(balance)
     const balanceAsNumber = bigIntToNumber(balanceAsBigInt)
-    return `${balanceAsNumber}${tokensConfig[tokenKey]?.name}`
+    return `${balanceAsNumber} ${tokensConfig[tokenKey]?.name}`
   })

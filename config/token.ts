@@ -43,7 +43,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
   },
   [TokenKey.WETH]: {
     key: TokenKey.WETH,
-    name: 'Weth',
+    name: 'WETH',
     symbol: 'WETH',
     chains: {
       [ChainKey.MAINNET]: {
