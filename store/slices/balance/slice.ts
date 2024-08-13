@@ -6,7 +6,7 @@ import { fetchAllTokenBalances, fetchAllTokenBalancesResult } from './thunks'
 // 1. STATE INTERFACE
 // ==================
 export interface BalancesState {
-  data: Record<TokenKey, string>
+  data: Record<TokenKey, string | null>
   loading: boolean
   error: string | null
 }
@@ -17,10 +17,10 @@ export interface BalancesState {
 const initialState: BalancesState = {
   data: Object.keys(tokensConfig).reduce(
     (acc, tokenKey) => {
-      acc[tokenKey as TokenKey] = '0'
+      acc[tokenKey as TokenKey] = null
       return acc
     },
-    {} as Record<TokenKey, string>
+    {} as Record<TokenKey, string | null>
   ),
   loading: false,
   error: null,

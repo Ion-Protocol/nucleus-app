@@ -1,6 +1,5 @@
 import { ModalsContainer } from '@/components/shared/modals'
 import { useChainChangeEffect } from '@/hooks/useChainChangeEffect'
-import { useDisconnectEffect } from '@/hooks/useDisconnectEffect'
 import { useRouteChangeEffect } from '@/hooks/useRouteChangeEffect'
 import { useStoreInitializer } from '@/store/hooks/useStoreInitializer'
 import { useMediaQuery } from '@chakra-ui/react'
@@ -9,11 +8,12 @@ import { DesktopLayout } from './DesktopLayout'
 import { MobileLayout } from './MobileLayout'
 import { TabletLayout } from './TabletLayout'
 import { useTermsEffect } from '@/hooks/useTermsEffect'
+import { useConnectEffect } from '@/hooks/useConnectEffect'
 
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
   useChainChangeEffect()
-  useDisconnectEffect()
+  useConnectEffect()
   useTermsEffect()
   useStoreInitializer()
 

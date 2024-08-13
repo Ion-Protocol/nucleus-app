@@ -3,7 +3,7 @@ import { RootState } from '@/store'
 import { bigIntToNumber } from '@/utils/bigint'
 import { createSelector } from '@reduxjs/toolkit'
 
-export const selectBalances = (state: RootState): Record<TokenKey, string> => state.balances.data
+export const selectBalances = (state: RootState): Record<TokenKey, string | null> => state.balances.data
 export const selectBalancesLoading = (state: RootState): boolean => state.balances.loading
 export const selectBalancesError = (state: RootState): string | null => state.balances.error
 
@@ -14,7 +14,7 @@ export const selectBalancesError = (state: RootState): string | null => state.ba
  * @returns The balance value for the specified token key.
  */
 export const selectTokenBalance = (tokenKey: TokenKey | null) =>
-  createSelector([selectBalances], (balances): string => {
+  createSelector([selectBalances], (balances): string | null => {
     if (!tokenKey) return '0'
     return balances[tokenKey]
   })
@@ -27,6 +27,7 @@ export const selectTokenBalance = (tokenKey: TokenKey | null) =>
  */
 export const selectFormattedTokenBalance = (tokenKey: TokenKey) =>
   createSelector([selectTokenBalance(tokenKey)], (balance): string => {
+    if (balance === null) return '-'
     const balanceAsBigInt = BigInt(balance)
     const balanceAsNumber = bigIntToNumber(balanceAsBigInt)
     return `${balanceAsNumber} ${tokensConfig[tokenKey]?.name}`
