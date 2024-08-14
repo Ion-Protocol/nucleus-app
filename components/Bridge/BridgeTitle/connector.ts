@@ -1,7 +1,7 @@
-import { BridgeKey } from '@/config/chains'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import { selectBridgeConfig } from '@/store/slices/bridges'
+import { BridgeKey } from '@/types/BridgeKey'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 

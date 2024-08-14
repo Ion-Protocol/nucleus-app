@@ -1,5 +1,6 @@
 import { Bridge } from '@/types/Bridge'
-import { TokenKey } from './token'
+import { TokenKey } from '@/types/TokenKey'
+import { BridgeKey } from '@/types/BridgeKey'
 
 export enum ChainKey {
   MAINNET = 'mainnet',
@@ -9,15 +10,6 @@ export enum ChainKey {
 
 // Use kebab-case (with hyphens) for the values.
 // These values are used to define the url paths.
-export enum BridgeKey {
-  ETHEREUM = 'ethereum',
-  SEI = 'sei',
-  MORPH = 'morph',
-  BOBA = 'boba',
-  FRAX = 'frax',
-  OPTIMISM_SEPOLIA_LAYER_ZERO = 'optimism_sepolia_layer_zero',
-  OPTIMISM_SEPOLIA_OPSTACK = 'optimism_sepolia_opstack',
-}
 export interface ChainConfig {
   id: number
   name: string
@@ -35,6 +27,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.SEI]: {
         name: 'Sei',
+        chainId: 1329,
         deployedOn: 1,
         comingSoon: false,
         contracts: {
@@ -53,6 +46,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.BOBA]: {
         name: 'Boba',
+        chainId: 288,
         deployedOn: 1,
         comingSoon: false,
         contracts: {
@@ -71,6 +65,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.FRAX]: {
         name: 'Frax',
+        chainId: 252,
         deployedOn: 1,
         comingSoon: true,
         contracts: {
@@ -100,6 +95,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.SEI]: {
         name: 'Sei',
+        chainId: 1329,
         deployedOn: 1,
         comingSoon: false,
         contracts: {
@@ -118,6 +114,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.BOBA]: {
         name: 'Boba',
+        chainId: 288,
         deployedOn: 1,
         comingSoon: false,
         contracts: {
@@ -136,6 +133,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.FRAX]: {
         name: 'Frax',
+        chainId: 252,
         deployedOn: 1,
         comingSoon: true,
         contracts: {
@@ -199,6 +197,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: {
         name: 'Optimism Sepolia (LayerZero)',
+        chainId: 10,
         deployedOn: 11155111, // Sepolia chain id
         layerZeroChainSelector: 40232,
         comingSoon: false,
@@ -216,6 +215,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.OPTIMISM_SEPOLIA_OPSTACK]: {
         name: 'Optimism Sepolia (OPStack)',
+        chainId: 10,
         deployedOn: 11155111, // Sepolia chain id
         layerZeroChainSelector: 0,
         comingSoon: false,

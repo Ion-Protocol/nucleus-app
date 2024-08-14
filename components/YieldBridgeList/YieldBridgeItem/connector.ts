@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import { selectBridgeConfigByKey, selectFormattedBridgeTvlByKey, selectTvlLoading } from '@/store/slices/bridges'

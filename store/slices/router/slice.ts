@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
 import { RootState } from '@/store'
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 

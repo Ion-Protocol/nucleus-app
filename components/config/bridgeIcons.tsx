@@ -1,5 +1,5 @@
 import { SeiIcon } from '@/components/shared/icons/Sei'
-import { BridgeKey } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
 import { EthereumIcon } from '../shared/icons/Ethereum'

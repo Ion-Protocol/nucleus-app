@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import {

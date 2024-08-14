@@ -1,4 +1,4 @@
-import { TokenKey } from '@/config/token'
+import { TokenKey } from '@/types/TokenKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
 import { EthereumIcon } from '../shared/icons/Ethereum'
@@ -27,7 +27,6 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.RSETH]: (props) => <TokenRsethIcon {...props} />,
   [TokenKey.RSWETH]: (props) => <RswethIcon {...props} />,
   [TokenKey.EZETH]: (props) => <TokenEzethIcon {...props} />,
-  [TokenKey.MRPH]: (props) => <MorphIcon />,
   [TokenKey.OP]: (props) => <OptimismIcon {...props} />,
   [TokenKey.BOBA]: (props) => <BobaNetworkIcon {...props} />,
   [TokenKey.FRAX]: (props) => <FraxIcon {...props} />,

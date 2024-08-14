@@ -4,7 +4,7 @@ import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
-import { BridgeKey } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
@@ -25,6 +25,7 @@ import { setInputError } from './slice'
 import { selectChainId, selectChainKey } from '../chain'
 import { switchChain } from 'wagmi/actions'
 import { wagmiConfig } from '@/config/wagmi'
+import { TokenKey } from '@/types/TokenKey'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -114,10 +115,17 @@ export const setBridgeFrom = createAsyncThunk<
   }
 
   const tokenKey = selectFromTokenKeyForBridge(state)
-  const tokenBalance = selectTokenBalance(tokenKey)(state)
-  const tokenBalanceAsNumber = bigIntToNumber(BigInt(tokenBalance))
+  const tokenBalance = selectTokenBalance(bridgeKey, tokenKey)(state)
+  const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : null
 
-  dispatch(setInputError(parseFloat(fromFormatted) > parseFloat(tokenBalanceAsNumber) ? 'Insufficient balance' : null))
+  let inputError = null
+  if (
+    (tokenBalanceAsNumber && parseFloat(fromFormatted) > parseFloat(tokenBalanceAsNumber)) ||
+    tokenBalanceAsNumber === null
+  ) {
+    inputError = 'Insufficient balance'
+  }
+  dispatch(setInputError(inputError))
 
   return { bridgeKey, from: fromFormatted }
 })
@@ -142,8 +150,8 @@ export const setBridgeFromMax = createAsyncThunk<
   const state = getState() as RootState
   const bridgeKey = selectBridgeKey(state) as BridgeKey
   const tokenKey = selectFromTokenKeyForBridge(state)
-  const tokenBalance = selectTokenBalance(tokenKey)(state)
-  const tokenBalanceAsNumber = bigIntToNumber(BigInt(tokenBalance))
+  const tokenBalance = selectTokenBalance(bridgeKey, tokenKey)(state)
+  const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
 
   return { bridgeKey, from: tokenBalanceAsNumber }
 })
@@ -165,12 +173,12 @@ export const fetchBridgeRate = createAsyncThunk<
 >('bridges/fetchBridgeRate', async (bridgeKey, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
-    const bridge = selectBridgeConfig(state)
-    const accountantAddress = bridge?.contracts?.accountant
-    if (bridge?.comingSoon || !accountantAddress) {
+    const bridgeConfig = selectBridgeConfig(state)
+    const accountantAddress = bridgeConfig?.contracts?.accountant
+    if (bridgeConfig?.comingSoon || !accountantAddress) {
       return { bridgeKey, result: { rate: '0' } }
     }
-    const rateAsBigInt = await getRate(accountantAddress, { chainId: bridge.deployedOn })
+    const rateAsBigInt = await getRate(accountantAddress, { chainId: bridgeConfig.deployedOn })
     return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
     const error = e as Error
@@ -214,7 +222,9 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const accountantAddress = bridgeConfig?.contracts.accountant
       const deployedOnId = bridgeConfig?.deployedOn
       const deployedOnChainKey = selectChainKeyByChainId(deployedOnId)
-      const wethAddress = deployedOnChainKey ? tokensConfig?.weth.chains[deployedOnChainKey].address : null
+      const wethAddress = deployedOnChainKey
+        ? tokensConfig?.[TokenKey.WETH].chains[deployedOnChainKey as BridgeKey]?.address || null
+        : null
       const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
       const depositAsset =
         depositAssetTokenKey && deployedOnChainKey
@@ -364,7 +374,9 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const accountantContractAddress = bridgeConfig?.contracts.accountant
       const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
 
-      const wethAddress = tokensConfig?.weth.chains[deployedOnChainKey].address
+      const wethAddress = deployedOnChainKey
+        ? tokensConfig[TokenKey.WETH].chains[deployedOnChainKey as BridgeKey]?.address
+        : null
 
       if (
         tellerContractAddress &&

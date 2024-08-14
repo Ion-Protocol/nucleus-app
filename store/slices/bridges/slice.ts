@@ -1,8 +1,8 @@
 import { ActionCreatorWithPayload, PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './extraReducers'
 import { initialState } from './initialState'
-import { BridgeKey } from '@/config/chains'
-import { TokenKey } from '@/config/token'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 
 const bridgesSlice = createSlice({
   name: 'bridges',

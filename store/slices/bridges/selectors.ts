@@ -1,5 +1,6 @@
-import { BridgeKey, ChainKey, chainsConfig } from '@/config/chains'
-import { TokenKey, tokensConfig } from '@/config/token'
+import { ChainKey, chainsConfig } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
 import { Bridge } from '@/types/Bridge'
@@ -34,8 +35,8 @@ export const selectChainConfig = createSelector([selectChainKey], (chainKey) => 
 
 export const selectChainKeyByChainId = (chainId: number | undefined) =>
   Object.keys(chainsConfig).find(
-    (chainKey) => chainsConfig[chainKey as keyof typeof chainsConfig].id === chainId
-  ) as ChainKey | null
+    (bridgeKey) => chainsConfig[bridgeKey as keyof typeof chainsConfig].id === chainId
+  ) as BridgeKey | null
 
 export const selectBridgeConfig = createSelector(
   [selectChainConfig, selectBridgeKey],
@@ -214,22 +215,6 @@ export const selectDepositAmountAsBigInt = createSelector([selectBridgeFrom], (d
   if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
   return BigInt(parseFloat(depositAmountAsString) * WAD.number)
 })
-
-/**
- * Selects the deposit asset address for a given token key and chain key.
- * Returns the address if both tokenKey and chainKey are valid, otherwise returns null.
- *
- * @param {Function} selectFromTokenKeyForBridge - The selector function to retrieve the token key for the bridge.
- * @param {Function} selectChainKey - The selector function to retrieve the chain key.
- * @returns {Address | null} - The deposit asset address or null.
- */
-export const selectDepositAssetAddress = createSelector(
-  [selectFromTokenKeyForBridge, selectChainKey],
-  (tokenKey, chainKey): Address | null => {
-    if (!tokenKey || !chainKey) return null
-    return tokensConfig[tokenKey]?.chains[chainKey]?.address
-  }
-)
 
 /**
  * Retrieves the rate of a specific bridge from the state.

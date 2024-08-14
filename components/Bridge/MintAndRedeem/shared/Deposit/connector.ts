@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/config/chains'
+import { BridgeKey } from '@/types/BridgeKey'
 import { RootState } from '@/store'
 import { selectBridgeConfig, selectBridgeFrom, selectDepositError, selectDepositPending } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'

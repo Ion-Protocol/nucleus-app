@@ -1,5 +1,5 @@
-import { BridgeKey, ChainKey } from '@/config/chains'
-import { TokenKey } from '@/config/token'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 
 export interface AsyncMetric {
   value: string | number | null

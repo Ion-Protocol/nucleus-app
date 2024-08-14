@@ -1,15 +1,17 @@
-import { ChainKey } from '@/config/chains'
-import { TokenKey } from '@/config/token'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 
 export interface Token {
   key: TokenKey
   name: string
   symbol: string
-  chains: Record<
-    ChainKey,
-    {
-      address: `0x${string}`
-      getPrice: () => Promise<bigint>
-    }
+  chains: Partial<
+    Record<
+      BridgeKey,
+      {
+        address: `0x${string}`
+        chainId: number
+      }
+    >
   >
 }
