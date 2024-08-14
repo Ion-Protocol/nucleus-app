@@ -1,4 +1,4 @@
-import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
+import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Tooltip } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Mint } from './Mint'
 import { Redeem } from './Redeem'
@@ -16,11 +16,13 @@ export function MintAndRedeem() {
               Mint
             </Text>
           </Tab>
-          <Tab _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-            <Text variant="large" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
-              Redeem
-            </Text>
-          </Tab>
+          <Tooltip label="Coming soon" aria-label="Redeem tab tooltip">
+            <Tab isDisabled _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
+              <Text variant="large" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+                Redeem
+              </Text>
+            </Tab>
+          </Tooltip>
         </TabList>
 
         {/* Tabs Content, Mint and Redeem */}
