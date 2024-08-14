@@ -11,7 +11,7 @@ function Summary({ fees, loading }: SummaryConnector.Props) {
       <Flex align="center" justify="space-between">
         <Flex color="secondaryText" gap={2}>
           <Text variant="large">Fees</Text>
-          <Tooltip label="">
+          <Tooltip label="Fees are charged by the underlying bridge provider such as LayerZero">
             <InfoOutlineIcon mt={'2px'} fontSize="sm" />
           </Tooltip>
         </Flex>
