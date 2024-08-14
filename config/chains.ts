@@ -8,11 +8,11 @@ export enum ChainKey {
   SEPOLIA = 'sepolia',
 }
 
-// Use kebab-case (with hyphens) for the values.
-// These values are used to define the url paths.
 export interface ChainConfig {
   id: number
   name: string
+  tokensL1: TokenKey[]
+  tokensL2: TokenKey[]
   bridges: Partial<Record<BridgeKey, Bridge>>
 }
 
@@ -24,6 +24,8 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.MAINNET]: {
     id: 1,
     name: 'Ethereum',
+    tokensL1: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
+    tokensL2: [TokenKey.WETH],
     bridges: {
       [BridgeKey.SEI]: {
         name: 'Sei',
@@ -40,7 +42,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.SEI],
         nativeToken: TokenKey.SEI,
-        layerZeroChainSelector: 0,
+        layerZeroChainSelector: 30280,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
       },
@@ -59,7 +61,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
-        layerZeroChainSelector: 0,
+        layerZeroChainSelector: 0, // There is no layer zero chain selector for Boba
         description:
           'The Boba Network is a Layer 2 scaling solution for Ethereum that enhances transaction speed and reduces costs through optimistic rollups.',
       },
@@ -78,7 +80,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
-        layerZeroChainSelector: 0,
+        layerZeroChainSelector: 30255,
         description:
           'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
       },
@@ -92,6 +94,8 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.TENDERLY_MAINNET]: {
     id: 99099127,
     name: 'Ion Testnet',
+    tokensL1: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
+    tokensL2: [TokenKey.WETH],
     bridges: {
       [BridgeKey.SEI]: {
         name: 'Sei',
@@ -108,7 +112,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.SEI],
         nativeToken: TokenKey.SEI,
-        layerZeroChainSelector: 0,
+        layerZeroChainSelector: 30280,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
       },
@@ -146,7 +150,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
-        layerZeroChainSelector: 0,
+        layerZeroChainSelector: 30255,
         description:
           'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
       },
@@ -194,6 +198,8 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
   [ChainKey.SEPOLIA]: {
     id: 11155111,
     name: 'Sepolia',
+    tokensL1: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
+    tokensL2: [TokenKey.WETH],
     bridges: {
       [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: {
         name: 'Optimism Sepolia (LayerZero)',

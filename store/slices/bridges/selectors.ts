@@ -33,6 +33,14 @@ export const selectChainConfig = createSelector([selectChainKey], (chainKey) => 
   return chainsConfig[chainKey]
 })
 
+export const selectSourceBridgeChainId = createSelector(
+  [selectSourceBridge, selectChainConfig],
+  (sourceBridgeKey, chainConfig): number | null => {
+    if (!sourceBridgeKey) return null
+    return chainConfig?.bridges[sourceBridgeKey as BridgeKey]?.chainId || null
+  }
+)
+
 export const selectChainKeyByChainId = (chainId: number | undefined) =>
   Object.keys(chainsConfig).find(
     (bridgeKey) => chainsConfig[bridgeKey as keyof typeof chainsConfig].id === chainId
@@ -44,6 +52,18 @@ export const selectBridgeConfig = createSelector(
     if (!bridgeKey || !chainConfig) return null
     const bridgeConfig = chainConfig.bridges[bridgeKey] as Bridge
     return { ...bridgeConfig, key: bridgeKey }
+  }
+)
+
+export const selectAvailableTokens = createSelector(
+  [selectSourceBridge, selectChainConfig],
+  (sourceBridge, chainConfig) => {
+    if (!chainConfig) return []
+    if (sourceBridge === BridgeKey.ETHEREUM) {
+      return chainConfig.tokensL1
+    } else {
+      return chainConfig.tokensL2
+    }
   }
 )
 

@@ -20,6 +20,7 @@ import {
   selectDepositAmountAsBigInt,
   selectFromTokenKeyForBridge,
   selectSourceBridge,
+  selectSourceBridgeChainId,
 } from './selectors'
 import { setInputError } from './slice'
 import { selectChainId, selectChainKey } from '../chain'
@@ -215,6 +216,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const bridgeKey = selectBridgeKey(state)
       const bridgeConfig = selectBridgeConfig(state)
       const sourceBridgeKey = selectSourceBridge(state)
+      const sourceBridgeChainId = selectSourceBridgeChainId(state)
 
       const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
       const tellerContractAddress = bridgeConfig?.contracts.teller
@@ -239,6 +241,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         depositAsset &&
         layerZeroChainSelector !== undefined &&
         sourceBridgeKey &&
+        sourceBridgeChainId &&
         tellerContractAddress &&
         userAddress &&
         wethAddress
@@ -262,7 +265,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           // Source chain and current bridge are the same
           ///////////////////////////////////////////////////////////////
 
-          // For example, both are Ethereum,
+          // For example, both are Sei,
           // Deposit without bridging.
           txHash = await deposit(
             { depositAsset, depositAmount },
@@ -271,7 +274,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
               tellerContractAddress,
               boringVaultAddress,
               accountantAddress,
-              chainId: bridgeConfig.deployedOn,
+              chainId: sourceBridgeChainId,
             }
           )
         } else {
@@ -288,14 +291,14 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           ///////////////////////////////////////////////////////////////
           const exchangeRate = await getRateInQuoteSafe(
             { quote: depositAsset },
-            { contractAddress: accountantAddress, chainId: bridgeConfig.deployedOn }
+            { contractAddress: accountantAddress, chainId: sourceBridgeChainId }
           )
 
           const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
           const fee = await previewFee(
             { shareAmount, bridgeData: depositBridgeData },
-            { contractAddress: tellerContractAddress, chainId: bridgeConfig.deployedOn }
+            { contractAddress: tellerContractAddress, chainId: sourceBridgeChainId }
           )
 
           // Add 1% to the fee for padding to prevent the contract from reverting
@@ -312,13 +315,12 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
               tellerContractAddress,
               boringVaultAddress,
               accountantAddress,
-              chainId: bridgeConfig.deployedOn,
+              chainId: sourceBridgeChainId,
               fee: paddedFee,
             }
           )
         }
 
-        console.log('Success!')
         dispatch(setTransactionTxHash(txHash))
         dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
         dispatch(setBridgeFrom(''))
