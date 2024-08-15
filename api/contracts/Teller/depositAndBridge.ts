@@ -81,20 +81,20 @@ export async function depositAndBridge(
   ////////////////////////////////
   // Write
   ////////////////////////////////
-  const hash = await writeContract(wagmiConfig, {
-    abi: CrossChainTellerBaseAbi.abi as Abi,
-    address: tellerContractAddress,
-    functionName: 'depositAndBridge',
-    args: [depositAsset, depositAmount, minimumMint, bridgeData],
-    chainId,
-    value: fee,
-  })
+  // const hash = await writeContract(wagmiConfig, {
+  //   abi: CrossChainTellerBaseAbi.abi as Abi,
+  //   address: tellerContractAddress,
+  //   functionName: 'depositAndBridge',
+  //   args: [depositAsset, depositAmount, minimumMint, bridgeData],
+  //   chainId,
+  //   value: fee,
+  // })
 
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
   const { blockHash } = await waitForTransactionReceipt(wagmiConfig, {
-    hash,
+    hash: '0x0',
   })
 
   return blockHash

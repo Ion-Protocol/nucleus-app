@@ -42,6 +42,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.SEI],
         nativeToken: TokenKey.SEI,
+        feeToken: TokenKey.ETH,
         layerZeroChainSelector: 30280,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
@@ -61,6 +62,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
+        feeToken: TokenKey.WETH,
         layerZeroChainSelector: 0, // There is no layer zero chain selector for Boba
         description:
           'The Boba Network is a Layer 2 scaling solution for Ethereum that enhances transaction speed and reduces costs through optimistic rollups.',
@@ -80,6 +82,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
+        feeToken: TokenKey.ETH,
         layerZeroChainSelector: 30255,
         description:
           'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
@@ -112,6 +115,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.SEI],
         nativeToken: TokenKey.SEI,
+        feeToken: TokenKey.ETH,
         layerZeroChainSelector: 30280,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
@@ -131,6 +135,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
+        feeToken: TokenKey.WETH,
         layerZeroChainSelector: 0,
         description:
           'The Boba Network is a Layer 2 scaling solution for Ethereum that enhances transaction speed and reduces costs through optimistic rollups.',
@@ -150,6 +155,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.BOBA],
         nativeToken: TokenKey.BOBA,
+        feeToken: TokenKey.ETH,
         layerZeroChainSelector: 30255,
         description:
           'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
@@ -217,6 +223,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.OP],
         nativeToken: TokenKey.OP,
+        feeToken: TokenKey.WETH,
         description: 'TBD',
       },
       [BridgeKey.OPTIMISM_SEPOLIA_OPSTACK]: {
@@ -235,6 +242,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceTokens: [TokenKey.WETH, TokenKey.WSTETH],
         destinationTokens: [TokenKey.OP],
         nativeToken: TokenKey.OP,
+        feeToken: TokenKey.WETH,
         description: 'TBD',
       },
     },

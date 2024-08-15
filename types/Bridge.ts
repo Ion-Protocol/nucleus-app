@@ -15,4 +15,5 @@ export interface Bridge {
   destinationTokens: TokenKey[]
   nativeToken: TokenKey
   comingSoon?: boolean
+  feeToken: TokenKey
 }

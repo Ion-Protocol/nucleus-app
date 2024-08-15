@@ -4,13 +4,17 @@ import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
-import { BridgeKey } from '@/types/BridgeKey'
 import { tokensConfig } from '@/config/token'
+import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { switchChain } from 'wagmi/actions'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
+import { selectChainId } from '../chain'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import {
@@ -18,15 +22,13 @@ import {
   selectChainConfig,
   selectChainKeyByChainId,
   selectDepositAmountAsBigInt,
+  selectFeeTokenAddress,
   selectFromTokenKeyForBridge,
   selectSourceBridge,
   selectSourceBridgeChainId,
+  selectTellerAddress,
 } from './selectors'
 import { setInputError } from './slice'
-import { selectChainId, selectChainKey } from '../chain'
-import { switchChain } from 'wagmi/actions'
-import { wagmiConfig } from '@/config/wagmi'
-import { TokenKey } from '@/types/TokenKey'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -217,45 +219,46 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const bridgeConfig = selectBridgeConfig(state)
       const sourceBridgeKey = selectSourceBridge(state)
       const sourceBridgeChainId = selectSourceBridgeChainId(state)
+      const tellerAddress = selectTellerAddress(state)
+      const feeTokenAddress = selectFeeTokenAddress(state)
 
       const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
       const tellerContractAddress = bridgeConfig?.contracts.teller
       const boringVaultAddress = bridgeConfig?.contracts.boringVault
       const accountantAddress = bridgeConfig?.contracts.accountant
-      const deployedOnId = bridgeConfig?.deployedOn
-      const deployedOnChainKey = selectChainKeyByChainId(deployedOnId)
-      const wethAddress = deployedOnChainKey
-        ? tokensConfig?.[TokenKey.WETH].chains[deployedOnChainKey as BridgeKey]?.address || null
+      const wethAddress = sourceBridgeKey
+        ? tokensConfig?.[TokenKey.WETH].chains[sourceBridgeKey as BridgeKey]?.address || null
         : null
       const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
       const depositAsset =
-        depositAssetTokenKey && deployedOnChainKey
-          ? tokensConfig[depositAssetTokenKey]?.chains[deployedOnChainKey]?.address
+        depositAssetTokenKey && sourceBridgeKey
+          ? tokensConfig[depositAssetTokenKey]?.chains[sourceBridgeKey as BridgeKey]?.address
           : null
 
       if (
         accountantAddress &&
         boringVaultAddress &&
         bridgeKey &&
-        deployedOnId &&
         depositAsset &&
         layerZeroChainSelector !== undefined &&
         sourceBridgeKey &&
         sourceBridgeChainId &&
         tellerContractAddress &&
+        feeTokenAddress &&
+        tellerAddress &&
         userAddress &&
         wethAddress
       ) {
         // if chain needs to switch, switch it
-        if (chainId !== deployedOnId) {
-          await switchChain(wagmiConfig, { chainId: deployedOnId })
+        if (chainId !== sourceBridgeChainId) {
+          await switchChain(wagmiConfig, { chainId: sourceBridgeChainId })
         }
 
         const depositBridgeData: CrossChainTellerBase.BridgeData = {
           chainSelector: layerZeroChainSelector,
-          destinationChainReceiver: userAddress,
-          bridgeFeeToken: wethAddress,
-          messageGas: 100_000,
+          destinationChainReceiver: tellerAddress,
+          bridgeFeeToken: feeTokenAddress,
+          messageGas: 1000000,
           data: '',
         }
 
@@ -263,6 +266,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         if (sourceBridgeKey === bridgeKey) {
           ///////////////////////////////////////////////////////////////
           // Source chain and current bridge are the same
+          // Deposit only
           ///////////////////////////////////////////////////////////////
 
           // For example, both are Sei,
@@ -280,6 +284,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         } else {
           ///////////////////////////////////////////////////////////////
           // Source chain and bridge are different
+          // Deposit & Bridge
           ///////////////////////////////////////////////////////////////
 
           // If the source chain and and destination chains are different.

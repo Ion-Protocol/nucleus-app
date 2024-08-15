@@ -10,7 +10,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'ETH',
     chains: {
       [BridgeKey.ETHEREUM]: {
-        address: '0x',
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         chainId: mainnet.id,
       },
     },
@@ -25,11 +25,11 @@ export const tokensConfig: Record<TokenKey, Token> = {
         chainId: mainnet.id,
       },
       [BridgeKey.SEI]: {
-        address: '0x',
+        address: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
         chainId: sei.id,
       },
       [BridgeKey.BOBA]: {
-        address: '0x',
+        address: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
         chainId: boba.id,
       },
     },

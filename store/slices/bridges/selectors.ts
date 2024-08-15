@@ -12,6 +12,8 @@ import { selectChainKey } from '../chain'
 import { selectPrice } from '../price'
 import { selectBridgeKey } from '../router'
 import { BridgeData } from './initialState'
+import { tokensConfig } from '@/config/token'
+import { Token } from '@/types/Token'
 
 export const selectBridgesState = (state: RootState) => state.bridges
 export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
@@ -37,6 +39,9 @@ export const selectSourceBridgeChainId = createSelector(
   [selectSourceBridge, selectChainConfig],
   (sourceBridgeKey, chainConfig): number | null => {
     if (!sourceBridgeKey) return null
+    if (sourceBridgeKey === BridgeKey.ETHEREUM) {
+      return 1
+    }
     return chainConfig?.bridges[sourceBridgeKey as BridgeKey]?.chainId || null
   }
 )
@@ -52,6 +57,23 @@ export const selectBridgeConfig = createSelector(
     if (!bridgeKey || !chainConfig) return null
     const bridgeConfig = chainConfig.bridges[bridgeKey] as Bridge
     return { ...bridgeConfig, key: bridgeKey }
+  }
+)
+
+export const selectTellerAddress = createSelector([selectBridgeConfig], (bridgeConfig): `0x${string}` | null => {
+  return bridgeConfig?.contracts.teller || null
+})
+
+export const selectFeeTokenKey = createSelector([selectBridgeConfig], (bridgeConfig): TokenKey | null => {
+  return bridgeConfig?.feeToken || null
+})
+
+export const selectFeeTokenAddress = createSelector(
+  [selectFeeTokenKey, selectSourceBridge],
+  (feeTokenKey, sourceBridgeKey): `0x${string}` | null => {
+    if (!feeTokenKey || !sourceBridgeKey) return null
+    const feeToken = tokensConfig[feeTokenKey as keyof typeof tokensConfig]
+    return feeToken.chains[sourceBridgeKey]?.address || null
   }
 )
 
