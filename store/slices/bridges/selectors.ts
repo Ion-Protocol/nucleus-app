@@ -132,10 +132,10 @@ export const selectBridgesData = createSelector([selectBridgesState], (bridgesSt
 })
 
 export const selectBridgeData = createSelector(
-  [selectBridgesData, selectBridgeKey],
-  (bridgesData, bridgeKey): BridgeData | null => {
-    if (!bridgeKey) return null
-    return bridgesData?.[bridgeKey] as BridgeData
+  [selectBridgesData, selectSourceBridge],
+  (bridgesData, sourceBridgeKey): BridgeData | null => {
+    if (!sourceBridgeKey) return null
+    return bridgesData?.[sourceBridgeKey] as BridgeData
   }
 )
 
