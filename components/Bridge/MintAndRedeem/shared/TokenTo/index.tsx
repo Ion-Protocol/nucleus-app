@@ -5,10 +5,10 @@ import { TokenToConnector } from './connector'
 
 function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: TokenToConnector.Props) {
   return (
-    <IonCard variant="elevate">
+    <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text>Receive</Text>
+        <Text>Amount</Text>
         <Flex color="secondaryText" gap={1}>
           <Text>Balance: </Text>
           <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
@@ -26,6 +26,7 @@ function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: Toke
             cursor: 'text',
             color: 'disabled',
           }}
+          color="textSecondary"
           cursor="pointer"
           value={value}
           variant="unstyled"

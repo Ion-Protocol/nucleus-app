@@ -25,6 +25,7 @@ export function NavDrawer() {
       borderColor="border"
       p={6}
       justify="space-between"
+      bg="drawerBackground"
     >
       <Flex direction="column" flex={1}>
         <Logo />

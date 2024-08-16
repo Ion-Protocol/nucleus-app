@@ -34,7 +34,6 @@ export function IonConnectButton() {
                 <Box style={{ display: 'flex', gap: 12 }}>
                   <Button
                     onClick={openChainModal}
-                    variant="outline"
                     leftIcon={
                       <Box bg={chain.iconBackground} borderRadius={999} overflow="hidden">
                         {chain.iconUrl && (

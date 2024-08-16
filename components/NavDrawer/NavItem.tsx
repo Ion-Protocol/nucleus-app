@@ -1,4 +1,4 @@
-import { Box, ChakraProps, Flex, Link, Text } from '@chakra-ui/react'
+import { Box, ChakraProps, Flex, Link, Text, useColorMode } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import React, { ReactElement } from 'react'
 
@@ -13,6 +13,7 @@ interface NavItemProps extends ChakraProps {
 export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItemProps) {
   const router = useRouter()
   const isSelected = router.asPath === href
+  const { colorMode } = useColorMode()
 
   const iconWithSize = leftIcon ? React.cloneElement(leftIcon, { height: '20px', width: '20px' }) : null
 
@@ -39,7 +40,9 @@ export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItem
         p={2}
         cursor="pointer"
         bg={isSelected ? 'selected' : 'transparent'}
-        _hover={{ bg: 'hover' }}
+        border={isSelected ? '1px solid' : '1px solid transparent'}
+        borderColor={isSelected && colorMode === 'light' ? 'border' : 'transparent'}
+        _hover={{ bg: 'hover', border: '1px solid', borderColor: colorMode === 'light' ? 'border' : 'transparent' }}
         _active={{ bg: 'active' }}
       >
         <Box w="36px">{iconWithSize}</Box>

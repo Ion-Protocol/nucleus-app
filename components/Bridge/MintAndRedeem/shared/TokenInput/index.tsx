@@ -1,10 +1,10 @@
 import { Button, Divider, Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 import TokenSelect from '../TokenSelect'
-import { TokenFromConnector } from './connector'
+import { TokenInputConnector } from './connector'
 import { useState } from 'react'
 import { IonCard } from '@/components/shared/IonCard'
 
-function TokenFrom({
+function TokenInput({
   error,
   inputValue,
   onChange,
@@ -14,14 +14,14 @@ function TokenFrom({
   tokenBalance,
   loadingTokenBalance,
   tokens,
-}: TokenFromConnector.Props) {
+}: TokenInputConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <IonCard variant="elevate" bg={isFocused ? 'backgroundSecondary' : 'none'}>
+    <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'}>
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text color={error ? 'error.main' : 'text'}>Deposit</Text>
+        <Text color={error ? 'error.main' : 'text'}>Amount</Text>
         <Flex color="secondaryText" gap={1}>
           <Text>Balance: </Text>
           <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
@@ -41,7 +41,7 @@ function TokenFrom({
           type="number"
           variant="unstyled"
           size="lg"
-          placeholder="Amount"
+          placeholder="0"
           fontWeight="bold"
           color={error ? 'error.main' : 'text'}
         />
@@ -61,4 +61,4 @@ function TokenFrom({
   )
 }
 
-export default TokenFromConnector.Connector(TokenFrom)
+export default TokenInputConnector.Connector(TokenInput)

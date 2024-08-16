@@ -14,7 +14,7 @@ import { selectBridgeKey } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
 
-const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
+const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const currentPageBridgeKey = selectBridgeKey(state)
   const selectedBridgeKey = selectSourceBridge(state)
   const inputValue = selectBridgeFrom(state)
@@ -38,7 +38,7 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps) => {
 const mergeProps = (
   stateProps: ReturnType<typeof mapState>,
   dispatchProps: typeof mapDispatch,
-  ownProps: TokenFromOwnProps
+  ownProps: TokenInputOwnProps
 ) => {
   const { bridgeKey } = stateProps
 
@@ -60,11 +60,11 @@ const connector = connect(mapState, mapDispatch, mergeProps)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface TokenFromOwnProps {}
+interface TokenInputOwnProps {}
 
-interface TokenFromProps extends TokenFromOwnProps, PropsFromRedux {}
+interface TokenInputProps extends TokenInputOwnProps, PropsFromRedux {}
 
-export namespace TokenFromConnector {
+export namespace TokenInputConnector {
   export const Connector = connector
-  export type Props = TokenFromProps
+  export type Props = TokenInputProps
 }

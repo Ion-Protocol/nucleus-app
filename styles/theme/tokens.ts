@@ -1,40 +1,97 @@
+// export const semanticTokens = {
+//   colors: {
+//     background: {
+//       default: 'neutral.500',
+//       _dark: 'darkMode.500',
+//     },
+//     drawerBackground: {
+//       default: 'background',
+//       _dark: 'darkMode.500',
+//     },
+//     cardBackground: {
+//       default: 'background',
+//       _dark: 'darkMode.400',
+//     },
+//     text: {
+//       default: 'body',
+//       _dark: 'white',
+//     },
+//     buttonSecondary: {
+//       default: 'neutral.400',
+//       _dark: 'darkMode.400',
+//     },
+//     formBackground: {
+//       default: 'neutral.400',
+//       _dark: 'dark.300',
+//     },
+//     textSecondary: {
+//       default: 'darkMode.300',
+//       _dark: 'darkMode.200',
+//     },
+//     disabledText: {
+//       default: 'neutral.700',
+//       _dark: 'darkMode.200',
+//     },
+//     border: {
+//       default: 'borderLight',
+//       _dark: 'borderDark',
+//     },
+//   },
+// }
+
 export const semanticTokens = {
   colors: {
-    border: {
-      default: 'neutral.100',
-      _dark: 'midnight.700',
+    primary: {
+      default: 'darkMode.500',
+      _dark: 'neutral.500',
     },
-    borderSubtle: {
-      default: 'neutral.200',
-      _dark: 'midnight.600',
+    border: {
+      default: 'neutral.600',
+      _dark: 'darkMode.300',
+    },
+    borderLight: {
+      default: 'neutral.600',
+      _dark: 'darkMode.200',
     },
     background: {
-      default: 'white',
-      _dark: 'midnight.900',
+      default: 'neutral.500',
+      _dark: 'darkMode.500',
     },
     backgroundSecondary: {
-      default: 'white',
-      _dark: 'midnight.800',
+      default: 'neutral.400',
+      _dark: 'darkMode.400',
+    },
+    drawerBackground: {
+      default: 'neutral.400',
+      _dark: 'darkMode.500',
+    },
+    formBackground: {
+      default: 'neutral.500',
+      _dark: 'darkMode.300',
     },
     text: {
-      default: 'neutral.900',
+      default: 'darkMode.500',
       _dark: 'white',
     },
-    secondaryText: {
-      default: 'neutral.500',
-      _dark: 'midnight.200',
+    textInverse: {
+      default: 'white',
+      _dark: 'darkMode.500',
+    },
+    textSecondary: {
+      default: 'darkMode.300',
+      _dark: 'darkMode.200',
     },
     selected: {
-      default: 'primary.50',
-      _dark: 'midnight.800',
+      default: 'neutral.300',
+      _dark: 'darkMode.900',
     },
     selectedSecondary: {
       default: 'neutral.50',
       _dark: 'midnight.700',
     },
     hover: {
-      default: 'primary.50',
-      _dark: 'midnight.800',
+      default: 'neutral.200',
+      _dark: 'darkMode.700',
     },
     hoverSecondary: {
       default: 'primary.100',
@@ -44,9 +101,9 @@ export const semanticTokens = {
       default: 'primary.100',
       _dark: 'midnight.700',
     },
-    disabled: {
-      default: 'neutral.500',
-      _dark: 'midnight.400',
+    disabledText: {
+      default: 'neutral.700',
+      _dark: 'darkMode.200',
     },
     shadow: {
       default: 'shadow.light',
@@ -96,36 +153,6 @@ export const semanticTokens = {
       background: {
         default: 'red.lighter',
         _dark: 'red.lighter',
-      },
-    },
-    timeRange: {
-      background: {
-        default: 'neutral.50',
-        _dark: 'midnight.890',
-      },
-      unselectedText: {
-        default: 'neutral.500',
-        _dark: 'neutral.600',
-      },
-      selectedBackground: {
-        default: 'white',
-        _dark: 'midnight.700',
-      },
-    },
-    chart: {
-      grid: {
-        default: 'neutral.200',
-        _dark: 'midnight.500',
-      },
-      line: {
-        default: 'primary.600',
-        _dark: 'primary.600',
-      },
-    },
-    table: {
-      background: {
-        default: 'neutral.50',
-        _dark: 'midnight.890',
       },
     },
     tooltip: {

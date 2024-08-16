@@ -1,30 +1,26 @@
-import { ChainKey } from '@/config/chains'
 import { RootState } from '@/store'
-import {
-  selectDestinationBridge,
-  selectSourceBridge,
-  selectDestinationBridges,
-  selectSourceBridges,
-  setDestinationChain,
-  setSourceChain,
-} from '@/store/slices/bridges'
+import { selectSourceBridge, selectSourceBridges, setDestinationChain, setSourceChain } from '@/store/slices/bridges'
+import { selectBridgeKey } from '@/store/slices/router'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
-  const { role } = ownProps
+  const { role, isActive } = ownProps
 
-  const selectBridges = role === 'source' ? selectSourceBridges : selectDestinationBridges
-  const bridges = selectBridges(state)
-  const selectChain = role === 'source' ? selectSourceBridge : selectDestinationBridge
+  const bridges = selectSourceBridges(state)
+  const selectChain = role === 'source' ? selectSourceBridge : selectBridgeKey
   const selected = selectChain(state) || bridges[0]?.key || null
   const selectedChain = selected && bridges.find((bridge) => bridge.key === selected)
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
+  const primaryText = role === 'source' ? `Deposit from ${selectedChain?.name}` : `Receive on ${selectedChain?.name}`
 
   return {
     chains: bridges,
     selected: selectedChain,
     placeholder,
+    primaryText,
+    isActive,
+    role,
   }
 }
 
@@ -55,6 +51,7 @@ export type PropsFromRedux = ConnectedProps<typeof connector>
 export type ChainSelectRole = 'source' | 'destination'
 interface ChainSelectOwnProps {
   role: ChainSelectRole
+  isActive: boolean
 }
 
 interface ChainSelectProps extends ChainSelectOwnProps, PropsFromRedux {}

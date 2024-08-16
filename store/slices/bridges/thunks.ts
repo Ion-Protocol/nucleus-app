@@ -4,17 +4,13 @@ import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
-import { tokensConfig } from '@/config/token'
-import { wagmiConfig } from '@/config/wagmi'
-import { RootState } from '@/store'
 import { BridgeKey } from '@/types/BridgeKey'
-import { TokenKey } from '@/types/TokenKey'
+import { tokensConfig } from '@/config/token'
+import { RootState } from '@/store'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { switchChain } from 'wagmi/actions'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
-import { selectChainId } from '../chain'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import {
@@ -29,6 +25,10 @@ import {
   selectTellerAddress,
 } from './selectors'
 import { setInputError } from './slice'
+import { selectChainId, selectChainKey } from '../chain'
+import { switchChain } from 'wagmi/actions'
+import { wagmiConfig } from '@/config/wagmi'
+import { TokenKey } from '@/types/TokenKey'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -258,7 +258,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           chainSelector: layerZeroChainSelector,
           destinationChainReceiver: tellerAddress,
           bridgeFeeToken: feeTokenAddress,
-          messageGas: 1000000,
+          messageGas: 100000,
           data: '',
         }
 

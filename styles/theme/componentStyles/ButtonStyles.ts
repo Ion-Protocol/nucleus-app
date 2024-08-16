@@ -21,16 +21,16 @@ export const ButtonStyles: ComponentStyleConfig = {
   },
   variants: {
     solid: (props) => ({
-      color: 'white',
+      color: 'textInverse',
       textStyle: 'button',
-      background: buttonGradient(props),
+      background: 'primary',
       _hover: {
-        background: buttonGradient(props),
-        filter: 'brightness(0.9)',
+        background: 'primary',
+        filter: 'brightness(0.8)',
       },
       _active: {
-        background: buttonGradient(props),
-        filter: 'brightness(0.7)',
+        background: 'primary',
+        filter: 'brightness(0.6)',
       },
     }),
     outline: (props) => ({
