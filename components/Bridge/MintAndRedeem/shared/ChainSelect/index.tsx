@@ -13,7 +13,7 @@ function ChainSelect({
   role,
 }: ChainSelectConnector.Props) {
   return (
-    <Menu>
+    <Menu matchWidth>
       <MenuButton
         variant="outline"
         borderWidth="1px"
@@ -30,7 +30,7 @@ function ChainSelect({
           <Text variant="paragraph">{selected ? primaryText : placeholder}</Text>
         </Flex>
       </MenuButton>
-      <MenuList bg="backgroundSecondary">
+      <MenuList bg="backgroundSecondary" w="100%">
         {chains.map((chain) => (
           <MenuItem key={chain.key} bg="none" onClick={() => onChange(chain.key)} _hover={{ bg: 'hover' }}>
             <Flex align="center" gap={3}>
