@@ -60,6 +60,7 @@ export const textStyles = {
   },
   bigParagraph: {
     fontSize: '22px',
+    lineHeight: '110%',
   },
   smallParagraphBold: {
     fontSize: '12px',

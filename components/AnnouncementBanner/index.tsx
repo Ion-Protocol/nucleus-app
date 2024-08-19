@@ -1,45 +1,44 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { Box, Image, useColorMode } from '@chakra-ui/react'
+import { uiConfig } from '@/config/ui'
+import { Flex, Image, Text, useColorMode } from '@chakra-ui/react'
 
 export function AnnouncementBanner() {
   const { colorMode } = useColorMode()
-  const [imageHeight, setImageHeight] = useState<number | null>(null)
-  const imageRef = useRef<HTMLImageElement>(null)
-
-  useEffect(() => {
-    if (imageRef.current) {
-      setImageHeight(imageRef.current.clientHeight)
-    }
-  }, [colorMode])
 
   return (
-    <Box
+    <Flex
       w="100%"
-      height={imageHeight ? `${imageHeight}px` : 'auto'}
-      overflowX="hidden"
-      display="flex"
-      position="relative"
+      h="200px"
+      overflow="hidden"
       borderRadius="16px"
+      border="1px solid"
+      borderColor="border"
+      maxW="1100px"
     >
-      <Image
-        ref={imageRef}
-        position="absolute"
-        top="0px"
-        left="0px"
-        minW="1100px"
-        maxW="1100px"
-        alt="announcement"
-        src={
-          colorMode === 'light'
-            ? '/assets/images/AnnouncementBannerLight.png'
-            : '/assets/images/AnnouncementBannerDark.png'
-        }
-        onLoad={() => {
-          if (imageRef.current) {
-            setImageHeight(imageRef.current.clientHeight)
-          }
-        }}
-      />
-    </Box>
+      <Flex bg="backgroundSecondary" position="relative" justify="space-between" w="100%">
+        {/* Left Side */}
+        <Flex direction="column" p={6} gap={3} minW="500px" maxW="500px" flex={1}>
+          <Flex
+            bg="background"
+            px={3}
+            py={1}
+            borderRadius="10px"
+            w="fit-content"
+            border={colorMode === 'light' ? '1px solid' : 'none'}
+            borderColor={colorMode === 'light' ? 'primary' : 'transparent'}
+          >
+            <Text variant="smallParagraph">{uiConfig.pages.dashboard.announcementTag}</Text>
+          </Flex>
+          <Text variant="heading2" mt={3}>
+            {uiConfig.pages.dashboard.announcementHeader}
+          </Text>
+          <Text variant="bigParagraph">{uiConfig.pages.dashboard.announcementBody}</Text>
+        </Flex>
+        <Image
+          alt="radar"
+          h="200px"
+          src={colorMode === 'light' ? '/assets/images/radar-light.png' : '/assets/images/radar-dark.png'}
+        />
+      </Flex>
+    </Flex>
   )
 }
