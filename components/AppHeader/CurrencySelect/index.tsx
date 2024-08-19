@@ -20,7 +20,7 @@ function CurrencySelect({ currency, setCurrency }: CurrencySelectConnector.Props
   return (
     <Menu>
       <MenuButton as={Button} variant="outline" leftIcon={currencyIconMap[currency]} rightIcon={<ChevronDownIcon />}>
-        <Text variant="medium" fontWeight="default">
+        <Text fontSize="15px" fontWeight="normal" fontFamily="var(--font-recklessNeue)">
           {currency}
         </Text>
       </MenuButton>

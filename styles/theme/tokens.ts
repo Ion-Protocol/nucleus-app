@@ -1,44 +1,3 @@
-// export const semanticTokens = {
-//   colors: {
-//     background: {
-//       default: 'neutral.500',
-//       _dark: 'darkMode.500',
-//     },
-//     drawerBackground: {
-//       default: 'background',
-//       _dark: 'darkMode.500',
-//     },
-//     cardBackground: {
-//       default: 'background',
-//       _dark: 'darkMode.400',
-//     },
-//     text: {
-//       default: 'body',
-//       _dark: 'white',
-//     },
-//     buttonSecondary: {
-//       default: 'neutral.400',
-//       _dark: 'darkMode.400',
-//     },
-//     formBackground: {
-//       default: 'neutral.400',
-//       _dark: 'dark.300',
-//     },
-//     textSecondary: {
-//       default: 'darkMode.300',
-//       _dark: 'darkMode.200',
-//     },
-//     disabledText: {
-//       default: 'neutral.700',
-//       _dark: 'darkMode.200',
-//     },
-//     border: {
-//       default: 'borderLight',
-//       _dark: 'borderDark',
-//     },
-//   },
-// }
-
 export const semanticTokens = {
   colors: {
     primary: {
@@ -96,6 +55,14 @@ export const semanticTokens = {
     hoverSecondary: {
       default: 'primary.100',
       _dark: 'midnight.700',
+    },
+    modalParagraph: {
+      default: '#6B7280',
+      _dark: 'white',
+    },
+    infoIcon: {
+      default: 'darkMode.200',
+      _dark: 'darkMode.200',
     },
     active: {
       default: 'primary.100',
@@ -158,11 +125,11 @@ export const semanticTokens = {
     tooltip: {
       background: {
         default: 'neutral.800',
-        _dark: 'midnight.50',
+        _dark: 'darkMode.50',
       },
       color: {
-        default: 'neutral.50',
-        _dark: 'neutral.800',
+        default: 'white',
+        _dark: 'darkMode.700',
       },
     },
     skeleton: {

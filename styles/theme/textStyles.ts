@@ -2,14 +2,51 @@ export const textStyles = {
   baseStyle: {
     fontSize: '12px',
   },
-  button: {
-    fontWeight: 'bold',
-  },
   header1: {
     fontSize: '25px',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     lineHeight: '110%',
     letterSpacing: '-1%',
+    fontFamily: 'var(--font-ppformula)',
+  },
+  heading2: {
+    fontSize: '25px',
+    fontWeight: 'normal',
+    lineHeight: '110%',
+    letterSpacing: '0.05em',
+    fontFamily: 'var(--font-ppformula)',
+  },
+  bigNumbers: {
+    fontSize: '18px',
+    fontWeight: 'normal',
+    lineHeight: '110%',
+    letterSpacing: '0.1em',
+    fontFamily: 'var(--font-ppformula)',
+  },
+  paragraph: {
+    fontSize: '15px',
+    fontWeight: 'normal',
+    fontFamily: 'var(--font-recklessNeue)',
+  },
+  paragraphBold: {
+    fontSize: '15px',
+    fontWeight: 'bold',
+    fontFamily: 'var(--font-recklessNeue)',
+  },
+  bigParagraphBold: {
+    fontSize: '22px',
+    fontWeight: 'bold',
+    fontFamily: 'var(--font-recklessNeue)',
+  },
+  smallParagraph: {
+    fontSize: '12px',
+    fontWeight: 'normal',
+    fontFamily: 'var(--font-recklessNeue)',
+  },
+  button: {
+    fontSize: '14px',
+    fontWeight: 'normal',
+    fontFamily: 'var(--font-ppformula)',
   },
   header2: {
     fontSize: '28px',

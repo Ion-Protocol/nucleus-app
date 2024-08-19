@@ -1,4 +1,4 @@
 export const fonts = {
-  heading: 'var(--font-aventa)',
-  body: 'var(--font-aventa)',
+  heading: 'var(--ppformula)',
+  body: 'var(--font-recklessNeue)',
 }

@@ -12,13 +12,13 @@ export function MintAndRedeem() {
         {/* Tab Buttons */}
         <TabList>
           <Tab _selected={{ borderBottom: '2px solid', borderColor: 'text' }}>
-            <Text variant="large" color={selectedIndex === 0 ? 'text' : 'secondaryText'} fontWeight="bold">
+            <Text variant="paragraphBold" color={selectedIndex === 0 ? 'text' : 'secondaryText'} fontWeight="bold">
               Mint
             </Text>
           </Tab>
           <Tooltip label="Coming soon" aria-label="Redeem tab tooltip">
             <Tab isDisabled _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-              <Text variant="large" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+              <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
                 Redeem
               </Text>
             </Tab>

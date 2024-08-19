@@ -17,13 +17,13 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
       w="100%"
     >
       <Flex gap={2} align="center">
-        <Text variant="large">Total Value Locked</Text>
+        <Text variant="paragraph">Total Value Locked</Text>
         <Tooltip label="Total value of assets backing the native yield asset.">
-          <InfoOutlineIcon color="neutral.600" />
+          <InfoOutlineIcon color="infoIcon" />
         </Tooltip>
       </Flex>
       <IonSkeleton w="150px" isLoaded={!loading}>
-        <Text textAlign="center" variant="xxl">
+        <Text textAlign="center" variant="bigNumbers">
           {tvlFormatted}
         </Text>
       </IonSkeleton>

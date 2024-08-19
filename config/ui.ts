@@ -2,7 +2,7 @@ export const uiConfig = {
   pages: {
     dashboard: {
       yieldBridges: {
-        descriptionLength: 55,
+        descriptionLength: 90,
       },
     },
     bridge: {

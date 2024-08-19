@@ -10,15 +10,15 @@ function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: Toke
       <Flex justify="space-between">
         <Text>Amount</Text>
         <Flex color="secondaryText" gap={1}>
-          <Text>Balance: </Text>
+          <Text variant="smallParagraph">Balance: </Text>
           <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
-            <Text>{tokenBalance}</Text>
+            <Text variant="smallParagraph">{tokenBalance}</Text>
           </Skeleton>
         </Flex>
       </Flex>
 
       {/* Bottom Row */}
-      <Flex align="center" gap={3}>
+      <Flex align="center" gap={3} mt={3}>
         {/* Input Box */}
         <Input
           disabled
@@ -32,12 +32,14 @@ function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: Toke
           variant="unstyled"
           size="lg"
           placeholder="Amount"
-          fontWeight="bold"
+          fontFamily="var(--font-ppformula)"
+          fontSize="18px"
+          letterSpacing="0.05em"
         />
 
         <Flex gap={2} align="center">
           <TokenIcon fontSize="28px" tokenKey={bridgeToken?.key || null} />
-          <Text variant="xl">{bridgeToken?.name}</Text>
+          <Text variant="paragraph">{bridgeToken?.name}</Text>
         </Flex>
       </Flex>
     </IonCard>

@@ -27,7 +27,17 @@ export function TxHashTag({ children, txHash, ...props }: TxHashTagProps) {
 
   return (
     <Tooltip label="Copied!" isOpen={showTooltip} placement="right" shouldWrapChildren>
-      <Tag borderRadius="100px" px={3} bg="clip.background" cursor="pointer" onClick={handleCopy} {...props}>
+      <Tag
+        borderRadius="100px"
+        px={3}
+        bg="none"
+        cursor="pointer"
+        border="1px solid"
+        borderColor="textSecondary"
+        color="textSecondary"
+        onClick={handleCopy}
+        {...props}
+      >
         <ClipIcon />
         <Text>{txHash.formatted}</Text>
       </Tag>

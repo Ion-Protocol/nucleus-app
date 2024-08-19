@@ -30,7 +30,12 @@ function YieldBridgeItem({
       borderRadius="16px"
       overflow="hidden"
       cursor={disabled ? 'not-allowed' : 'pointer'}
-      _hover={{ bg: disabled ? 'default' : 'hover' }}
+      transition="transform 0.1s ease, box-shadow 0.1s ease"
+      _hover={{
+        bg: disabled ? 'default' : 'backgroundSecondary',
+        boxShadow: !disabled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
+        transform: !disabled ? 'translate(1px, -1px)' : 'none',
+      }}
       _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
     >
@@ -38,20 +43,20 @@ function YieldBridgeItem({
       <Flex w="225px" py={6} pl={6} direction="column" justify="center">
         <Flex align="center" gap={3}>
           {/* Bridge Name */}
-          <Text variant="header3">{name}</Text>
+          <Text variant="bigParagraphBold">{name}</Text>
         </Flex>
 
         {/* Bridge Description */}
-        <Text>{description}</Text>
+        <Text variant="smallParagraph">{description}</Text>
 
         {!comingSoon ? (
           // Not Coming Soon
           <Flex mt={3} gap={6}>
             {/* TVL */}
             <Flex direction="column">
-              <Text>TVL</Text>
+              <Text variant="smallParagraph">TVL</Text>
               <IonSkeleton isLoaded={!loading} w="100px">
-                <Text variant="large">{comingSoon ? '-' : tvl}</Text>
+                <Text variant="paragraphBold">{comingSoon ? '-' : tvl}</Text>
               </IonSkeleton>
             </Flex>
           </Flex>
@@ -59,7 +64,7 @@ function YieldBridgeItem({
           // Coming Soon
           <Flex mt={3}>
             <Button pointerEvents="none">
-              <Text variant="large">COMING SOON</Text>
+              <Text variant="button">COMING SOON</Text>
             </Button>
           </Flex>
         )}

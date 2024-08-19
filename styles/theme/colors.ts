@@ -99,9 +99,9 @@ export const colors = {
     900: '#00344b',
   },
   green: {
-    main: '#05BB85',
-    light: '#05BB8560',
-    lighter: '#05BB852a',
+    main: '#6E988A',
+    light: '#6E988A60',
+    lighter: '#6E988A2a',
   },
   yellow: {
     light: '#FEF7E8',
@@ -109,9 +109,9 @@ export const colors = {
     dark: '#F2A818',
   },
   red: {
-    main: '#D14343',
-    light: '#D1434360',
-    lighter: '#D143432a',
+    main: '#F46E6E',
+    light: '#F46E6E60',
+    lighter: '#F46E6E2a',
   },
   shadow: {
     light: '#0000000D',

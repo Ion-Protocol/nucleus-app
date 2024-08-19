@@ -105,7 +105,7 @@ export const setBridgeFrom = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >('bridges/setBridgeFrom', async (from, { getState, rejectWithValue, dispatch }) => {
   const state = getState() as RootState
-  const bridgeKey = selectSourceBridge(state)
+  const bridgeKey = selectBridgeKey(state)
 
   if (!bridgeKey) {
     throw new Error('Bridge key is missing in router query')
@@ -151,12 +151,16 @@ export const setBridgeFromMax = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >('bridges/setBridgeFromMax', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState() as RootState
-  const bridgeKey = selectSourceBridge(state) as BridgeKey
+  const bridgeKeyFromSourceChain = selectSourceBridge(state) as BridgeKey
+  const bridgeKeyFromUrl = selectBridgeKey(state)
+  if (!bridgeKeyFromUrl) {
+    return rejectWithValue('Bridge key is missing in router query')
+  }
   const tokenKey = selectFromTokenKeyForBridge(state)
-  const tokenBalance = selectTokenBalance(bridgeKey, tokenKey)(state)
+  const tokenBalance = selectTokenBalance(bridgeKeyFromSourceChain, tokenKey)(state)
   const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
 
-  return { bridgeKey, from: tokenBalanceAsNumber }
+  return { bridgeKey: bridgeKeyFromUrl, from: tokenBalanceAsNumber }
 })
 
 export interface FetchBridgeRateResult {

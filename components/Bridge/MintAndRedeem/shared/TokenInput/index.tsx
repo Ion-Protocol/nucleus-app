@@ -21,9 +21,11 @@ function TokenInput({
     <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'}>
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text color={error ? 'error.main' : 'text'}>Amount</Text>
+        <Text variant="smallParagraph" color={error ? 'error.main' : 'text'}>
+          Amount
+        </Text>
         <Flex color="secondaryText" gap={1}>
-          <Text>Balance: </Text>
+          <Text variant="smallParagraph">Balance: </Text>
           <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
             <Text>{tokenBalance}</Text>
           </Skeleton>
@@ -31,7 +33,7 @@ function TokenInput({
       </Flex>
 
       {/* Bottom Row */}
-      <Flex align="center" gap={3}>
+      <Flex align="center" gap={3} mt={3}>
         {/* Input Box */}
         <Input
           value={inputValue}
@@ -41,15 +43,19 @@ function TokenInput({
           type="number"
           variant="unstyled"
           size="lg"
+          fontFamily="var(--font-ppformula)"
+          fontSize="18px"
+          letterSpacing="0.05em"
           placeholder="0"
-          fontWeight="bold"
           color={error ? 'error.main' : 'text'}
         />
         {error && <Text color="error.main">{error}</Text>}
         <Flex gap={3} align="center">
           {/* Max Button */}
           <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
-            <Text>MAX</Text>
+            <Text color="disabledText" variant="smallParagraph">
+              MAX
+            </Text>
           </Button>
 
           <Divider orientation="vertical" h="36px" borderColor="border" />

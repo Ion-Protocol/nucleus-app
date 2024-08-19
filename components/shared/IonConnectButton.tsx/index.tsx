@@ -21,7 +21,11 @@ export function IonConnectButton() {
           >
             {(() => {
               if (!connected) {
-                return <Button onClick={openConnectModal}>Connect Wallet</Button>
+                return (
+                  <Button variant="solid" onClick={openConnectModal}>
+                    Connect Wallet
+                  </Button>
+                )
               }
               if (chain.unsupported) {
                 return (
@@ -33,6 +37,7 @@ export function IonConnectButton() {
               return (
                 <Box style={{ display: 'flex', gap: 12 }}>
                   <Button
+                    variant="outline"
                     onClick={openChainModal}
                     leftIcon={
                       <Box bg={chain.iconBackground} borderRadius={999} overflow="hidden">
@@ -47,10 +52,10 @@ export function IonConnectButton() {
                       </Box>
                     }
                   >
-                    <Text variant="large">{chain.name}</Text>
+                    <Text variant="button">{chain.name}</Text>
                   </Button>
                   <Button variant="outline" onClick={openAccountModal}>
-                    <Text variant="large">
+                    <Text variant="button">
                       {account.displayName}
                       {account.displayBalance ? ` (${account.displayBalance})` : ''}
                     </Text>

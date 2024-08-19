@@ -26,7 +26,7 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectProps) {
         {/* Token Selector Button */}
         <Flex align="center" gap={2}>
           {selected && <TokenIcon fontSize="28px" tokenKey={selected.key} />}
-          <Text variant="xl">{selected?.name}</Text>
+          <Text variant="paragraph">{selected?.name}</Text>
           <ChevronDownIcon />
         </Flex>
       </MenuButton>

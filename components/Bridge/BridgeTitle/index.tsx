@@ -4,12 +4,12 @@ import { BridgeTitleConnector } from './connector'
 
 function BridgeTitle({ bridgeKey, name, description, ...props }: BridgeTitleConnector.Props) {
   return (
-    <Flex direction="column" align="center" justify="center" w="100%" gap={3} {...props}>
+    <Flex direction="column" align="center" justify="center" w="100%" gap={2} {...props}>
       <Flex align="center" gap={3} justify="center">
-        <Text variant="header1">Bridge {name}</Text>
+        <Text variant="heading2">Bridge {name}</Text>
         <BridgeIcon bridgeKey={bridgeKey} fontSize="32px" />
       </Flex>
-      <Text>
+      <Text variant="smallParagraph">
         Select your deposit asset and select the destination chain that you want to mint the native yield token on.
       </Text>
     </Flex>

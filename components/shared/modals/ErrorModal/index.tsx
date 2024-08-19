@@ -66,7 +66,7 @@ function ErrorModal({ error, clearError }: ErrorModalConnector.Props) {
                 </Code>
               ) : (
                 <Flex direction="column" align="center" gap={2}>
-                  <Text variant="smallParagraphBold">
+                  <Text variant="smallParagraph" color="modalParagraph">
                     {truncatedMessage}
                     {error.message && error.message.length > 100 && (
                       <Link ml={3} fontSize="14px" color="link" onClick={handleMoreClick}>

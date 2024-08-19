@@ -27,7 +27,7 @@ function ChainSelect({
       >
         <Flex align="center" gap={3}>
           {selected && <BridgeIcon bridgeKey={selected.key} />}
-          <Text variant="medium">{selected ? primaryText : placeholder}</Text>
+          <Text variant="paragraph">{selected ? primaryText : placeholder}</Text>
         </Flex>
       </MenuButton>
       <MenuList bg="backgroundSecondary">
