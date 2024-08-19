@@ -1,5 +1,5 @@
 import { discordUrl, docsUrl } from '@/config/constants'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { selectBridgesAsArray } from '@/store/slices/bridges'
 import { Divider, Flex } from '@chakra-ui/react'
 import { BridgeNavIcon } from '../shared/icons/Bridge'
@@ -12,9 +12,15 @@ import { FooterLink } from './FooterLink'
 import { Logo } from './Logo'
 import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
+import { openTermsModal } from '@/store/slices/ui'
 
 export function NavDrawer() {
   const bridges = useAppSelector(selectBridgesAsArray)
+  const dispatch = useAppDispatch()
+
+  function handleClickTermsAndConditions() {
+    dispatch(openTermsModal())
+  }
 
   return (
     <Flex
@@ -49,7 +55,7 @@ export function NavDrawer() {
       <Flex pt={6} direction="column">
         <FooterLink title="Docs" href={docsUrl} icon={<DocsIcon />} openNewTab />
         <FooterLink title="Discord" href={discordUrl} icon={<DiscordIcon />} openNewTab />
-        <FooterLink title="Terms & Conditions" icon={<TermsIcon />} />
+        <FooterLink title="Terms & Conditions" onClick={handleClickTermsAndConditions} icon={<TermsIcon />} />
       </Flex>
     </Flex>
   )
