@@ -27,7 +27,8 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   return {
     inputValue,
     tokenBalance: formattedTokenBalance,
-    loadingTokenBalance: selectBalancesLoading(state),
+    // loadingTokenBalance: selectBalancesLoading(state),
+    loadingTokenBalance: true,
     error: selectInputError(state),
     tokens,
     selectedToken,

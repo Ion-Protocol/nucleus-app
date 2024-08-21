@@ -40,21 +40,9 @@ export const semanticTokens = {
       default: 'darkMode.300',
       _dark: 'darkMode.200',
     },
-    selected: {
-      default: 'neutral.300',
-      _dark: 'darkMode.900',
-    },
-    selectedSecondary: {
-      default: 'neutral.50',
-      _dark: 'midnight.700',
-    },
     hover: {
       default: 'neutral.200',
       _dark: 'darkMode.700',
-    },
-    hoverSecondary: {
-      default: 'primary.100',
-      _dark: 'midnight.700',
     },
     modalParagraph: {
       default: '#6B7280',
@@ -63,10 +51,6 @@ export const semanticTokens = {
     infoIcon: {
       default: 'darkMode.200',
       _dark: 'darkMode.200',
-    },
-    active: {
-      default: 'primary.100',
-      _dark: 'midnight.700',
     },
     disabledText: {
       default: 'neutral.700',
@@ -122,36 +106,20 @@ export const semanticTokens = {
         _dark: 'red.lighter',
       },
     },
-    tooltip: {
-      background: {
-        default: 'neutral.800',
-        _dark: 'darkMode.50',
-      },
-      color: {
-        default: 'white',
-        _dark: 'darkMode.700',
-      },
-    },
     skeleton: {
       startColor: {
         default: 'neutral.500',
-        _dark: 'midnight.400',
+        _dark: 'darkMode.500',
       },
       endColor: {
-        default: 'neutral.200',
-        _dark: 'midnight.800',
+        default: 'neutral.600',
+        _dark: 'darkMode.600',
       },
     },
     code: {
       background: {
         default: 'neutral.50',
-        _dark: 'midnight.890',
-      },
-    },
-    clip: {
-      background: {
-        default: 'neutral.200',
-        _dark: 'midnight.600',
+        _dark: 'darkMode.800',
       },
     },
   },

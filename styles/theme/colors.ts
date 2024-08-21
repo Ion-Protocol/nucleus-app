@@ -1,11 +1,4 @@
 export const colors = {
-  // new colors
-  primary: '#F8F3E0',
-  body: '#00171F',
-  white: '#FFFFFF',
-  background: '#F9F5E6',
-  borderLight: '#E2DDCC',
-  borderDark: '#000D11',
   neutral: {
     50: '#fefefc',
     100: '#fdfbf5',
@@ -59,44 +52,6 @@ export const colors = {
     background: '#180B0B',
     iconBg: '#492121',
     main: '#F46E6E',
-  },
-
-  // old colors
-  midnight: {
-    50: '#E6E8E9',
-    100: '#B0B7BA',
-    200: '#8A9498',
-    300: '#546469',
-    400: '#33454C',
-    500: '#00171F',
-    600: '#00151C',
-    700: '#001016',
-    800: '#000D11',
-    900: '#000A0D',
-  },
-  // primary: {
-  //   50: '#e1f7fd',
-  //   100: '#b4ebfa',
-  //   200: '#82dff6',
-  //   300: '#4fd2f0',
-  //   400: '#26c8eb',
-  //   500: '#09bee5',
-  //   600: '#01B0D1',
-  //   700: '#009ab6',
-  //   800: '#00869d',
-  //   900: '#006370',
-  // },
-  secondary: {
-    50: '#cbf4ff',
-    100: '#a7def5',
-    200: '#87c2dd',
-    300: '#62a7c5',
-    400: '#4593b3',
-    500: '#1c7fa1',
-    600: '#01708f',
-    700: '#005c79',
-    800: '#004963',
-    900: '#00344b',
   },
   green: {
     main: '#6E988A',
