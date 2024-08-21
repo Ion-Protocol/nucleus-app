@@ -2,7 +2,7 @@ import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
 import { wagmiConfig } from '@/config/wagmi'
 import TellerWithMultiAssetSupport from '@/contracts/TellerWithMultiAssetSupport.json'
 import { Abi } from 'viem'
-import { simulateContract, waitForTransactionReceipt } from 'wagmi/actions'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 import { getRateInQuote } from '../Accountant/getRateInQuote'
 import { allowance } from '../erc20/allowance'
 import { approve } from '../erc20/approve'
@@ -74,19 +74,31 @@ export async function deposit(
   ////////////////////////////////
   // Write
   ////////////////////////////////
-  // const hash = await writeContract(wagmiConfig, {
-  //   abi: TellerWithMultiAssetSupport.abi as Abi,
-  //   address: tellerContractAddress,
-  //   functionName: 'deposit',
-  //   args: [depositAsset, depositAmount, minimumMint],
-  // })
+  const hash = await writeContract(wagmiConfig, {
+    abi: TellerWithMultiAssetSupport.abi as Abi,
+    address: tellerContractAddress,
+    functionName: 'deposit',
+    args: [depositAsset, depositAmount, minimumMint],
+  })
 
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
-  const { blockHash } = await waitForTransactionReceipt(wagmiConfig, {
-    hash: '0x',
-  })
+  const maxRetries = 5
+  let attempts = 0
+  let blockHash: `0x${string}` = '0x0'
+
+  while (attempts < maxRetries) {
+    try {
+      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash, timeout: 10000 })
+      blockHash = receipt.blockHash
+      break
+    } catch (error) {
+      attempts++
+      if (attempts === maxRetries) throw error
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+  }
 
   return blockHash
 }

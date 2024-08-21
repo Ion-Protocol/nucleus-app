@@ -33,7 +33,7 @@ export async function depositAndBridge(
     chainId: number
     fee: bigint
   }
-) {
+): Promise<`0x${string}`> {
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
@@ -81,21 +81,33 @@ export async function depositAndBridge(
   ////////////////////////////////
   // Write
   ////////////////////////////////
-  // const hash = await writeContract(wagmiConfig, {
-  //   abi: CrossChainTellerBaseAbi.abi as Abi,
-  //   address: tellerContractAddress,
-  //   functionName: 'depositAndBridge',
-  //   args: [depositAsset, depositAmount, minimumMint, bridgeData],
-  //   chainId,
-  //   value: fee,
-  // })
+  const hash = await writeContract(wagmiConfig, {
+    abi: CrossChainTellerBaseAbi.abi as Abi,
+    address: tellerContractAddress,
+    functionName: 'depositAndBridge',
+    args: [depositAsset, depositAmount, minimumMint, bridgeData],
+    chainId,
+    value: fee,
+  })
 
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
-  const { blockHash } = await waitForTransactionReceipt(wagmiConfig, {
-    hash: '0x0',
-  })
+  const maxRetries = 5
+  let attempts = 0
+  let blockHash: `0x${string}` = '0x0'
+
+  while (attempts < maxRetries) {
+    try {
+      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash, timeout: 10000 })
+      blockHash = receipt.blockHash
+      break
+    } catch (error) {
+      attempts++
+      if (attempts === maxRetries) throw error
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+  }
 
   return blockHash
 }
