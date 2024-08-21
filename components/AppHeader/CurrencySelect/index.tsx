@@ -28,7 +28,7 @@ function CurrencySelect({ currency, setCurrency }: CurrencySelectConnector.Props
         {currencyList.map((curr) => (
           <Flex key={curr} align="center" pl={3} _hover={{ bg: 'hoverSecondary' }}>
             {currencyIconMap[curr]}
-            <MenuItem bg="none" onClick={() => handleChange(curr as Currency)}>
+            <MenuItem bg="none" onClick={() => handleChange(curr as Currency)} _hover={{ bg: 'hover' }}>
               {curr}
             </MenuItem>
           </Flex>
