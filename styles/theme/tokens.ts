@@ -44,6 +44,10 @@ export const semanticTokens = {
       default: 'neutral.200',
       _dark: 'darkMode.700',
     },
+    hoverSecondary: {
+      default: 'neutral.300',
+      _dark: 'darkMode.300',
+    },
     modalParagraph: {
       default: '#6B7280',
       _dark: 'white',

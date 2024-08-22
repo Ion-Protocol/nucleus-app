@@ -30,9 +30,16 @@ function ChainSelect({
           <Text variant="paragraph">{selected ? primaryText : placeholder}</Text>
         </Flex>
       </MenuButton>
-      <MenuList bg="backgroundSecondary" w="100%">
+      <MenuList bg="backgroundSecondary" w="100%" px={3}>
         {chains.map((chain) => (
-          <MenuItem key={chain.key} bg="none" onClick={() => onChange(chain.key)} _hover={{ bg: 'hover' }}>
+          <MenuItem
+            key={chain.key}
+            bg="none"
+            onClick={() => onChange(chain.key)}
+            border="1px solid"
+            borderColor="transparent"
+            _hover={{ bg: 'hoverSecondary', border: '1px solid', borderColor: 'border', borderRadius: '8px' }}
+          >
             <Flex align="center" gap={3}>
               <BridgeIcon bridgeKey={chain.key} />
               <Text variant="medium">{chain.name}</Text>

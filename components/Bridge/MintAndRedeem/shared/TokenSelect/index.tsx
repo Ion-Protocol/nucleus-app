@@ -32,9 +32,16 @@ function TokenSelect({ selected, tokens, onChange }: TokenSelectProps) {
       </MenuButton>
 
       {/* Token List */}
-      <MenuList bg="backgroundSecondary" zIndex={5}>
+      <MenuList bg="backgroundSecondary" zIndex={5} px={3}>
         {tokens.map((token) => (
-          <MenuItem key={token.key} bg="none" onClick={() => onChange(token.key)} _hover={{ bg: 'hoverSecondary' }}>
+          <MenuItem
+            key={token.key}
+            bg="none"
+            onClick={() => onChange(token.key)}
+            border="1px solid"
+            borderColor="transparent"
+            _hover={{ bg: 'hoverSecondary', border: '1px solid', borderColor: 'border', borderRadius: '8px' }}
+          >
             <Flex align="center" gap={3}>
               <TokenIcon fontSize="28px" tokenKey={token.key} />
               <Text variant="xl">{token.name}</Text>
