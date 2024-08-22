@@ -2,6 +2,7 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Text, Tooltip } from '@chakra-ui/react'
 import { TvlConnector } from './connector'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 
 function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
   return (
@@ -18,9 +19,9 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
     >
       <Flex gap={2} align="center">
         <Text variant="paragraph">Total Value Locked</Text>
-        <Tooltip label="Total value of assets backing the native yield asset.">
+        <IonTooltip label="Total value of assets backing the native yield asset.">
           <InfoOutlineIcon color="infoIcon" />
-        </Tooltip>
+        </IonTooltip>
       </Flex>
       <IonSkeleton w="150px" isLoaded={!loading}>
         <Text textAlign="center" variant="bigNumbers">

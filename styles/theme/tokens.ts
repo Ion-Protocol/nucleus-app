@@ -64,6 +64,10 @@ export const semanticTokens = {
       default: 'shadow.light',
       _dark: 'shadow.dark',
     },
+    tooltip: {
+      default: 'neutral.800',
+      _dark: 'darkMode.50',
+    },
     link: {
       default: 'primary.500',
       _dark: 'primary.300',
