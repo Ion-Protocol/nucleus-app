@@ -13,6 +13,7 @@ import { WstethIcon } from '../shared/icons/Wsteth'
 import { OptimismIcon } from '../shared/icons/Optimism'
 import { BobaNetworkIcon } from '../shared/icons/BobaNetwork'
 import { FraxIcon } from '../shared/icons/Frax'
+import { BitcoinIcon } from '../shared/icons/Bitcoin'
 
 function DefaultIcon() {
   return <></>
@@ -30,6 +31,9 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.OP]: (props) => <OptimismIcon {...props} />,
   [TokenKey.BOBA]: (props) => <BobaNetworkIcon {...props} />,
   [TokenKey.FRAX]: (props) => <FraxIcon {...props} />,
+  [TokenKey.WBTC]: (props) => <BitcoinIcon {...props} />,
+  [TokenKey.SWBTC]: (props) => <BitcoinIcon {...props} />,
+  [TokenKey.RSWBTC]: (props) => <BitcoinIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

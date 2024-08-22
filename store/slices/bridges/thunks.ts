@@ -67,10 +67,10 @@ export const fetchBridgeTvl = createAsyncThunk<
 
   try {
     // Fetch total supply of shares
-    const totalSupply = await getTotalSupply(vaultAddress, { chainId: bridgeConfig.deployedOn })
+    const totalSupply = await getTotalSupply(vaultAddress, { chainId: 1 })
 
     // Fetch exchange rate
-    const exchangeRate = await getRate(accountantAddress, { chainId: bridgeConfig.deployedOn })
+    const exchangeRate = await getRate(accountantAddress, { chainId: 1 })
 
     // Calculate TVL
     const tvlInEth = (totalSupply * exchangeRate) / BigInt(1e18) // Adjust for 18 decimals
@@ -183,7 +183,7 @@ export const fetchBridgeRate = createAsyncThunk<
     if (bridgeConfig?.comingSoon || !accountantAddress) {
       return { bridgeKey, result: { rate: '0' } }
     }
-    const rateAsBigInt = await getRate(accountantAddress, { chainId: bridgeConfig.deployedOn })
+    const rateAsBigInt = await getRate(accountantAddress, { chainId: 1 })
     return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
     const error = e as Error
@@ -369,29 +369,25 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const state = getState()
       const bridgeConfig = selectBridgeConfig(state)
       const depositAmount = selectDepositAmountAsBigInt(state)
-      const deployedOnId = bridgeConfig?.deployedOn
-      const deployedOnChainKey = selectChainKeyByChainId(deployedOnId)
+      const sourceChainKey = selectSourceBridge(state)
       const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
 
-      if (!depositAssetTokenKey || !deployedOnChainKey) {
+      if (!depositAssetTokenKey || !sourceChainKey) {
         return rejectWithValue('Missing deposit asset token key')
       }
 
-      const depositAssetAddress = tokensConfig[depositAssetTokenKey]?.chains[deployedOnChainKey]?.address
+      const depositAssetAddress = tokensConfig[depositAssetTokenKey]?.chains[sourceChainKey]?.address
 
       const tellerContractAddress = bridgeConfig?.contracts.teller
       const accountantContractAddress = bridgeConfig?.contracts.accountant
       const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
 
-      const wethAddress = deployedOnChainKey
-        ? tokensConfig[TokenKey.WETH].chains[deployedOnChainKey as BridgeKey]?.address
-        : null
+      const wethAddress = tokensConfig[TokenKey.WETH].chains[sourceChainKey as BridgeKey]?.address
 
       if (
         tellerContractAddress &&
         accountantContractAddress &&
         depositAmount &&
-        deployedOnChainKey &&
         layerZeroChainSelector &&
         wethAddress &&
         depositAssetAddress
@@ -406,14 +402,14 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
         const exchangeRate = await getRateInQuoteSafe(
           { quote: depositAssetAddress },
-          { contractAddress: accountantContractAddress, chainId: bridgeConfig.deployedOn }
+          { contractAddress: accountantContractAddress, chainId: 1 }
         )
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
         const fee = await previewFee(
           { shareAmount, bridgeData: previewFeeBridgeData },
-          { contractAddress: tellerContractAddress, chainId: bridgeConfig.deployedOn }
+          { contractAddress: tellerContractAddress, chainId: 1 }
         )
         return { fee: fee.toString() }
       } else {

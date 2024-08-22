@@ -10,4 +10,7 @@ export enum TokenKey {
   OP = 'op',
   BOBA = 'boba',
   FRAX = 'frax',
+  WBTC = 'wbtc',
+  SWBTC = 'swbtc',
+  RSWBTC = 'rswbtc',
 }

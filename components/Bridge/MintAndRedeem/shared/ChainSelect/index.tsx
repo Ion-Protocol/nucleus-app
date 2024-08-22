@@ -6,7 +6,7 @@ import { ChainSelectConnector } from './connector'
 function ChainSelect({
   chains,
   onChange,
-  selected,
+  selectedBridgeKey,
   placeholder,
   primaryText,
   isActive,
@@ -21,13 +21,13 @@ function ChainSelect({
         as={Button}
         rightIcon={isActive ? <ChevronDownIcon /> : undefined}
         textAlign="left"
-        color={!selected ? 'disabled' : undefined}
+        color={!selectedBridgeKey ? 'disabled' : undefined}
         bg={role === 'source' ? 'none' : 'formBackground'}
         pointerEvents={role === 'source' ? 'auto' : 'none'}
       >
         <Flex align="center" gap={3}>
-          {selected && <BridgeIcon bridgeKey={selected.key} />}
-          <Text variant="paragraph">{selected ? primaryText : placeholder}</Text>
+          {selectedBridgeKey && <BridgeIcon bridgeKey={selectedBridgeKey} />}
+          <Text variant="paragraph">{selectedBridgeKey ? primaryText : placeholder}</Text>
         </Flex>
       </MenuButton>
       <MenuList bg="backgroundSecondary" w="100%" px={3}>

@@ -133,4 +133,37 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
+  [TokenKey.WBTC]: {
+    key: TokenKey.WBTC,
+    name: 'WBTC',
+    symbol: 'WBTC',
+    chains: {
+      [BridgeKey.ETHEREUM]: {
+        address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+        chainId: mainnet.id,
+      },
+    },
+  },
+  [TokenKey.SWBTC]: {
+    key: TokenKey.SWBTC,
+    name: 'SWBTC',
+    symbol: 'SWBTC',
+    chains: {
+      [BridgeKey.ETHEREUM]: {
+        address: '0x8DB2350D78aBc13f5673A411D4700BCF87864dDE',
+        chainId: mainnet.id,
+      },
+    },
+  },
+  [TokenKey.RSWBTC]: {
+    key: TokenKey.RSWBTC,
+    name: 'rswBTC',
+    symbol: 'RSWBTC',
+    chains: {
+      [BridgeKey.ETHEREUM]: {
+        address: '0x',
+        chainId: mainnet.id,
+      },
+    },
+  },
 }

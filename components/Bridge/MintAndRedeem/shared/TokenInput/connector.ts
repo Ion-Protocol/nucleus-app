@@ -2,11 +2,11 @@ import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
-  selectAvailableTokens,
   selectBridgeFrom,
   selectFromTokenKeyForBridge,
   selectInputError,
   selectSourceBridge,
+  selectSourceTokens,
   setSelectedFromToken,
 } from '@/store/slices/bridges'
 import { setBridgeFrom, setBridgeFromMax } from '@/store/slices/bridges/thunks'
@@ -18,7 +18,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const currentPageBridgeKey = selectBridgeKey(state)
   const selectedBridgeKey = selectSourceBridge(state)
   const inputValue = selectBridgeFrom(state)
-  const tokenKeys = selectAvailableTokens(state)
+  const tokenKeys = selectSourceTokens(state)
   const tokens = tokenKeys.map((key) => tokensConfig[key])
   const selectedTokenKey = selectFromTokenKeyForBridge(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
@@ -27,8 +27,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   return {
     inputValue,
     tokenBalance: formattedTokenBalance,
-    // loadingTokenBalance: selectBalancesLoading(state),
-    loadingTokenBalance: true,
+    loadingTokenBalance: selectBalancesLoading(state),
     error: selectInputError(state),
     tokens,
     selectedToken,

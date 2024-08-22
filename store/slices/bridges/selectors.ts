@@ -60,6 +60,13 @@ export const selectBridgeConfig = createSelector(
   }
 )
 
+export const selectSourceTokens = createSelector(
+  [selectBridgeConfig, selectSourceBridge],
+  (bridgeConfig, sourceBridge): TokenKey[] => {
+    return bridgeConfig?.sourceTokens[sourceBridge as BridgeKey] || []
+  }
+)
+
 export const selectTellerAddress = createSelector([selectBridgeConfig], (bridgeConfig): `0x${string}` | null => {
   return bridgeConfig?.contracts.teller || null
 })
@@ -74,18 +81,6 @@ export const selectFeeTokenAddress = createSelector(
     if (!feeTokenKey || !sourceBridgeKey) return null
     const feeToken = tokensConfig[feeTokenKey as keyof typeof tokensConfig]
     return feeToken.chains[sourceBridgeKey]?.address || null
-  }
-)
-
-export const selectAvailableTokens = createSelector(
-  [selectSourceBridge, selectChainConfig],
-  (sourceBridge, chainConfig) => {
-    if (!chainConfig) return []
-    if (sourceBridge === BridgeKey.ETHEREUM) {
-      return chainConfig.tokensL1
-    } else {
-      return chainConfig.tokensL2
-    }
   }
 )
 
@@ -113,20 +108,6 @@ export const selectSourceBridges = createSelector(
   (bridgeConfig, chainConfig) => {
     if (!bridgeConfig || !chainConfig || !bridgeConfig.sourceBridges) return []
     return bridgeConfig.sourceBridges.map((bridgeKey) => {
-      let name = chainConfig.bridges[bridgeKey]?.name
-      if (bridgeKey === BridgeKey.ETHEREUM) {
-        name = 'Ethereum'
-      }
-      return { key: bridgeKey, name }
-    })
-  }
-)
-
-export const selectDestinationBridges = createSelector(
-  [selectBridgeConfig, selectChainConfig],
-  (bridgeConfig, chainConfig) => {
-    if (!bridgeConfig || !chainConfig || !bridgeConfig.destinationBridges) return []
-    return bridgeConfig.destinationBridges.map((bridgeKey) => {
       let name = chainConfig.bridges[bridgeKey]?.name
       if (bridgeKey === BridgeKey.ETHEREUM) {
         name = 'Ethereum'
@@ -247,10 +228,10 @@ export const selectToTokenKeyForBridge = createSelector([selectBridgeData], (bri
  * @returns The selected `TokenKey` or `null`.
  */
 export const selectFromTokenKeyForBridge = createSelector(
-  [selectBridgeData, selectBridgeConfig],
-  (bridgeData, bridgeConfig): TokenKey | null => {
+  [selectBridgeData, selectBridgeConfig, selectSourceBridge],
+  (bridgeData, bridgeConfig, sourceBridge): TokenKey | null => {
     if (!bridgeData || !bridgeConfig) return null
-    return bridgeData.selectedFromToken || bridgeConfig?.sourceTokens?.[0]
+    return bridgeData.selectedFromToken || bridgeConfig?.sourceTokens[sourceBridge as BridgeKey]?.[0] || null
   }
 )
 

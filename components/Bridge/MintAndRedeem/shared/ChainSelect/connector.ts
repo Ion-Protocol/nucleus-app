@@ -1,22 +1,33 @@
 import { RootState } from '@/store'
-import { selectSourceBridge, selectSourceBridges, setDestinationChain, setSourceChain } from '@/store/slices/bridges'
+import {
+  selectChainConfig,
+  selectSourceBridge,
+  selectSourceBridges,
+  setDestinationChain,
+  setSourceChain,
+} from '@/store/slices/bridges'
 import { selectBridgeKey } from '@/store/slices/router'
+import { BridgeKey } from '@/types/BridgeKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role, isActive } = ownProps
 
-  const bridges = selectSourceBridges(state)
+  const selectableBridges = selectSourceBridges(state)
+  const chainConfig = selectChainConfig(state)
+  const allBridges = chainConfig?.bridges
   const selectChain = role === 'source' ? selectSourceBridge : selectBridgeKey
-  const selected = selectChain(state) || bridges[0]?.key || null
-  const selectedChain = selected && bridges.find((bridge) => bridge.key === selected)
+  const selectedBridgeKey = selectChain(state) || selectableBridges[0]?.key || null
+  const selectedChain = allBridges?.[selectedBridgeKey]
+
+  const selectedChainName = selectedBridgeKey === BridgeKey.ETHEREUM ? 'Ethereum' : selectedChain?.name || ''
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
-  const primaryText = role === 'source' ? `Deposit from ${selectedChain?.name}` : `Receive on ${selectedChain?.name}`
+  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${selectedChainName}`
 
   return {
-    chains: bridges,
-    selected: selectedChain,
+    chains: selectableBridges,
+    selectedBridgeKey,
     placeholder,
     primaryText,
     isActive,
