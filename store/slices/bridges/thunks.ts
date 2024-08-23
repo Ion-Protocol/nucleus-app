@@ -396,7 +396,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
           chainSelector: layerZeroChainSelector,
           destinationChainReceiver: tellerContractAddress,
           bridgeFeeToken: wethAddress,
-          messageGas: 1_000_000,
+          messageGas: 100_000,
           data: '',
         }
 
