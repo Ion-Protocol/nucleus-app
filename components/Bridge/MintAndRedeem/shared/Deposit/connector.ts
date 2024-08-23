@@ -1,7 +1,7 @@
-import { BridgeKey } from '@/types/BridgeKey'
 import { RootState } from '@/store'
-import { selectBridgeConfig, selectBridgeFrom, selectDepositError, selectDepositPending } from '@/store/slices/bridges'
+import { selectBridgeFrom, selectDepositError, selectDepositPending } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'
+import { BridgeKey } from '@/types/BridgeKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
@@ -20,7 +20,7 @@ const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
 }
 
 const mapDispatch = {
-  onSubmit: performDeposit,
+  onSubmit: () => performDeposit(),
 }
 
 const connector = connect(mapState, mapDispatch)
