@@ -35,6 +35,12 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   }
 }
 
+const mapDispatch = {
+  onChange: setBridgeFrom,
+  onChangeToken: setSelectedFromToken,
+  onMax: () => setBridgeFromMax(),
+}
+
 const mergeProps = (
   stateProps: ReturnType<typeof mapState>,
   dispatchProps: typeof mapDispatch,
@@ -48,12 +54,6 @@ const mergeProps = (
     ...dispatchProps,
     onChangeToken: (tokenKey: TokenKey) => dispatchProps.onChangeToken({ bridgeKey, tokenKey }),
   }
-}
-
-const mapDispatch = {
-  onChange: setBridgeFrom,
-  onChangeToken: setSelectedFromToken,
-  onMax: setBridgeFromMax,
 }
 
 const connector = connect(mapState, mapDispatch, mergeProps)
