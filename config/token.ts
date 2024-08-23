@@ -161,7 +161,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'RSWBTC',
     chains: {
       [BridgeKey.ETHEREUM]: {
-        address: '0x',
+        address: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
         chainId: mainnet.id,
       },
     },

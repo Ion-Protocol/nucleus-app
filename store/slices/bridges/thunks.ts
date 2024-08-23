@@ -29,6 +29,7 @@ import { selectChainId, selectChainKey } from '../chain'
 import { switchChain } from 'wagmi/actions'
 import { wagmiConfig } from '@/config/wagmi'
 import { TokenKey } from '@/types/TokenKey'
+import { nativeAddress } from '@/config/constants'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -382,20 +383,17 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const accountantContractAddress = bridgeConfig?.contracts.accountant
       const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
 
-      const wethAddress = tokensConfig[TokenKey.WETH].chains[sourceChainKey as BridgeKey]?.address
-
       if (
         tellerContractAddress &&
         accountantContractAddress &&
         depositAmount &&
         layerZeroChainSelector &&
-        wethAddress &&
         depositAssetAddress
       ) {
         const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
           chainSelector: layerZeroChainSelector,
           destinationChainReceiver: tellerContractAddress,
-          bridgeFeeToken: wethAddress,
+          bridgeFeeToken: nativeAddress,
           messageGas: 100_000,
           data: '',
         }
