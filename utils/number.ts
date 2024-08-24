@@ -20,7 +20,7 @@ export function numberToUsd(value: number, price: bigint, opts?: { digits?: numb
  * @param value - The number value to convert.
  * @returns The string representation of the number value in ETH.
  */
-export function numberToEth(value: number, opts?: { digits?: number }): string {
+export function numberToToken(value: number, symbol: string, opts?: { digits?: number }): string {
   const { digits = 3 } = opts || {}
-  return `${value.toFixed(digits)} ETH`
+  return `${value.toFixed(digits)} ${symbol}`
 }

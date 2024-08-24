@@ -50,6 +50,6 @@ export function bigIntToUsd(value: bigint, opts?: { decimals?: number; digits?: 
  * @param value - The BigInt value to convert.
  * @returns The string representation of the BigInt value in ETH.
  */
-export function bigIntToEth(value: bigint, opts?: { digits?: number }): string {
-  return `${bigIntToNumber(value, { maximumFractionDigits: opts?.digits })} ETH`
+export function bigIntToToken(value: bigint, symbol: string, opts?: { digits?: number }): string {
+  return `${bigIntToNumber(value, { maximumFractionDigits: opts?.digits })} ${symbol}`
 }

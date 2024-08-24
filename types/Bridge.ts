@@ -13,6 +13,7 @@ export interface Bridge {
     [bridge in BridgeKey]: TokenKey[]
   }>
   nativeToken: TokenKey
+  networkSymbol: string
   comingSoon?: boolean
   feeToken: TokenKey
 }

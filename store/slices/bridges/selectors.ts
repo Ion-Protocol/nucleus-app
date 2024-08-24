@@ -177,15 +177,19 @@ export const selectActiveBridgeTvl = createSelector([selectBridgesData, selectBr
  * @returns A selector function that returns the formatted TVL.
  */
 export const selectFormattedBridgeTvlByKey = (bridgeKey: BridgeKey) =>
-  createSelector([selectBridgeTvlByKey(bridgeKey), selectUsdPerEthRate, selectCurrency], (tvl, price, currency) => {
-    const formattedTvl = currencySwitch(currency, tvl, price)
-    return formattedTvl || '-'
-  })
+  createSelector(
+    [selectBridgeTvlByKey(bridgeKey), selectUsdPerEthRate, selectCurrency, selectChainConfig],
+    (tvl, price, currency, chainConfig) => {
+      const bridgeConfig = chainConfig?.bridges[bridgeKey]
+      const formattedTvl = currencySwitch(currency, tvl, price, { symbol: bridgeConfig?.networkSymbol })
+      return formattedTvl || '-'
+    }
+  )
 
 export const selectActiveFormattedBridgeTvl = createSelector(
-  [selectActiveBridgeTvl, selectUsdPerEthRate, selectCurrency],
-  (tvl, price, currency) => {
-    const formattedTvl = currencySwitch(currency, tvl, price)
+  [selectActiveBridgeTvl, selectUsdPerEthRate, selectCurrency, selectBridgeConfig],
+  (tvl, price, currency, bridgeConfig) => {
+    const formattedTvl = currencySwitch(currency, tvl, price, { symbol: bridgeConfig?.networkSymbol })
     return formattedTvl || '-'
   }
 )
@@ -275,10 +279,14 @@ export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (prev
 })
 
 export const selectFormattedPreviewFee = createSelector(
-  [selectPreviewFeeAsBigInt, selectUsdPerEthRate, selectCurrency],
-  (previewFee, price, currency): string => {
+  [selectPreviewFeeAsBigInt, selectUsdPerEthRate, selectCurrency, selectBridgeConfig],
+  (previewFee, price, currency, bridgeConfig): string => {
     if (!previewFee) return '$0'
-    const formattedPreviewFee = currencySwitch(currency, previewFee, price, { usdDigits: 2, ethDigits: 4 })
+    const formattedPreviewFee = currencySwitch(currency, previewFee, price, {
+      usdDigits: 2,
+      ethDigits: 4,
+      symbol: bridgeConfig?.networkSymbol,
+    })
     return formattedPreviewFee || '$0'
   }
 )

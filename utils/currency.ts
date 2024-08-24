@@ -1,5 +1,6 @@
-import { bigIntToEth, bigIntToUsd } from './bigint'
-import { numberToEth, numberToUsd } from './number'
+import { Currency } from '@/types/Currency'
+import { bigIntToToken, bigIntToUsd } from './bigint'
+import { numberToToken, numberToUsd } from './number'
 
 /**
  * Converts a value to a formatted currency string based on the given currency code.
@@ -10,27 +11,27 @@ import { numberToEth, numberToUsd } from './number'
  * @returns The formatted currency string.
  */
 export function currencySwitch(
-  currency: string,
+  currency: Currency,
   value: bigint | number | null,
   price: bigint,
-  opts?: { usdDigits?: number; ethDigits?: number }
+  opts?: { usdDigits?: number; ethDigits?: number; symbol?: string }
 ): string | null {
-  const { usdDigits = 0, ethDigits = 0 } = opts || {}
+  const { usdDigits = 0, ethDigits = 0, symbol = 'ETH' } = opts || {}
   if (value === null) return null
 
   switch (currency) {
-    case 'USD':
+    case Currency.USD:
       if (typeof value === 'bigint') {
         const usdValue = (value * price) / BigInt(1e8)
         return bigIntToUsd(usdValue, { digits: usdDigits })
       } else {
         return numberToUsd(value, price, { digits: usdDigits })
       }
-    case 'ETH':
+    case Currency.ETH_BTC:
       if (typeof value === 'bigint') {
-        return bigIntToEth(value, { digits: ethDigits })
+        return bigIntToToken(value, symbol, { digits: ethDigits })
       } else {
-        return numberToEth(value, { digits: ethDigits })
+        return numberToToken(value, symbol, { digits: ethDigits })
       }
     default:
       return ''

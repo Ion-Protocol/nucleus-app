@@ -38,6 +38,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         },
         nativeToken: TokenKey.SEI,
         feeToken: TokenKey.ETH,
+        networkSymbol: 'ETH',
         layerZeroChainSelector: 30280,
         description:
           'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
@@ -58,6 +59,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         },
         nativeToken: TokenKey.FRAX,
         feeToken: TokenKey.ETH, // The token here is technically just NATIVE, but for now we just use the name ETH here
+        networkSymbol: 'ETH',
         layerZeroChainSelector: 30255,
         description:
           'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
@@ -77,6 +79,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         },
         nativeToken: TokenKey.RSWBTC,
         feeToken: TokenKey.ETH,
+        networkSymbol: 'BTC',
         layerZeroChainSelector: 0,
         description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
       },
@@ -96,6 +99,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         },
         nativeToken: TokenKey.BOBA,
         feeToken: TokenKey.WETH,
+        networkSymbol: 'ETH',
         layerZeroChainSelector: 0, // There is no layer zero chain selector for Boba
         description:
           'The Boba Network is a Layer 2 scaling solution for Ethereum that enhances transaction speed and reduces costs through optimistic rollups.',
