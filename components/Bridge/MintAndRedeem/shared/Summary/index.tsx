@@ -15,7 +15,7 @@ function Summary({ fees, loading }: SummaryConnector.Props) {
             <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
           </IonTooltip>
         </Flex>
-        <Skeleton w="75px" isLoaded={!loading}>
+        <Skeleton minW="75px" isLoaded={!loading}>
           <Text textAlign="right" variant="paragraph">
             {fees}
           </Text>

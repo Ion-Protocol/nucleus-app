@@ -1,19 +1,17 @@
-import { ChainKey, chainsConfig } from '@/config/chains'
-import { BridgeKey } from '@/types/BridgeKey'
-import { TokenKey } from '@/types/TokenKey'
+import { chainsConfig } from '@/config/chains'
+import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
 import { Bridge } from '@/types/Bridge'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 import { WAD } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
-import { Address } from 'viem'
 import { selectChainKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectBridgeKey } from '../router'
 import { BridgeData } from './initialState'
-import { tokensConfig } from '@/config/token'
-import { Token } from '@/types/Token'
 
 export const selectBridgesState = (state: RootState) => state.bridges
 export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
@@ -284,7 +282,7 @@ export const selectFormattedPreviewFee = createSelector(
     if (!previewFee) return '$0'
     const formattedPreviewFee = currencySwitch(currency, previewFee, price, {
       usdDigits: 2,
-      ethDigits: 4,
+      ethDigits: 7,
       symbol: bridgeConfig?.networkSymbol,
     })
     return formattedPreviewFee || '$0'
