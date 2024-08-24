@@ -4,19 +4,24 @@ import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
-import { BridgeKey } from '@/types/BridgeKey'
+import { nativeAddress } from '@/config/constants'
 import { tokensConfig } from '@/config/token'
+import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
+import { BridgeKey } from '@/types/BridgeKey'
+import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { switchChain } from 'wagmi/actions'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
+import { selectChainId } from '../chain'
 import { selectBridgeKey } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
+import { getTokenPerShareRate } from './getTokenPerShareRate'
 import {
   selectBridgeConfig,
   selectChainConfig,
-  selectChainKeyByChainId,
   selectDepositAmountAsBigInt,
   selectFeeTokenAddress,
   selectFromTokenKeyForBridge,
@@ -24,13 +29,7 @@ import {
   selectSourceBridgeChainId,
   selectTellerAddress,
 } from './selectors'
-import { setInputError } from './slice'
-import { selectChainId, selectChainKey } from '../chain'
-import { switchChain } from 'wagmi/actions'
-import { wagmiConfig } from '@/config/wagmi'
-import { TokenKey } from '@/types/TokenKey'
-import { nativeAddress } from '@/config/constants'
-import { getTokenPerShareRate } from './getTokenPerShareRate'
+import { clearInputError, setInputError } from './slice'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -125,9 +124,10 @@ export const setBridgeFrom = createAsyncThunk<
   const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : null
 
   if ((tokenBalanceAsNumber && parseFloat(from) > parseFloat(tokenBalanceAsNumber)) || tokenBalanceAsNumber === null) {
-    console.log('Here?')
     const inputError = 'Insufficient balance'
     dispatch(setInputError(inputError))
+  } else {
+    dispatch(clearInputError())
   }
 
   return { bridgeKey: bridgeKeyFromRoute, from: fromFormatted }
