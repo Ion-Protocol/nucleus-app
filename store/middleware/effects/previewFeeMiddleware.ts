@@ -1,7 +1,7 @@
-import { Middleware } from '@reduxjs/toolkit'
-import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
 import { AppDispatch } from '@/store'
-import { setBridgeFromDebounceComplete } from '@/store/slices/bridges'
+import { selectDepositDisabled, setBridgeFromDebounceComplete } from '@/store/slices/bridges'
+import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
+import { Middleware } from '@reduxjs/toolkit'
 
 /**
  * Middleware function that handles preview fee actions.
@@ -12,7 +12,11 @@ export const previewFeeMiddleware: Middleware =
   (next) =>
   (action) => {
     if (setBridgeFromDebounceComplete.match(action)) {
-      dispatch(fetchPreviewFee())
+      const state = getState()
+      const disabled = selectDepositDisabled(state)
+      if (!disabled) {
+        dispatch(fetchPreviewFee())
+      }
     }
     return next(action)
   }

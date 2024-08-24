@@ -3,7 +3,7 @@ import {
   selectBridgeFrom,
   selectDepositError,
   selectDepositPending,
-  selectTokenInuptDisabled,
+  selectDepositDisabled,
 } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'
 import { BridgeKey } from '@/types/BridgeKey'
@@ -13,7 +13,7 @@ const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
   const bridgeKey = state.router.query?.bridge as BridgeKey
   const loading = selectDepositPending(state)
   const error = selectDepositError(state)
-  const disabled = selectTokenInuptDisabled(state)
+  const disabled = selectDepositDisabled(state)
 
   return {
     bridgeKey,
