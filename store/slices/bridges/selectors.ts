@@ -9,7 +9,7 @@ import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
 import { Address } from 'viem'
 import { selectChainKey } from '../chain'
-import { selectPrice } from '../price'
+import { selectUsdPerEthRate } from '../price'
 import { selectBridgeKey } from '../router'
 import { BridgeData } from './initialState'
 import { tokensConfig } from '@/config/token'
@@ -177,13 +177,13 @@ export const selectActiveBridgeTvl = createSelector([selectBridgesData, selectBr
  * @returns A selector function that returns the formatted TVL.
  */
 export const selectFormattedBridgeTvlByKey = (bridgeKey: BridgeKey) =>
-  createSelector([selectBridgeTvlByKey(bridgeKey), selectPrice, selectCurrency], (tvl, price, currency) => {
+  createSelector([selectBridgeTvlByKey(bridgeKey), selectUsdPerEthRate, selectCurrency], (tvl, price, currency) => {
     const formattedTvl = currencySwitch(currency, tvl, price)
     return formattedTvl || '-'
   })
 
 export const selectActiveFormattedBridgeTvl = createSelector(
-  [selectActiveBridgeTvl, selectPrice, selectCurrency],
+  [selectActiveBridgeTvl, selectUsdPerEthRate, selectCurrency],
   (tvl, price, currency) => {
     const formattedTvl = currencySwitch(currency, tvl, price)
     return formattedTvl || '-'
@@ -275,7 +275,7 @@ export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (prev
 })
 
 export const selectFormattedPreviewFee = createSelector(
-  [selectPreviewFeeAsBigInt, selectPrice, selectCurrency],
+  [selectPreviewFeeAsBigInt, selectUsdPerEthRate, selectCurrency],
   (previewFee, price, currency): string => {
     if (!previewFee) return '$0'
     const formattedPreviewFee = currencySwitch(currency, previewFee, price, { usdDigits: 2, ethDigits: 4 })

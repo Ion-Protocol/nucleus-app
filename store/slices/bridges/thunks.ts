@@ -30,6 +30,7 @@ import { switchChain } from 'wagmi/actions'
 import { wagmiConfig } from '@/config/wagmi'
 import { TokenKey } from '@/types/TokenKey'
 import { nativeAddress } from '@/config/constants'
+import { getTokenPerShareRate } from './getTokenPerShareRate'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -68,14 +69,14 @@ export const fetchBridgeTvl = createAsyncThunk<
 
   try {
     // Fetch total supply of shares
-    const totalSupply = await getTotalSupply(vaultAddress, { chainId: 1 })
+    const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: 1 })
 
     // Fetch exchange rate
-    const exchangeRate = await getRate(accountantAddress, { chainId: 1 })
+    const tokenPerShareRate = await getTokenPerShareRate(bridgeKey, accountantAddress) // 1e18
 
     // Calculate TVL
-    const tvlInEth = (totalSupply * exchangeRate) / BigInt(1e18) // Adjust for 18 decimals
-    const tvlAsString = tvlInEth.toString()
+    const tvlInToken = (totalSharesSupply * tokenPerShareRate) / BigInt(1e18) // Adjust for 18 decimals
+    const tvlAsString = tvlInToken.toString()
 
     return { tvl: tvlAsString, bridgeKey }
   } catch (e) {
@@ -184,7 +185,7 @@ export const fetchBridgeRate = createAsyncThunk<
     if (bridgeConfig?.comingSoon || !accountantAddress) {
       return { bridgeKey, result: { rate: '0' } }
     }
-    const rateAsBigInt = await getRate(accountantAddress, { chainId: 1 })
+    const rateAsBigInt = await getRate(accountantAddress)
     return { bridgeKey, result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
     const error = e as Error

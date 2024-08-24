@@ -3,11 +3,10 @@ import { deferExecution } from '@/utils/misc'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { fetchAllTokenBalances } from '../slices/balance'
 import { selectAvailableBridgeKeys } from '../slices/bridges'
 import { fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
 import { selectChainKey } from '../slices/chain'
-import { fetchEthPrice } from '../slices/price'
+import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -22,8 +21,8 @@ export function useStoreInitializer() {
 
   useEffect(() => {
     deferExecution(() => {
-      dispatch(fetchEthPrice())
-      dispatch(fetchAllTokenBalances())
+      dispatch(fetchUsdPerEthRate())
+      dispatch(fetchUsdPerBtcRate())
 
       bridgeKeys.forEach((key) => {
         dispatch(fetchBridgeTvl(key))
