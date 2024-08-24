@@ -8,7 +8,7 @@ function Deposit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
       p={2}
       isLoading={loading}
       onClick={onSubmit}
-      isDisabled={disabled || loading}
+      isDisabled={disabled}
       _hover={!loading && !disabled ? {} : undefined}
       _active={!loading && !disabled ? {} : undefined}
     >

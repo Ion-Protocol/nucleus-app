@@ -290,3 +290,10 @@ export const selectFormattedPreviewFee = createSelector(
     return formattedPreviewFee || '$0'
   }
 )
+
+export const selectTokenInuptDisabled = createSelector(
+  [selectBridgeFrom, selectInputError, selectDepositPending],
+  (from, error, pending): boolean => {
+    return !from.trim() || parseFloat(from) === 0 || !!error || !!pending
+  }
+)
