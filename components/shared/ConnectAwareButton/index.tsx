@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Tooltip } from '@chakra-ui/react'
+import { Button, ButtonProps } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
 import { useAccount } from 'wagmi'
 import { IonTooltip } from '../IonTooltip'

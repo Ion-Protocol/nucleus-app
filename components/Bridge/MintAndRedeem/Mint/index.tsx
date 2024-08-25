@@ -4,6 +4,7 @@ import Deposit from '../shared/Deposit'
 import Summary from '../shared/Summary'
 import TokenInput from '../shared/TokenInput'
 import TokenTo from '../shared/TokenTo'
+import FunkitBuy from '../../FunkitBuy'
 
 interface MintProps extends ChakraProps {}
 
@@ -16,7 +17,8 @@ export function Mint({ ...props }: MintProps) {
       <TokenTo />
       <Summary />
       <Divider />
-      <Deposit />
+      {/* <Deposit /> */}
+      <FunkitBuy />
     </Flex>
   )
 }
