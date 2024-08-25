@@ -12,7 +12,7 @@ import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { WagmiProvider } from 'wagmi'
 import { FunkitProvider, lightTheme } from '@funkit/connect'
-import { funkitConfig, funkitThemeConfig } from '@/config/funkit'
+import { funkitConfig, funkitThemeConfig, isDebug } from '@/config/funkit'
 
 suppressErrors()
 
@@ -20,7 +20,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <FunkitProvider funkitConfig={funkitConfig} theme={funkitThemeConfig} debug={true}>
+        <FunkitProvider funkitConfig={funkitConfig} theme={funkitThemeConfig} debug={isDebug}>
           <Provider store={store}>
             <ChakraProvider theme={theme}>
               <ColorModeScript initialColorMode={theme.config?.initialColorMode} />

@@ -1,5 +1,7 @@
 import { darkTheme, lightTheme } from '@funkit/connect'
 
+export const isDebug = false
+
 const FUNKIT_API_KEY = process.env.NEXT_PUBLIC_FUNKIT_API_KEY
 if (!FUNKIT_API_KEY) throw new Error('FUNKIT_API_KEY is required')
 
