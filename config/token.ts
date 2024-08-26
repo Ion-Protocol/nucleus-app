@@ -1,7 +1,7 @@
 import { Token } from '@/types/Token'
 import { BridgeKey } from '@/types/BridgeKey'
 import { TokenKey } from '@/types/TokenKey'
-import { boba, mainnet, sei } from 'wagmi/chains'
+import { boba, fraxtal, mainnet, sei } from 'wagmi/chains'
 
 export const tokensConfig: Record<TokenKey, Token> = {
   [TokenKey.ETH]: {
@@ -10,6 +10,14 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'ETH',
     chains: {
       [BridgeKey.ETHEREUM]: {
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        chainId: mainnet.id,
+      },
+      [BridgeKey.SEI]: {
+        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        chainId: mainnet.id,
+      },
+      [BridgeKey.FRAX]: {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         chainId: mainnet.id,
       },
@@ -28,9 +36,9 @@ export const tokensConfig: Record<TokenKey, Token> = {
         address: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
         chainId: sei.id,
       },
-      [BridgeKey.BOBA]: {
-        address: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
-        chainId: boba.id,
+      [BridgeKey.FRAX]: {
+        address: '0x',
+        chainId: fraxtal.id,
       },
     },
   },

@@ -17,8 +17,7 @@ export function Mint({ ...props }: MintProps) {
       <TokenTo />
       <Summary />
       <Divider />
-      {/* <Deposit /> */}
-      <FunkitBuy />
+      <Deposit />
     </Flex>
   )
 }

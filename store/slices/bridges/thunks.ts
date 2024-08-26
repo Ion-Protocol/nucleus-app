@@ -218,14 +218,14 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const tellerContractAddress = bridgeConfig?.contracts.teller
       const boringVaultAddress = bridgeConfig?.contracts.boringVault
       const accountantAddress = bridgeConfig?.contracts.accountant
-      const wethAddress = sourceBridgeKey
-        ? tokensConfig?.[TokenKey.WETH].chains[sourceBridgeKey as BridgeKey]?.address || null
-        : null
       const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
       const depositAsset =
         depositAssetTokenKey && sourceBridgeKey
           ? tokensConfig[depositAssetTokenKey]?.chains[sourceBridgeKey as BridgeKey]?.address
           : null
+
+      console.log('depositAssetTokenKey', depositAssetTokenKey)
+      console.log('sourceBridgeKey', sourceBridgeKey)
 
       if (
         accountantAddress &&
@@ -238,8 +238,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         tellerContractAddress &&
         feeTokenAddress &&
         tellerAddress &&
-        userAddress &&
-        wethAddress
+        userAddress
       ) {
         // if chain needs to switch, switch it
         if (chainId !== sourceBridgeChainId) {
@@ -361,6 +360,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const depositAmount = selectDepositAmountAsBigInt(state)
       const sourceChainKey = selectSourceBridge(state)
       const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
+      const chainId = selectSourceBridgeChainId(state)
 
       if (!depositAssetTokenKey || !sourceChainKey) {
         return rejectWithValue('Missing deposit asset token key')
@@ -377,6 +377,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
         accountantContractAddress &&
         depositAmount &&
         layerZeroChainSelector &&
+        chainId &&
         depositAssetAddress
       ) {
         const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
@@ -389,14 +390,14 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
         const exchangeRate = await getRateInQuoteSafe(
           { quote: depositAssetAddress },
-          { contractAddress: accountantContractAddress, chainId: 1 }
+          { contractAddress: accountantContractAddress, chainId }
         )
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
         const fee = await previewFee(
           { shareAmount, bridgeData: previewFeeBridgeData },
-          { contractAddress: tellerContractAddress, chainId: 1 }
+          { contractAddress: tellerContractAddress, chainId }
         )
         return { fee: fee.toString() }
       } else {

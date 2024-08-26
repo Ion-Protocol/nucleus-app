@@ -1,9 +1,12 @@
+import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import {
   selectBridgeFrom,
   selectDepositError,
   selectDepositPending,
   selectDepositDisabled,
+  selectSourceBridge,
+  selectFromTokenKeyForBridge,
 } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'
 import { BridgeKey } from '@/types/BridgeKey'
@@ -14,8 +17,18 @@ const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
   const loading = selectDepositPending(state)
   const error = selectDepositError(state)
   const disabled = selectDepositDisabled(state)
+  const fromChain = selectSourceBridge(state)
+  const fromAmount = selectBridgeFrom(state)
+  const fromTokenKey = selectFromTokenKeyForBridge(state)
+  const fromTokenInfo = fromTokenKey ? tokensConfig[fromTokenKey] : null
+
+  const shouldUseFunkit = fromChain === 'ethereum'
 
   return {
+    shouldUseFunkit,
+    fromAmount,
+    fromTokenInfo,
+    fromChain,
     bridgeKey,
     loading,
     error,

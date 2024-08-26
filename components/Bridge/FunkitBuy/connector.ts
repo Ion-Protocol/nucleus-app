@@ -14,7 +14,6 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: FunkitBuyOwnProps) => {
   const bridgeKey = state.router.query?.bridge as BridgeKey
   const loading = selectDepositPending(state)
-  const inputError = selectInputError(state)
   const fromChain = selectSourceBridge(state)
   const fromAmount = selectBridgeFrom(state)
   const fromTokenKey = selectFromTokenKeyForBridge(state)
