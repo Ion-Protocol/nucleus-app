@@ -107,6 +107,7 @@ export const setBridgeFrom = createAsyncThunk<
 >('bridges/setBridgeFrom', async (from, { getState, rejectWithValue, dispatch }) => {
   const state = getState() as RootState
   const bridgeKeyFromRoute = selectBridgeKey(state)
+  const bridgeKeyFromChainSelector = selectSourceBridge(state)
 
   if (!bridgeKeyFromRoute) {
     throw new Error('Bridge key is missing in router query')
@@ -116,6 +117,21 @@ export const setBridgeFrom = createAsyncThunk<
 
   if (isNaN(parseFloat(fromFormatted))) {
     fromFormatted = ''
+  }
+
+  const tokenKey = selectFromTokenKeyForBridge(state)
+  const tokenBalance = selectTokenBalance(bridgeKeyFromChainSelector, tokenKey)(state)
+  const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : null
+
+  const shouldCheckForInsufficientBalance = bridgeKeyFromChainSelector === bridgeKeyFromRoute
+  const fromValueGreaterThanBalance = tokenBalanceAsNumber && parseFloat(from) > parseFloat(tokenBalanceAsNumber)
+
+  if (shouldCheckForInsufficientBalance) {
+    if (fromValueGreaterThanBalance) {
+      dispatch(setInputError('Insufficient balance'))
+    } else {
+      dispatch(clearInputError())
+    }
   }
 
   return { bridgeKey: bridgeKeyFromRoute, from: fromFormatted }

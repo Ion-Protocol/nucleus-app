@@ -23,6 +23,8 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const selectedTokenKey = selectFromTokenKeyForBridge(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
   const formattedTokenBalance = selectFormattedTokenBalance(selectedBridgeKey, selectedTokenKey)(state)
+  const fromChain = selectSourceBridge(state)
+  const shouldShowMax = fromChain === currentPageBridgeKey
 
   return {
     inputValue,
@@ -32,6 +34,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
     tokens,
     selectedToken,
     bridgeKey: currentPageBridgeKey,
+    shouldShowMax,
   }
 }
 

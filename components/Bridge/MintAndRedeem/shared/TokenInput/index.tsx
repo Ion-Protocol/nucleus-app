@@ -14,6 +14,7 @@ function TokenInput({
   tokenBalance,
   loadingTokenBalance,
   tokens,
+  shouldShowMax,
 }: TokenInputConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -24,6 +25,7 @@ function TokenInput({
         <Text variant="smallParagraph" color={error ? 'error.main' : 'text'}>
           Amount
         </Text>
+
         <Flex color="secondaryText" gap={1}>
           <Text variant="smallParagraph">Balance: </Text>
           <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
@@ -52,13 +54,17 @@ function TokenInput({
         {error && <Text color="error.main">{error}</Text>}
         <Flex gap={3} align="center">
           {/* Max Button */}
-          <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
-            <Text color="disabledText" variant="smallParagraph">
-              MAX
-            </Text>
-          </Button>
+          {shouldShowMax && (
+            <Flex gap={3}>
+              <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
+                <Text color="disabledText" variant="smallParagraph">
+                  MAX
+                </Text>
+              </Button>
+              <Divider orientation="vertical" h="36px" borderColor="border" />
+            </Flex>
+          )}
 
-          <Divider orientation="vertical" h="36px" borderColor="border" />
           {/* Token Select */}
           <TokenSelect tokens={tokens} selected={selectedToken} onChange={onChangeToken} />
         </Flex>
