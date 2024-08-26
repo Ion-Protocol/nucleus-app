@@ -27,7 +27,8 @@ function NavCollapse({ title, leftIcon, children, isOpen, toggle }: NavCollapseC
         >
           <Flex gap={3}>
             <Box w="36px">{iconWithSize}</Box>
-            <Text userSelect="none" variant="large">
+            {/* marginTop of 4px is to compensate for some strange font offset */}
+            <Text userSelect="none" variant="large" mt="4px">
               {title}
             </Text>
           </Flex>

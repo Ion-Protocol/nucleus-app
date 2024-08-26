@@ -7,7 +7,6 @@ import { IonTokenIcon } from '../shared/icons/IonToken'
 export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.Element>> = {
   [ChainKey.MAINNET]: (props) => <EthereumIcon {...props} />,
   [ChainKey.TENDERLY_MAINNET]: (props) => <IonTokenIcon {...props} />,
-  [ChainKey.SEPOLIA]: (props) => <EthereumIcon {...props} />,
 }
 
 interface ChainIconProps extends ChakraProps {

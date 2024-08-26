@@ -10,7 +10,7 @@ interface NavItemProps extends ChakraProps {
   comingSoon?: boolean
 }
 
-export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItemProps) {
+export function NavItem({ title, href, leftIcon, disabled, comingSoon, ...props }: NavItemProps) {
   const router = useRouter()
   const isSelected = router.asPath === href
   const { colorMode } = useColorMode()
@@ -31,6 +31,7 @@ export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItem
       onClick={handleClick}
       cursor={disabled ? 'not-allowed' : 'pointer'}
       color={disabled ? 'disabledText' : undefined}
+      {...props}
     >
       <Flex
         borderRadius="8px"
@@ -48,7 +49,8 @@ export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItem
         _active={{ bg: disabled ? 'transparent' : 'active' }}
       >
         <Box w="36px">{iconWithSize}</Box>
-        <Text userSelect="none" variant="paragraph">
+        {/* marginTop of 4px is to compensate for some strange font offset */}
+        <Text userSelect="none" variant="paragraph" mt="4px">
           {title} {comingSoon && '(coming soon)'}
         </Text>
       </Flex>
