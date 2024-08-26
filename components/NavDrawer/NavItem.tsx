@@ -27,23 +27,25 @@ export function NavItem({ title, href, leftIcon, disabled, comingSoon }: NavItem
 
   return (
     <Link
-      href={href}
       _hover={{ textDecoration: 'none' }}
       onClick={handleClick}
-      pointerEvents={disabled ? 'none' : undefined}
-      color={disabled ? 'disabled' : undefined}
+      cursor={disabled ? 'not-allowed' : 'pointer'}
+      color={disabled ? 'disabledText' : undefined}
     >
       <Flex
         borderRadius="8px"
         align="center"
         gap={3}
         p={2}
-        cursor="pointer"
         bg={isSelected ? 'selected' : 'transparent'}
         border={isSelected ? '1px solid' : '1px solid transparent'}
         borderColor={isSelected && colorMode === 'light' ? 'border' : 'transparent'}
-        _hover={{ bg: 'hover', border: '1px solid', borderColor: colorMode === 'light' ? 'border' : 'transparent' }}
-        _active={{ bg: 'active' }}
+        _hover={{
+          bg: disabled ? 'transparent' : 'hover',
+          border: '1px solid',
+          borderColor: colorMode === 'light' ? 'border' : 'transparent',
+        }}
+        _active={{ bg: disabled ? 'transparent' : 'active' }}
       >
         <Box w="36px">{iconWithSize}</Box>
         <Text userSelect="none" variant="paragraph">
