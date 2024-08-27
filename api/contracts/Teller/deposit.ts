@@ -74,7 +74,7 @@ export async function deposit(
   ////////////////////////////////
   // Write
   ////////////////////////////////
-  const hash = await writeContract(wagmiConfig, {
+  const txHash = await writeContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
     address: tellerContractAddress,
     functionName: 'deposit',
@@ -86,12 +86,10 @@ export async function deposit(
   ////////////////////////////////
   const maxRetries = 5
   let attempts = 0
-  let blockHash: `0x${string}` = '0x0'
 
   while (attempts < maxRetries) {
     try {
-      const receipt = await waitForTransactionReceipt(wagmiConfig, { hash, timeout: 10000 })
-      blockHash = receipt.blockHash
+      await waitForTransactionReceipt(wagmiConfig, { hash: txHash, timeout: 10000 })
       break
     } catch (error) {
       attempts++
@@ -100,5 +98,5 @@ export async function deposit(
     }
   }
 
-  return blockHash
+  return txHash
 }

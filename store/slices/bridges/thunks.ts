@@ -204,7 +204,9 @@ export const fetchBridgeRate = createAsyncThunk<
   }
 })
 
-export interface PerformDepositResult {}
+export interface PerformDepositResult {
+  txHash: `0x${string}` | null
+}
 
 /**
  * Performs a deposit for a bridge.
@@ -270,7 +272,7 @@ export const performDeposit = createAsyncThunk<
         data: '',
       }
 
-      let txHash: `0x${string}`
+      let txHash: `0x${string}` | null = null
       if (sourceBridgeKey === bridgeKey) {
         ///////////////////////////////////////////////////////////////
         // Source chain and current bridge are the same
@@ -370,11 +372,11 @@ export const performDeposit = createAsyncThunk<
       }
 
       dispatch(setBridgeFrom(''))
-      return {}
+      return { txHash }
     } else {
       dispatch(setErrorTitle('Deposit Failed'))
       dispatch(setErrorMessage('Some required values are missing'))
-      return {}
+      return { txHash: null }
     }
   } catch (e) {
     const error = e as Error
