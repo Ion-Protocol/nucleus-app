@@ -1,26 +1,29 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
+import { getRateInQuote } from '@/api/contracts/Accountant/getRateInQuote'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
-import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
+import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
 import { nativeAddress } from '@/config/constants'
 import { tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
+import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
 import { RootState } from '@/store'
 import { BridgeKey } from '@/types/BridgeKey'
-import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { switchChain } from 'wagmi/actions'
+import { Abi, erc20Abi } from 'viem'
+import { simulateContract, switchChain } from 'wagmi/actions'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
 import { selectChainId } from '../chain'
-import { selectBridgeKey } from '../router'
-import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
+import { selectBridgeKeyFromRoute } from '../router'
+import { setErrorMessage, setErrorTitle } from '../status'
 import { getTokenPerShareRate } from './getTokenPerShareRate'
 import {
   selectBridgeConfig,
+  selectBridgeFrom,
   selectChainConfig,
   selectDepositAmountAsBigInt,
   selectFeeTokenAddress,
@@ -106,7 +109,7 @@ export const setBridgeFrom = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >('bridges/setBridgeFrom', async (from, { getState, rejectWithValue, dispatch }) => {
   const state = getState() as RootState
-  const bridgeKeyFromRoute = selectBridgeKey(state)
+  const bridgeKeyFromRoute = selectBridgeKeyFromRoute(state)
   const bridgeKeyFromChainSelector = selectSourceBridge(state)
 
   if (!bridgeKeyFromRoute) {
@@ -156,7 +159,7 @@ export const setBridgeFromMax = createAsyncThunk<
 >('bridges/setBridgeFromMax', async (_, { getState, rejectWithValue, dispatch }) => {
   const state = getState() as RootState
   const bridgeKeyFromSourceChain = selectSourceBridge(state) as BridgeKey
-  const bridgeKeyFromUrl = selectBridgeKey(state)
+  const bridgeKeyFromUrl = selectBridgeKeyFromRoute(state)
   if (!bridgeKeyFromUrl) {
     return rejectWithValue('Bridge key is missing in router query')
   }
@@ -201,9 +204,7 @@ export const fetchBridgeRate = createAsyncThunk<
   }
 })
 
-export interface PerformDepositResult {
-  txHash: `0x${string}`
-}
+export interface PerformDepositResult {}
 
 /**
  * Performs a deposit for a bridge.
@@ -214,145 +215,177 @@ export interface PerformDepositResult {
  * @param dispatch - A function to dispatch actions.
  * @returns A promise that resolves to the transaction hash of the deposit.
  */
-export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rejectValue: string; state: RootState }>(
-  'bridges/performDeposit',
-  async (_, { getState, rejectWithValue, dispatch }) => {
-    try {
-      const state = getState()
-      const userAddress = selectAddress(state)
+export const performDeposit = createAsyncThunk<
+  PerformDepositResult,
+  (inputConfig?: any) => Promise<void>,
+  { rejectValue: string; state: RootState }
+>('bridges/performDeposit', async (beginCheckout, { getState, rejectWithValue, dispatch }) => {
+  try {
+    const state = getState()
+    const userAddress = selectAddress(state)
 
-      const depositAmount = selectDepositAmountAsBigInt(state)
-      const chainId = selectChainId(state)
-      const bridgeKey = selectBridgeKey(state)
-      const bridgeConfig = selectBridgeConfig(state)
-      const sourceBridgeKey = selectSourceBridge(state)
-      const sourceBridgeChainId = selectSourceBridgeChainId(state)
-      const tellerAddress = selectTellerAddress(state)
-      const feeTokenAddress = selectFeeTokenAddress(state)
+    const depositAmount = selectDepositAmountAsBigInt(state)
+    const fromAmount = selectBridgeFrom(state)
+    const chainId = selectChainId(state)
+    const bridgeKey = selectBridgeKeyFromRoute(state)
+    const bridgeConfig = selectBridgeConfig(state)
+    const sourceBridgeKey = selectSourceBridge(state)
+    const sourceBridgeChainId = selectSourceBridgeChainId(state)
+    const tellerAddress = selectTellerAddress(state)
+    const feeTokenAddress = selectFeeTokenAddress(state)
 
-      const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
-      const tellerContractAddress = bridgeConfig?.contracts.teller
-      const boringVaultAddress = bridgeConfig?.contracts.boringVault
-      const accountantAddress = bridgeConfig?.contracts.accountant
-      const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
-      const depositAsset =
-        depositAssetTokenKey && sourceBridgeKey
-          ? tokensConfig[depositAssetTokenKey]?.chains[sourceBridgeKey as BridgeKey]?.address
-          : null
+    const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
+    const tellerContractAddress = bridgeConfig?.contracts.teller
+    const boringVaultAddress = bridgeConfig?.contracts.boringVault
+    const accountantAddress = bridgeConfig?.contracts.accountant
+    const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
+    const depositAsset =
+      depositAssetTokenKey && sourceBridgeKey
+        ? tokensConfig[depositAssetTokenKey]?.chains[sourceBridgeKey as BridgeKey]?.address
+        : null
 
-      console.log('depositAssetTokenKey', depositAssetTokenKey)
-      console.log('sourceBridgeKey', sourceBridgeKey)
-
-      if (
-        accountantAddress &&
-        boringVaultAddress &&
-        bridgeKey &&
-        depositAsset &&
-        layerZeroChainSelector !== undefined &&
-        sourceBridgeKey &&
-        sourceBridgeChainId &&
-        tellerContractAddress &&
-        feeTokenAddress &&
-        tellerAddress &&
-        userAddress
-      ) {
-        // if chain needs to switch, switch it
-        if (chainId !== sourceBridgeChainId) {
-          await switchChain(wagmiConfig, { chainId: sourceBridgeChainId })
-        }
-
-        const depositBridgeData: CrossChainTellerBase.BridgeData = {
-          chainSelector: layerZeroChainSelector,
-          destinationChainReceiver: tellerAddress,
-          bridgeFeeToken: feeTokenAddress,
-          messageGas: 100000,
-          data: '',
-        }
-
-        let txHash: `0x${string}`
-        if (sourceBridgeKey === bridgeKey) {
-          ///////////////////////////////////////////////////////////////
-          // Source chain and current bridge are the same
-          // Deposit only
-          ///////////////////////////////////////////////////////////////
-
-          // For example, both are Sei,
-          // Deposit without bridging.
-          txHash = await deposit(
-            { depositAsset, depositAmount },
-            {
-              userAddress,
-              tellerContractAddress,
-              boringVaultAddress,
-              accountantAddress,
-              chainId: sourceBridgeChainId,
-            }
-          )
-        } else {
-          ///////////////////////////////////////////////////////////////
-          // Source chain and bridge are different
-          // Deposit & Bridge
-          ///////////////////////////////////////////////////////////////
-
-          // If the source chain and and destination chains are different.
-          // For example, the source is Ethereum and the destination is Optimism.
-          // Deposit with bridging.
-
-          ///////////////////////////////////////////////////////////////
-          // First: Get updated preview fee
-          ///////////////////////////////////////////////////////////////
-          const exchangeRate = await getRateInQuoteSafe(
-            { quote: depositAsset },
-            { contractAddress: accountantAddress, chainId: sourceBridgeChainId }
-          )
-
-          const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
-
-          const fee = await previewFee(
-            { shareAmount, bridgeData: depositBridgeData },
-            { contractAddress: tellerContractAddress, chainId: sourceBridgeChainId }
-          )
-
-          // Add 1% to the fee for padding to prevent the contract from reverting
-          // This extra amount will be refunded
-          const paddedFee = (fee * BigInt(101)) / BigInt(100)
-
-          ///////////////////////////////////////////////////////////////
-          // Second: Deposit and bridge
-          ///////////////////////////////////////////////////////////////
-          txHash = await depositAndBridge(
-            { depositAsset, depositAmount, bridgeData: depositBridgeData },
-            {
-              userAddress,
-              tellerContractAddress,
-              boringVaultAddress,
-              accountantAddress,
-              chainId: sourceBridgeChainId,
-              fee: paddedFee,
-            }
-          )
-        }
-
-        dispatch(setTransactionTxHash(txHash))
-        dispatch(setTransactionSuccessMessage('Your deposit was successful!'))
-        dispatch(setBridgeFrom(''))
-        return { txHash }
-      } else {
-        dispatch(setErrorTitle('Deposit Failed'))
-        dispatch(setErrorMessage('Some required values are missing'))
-        return { txHash: '0x0' }
+    if (
+      accountantAddress &&
+      boringVaultAddress &&
+      bridgeKey &&
+      depositAsset &&
+      layerZeroChainSelector !== undefined &&
+      sourceBridgeKey &&
+      sourceBridgeChainId &&
+      tellerContractAddress &&
+      feeTokenAddress &&
+      tellerAddress &&
+      userAddress
+    ) {
+      // if chain needs to switch, switch it
+      if (chainId !== sourceBridgeChainId) {
+        await switchChain(wagmiConfig, { chainId: sourceBridgeChainId })
       }
-    } catch (e) {
-      const error = e as Error
-      const errorMessage = `Failed to deposit`
-      const fullErrorMessage = `${errorMessage}\n${error.message}`
-      console.error(fullErrorMessage)
+
+      const depositBridgeData: CrossChainTellerBase.BridgeData = {
+        chainSelector: layerZeroChainSelector,
+        destinationChainReceiver: userAddress,
+        bridgeFeeToken: feeTokenAddress,
+        messageGas: 100000,
+        data: '',
+      }
+
+      let txHash: `0x${string}`
+      if (sourceBridgeKey === bridgeKey) {
+        ///////////////////////////////////////////////////////////////
+        // Source chain and current bridge are the same
+        // Deposit only
+        ///////////////////////////////////////////////////////////////
+
+        // For example, both are Sei,
+        // Deposit without bridging.
+        txHash = await deposit(
+          { depositAsset, depositAmount },
+          {
+            userAddress,
+            tellerContractAddress,
+            boringVaultAddress,
+            accountantAddress,
+            chainId: sourceBridgeChainId,
+          }
+        )
+      } else {
+        ///////////////////////////////////////////////////////////////
+        // Source chain and bridge are different
+        // Deposit & Bridge
+        ///////////////////////////////////////////////////////////////
+
+        // If the source chain and and destination chains are different.
+        // For example, the source is Ethereum and the destination is Optimism.
+        // Deposit with bridging.
+
+        ///////////////////////////////////////////////////////////////
+        // First: Get updated preview fee
+        ///////////////////////////////////////////////////////////////
+        const exchangeRate = await getRateInQuoteSafe(
+          { quote: depositAsset },
+          { contractAddress: accountantAddress, chainId: sourceBridgeChainId }
+        )
+
+        const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
+
+        const fee = await previewFee(
+          { shareAmount, bridgeData: depositBridgeData },
+          { contractAddress: tellerContractAddress, chainId: sourceBridgeChainId }
+        )
+
+        // Add 1% to the fee for padding to prevent the contract from reverting
+        // This extra amount will be refunded
+        const paddedFee = (fee * BigInt(101)) / BigInt(100)
+
+        ///////////////////////////////////////////////////////////////
+        // Second: Deposit and bridge
+        ///////////////////////////////////////////////////////////////
+        const rate = await getRateInQuote(
+          { quote: depositAsset },
+          { contractAddress: accountantAddress, chainId: sourceBridgeChainId }
+        )
+        const minimumMint = calculateMinimumMint(depositAmount, rate)
+
+        // I'm not sure if Fun's beginCheckout function simulates the transaction, so we will do it ourselves just in case
+        await simulateContract(wagmiConfig, {
+          abi: CrossChainTellerBaseAbi.abi as Abi,
+          address: tellerContractAddress,
+          functionName: 'depositAndBridge',
+          args: [depositAsset, depositAmount, minimumMint, depositBridgeData],
+          value: paddedFee,
+        })
+
+        const VERB = 'Mint'
+        const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
+        await beginCheckout({
+          modalTitle: `${VERB} ${fromTokenInfo?.name}`,
+          iconSrc: `/assets/svgs/token-${fromTokenInfo?.key}.svg`,
+          actionsParams: [
+            // Approve the ERC20 token
+            {
+              contractAbi: erc20Abi,
+              contractAddress: depositAsset,
+              functionName: 'approve',
+              functionArgs: [boringVaultAddress, depositAmount],
+            },
+            // Deposit the token
+            {
+              contractAbi: CrossChainTellerBaseAbi.abi as Abi,
+              contractAddress: tellerContractAddress,
+              functionName: 'depositAndBridge',
+              functionArgs: [depositAsset, depositAmount, minimumMint, depositBridgeData],
+              value: paddedFee,
+            },
+          ],
+          targetChain: sourceBridgeChainId.toString(),
+          targetAsset: depositAsset,
+          targetAssetAmount: parseFloat(fromAmount),
+          checkoutItemTitle: `Bridge ${fromTokenInfo?.name}`,
+          checkoutItemDescription: `${VERB} ${fromTokenInfo?.name}`,
+          checkoutItemAmount: parseFloat(fromAmount),
+          expirationTimestampMs: 3600000,
+          disableEditing: true,
+        })
+      }
+
+      dispatch(setBridgeFrom(''))
+      return {}
+    } else {
       dispatch(setErrorTitle('Deposit Failed'))
-      dispatch(setErrorMessage(fullErrorMessage))
-      return rejectWithValue(errorMessage)
+      dispatch(setErrorMessage('Some required values are missing'))
+      return {}
     }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to deposit`
+    const fullErrorMessage = `${errorMessage}\n${error.message}`
+    console.error(fullErrorMessage)
+    dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorMessage(fullErrorMessage))
+    return rejectWithValue(errorMessage)
   }
-)
+})
 
 export interface FetchPreviewFeeResult {
   fee: string
@@ -374,15 +407,22 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const state = getState()
       const bridgeConfig = selectBridgeConfig(state)
       const depositAmount = selectDepositAmountAsBigInt(state)
-      const sourceChainKey = selectSourceBridge(state)
+      const bridgeKeyFromSelector = selectSourceBridge(state)
+      const bridgeKeyFromRoute = selectBridgeKeyFromRoute(state)
       const depositAssetTokenKey = selectFromTokenKeyForBridge(state)
       const chainId = selectSourceBridgeChainId(state)
+      const userAddress = selectAddress(state)
 
-      if (!depositAssetTokenKey || !sourceChainKey) {
+      if (!depositAssetTokenKey || !bridgeKeyFromSelector) {
         return rejectWithValue('Missing deposit asset token key')
       }
 
-      const depositAssetAddress = tokensConfig[depositAssetTokenKey]?.chains[sourceChainKey]?.address
+      // Preview fee is not necessary if doing a deposit from the L2 to the L2
+      if (bridgeKeyFromRoute === bridgeKeyFromSelector) {
+        return { fee: '0' }
+      }
+
+      const depositAssetAddress = tokensConfig[depositAssetTokenKey]?.chains[bridgeKeyFromSelector]?.address
 
       const tellerContractAddress = bridgeConfig?.contracts.teller
       const accountantContractAddress = bridgeConfig?.contracts.accountant
@@ -394,11 +434,12 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
         depositAmount &&
         layerZeroChainSelector &&
         chainId &&
+        userAddress &&
         depositAssetAddress
       ) {
         const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
           chainSelector: layerZeroChainSelector,
-          destinationChainReceiver: tellerContractAddress,
+          destinationChainReceiver: userAddress,
           bridgeFeeToken: nativeAddress,
           messageGas: 100_000,
           data: '',

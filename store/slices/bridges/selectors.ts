@@ -10,7 +10,7 @@ import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
 import { selectChainKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
-import { selectBridgeKey } from '../router'
+import { selectBridgeKeyFromRoute } from '../router'
 import { BridgeData } from './initialState'
 
 export const selectBridgesState = (state: RootState) => state.bridges
@@ -50,7 +50,7 @@ export const selectChainKeyByChainId = (chainId: number | undefined) =>
   ) as BridgeKey | null
 
 export const selectBridgeConfig = createSelector(
-  [selectChainConfig, selectBridgeKey],
+  [selectChainConfig, selectBridgeKeyFromRoute],
   (chainConfig, bridgeKey): (Bridge & { key: BridgeKey }) | null => {
     if (!bridgeKey || !chainConfig) return null
     const bridgeConfig = chainConfig.bridges[bridgeKey] as Bridge
@@ -133,7 +133,7 @@ export const selectBridgesData = createSelector([selectBridgesState], (bridgesSt
 })
 
 export const selectBridgeData = createSelector(
-  [selectBridgesData, selectBridgeKey],
+  [selectBridgesData, selectBridgeKeyFromRoute],
   (bridgesData, bridgeKeyFromUrl): BridgeData | null => {
     if (!bridgeKeyFromUrl) return null
     return bridgesData?.[bridgeKeyFromUrl] as BridgeData
@@ -161,12 +161,15 @@ export const selectBridgeTvlByKey = (bridgeKey: BridgeKey) =>
     return BigInt(tvl)
   })
 
-export const selectActiveBridgeTvl = createSelector([selectBridgesData, selectBridgeKey], (bridgesData, bridgeKey) => {
-  if (bridgeKey === null) return null
-  const tvl = bridgesData[bridgeKey].tvl.value
-  if (tvl === null) return null
-  return BigInt(tvl)
-})
+export const selectActiveBridgeTvl = createSelector(
+  [selectBridgesData, selectBridgeKeyFromRoute],
+  (bridgesData, bridgeKey) => {
+    if (bridgeKey === null) return null
+    const tvl = bridgesData[bridgeKey].tvl.value
+    if (tvl === null) return null
+    return BigInt(tvl)
+  }
+)
 
 /**
  * Selects the formatted total value locked (TVL) for a specific bridge key.

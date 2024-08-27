@@ -42,7 +42,7 @@ export const selectRouterQuery = (state: RootState) => {
   return state.router.query
 }
 
-export const selectBridgeKey = createSelector([selectRouterQuery], (routerQuery): BridgeKey | null => {
+export const selectBridgeKeyFromRoute = createSelector([selectRouterQuery], (routerQuery): BridgeKey | null => {
   const bridgeKey = routerQuery?.bridge
   if (!bridgeKey) return null
   return bridgeKey

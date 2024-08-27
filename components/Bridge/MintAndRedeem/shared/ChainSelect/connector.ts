@@ -6,7 +6,7 @@ import {
   setDestinationChain,
   setSourceChain,
 } from '@/store/slices/bridges'
-import { selectBridgeKey } from '@/store/slices/router'
+import { selectBridgeKeyFromRoute } from '@/store/slices/router'
 import { BridgeKey } from '@/types/BridgeKey'
 import { ConnectedProps, connect } from 'react-redux'
 
@@ -16,7 +16,7 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const selectableBridges = selectSourceBridges(state)
   const chainConfig = selectChainConfig(state)
   const allBridges = chainConfig?.bridges
-  const selectChain = role === 'source' ? selectSourceBridge : selectBridgeKey
+  const selectChain = role === 'source' ? selectSourceBridge : selectBridgeKeyFromRoute
   const selectedBridgeKey = selectChain(state) || selectableBridges[0]?.key || null
   const selectedChain = allBridges?.[selectedBridgeKey]
 

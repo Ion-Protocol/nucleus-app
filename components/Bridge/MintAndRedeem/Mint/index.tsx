@@ -4,7 +4,6 @@ import Deposit from '../shared/Deposit'
 import Summary from '../shared/Summary'
 import TokenInput from '../shared/TokenInput'
 import TokenTo from '../shared/TokenTo'
-import FunkitBuy from '../../FunkitBuy'
 
 interface MintProps extends ChakraProps {}
 

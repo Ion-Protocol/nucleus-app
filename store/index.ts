@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { debounceMiddleware } from './middleware/debounceMiddleware'
+import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
 import { chainChangeMiddleware } from './middleware/effects/chainChangeMiddleware'
 import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
 import { accountReducer } from './slices/account/slice'
@@ -11,11 +12,11 @@ import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
-import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
 
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, chainChangeMiddleware, termsAcceptedMiddleware]
 
+// Configure the store and inject the LibraryContext as an extra argument for thunks
 export const store = configureStore({
   reducer: {
     account: accountReducer,

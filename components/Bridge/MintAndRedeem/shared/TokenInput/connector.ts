@@ -10,12 +10,12 @@ import {
   setSelectedFromToken,
 } from '@/store/slices/bridges'
 import { setBridgeFrom, setBridgeFromMax } from '@/store/slices/bridges/thunks'
-import { selectBridgeKey } from '@/store/slices/router'
+import { selectBridgeKeyFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
-  const currentPageBridgeKey = selectBridgeKey(state)
+  const currentPageBridgeKey = selectBridgeKeyFromRoute(state)
   const selectedBridgeKey = selectSourceBridge(state)
   const inputValue = selectBridgeFrom(state)
   const tokenKeys = selectSourceTokens(state)
