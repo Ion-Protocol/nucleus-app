@@ -13,4 +13,5 @@ export enum TokenKey {
   WBTC = 'wbtc',
   SWBTC = 'swbtc',
   RSWBTC = 'rswbtc',
+  WFRXETH = 'wfrxeth',
 }

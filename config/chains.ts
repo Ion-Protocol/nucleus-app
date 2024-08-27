@@ -1,6 +1,7 @@
 import { Bridge } from '@/types/Bridge'
 import { TokenKey } from '@/types/TokenKey'
 import { BridgeKey } from '@/types/BridgeKey'
+import { boba, fraxtal, sei } from 'wagmi/chains'
 
 export enum ChainKey {
   MAINNET = 'mainnet',
@@ -24,7 +25,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
     bridges: {
       [BridgeKey.SEI]: {
         name: 'Sei',
-        chainId: 1329,
+        chainId: sei.id,
         comingSoon: false,
         contracts: {
           teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
@@ -45,7 +46,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.FRAX]: {
         name: 'Frax',
-        chainId: 252,
+        chainId: fraxtal.id,
         comingSoon: false,
         contracts: {
           teller: '0xD9395622c8Ec792D1cb6F39B562095fDa240BA57',
@@ -55,7 +56,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
         sourceBridges: [BridgeKey.ETHEREUM, BridgeKey.FRAX],
         sourceTokens: {
           [BridgeKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
-          [BridgeKey.FRAX]: [TokenKey.WETH],
+          [BridgeKey.FRAX]: [TokenKey.WFRXETH],
         },
         nativeToken: TokenKey.FRAX,
         feeToken: TokenKey.ETH, // The token here is technically just NATIVE, but for now we just use the name ETH here
@@ -85,7 +86,7 @@ export const chainsConfig: Record<ChainKey, ChainConfig> = {
       },
       [BridgeKey.BOBA]: {
         name: 'Boba',
-        chainId: 288,
+        chainId: boba.id,
         comingSoon: true,
         contracts: {
           teller: '0x690a032B33d4d016bE5d41B00eB06814e167c525',

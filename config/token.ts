@@ -1,7 +1,7 @@
-import { Token } from '@/types/Token'
 import { BridgeKey } from '@/types/BridgeKey'
+import { Token } from '@/types/Token'
 import { TokenKey } from '@/types/TokenKey'
-import { boba, fraxtal, mainnet, sei } from 'wagmi/chains'
+import { fraxtal, mainnet, sei } from 'wagmi/chains'
 
 export const tokensConfig: Record<TokenKey, Token> = {
   [TokenKey.ETH]: {
@@ -171,6 +171,17 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [BridgeKey.ETHEREUM]: {
         address: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
         chainId: mainnet.id,
+      },
+    },
+  },
+  [TokenKey.WFRXETH]: {
+    key: TokenKey.WFRXETH,
+    name: 'wfrxETH',
+    symbol: 'WFRXETH',
+    chains: {
+      [BridgeKey.FRAX]: {
+        address: '0xfc00000000000000000000000000000000000006',
+        chainId: fraxtal.id,
       },
     },
   },
