@@ -7,7 +7,7 @@ if (!FUNKIT_API_KEY) throw new Error('FUNKIT_API_KEY is required')
 
 export const funkitConfig = {
   appName: 'Nucleus',
-  appLogoSrc: '/assets/images/IonLogo.png',
+  appLogoSrc: '/assets/images/ion-logo-neutral.png',
   loginModalConfig: {
     web2: false,
     web3: true,
