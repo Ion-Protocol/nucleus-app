@@ -36,3 +36,8 @@ export const selectFormattedTokenBalance = (bridgeKey: BridgeKey | null, tokenKe
     const balanceAsNumber = bigIntToNumber(balanceAsBigInt)
     return `${balanceAsNumber} ${tokensConfig[tokenKey]?.name}`
   })
+
+export const selectTokenBalanceAsNumber = (bridgeKey: BridgeKey | null, tokenKey: TokenKey | null) =>
+  createSelector([selectTokenBalance(bridgeKey, tokenKey)], (balance): number | null => {
+    return balance ? parseFloat(bigIntToNumber(BigInt(balance))) : null
+  })

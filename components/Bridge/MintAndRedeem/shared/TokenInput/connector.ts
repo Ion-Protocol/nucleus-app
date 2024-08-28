@@ -2,14 +2,15 @@ import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
-  selectBridgeFrom,
-  selectFromTokenKeyForBridge,
+  selectBridgeInputValue,
+  selectFromTokenKey,
   selectInputError,
   selectSourceBridge,
   selectSourceTokens,
+  setInputValue,
   setSelectedFromToken,
 } from '@/store/slices/bridges'
-import { setBridgeFrom, setBridgeFromMax } from '@/store/slices/bridges/thunks'
+import { setBridgeFromMax } from '@/store/slices/bridges/thunks'
 import { selectBridgeKeyFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
@@ -17,10 +18,10 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const currentPageBridgeKey = selectBridgeKeyFromRoute(state)
   const selectedBridgeKey = selectSourceBridge(state)
-  const inputValue = selectBridgeFrom(state)
+  const inputValue = selectBridgeInputValue(state)
   const tokenKeys = selectSourceTokens(state)
   const tokens = tokenKeys.map((key) => tokensConfig[key])
-  const selectedTokenKey = selectFromTokenKeyForBridge(state) || tokenKeys[0] || null
+  const selectedTokenKey = selectFromTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
   const formattedTokenBalance = selectFormattedTokenBalance(selectedBridgeKey, selectedTokenKey)(state)
   const fromChain = selectSourceBridge(state)
@@ -39,27 +40,12 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
 }
 
 const mapDispatch = {
-  onChange: setBridgeFrom,
-  onChangeToken: setSelectedFromToken,
+  onChange: setInputValue,
+  onChangeToken: (token: TokenKey) => setSelectedFromToken({ tokenKey: token }),
   onMax: () => setBridgeFromMax(),
 }
 
-const mergeProps = (
-  stateProps: ReturnType<typeof mapState>,
-  dispatchProps: typeof mapDispatch,
-  ownProps: TokenInputOwnProps
-) => {
-  const { bridgeKey } = stateProps
-
-  return {
-    ...stateProps,
-    ...ownProps,
-    ...dispatchProps,
-    onChangeToken: (tokenKey: TokenKey) => dispatchProps.onChangeToken({ bridgeKey, tokenKey }),
-  }
-}
-
-const connector = connect(mapState, mapDispatch, mergeProps)
+const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 

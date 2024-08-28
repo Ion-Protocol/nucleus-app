@@ -11,6 +11,9 @@ const bridgesSlice = createSlice({
     setSourceChain: (state, action) => {
       state.sourceBridge = action.payload
     },
+    resetSourceChain: (state) => {
+      state.sourceBridge = BridgeKey.ETHEREUM
+    },
     setDestinationChain: (state, action) => {
       state.destinationBridge = action.payload
     },
@@ -20,36 +23,37 @@ const bridgesSlice = createSlice({
     clearInputError: (state) => {
       state.inputError = null
     },
-    setSelectedFromToken: (state, action: PayloadAction<{ bridgeKey: BridgeKey | null; tokenKey: TokenKey }>) => {
-      const { bridgeKey } = action.payload
-      if (!bridgeKey) return
-      state.data[bridgeKey].selectedFromToken = action.payload.tokenKey
+    setSelectedFromToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
+      state.selectedFromToken = action.payload.tokenKey
     },
-    setSelectedToToken: (state, action: PayloadAction<{ bridgeKey: BridgeKey; tokenKey: TokenKey | null }>) => {
-      state.data[action.payload.bridgeKey].selectedToToken = action.payload.tokenKey
+    clearSelectedFromToken: (state) => {
+      state.selectedFromToken = null
     },
-    setBridgeFromDebounceComplete: () => {}, // only used as an action to trigger a side effect
     clearPreviewFee: (state) => {
       state.previewFee = null
     },
+    setInputValue: (state, action) => {
+      state.inputValue = action.payload
+    },
+    clearInputValue: (state) => {
+      state.inputValue = ''
+    },
+    setInputValueDebounceComplete: () => {}, // only used as an action to trigger a side effect
   },
   extraReducers,
 })
 
 export const {
-  setSourceChain,
+  clearInputError,
+  resetSourceChain,
+  clearInputValue,
+  clearPreviewFee,
+  clearSelectedFromToken,
   setDestinationChain,
   setInputError,
-  clearInputError,
+  setInputValue,
+  setInputValueDebounceComplete,
   setSelectedFromToken,
-  setSelectedToToken,
-  setBridgeFromDebounceComplete,
-  clearPreviewFee,
+  setSourceChain,
 } = bridgesSlice.actions
 export const bridgesReducer = bridgesSlice.reducer
-
-export namespace Bridges {
-  export type TokenPayload =
-    | ActionCreatorWithPayload<{ bridgeKey: BridgeKey; tokenKey: TokenKey }, 'bridges/setSelectedToToken'>
-    | ActionCreatorWithPayload<{ bridgeKey: BridgeKey; tokenKey: TokenKey }, 'bridges/setSelectedFromToken'>
-}

@@ -10,18 +10,17 @@ export interface BridgeData {
   tvl: AsyncMetric
   rate: AsyncMetric
   error: string | null
-  from: string
-  selectedFromToken: TokenKey | null
-  selectedToToken: TokenKey | null
 }
 
 export type BridgesState = {
   data: { [bridgeKey in BridgeKey]: BridgeData }
   overallLoading: boolean
+  inputValue: string
+  selectedFromToken: TokenKey | null
   tvlLoading: boolean
   previewFeeLoading: boolean
   previewFee: string | null
-  sourceBridge: BridgeKey | null
+  sourceBridge: BridgeKey
   inputError: string | null
   destinationBridge: BridgeKey | null
   deposit: {
@@ -34,9 +33,6 @@ const initialBridgeData: BridgeData = {
   tvl: { value: null, loading: false },
   rate: { value: null, loading: false },
   error: null,
-  from: '',
-  selectedFromToken: null,
-  selectedToToken: null,
 }
 
 export const initialState: BridgesState = {
@@ -48,6 +44,8 @@ export const initialState: BridgesState = {
     {} as { [bridgeKey in BridgeKey]: BridgeData }
   ),
   overallLoading: false,
+  inputValue: '',
+  selectedFromToken: null,
   tvlLoading: false,
   previewFeeLoading: false,
   previewFee: null,

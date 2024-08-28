@@ -35,8 +35,9 @@ const createDebounceMiddleware = (options: DebounceMiddlewareOptions): Middlewar
         clearTimeout(timers[debounceActionType]!)
       }
 
+      next(action)
+
       timers[debounceActionType] = setTimeout(() => {
-        next(action)
         store.dispatch({ type: triggerActionType })
       }, debounceTime)
     } else {

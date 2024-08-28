@@ -2,13 +2,13 @@ import { BridgeKey } from '@/types/BridgeKey'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
-import { selectBridgeConfig, selectBridgeFrom, selectBridgeRate } from '@/store/slices/bridges'
+import { selectBridgeConfig, selectBridgeInputValue, selectBridgeRate } from '@/store/slices/bridges'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   // Calculate "to" value
-  const from = selectBridgeFrom(state)
+  const from = selectBridgeInputValue(state)
   const rate = selectBridgeRate(state)
   const fromAsNumber = parseFloat(from)
   const fromAsBigInt = fromAsNumber ? BigInt(fromAsNumber * WAD.number) : BigInt(0)

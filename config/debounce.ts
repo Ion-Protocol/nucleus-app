@@ -1,6 +1,5 @@
 import { DebounceConfig } from '@/store/middleware/debounceMiddleware'
-import { setBridgeFromDebounceComplete } from '@/store/slices/bridges'
-import { setBridgeFrom } from '@/store/slices/bridges/thunks'
+import { setInputValue, setInputValueDebounceComplete } from '@/store/slices/bridges'
 
 /**
  * Configuration for debouncing actions in the application.
@@ -25,8 +24,8 @@ import { setBridgeFrom } from '@/store/slices/bridges/thunks'
  */
 export const debounceConfigs: DebounceConfig[] = [
   {
-    debounceActionType: setBridgeFrom.pending.type,
-    triggerActionType: setBridgeFromDebounceComplete.type,
+    debounceActionType: setInputValue.type,
+    triggerActionType: setInputValueDebounceComplete.type,
     debounceTime: 1000,
   },
 ]

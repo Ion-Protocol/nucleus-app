@@ -207,36 +207,15 @@ export const selectAllBridgeKeys = createSelector([selectChainConfig], (chainCon
  * @param key - The key of the bridge.
  * @returns The 'from' value of the bridge, or undefined if the bridge does not exist.
  */
-export const selectBridgeFrom = createSelector([selectBridgeData], (bridgeData): string => {
-  if (!bridgeData) return ''
-  return bridgeData.from
+export const selectBridgeInputValue = createSelector([selectBridgesState], (bridgesState): string => {
+  return bridgesState.inputValue
 })
 
-/**
- * Retrieves the token of a specific bridge from the state.
- * @param state - The root state of the application.
- * @param bridgeKey - The key of the bridge.
- * @returns The token of the bridge, or undefined if the bridge does not exist.
- */
-export const selectToTokenKeyForBridge = createSelector([selectBridgeData], (bridgeData): TokenKey | null => {
-  if (!bridgeData) return null
-  return bridgeData.selectedToToken
-})
-
-/**
- * Selects the `TokenKey` associated with a specific `BridgeKey` from the state.
- * If the `BridgeKey` does not exist in the state, it returns `null`.
- * If the `BridgeKey` exists but does not have a selected `TokenKey`, it returns the first `TokenKey` from the `sourceTokens` array in the `bridgesConfig`.
- *
- * @param state - The root state of the application.
- * @param bridgeKey - The key of the bridge.
- * @returns The selected `TokenKey` or `null`.
- */
-export const selectFromTokenKeyForBridge = createSelector(
-  [selectBridgeData, selectBridgeConfig, selectSourceBridge],
-  (bridgeData, bridgeConfig, sourceBridge): TokenKey | null => {
-    if (!bridgeData || !bridgeConfig) return null
-    return bridgeData.selectedFromToken || bridgeConfig?.sourceTokens[sourceBridge as BridgeKey]?.[0] || null
+export const selectFromTokenKey = createSelector(
+  [selectBridgesState, selectBridgeConfig, selectSourceBridge],
+  (bridgesState, bridgeConfig, sourceBridge): TokenKey | null => {
+    if (!bridgeConfig) return null
+    return bridgesState.selectedFromToken || bridgeConfig?.sourceTokens[sourceBridge as BridgeKey]?.[0] || null
   }
 )
 
@@ -247,7 +226,7 @@ export const selectFromTokenKeyForBridge = createSelector(
  * @param depositAmountAsString - The deposit amount as a string.
  * @returns The deposit amount as a BigInt.
  */
-export const selectDepositAmountAsBigInt = createSelector([selectBridgeFrom], (depositAmountAsString): bigint => {
+export const selectDepositAmountAsBigInt = createSelector([selectBridgeInputValue], (depositAmountAsString): bigint => {
   if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
   return BigInt(parseFloat(depositAmountAsString) * WAD.number)
 })
@@ -293,7 +272,7 @@ export const selectFormattedPreviewFee = createSelector(
 )
 
 export const selectDepositDisabled = createSelector(
-  [selectBridgeFrom, selectInputError, selectDepositPending],
+  [selectBridgeInputValue, selectInputError, selectDepositPending],
   (from, error, pending): boolean => {
     return !from.trim() || parseFloat(from) === 0 || !!error || !!pending
   }

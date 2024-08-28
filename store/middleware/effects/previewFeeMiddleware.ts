@@ -1,5 +1,5 @@
 import { AppDispatch } from '@/store'
-import { selectBridgeConfig, selectDepositDisabled, setBridgeFromDebounceComplete } from '@/store/slices/bridges'
+import { selectBridgeConfig, selectDepositDisabled, setInputValueDebounceComplete } from '@/store/slices/bridges'
 import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
 import { Middleware } from '@reduxjs/toolkit'
 
@@ -11,7 +11,7 @@ export const previewFeeMiddleware: Middleware =
   ({ dispatch, getState }: { dispatch: AppDispatch; getState: () => any }) =>
   (next) =>
   (action) => {
-    if (setBridgeFromDebounceComplete.match(action)) {
+    if (setInputValueDebounceComplete.match(action)) {
       const state = getState()
       const disabled = selectDepositDisabled(state)
       const bridgeConfig = selectBridgeConfig(state)
