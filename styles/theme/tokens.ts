@@ -48,6 +48,10 @@ export const semanticTokens = {
       default: 'neutral.300',
       _dark: 'darkMode.300',
     },
+    navDrawerSelected: {
+      default: 'neutral.300',
+      _dark: 'darkMode.900',
+    },
     modalParagraph: {
       default: '#6B7280',
       _dark: 'white',

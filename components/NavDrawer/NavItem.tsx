@@ -38,7 +38,7 @@ export function NavItem({ title, href, leftIcon, disabled, comingSoon, ...props 
         align="center"
         gap={3}
         p={2}
-        bg={isSelected ? 'selected' : 'transparent'}
+        bg={isSelected ? 'navDrawerSelected' : 'transparent'}
         border={isSelected ? '1px solid' : '1px solid transparent'}
         borderColor={isSelected && colorMode === 'light' ? 'border' : 'transparent'}
         _hover={{
