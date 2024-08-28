@@ -17,23 +17,57 @@ export const funkitConfig = {
 
 export const funkitThemeConfig = {
   lightMode: lightTheme({
-    accentColor: 'linear-gradient(101.87deg, #01B0D1 2.85%, #00869d 100.03%)',
-    customFontFamily: 'inherit',
+    accentColor: 'var(--chakra-colors-darkMode-500)',
+    customFontFamily: 'var(--font-recklessNeue)',
+    customFontWeights: {
+      regular: 'var(--font-recklessNeue)',
+      medium: 'var(--font-recklessNeue)',
+      semibold: 'var(--font-recklessNeue)',
+      bold: 'var(--font-recklessNeue)',
+      heavy: 'var(--font-recklessNeue)',
+    },
+    fontSizing: 'regular',
     borderRadius: 'small',
     customColors: {
       notificationPrimary: 'var(--chakra-colors-neutral-500)',
-      buttonDisabled: '#01B0D150',
+
+      // button
+      buttonPrimary: 'var(--chakra-colors-darkMode-500)',
+      buttonDisabled: '#00171F77',
+
+      // modal
+      modalBackdrop: 'rgba(0,0,0,0.7)',
+      modalBackground: 'var(--chakra-colors-neutral-400)',
+      modalBorder: 'var(--chakra-colors-neutral-600)',
+      modalTextDim: 'var(--chakra-colors-neutral-800)',
+      modalTextSecondary: 'var(--chakra-colors-neutral-800)',
     },
   }),
   darkMode: darkTheme({
-    accentColor: 'linear-gradient(101.87deg, #01B0D1 2.85%, #00869d 100.03%)',
+    accentColor: 'var(--chakra-colors-neutral-500)',
     borderRadius: 'small',
+    customFontFamily: 'var(--font-recklessNeue)',
+    customFontWeights: {
+      regular: 'var(--font-recklessNeue)',
+      medium: 'var(--font-ppformula)',
+      semibold: 'var(--font-ppformula)',
+      bold: 'var(--font-ppformula)',
+      heavy: 'var(--font-ppformula)',
+    },
+    fontSizing: 'regular',
     customColors: {
-      notificationPrimary: 'var(--chakra-colors-darkMode-400)',
-      modalBackground: 'var(--chakra-colors-darkMode-500)',
+      notificationPrimary: 'var(--chakra-colors-darkMode-300)',
+
+      // button
+      buttonPrimary: 'var(--chakra-colors-neutral-500)',
+      buttonDisabled: '#f8f3e077',
+
+      // modal
       modalBackdrop: 'rgba(0,0,0,0.7)',
-      buttonDisabled: '#01B0D150',
-      buttonTextPrimary: '#FFFFFF',
+      modalBackground: 'var(--chakra-colors-darkMode-400)',
+      modalBorder: 'var(--chakra-colors-darkMode-300)',
+      modalTextDim: 'var(--chakra-colors-darkMode-200)',
+      modalTextSecondary: 'var(--chakra-colors-darkMode-200)',
     },
   }),
 }
