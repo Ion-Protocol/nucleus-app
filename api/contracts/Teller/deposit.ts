@@ -32,14 +32,11 @@ export async function deposit(
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
-  const allowanceAsBigInt = await allowance(
-    {
-      tokenAddress: depositAsset,
-      spenderAddress: boringVaultAddress,
-      userAddress,
-    },
-    { chainId }
-  )
+  const allowanceAsBigInt = await allowance({
+    tokenAddress: depositAsset,
+    spenderAddress: boringVaultAddress,
+    userAddress,
+  })
 
   ////////////////////////////////
   // Approve
@@ -58,7 +55,7 @@ export async function deposit(
   ////////////////////////////////
   // Calculate Minimum Mint
   ////////////////////////////////
-  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress, chainId }) // Updated to include chainId
+  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
   const minimumMint = calculateMinimumMint(depositAmount, rate)
 
   ////////////////////////////////

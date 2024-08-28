@@ -1,4 +1,4 @@
-import { chainsConfig } from '@/config/chains'
+import { ChainKey, chainsConfig } from '@/config/chains'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'

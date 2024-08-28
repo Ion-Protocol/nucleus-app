@@ -71,7 +71,7 @@ export const fetchBridgeTvl = createAsyncThunk<
 
   try {
     // Fetch total supply of shares
-    const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: 1 })
+    const totalSharesSupply = await getTotalSupply(vaultAddress)
 
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(bridgeKey, accountantAddress) // 1e18
@@ -304,16 +304,13 @@ export const performDeposit = createAsyncThunk<
         ///////////////////////////////////////////////////////////////
         // First: Get updated preview fee
         ///////////////////////////////////////////////////////////////
-        const exchangeRate = await getRateInQuoteSafe(
-          { quote: depositAsset },
-          { contractAddress: accountantAddress, chainId: sourceBridgeChainId }
-        )
+        const exchangeRate = await getRateInQuoteSafe({ quote: depositAsset }, { contractAddress: accountantAddress })
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
         const fee = await previewFee(
           { shareAmount, bridgeData: depositBridgeData },
-          { contractAddress: tellerContractAddress, chainId: sourceBridgeChainId }
+          { contractAddress: tellerContractAddress }
         )
 
         // Add 1% to the fee for padding to prevent the contract from reverting
@@ -323,10 +320,7 @@ export const performDeposit = createAsyncThunk<
         ///////////////////////////////////////////////////////////////
         // Second: Deposit and bridge
         ///////////////////////////////////////////////////////////////
-        const rate = await getRateInQuote(
-          { quote: depositAsset },
-          { contractAddress: accountantAddress, chainId: sourceBridgeChainId }
-        )
+        const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
         const minimumMint = calculateMinimumMint(depositAmount, rate)
 
         // I'm not sure if Fun's beginCheckout function simulates the transaction, so we will do it ourselves just in case
@@ -360,7 +354,7 @@ export const performDeposit = createAsyncThunk<
               value: paddedFee,
             },
           ],
-          targetChain: sourceBridgeChainId.toString(),
+          targetChain: '1',
           targetAsset: depositAsset,
           targetAssetAmount: parseFloat(fromAmount),
           checkoutItemTitle: `Bridge ${fromTokenInfo?.name}`,
@@ -405,6 +399,7 @@ export interface FetchPreviewFeeResult {
 export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { rejectValue: string; state: RootState }>(
   'bridges/fetchPreviewFee',
   async (_, { getState, rejectWithValue, dispatch }) => {
+    console.log('blip')
     try {
       const state = getState()
       const bridgeConfig = selectBridgeConfig(state)
@@ -449,14 +444,14 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
         const exchangeRate = await getRateInQuoteSafe(
           { quote: depositAssetAddress },
-          { contractAddress: accountantContractAddress, chainId }
+          { contractAddress: accountantContractAddress }
         )
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
         const fee = await previewFee(
           { shareAmount, bridgeData: previewFeeBridgeData },
-          { contractAddress: tellerContractAddress, chainId }
+          { contractAddress: tellerContractAddress }
         )
         return { fee: fee.toString() }
       } else {

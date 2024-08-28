@@ -9,6 +9,7 @@ export async function getRate(contractAddress: `0x${string}`): Promise<bigint> {
     address: contractAddress,
     functionName: 'getRate',
     args: [],
+    chainId: 1,
   })
 
   return rate as bigint

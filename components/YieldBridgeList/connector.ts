@@ -3,9 +3,8 @@ import { selectAllBridgeKeys } from '@/store/slices/bridges'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
-  return {
-    bridgeKeys: selectAllBridgeKeys(state),
-  }
+  const bridgeKeys = selectAllBridgeKeys(state)
+  return { bridgeKeys }
 }
 
 const mapDispatch = {}

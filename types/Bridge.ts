@@ -5,7 +5,7 @@ import { Contracts } from './Contracts'
 export interface Bridge {
   name: string
   chainId: number
-  layerZeroChainSelector: number
+  layerZeroChainSelector?: number
   description: string
   sourceBridges: BridgeKey[]
   contracts: Contracts

@@ -17,6 +17,7 @@ export async function latestRoundData(contractAddress: `0x${string}`): Promise<L
     address: contractAddress,
     functionName: 'latestRoundData',
     args: [],
+    chainId: 1,
   })) as bigint[]
 
   return {

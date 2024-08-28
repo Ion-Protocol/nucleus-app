@@ -15,14 +15,14 @@ export namespace CrossChainTellerBase {
 
 export async function previewFee(
   { shareAmount, bridgeData }: { shareAmount: bigint; bridgeData: CrossChainTellerBase.BridgeData },
-  { contractAddress, chainId }: { contractAddress: Address; chainId: number }
+  { contractAddress }: { contractAddress: Address }
 ): Promise<bigint> {
   const fee = (await readContract(wagmiConfig, {
     abi: CrossChainTellerBaseAbi.abi as Abi,
     address: contractAddress,
     functionName: 'previewFee',
     args: [shareAmount, bridgeData],
-    chainId,
+    chainId: 1,
   })) as bigint
 
   return fee

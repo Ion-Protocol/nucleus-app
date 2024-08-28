@@ -30,7 +30,9 @@ export const selectChainId = (state: RootState): number | null => {
 }
 
 export const selectChainKey = createSelector([selectChainId], (chainId): ChainKey | null => {
-  return (Object.keys(chainsConfig).find((key) => chainsConfig[key as ChainKey].id === chainId) as ChainKey) || null
+  const chainKey =
+    (Object.keys(chainsConfig).find((key) => chainsConfig[key as ChainKey].id === chainId) as ChainKey) || null
+  return chainKey
 })
 
 export const { setChainId } = chainSlice.actions
