@@ -3,6 +3,8 @@ import TokenSelect from '../TokenSelect'
 import { TokenInputConnector } from './connector'
 import { useState } from 'react'
 import { IonCard } from '@/components/shared/IonCard'
+import { IonTooltip } from '@/components/shared/IonTooltip'
+import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 
 function TokenInput({
   error,
@@ -14,7 +16,7 @@ function TokenInput({
   tokenBalance,
   loadingTokenBalance,
   tokens,
-  shouldShowMax,
+  shouldIgnoreBalance,
 }: TokenInputConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
 
@@ -27,10 +29,23 @@ function TokenInput({
         </Text>
 
         <Flex color="secondaryText" gap={1}>
-          <Text variant="smallParagraph">Balance: </Text>
-          <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
-            <Text>{tokenBalance}</Text>
-          </Skeleton>
+          {shouldIgnoreBalance ? (
+            <>
+              <Text variant="smallParagraph">Balance: </Text>
+              <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
+                <Text>{tokenBalance}</Text>
+              </Skeleton>
+            </>
+          ) : (
+            <Flex align="center" gap={1}>
+              <Text variant="smallParagraph" color="disabledText">
+                You may input any amount here
+              </Text>
+              <IonTooltip label="You will be able to choose other assets from other chains to convert to the deposit asset">
+                <InfoOutlineIcon color="disabledText" fontSize="small" mt="2px" />
+              </IonTooltip>
+            </Flex>
+          )}
         </Flex>
       </Flex>
 
@@ -54,7 +69,7 @@ function TokenInput({
         {error && <Text color="error.main">{error}</Text>}
         <Flex gap={3} align="center">
           {/* Max Button */}
-          {shouldShowMax && (
+          {shouldIgnoreBalance && (
             <Flex gap={3}>
               <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
                 <Text color="disabledText" variant="smallParagraph">

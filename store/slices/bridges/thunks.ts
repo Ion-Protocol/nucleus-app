@@ -32,7 +32,7 @@ import {
   selectSourceBridgeChainId,
   selectTellerAddress,
 } from './selectors'
-import { clearInputError, clearInputValue, setInputError } from './slice'
+import { clearInputValue } from './slice'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
