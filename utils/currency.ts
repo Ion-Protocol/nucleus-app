@@ -15,9 +15,11 @@ export function currencySwitch(
   value: bigint | number | null,
   price: bigint,
   opts?: { usdDigits?: number; ethDigits?: number; symbol?: string }
-): string | null {
+): string {
   const { usdDigits = 0, ethDigits = 0, symbol = 'ETH' } = opts || {}
-  if (value === null) return null
+  if (value === null) {
+    value = BigInt(0)
+  }
 
   switch (currency) {
     case Currency.USD:

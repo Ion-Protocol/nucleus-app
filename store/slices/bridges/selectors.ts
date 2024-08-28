@@ -12,6 +12,7 @@ import { selectChainKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectBridgeKeyFromRoute } from '../router'
 import { BridgeData } from './initialState'
+import { Currency } from '@/types/Currency'
 
 export const selectBridgesState = (state: RootState) => state.bridges
 export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
@@ -261,13 +262,15 @@ export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (prev
 export const selectFormattedPreviewFee = createSelector(
   [selectPreviewFeeAsBigInt, selectUsdPerEthRate, selectCurrency, selectBridgeConfig],
   (previewFee, price, currency, bridgeConfig): string => {
-    if (!previewFee) return '$0'
+    if (!previewFee) {
+      price = BigInt(0)
+    }
     const formattedPreviewFee = currencySwitch(currency, previewFee, price, {
       usdDigits: 2,
       ethDigits: 7,
       symbol: bridgeConfig?.networkSymbol,
     })
-    return formattedPreviewFee || '$0'
+    return formattedPreviewFee
   }
 )
 
