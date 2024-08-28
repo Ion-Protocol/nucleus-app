@@ -119,17 +119,6 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
-  [TokenKey.BOBA]: {
-    key: TokenKey.BOBA,
-    name: 'Boba',
-    symbol: 'BOBA',
-    chains: {
-      [BridgeKey.ETHEREUM]: {
-        address: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
-        chainId: mainnet.id,
-      },
-    },
-  },
   [TokenKey.FRAX]: {
     key: TokenKey.FRAX,
     name: 'Frax',

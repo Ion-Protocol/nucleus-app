@@ -2,7 +2,7 @@ import { createFunkitWagmiConfig, getDefaultTransports, getDefaultWallets } from
 import { bitgetWallet, ledgerWallet } from '@funkit/connect/wallets'
 import { http } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
-import { boba, fraxtal, sei, tenderlyStaging } from './networks'
+import { fraxtal, sei, tenderlyStaging } from './networks'
 
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 
@@ -13,7 +13,6 @@ if (process.env.NEXT_PUBLIC_SHOW_TENDERLY) {
   chains.push(tenderlyStaging)
 }
 chains.push(sei)
-chains.push(boba)
 chains.push(fraxtal)
 
 const { wallets } = getDefaultWallets()
@@ -33,7 +32,6 @@ export const wagmiConfig = createFunkitWagmiConfig({
     ...getDefaultTransports(),
     [tenderlyStaging.id]: http(),
     [sei.id]: http(),
-    [boba.id]: http(),
     [fraxtal.id]: http(),
   },
   ssr: true,

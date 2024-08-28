@@ -1,5 +1,5 @@
 import { Chain } from '@funkit/connect'
-import { boba as bobaWagmi, fraxtal as fraxtalWagmi, mainnet, sei as seiWagmi } from 'wagmi/chains'
+import { fraxtal as fraxtalWagmi, sei as seiWagmi } from 'wagmi/chains'
 
 const TENDERLY_STAGING_RPC_URL = 'https://virtual.mainnet.rpc.tenderly.co/2c860eb1-24d0-4817-86f4-dd17c2629d18'
 const TENDERLY_STAGING_CHAIN_ID = 99099127
@@ -38,11 +38,6 @@ export const tenderlyStaging: Chain = {
 export const sei = {
   ...seiWagmi,
   iconUrl: '/assets/svgs/sei.svg',
-}
-
-export const boba = {
-  ...bobaWagmi,
-  iconUrl: '/assets/svgs/boba-network.svg',
 }
 
 export const fraxtal = {

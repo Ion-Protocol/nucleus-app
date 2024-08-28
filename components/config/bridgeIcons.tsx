@@ -3,10 +3,9 @@ import { BridgeKey } from '@/types/BridgeKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
 import { EthereumIcon } from '../shared/icons/Ethereum'
+import { FraxIcon } from '../shared/icons/Frax'
 import { MorphLogo } from '../shared/icons/Morph'
 import { OptimismIcon } from '../shared/icons/Optimism'
-import { BobaNetworkIcon } from '../shared/icons/BobaNetwork'
-import { FraxIcon } from '../shared/icons/Frax'
 import { SwellChainIcon } from '../shared/icons/SwellChain'
 
 export const bridgeIconMap: Partial<Record<BridgeKey, (props: ChakraProps) => JSX.Element>> = {
@@ -15,7 +14,6 @@ export const bridgeIconMap: Partial<Record<BridgeKey, (props: ChakraProps) => JS
   [BridgeKey.MORPH]: (props) => <MorphLogo {...props} />,
   [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: (props) => <OptimismIcon {...props} />,
   [BridgeKey.OPTIMISM_SEPOLIA_OPSTACK]: (props) => <OptimismIcon {...props} />,
-  [BridgeKey.BOBA]: (props) => <BobaNetworkIcon {...props} />,
   [BridgeKey.FRAX]: (props) => <FraxIcon {...props} />,
   [BridgeKey.SWELL]: (props) => <SwellChainIcon {...props} />,
 }

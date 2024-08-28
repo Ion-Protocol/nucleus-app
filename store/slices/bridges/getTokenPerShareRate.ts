@@ -48,7 +48,6 @@ class NotImplementedStrategy implements RateFetchingStrategy {
  */
 export async function getTokenPerShareRate(bridgeKey: BridgeKey, accountantAddress: Address): Promise<bigint> {
   const strategies: Record<BridgeKey, RateFetchingStrategy> = {
-    [BridgeKey.BOBA]: new NotImplementedStrategy(),
     [BridgeKey.ETHEREUM]: new NotImplementedStrategy(),
     [BridgeKey.FRAX]: new RateForFrax(),
     [BridgeKey.MORPH]: new NotImplementedStrategy(),

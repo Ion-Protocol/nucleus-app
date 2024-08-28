@@ -1,7 +1,7 @@
 import { Bridge } from '@/types/Bridge'
-import { TokenKey } from '@/types/TokenKey'
 import { BridgeKey } from '@/types/BridgeKey'
-import { boba, fraxtal, sei } from 'wagmi/chains'
+import { TokenKey } from '@/types/TokenKey'
+import { fraxtal, sei } from 'wagmi/chains'
 
 export enum ChainKey {
   MAINNET = 'mainnet',

@@ -1,5 +1,4 @@
 export enum BridgeKey {
-  BOBA = 'boba',
   ETHEREUM = 'ethereum',
   FRAX = 'frax',
   MORPH = 'morph',
