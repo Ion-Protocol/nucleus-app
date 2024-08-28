@@ -66,7 +66,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
   },
   [TokenKey.SEI]: {
     key: TokenKey.SEI,
-    name: 'SEI',
+    name: 'seiyanETH',
     symbol: 'SEI',
     chains: {
       [BridgeKey.ETHEREUM]: {

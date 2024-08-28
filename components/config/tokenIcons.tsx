@@ -1,7 +1,6 @@
 import { TokenKey } from '@/types/TokenKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
-import { BitcoinIcon } from '../shared/icons/Bitcoin'
 import { BobaNetworkIcon } from '../shared/icons/BobaNetwork'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { FraxIcon } from '../shared/icons/Frax'
@@ -10,6 +9,8 @@ import { RswethIcon } from '../shared/icons/Rsweth'
 import { SeiIcon } from '../shared/icons/Sei'
 import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
 import { TokenRsethIcon } from '../shared/icons/TokenRseth'
+import { TokenSwbtcIcon } from '../shared/icons/TokenSwbtc'
+import { TokenWbtcIcon } from '../shared/icons/TokenWbtc'
 import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
@@ -31,9 +32,9 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.OP]: (props) => <OptimismIcon {...props} />,
   [TokenKey.BOBA]: (props) => <BobaNetworkIcon {...props} />,
   [TokenKey.FRAX]: (props) => <FraxIcon {...props} />,
-  [TokenKey.WBTC]: (props) => <BitcoinIcon {...props} />,
-  [TokenKey.SWBTC]: (props) => <BitcoinIcon {...props} />,
-  [TokenKey.RSWBTC]: (props) => <BitcoinIcon {...props} />,
+  [TokenKey.WBTC]: (props) => <TokenWbtcIcon {...props} />,
+  [TokenKey.SWBTC]: (props) => <TokenSwbtcIcon {...props} />,
+  [TokenKey.RSWBTC]: (props) => <TokenWbtcIcon {...props} />,
   [TokenKey.WFRXETH]: (props) => <TokenWfrxethIcon {...props} />,
 }
 
