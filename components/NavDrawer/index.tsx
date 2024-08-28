@@ -14,6 +14,7 @@ import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
 import { openTermsModal } from '@/store/slices/ui'
 import { TokenIcon } from '../config/tokenIcons'
+import { BridgeIcon } from '../config/bridgeIcons'
 
 export function NavDrawer() {
   const bridges = useAppSelector(selectBridgesAsArray)
@@ -41,13 +42,12 @@ export function NavDrawer() {
           <NavCollapse title="Bridge" leftIcon={<BridgeNavIcon />}>
             {bridges.map((bridge) => (
               <NavItem
-                // ml={3}
                 key={bridge.key}
                 title={bridge.name}
                 href={`/bridge/${bridge.key}`}
                 disabled={bridge.comingSoon}
                 comingSoon={bridge.comingSoon}
-                // leftIcon={<TokenIcon tokenKey={bridge.nativeToken} />}
+                leftIcon={<BridgeIcon bridgeKey={bridge.key} />}
               />
             ))}
           </NavCollapse>

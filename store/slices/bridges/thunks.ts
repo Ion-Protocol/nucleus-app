@@ -19,7 +19,7 @@ import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
 import { selectChainId } from '../chain'
 import { selectBridgeKeyFromRoute } from '../router'
-import { setErrorMessage, setErrorTitle } from '../status'
+import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { getTokenPerShareRate } from './getTokenPerShareRate'
 import {
   selectBridgeConfig,
@@ -201,7 +201,6 @@ export const performDeposit = createAsyncThunk<
       boringVaultAddress &&
       bridgeKey &&
       depositAsset &&
-      layerZeroChainSelector !== undefined &&
       sourceBridgeKey &&
       sourceBridgeChainId &&
       tellerContractAddress &&
@@ -215,7 +214,7 @@ export const performDeposit = createAsyncThunk<
       }
 
       const depositBridgeData: CrossChainTellerBase.BridgeData = {
-        chainSelector: layerZeroChainSelector,
+        chainSelector: layerZeroChainSelector || 0,
         destinationChainReceiver: userAddress,
         bridgeFeeToken: feeTokenAddress,
         messageGas: 100000,
@@ -241,6 +240,9 @@ export const performDeposit = createAsyncThunk<
             chainId: sourceBridgeChainId,
           }
         )
+
+        dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
+        dispatch(setTransactionTxHash(txHash))
       } else {
         ///////////////////////////////////////////////////////////////
         // Source chain and bridge are different
@@ -258,29 +260,24 @@ export const performDeposit = createAsyncThunk<
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
-        const fee = await previewFee(
-          { shareAmount, bridgeData: depositBridgeData },
-          { contractAddress: tellerContractAddress }
-        )
+        let paddedFee = BigInt(0)
 
-        // Add 1% to the fee for padding to prevent the contract from reverting
-        // This extra amount will be refunded
-        const paddedFee = (fee * BigInt(101)) / BigInt(100)
+        if (layerZeroChainSelector) {
+          const fee = await previewFee(
+            { shareAmount, bridgeData: depositBridgeData },
+            { contractAddress: tellerContractAddress }
+          )
+
+          // Add 1% to the fee for padding to prevent the contract from reverting
+          // This extra amount will be refunded
+          paddedFee = (fee * BigInt(101)) / BigInt(100)
+        }
 
         ///////////////////////////////////////////////////////////////
         // Second: Deposit and bridge
         ///////////////////////////////////////////////////////////////
         const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
         const minimumMint = calculateMinimumMint(depositAmount, rate)
-
-        // I'm not sure if Fun's beginCheckout function simulates the transaction, so we will do it ourselves just in case
-        await simulateContract(wagmiConfig, {
-          abi: CrossChainTellerBaseAbi.abi as Abi,
-          address: tellerContractAddress,
-          functionName: 'depositAndBridge',
-          args: [depositAsset, depositAmount, minimumMint, depositBridgeData],
-          value: paddedFee,
-        })
 
         const VERB = 'Mint'
         const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
@@ -315,7 +312,6 @@ export const performDeposit = createAsyncThunk<
         })
       }
 
-      dispatch(clearInputValue())
       return { txHash }
     } else {
       dispatch(setErrorTitle('Deposit Failed'))

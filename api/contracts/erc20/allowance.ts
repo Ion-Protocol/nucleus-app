@@ -24,7 +24,6 @@ export async function allowance({
     address: tokenAddress,
     functionName: 'allowance',
     args: [userAddress, spenderAddress],
-    chainId: 1,
   })
 
   return allowanceAsBigInt

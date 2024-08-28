@@ -12,7 +12,6 @@ export async function getRateInQuote(
     address: contractAddress,
     functionName: 'getRateInQuote',
     args: [quote],
-    chainId: 1,
   })
 
   return rate as bigint
