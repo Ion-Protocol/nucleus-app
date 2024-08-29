@@ -280,3 +280,13 @@ export const selectDepositDisabled = createSelector(
     return !from.trim() || parseFloat(from) === 0 || !!error || !!pending
   }
 )
+
+export const selectReceiveOnBridge = createSelector(
+  [selectBridgeConfig, selectChainConfig],
+  (bridgeConfig, chainConfig) => {
+    if (!bridgeConfig || !chainConfig) return null
+    const receiveOn = bridgeConfig.receiveOn
+    if (receiveOn === BridgeKey.ETHEREUM) return 'Ethereum'
+    return chainConfig.bridges[receiveOn]?.name || null
+  }
+)

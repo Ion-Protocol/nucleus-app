@@ -16,4 +16,5 @@ export interface Bridge {
   networkSymbol: string
   comingSoon?: boolean
   feeToken: TokenKey
+  receiveOn: BridgeKey
 }

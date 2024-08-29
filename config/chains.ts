@@ -37,6 +37,7 @@ const mainnetBridges: Bridges = {
     feeToken: TokenKey.ETH,
     networkSymbol: 'ETH',
     layerZeroChainSelector: 30280,
+    receiveOn: BridgeKey.SEI,
     description:
       'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
   },
@@ -58,6 +59,7 @@ const mainnetBridges: Bridges = {
     feeToken: TokenKey.ETH, // The token here is technically just NATIVE, but for now we just use the name ETH here
     networkSymbol: 'ETH',
     layerZeroChainSelector: 30255,
+    receiveOn: BridgeKey.FRAX,
     description:
       'The Frax Network is a decentralized stablecoin protocol that combines algorithmic and collateral-backed mechanisms to maintain price stability.',
   },
@@ -76,6 +78,7 @@ const mainnetBridges: Bridges = {
     },
     nativeToken: TokenKey.RSWBTC,
     feeToken: TokenKey.ETH,
+    receiveOn: BridgeKey.ETHEREUM,
     networkSymbol: 'BTC',
     description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
   },
