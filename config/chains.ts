@@ -41,7 +41,7 @@ const mainnetBridges: Bridges = {
       'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
   },
   [BridgeKey.FRAX]: {
-    name: 'Frax',
+    name: 'Fraxtal',
     chainId: fraxtal.id,
     comingSoon: false,
     contracts: {

@@ -121,7 +121,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
   },
   [TokenKey.FRAX]: {
     key: TokenKey.FRAX,
-    name: 'Frax',
+    name: 'frxtlETH',
     symbol: 'FRAX',
     chains: {
       [BridgeKey.ETHEREUM]: {
