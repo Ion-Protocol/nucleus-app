@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { IonCard } from '@/components/shared/IonCard'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function TokenInput({
   error,
@@ -32,9 +33,9 @@ function TokenInput({
           {shouldIgnoreBalance ? (
             <>
               <Text variant="smallParagraph">Balance: </Text>
-              <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
+              <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
                 <Text>{tokenBalance}</Text>
-              </Skeleton>
+              </IonSkeleton>
             </>
           ) : (
             <Flex align="center" gap={1}>

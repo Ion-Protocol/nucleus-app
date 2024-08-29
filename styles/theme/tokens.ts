@@ -120,12 +120,12 @@ export const semanticTokens = {
     },
     skeleton: {
       startColor: {
-        default: 'neutral.500',
-        _dark: 'darkMode.500',
+        default: 'neutral.600',
+        _dark: 'darkMode.300',
       },
       endColor: {
-        default: 'neutral.600',
-        _dark: 'darkMode.600',
+        default: 'neutral.700',
+        _dark: 'darkMode.400',
       },
     },
     code: {
