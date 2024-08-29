@@ -64,8 +64,8 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
-  [TokenKey.SEI]: {
-    key: TokenKey.SEI,
+  [TokenKey.SEIYANETH]: {
+    key: TokenKey.SEIYANETH,
     name: 'seiyanETH',
     symbol: 'SEI',
     chains: {
@@ -119,8 +119,8 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
-  [TokenKey.FRAX]: {
-    key: TokenKey.FRAX,
+  [TokenKey.FRXTLETH]: {
+    key: TokenKey.FRXTLETH,
     name: 'frxtlETH',
     symbol: 'FRAX',
     chains: {

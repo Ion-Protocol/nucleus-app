@@ -33,7 +33,7 @@ const mainnetBridges: Bridges = {
       [BridgeKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
       [BridgeKey.SEI]: [TokenKey.WETH],
     },
-    nativeToken: TokenKey.SEI,
+    nativeToken: TokenKey.SEIYANETH,
     feeToken: TokenKey.ETH,
     networkSymbol: 'ETH',
     layerZeroChainSelector: 30280,
@@ -55,7 +55,7 @@ const mainnetBridges: Bridges = {
       [BridgeKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
       [BridgeKey.FRAX]: [TokenKey.WFRXETH],
     },
-    nativeToken: TokenKey.FRAX,
+    nativeToken: TokenKey.FRXTLETH,
     feeToken: TokenKey.ETH, // The token here is technically just NATIVE, but for now we just use the name ETH here
     networkSymbol: 'ETH',
     layerZeroChainSelector: 30255,
