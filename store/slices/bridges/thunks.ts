@@ -27,6 +27,7 @@ import {
   selectDepositAmountAsBigInt,
   selectDepositAndBridgeCheckoutParams,
   selectDepositBridgeData,
+  selectDepositDisabled,
   selectFeeTokenAddress,
   selectFromTokenKey,
   selectPreviewFeeAsBigInt,
@@ -176,8 +177,12 @@ export const performDeposit = createAsyncThunk<
 >('bridges/performDeposit', async (beginCheckout, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
-    const userAddress = selectAddress(state)
+    const depositDisabled = selectDepositDisabled(state)
+    if (depositDisabled) {
+      throw new Error('Deposit is disabled')
+    }
 
+    const userAddress = selectAddress(state)
     const depositAmount = selectDepositAmountAsBigInt(state)
     const fromAmount = selectBridgeInputValue(state)
     const chainId = selectChainId(state)
