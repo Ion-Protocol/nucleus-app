@@ -391,10 +391,9 @@ export const selectDepositAndBridgeCheckoutParams = (minimumMint: bigint) =>
 
       // Values
       const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
-      const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
 
       // Null checks
-      if (!userAddress || !feeTokenAddress || !feeAsBigInt || !depositAssetAddress) {
+      if (!userAddress || !feeTokenAddress || !depositAssetAddress) {
         return null
       }
 

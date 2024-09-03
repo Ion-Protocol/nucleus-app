@@ -249,12 +249,17 @@ export const performDeposit = createAsyncThunk<
       // Source chain and bridge are different
       // Deposit & Bridge
       ///////////////////////////////////////////////////////////////
+      let previewFeeAsBigInt: bigint = BigInt(0)
+      const depositBridgeData = selectDepositBridgeData(state)
 
       ///////////////////////////////////////////////////////////////
       // 1. Load up-to-date preview fee into the store
       ///////////////////////////////////////////////////////////////
-      if (layerZeroChainSelector) {
-        await dispatch(fetchPreviewFee())
+      if (layerZeroChainSelector && depositBridgeData) {
+        previewFeeAsBigInt = await previewFee(
+          { shareAmount: depositAmount, bridgeData: depositBridgeData },
+          { contractAddress: tellerContractAddress }
+        )
       }
 
       ///////////////////////////////////////////////////////////////
@@ -271,10 +276,12 @@ export const performDeposit = createAsyncThunk<
       const shouldUseFunCheckout = selectShouldUseFunCheckout(state)
 
       if (shouldUseFunCheckout) {
-        await beginCheckout(selectDepositAndBridgeCheckoutParams(minimumMint)(state))
+        const params = selectDepositAndBridgeCheckoutParams(minimumMint)(state)
+        if (params === null) {
+          throw new Error('Missing checkout params')
+        }
+        await beginCheckout(params)
       } else {
-        const depositBridgeData = selectDepositBridgeData(state)
-        const previewFeeAsBigInt = selectPreviewFeeAsBigInt(state)
         if (!depositBridgeData) throw new Error('Missing deposit bridge data')
         txHash = await depositAndBridge(
           { depositAsset, depositAmount, bridgeData: depositBridgeData },
