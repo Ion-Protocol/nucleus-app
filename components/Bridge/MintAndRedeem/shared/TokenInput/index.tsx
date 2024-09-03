@@ -30,23 +30,12 @@ function TokenInput({
         </Text>
 
         <Flex color="secondaryText" gap={1}>
-          {shouldIgnoreBalance ? (
-            <>
-              <Text variant="smallParagraph">Balance: </Text>
-              <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
-                <Text>{tokenBalance}</Text>
-              </IonSkeleton>
-            </>
-          ) : (
-            <Flex align="center" gap={1}>
-              <Text variant="smallParagraph" color="disabledText">
-                You may input any amount here
-              </Text>
-              <IonTooltip label="You will be able to choose other assets from other chains to convert to the deposit asset">
-                <InfoOutlineIcon color="disabledText" fontSize="small" mt="2px" />
-              </IonTooltip>
-            </Flex>
-          )}
+          <>
+            <Text variant="smallParagraph">Balance: </Text>
+            <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
+              <Text>{tokenBalance}</Text>
+            </IonSkeleton>
+          </>
         </Flex>
       </Flex>
 

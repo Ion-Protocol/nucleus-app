@@ -3,18 +3,17 @@ import { getRateInQuote } from '@/api/contracts/Accountant/getRateInQuote'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
+import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
 import { nativeAddress } from '@/config/constants'
 import { tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
-import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
 import { RootState } from '@/store'
 import { BridgeKey } from '@/types/BridgeKey'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { Abi, erc20Abi } from 'viem'
-import { simulateContract, switchChain } from 'wagmi/actions'
+import { switchChain } from 'wagmi/actions'
 import { selectAddress } from '../account/slice'
 import { selectTokenBalance } from '../balance'
 import { selectChainId } from '../chain'
@@ -26,13 +25,16 @@ import {
   selectBridgeInputValue,
   selectChainConfig,
   selectDepositAmountAsBigInt,
+  selectDepositAndBridgeCheckoutParams,
+  selectDepositBridgeData,
   selectFeeTokenAddress,
   selectFromTokenKey,
+  selectPreviewFeeAsBigInt,
+  selectShouldUseFunCheckout,
   selectSourceBridge,
   selectSourceBridgeChainId,
   selectTellerAddress,
 } from './selectors'
-import { clearInputValue } from './slice'
 
 export interface FetchBridgeTvlResult {
   bridgeKey: BridgeKey
@@ -197,127 +199,99 @@ export const performDeposit = createAsyncThunk<
         : null
 
     if (
-      accountantAddress &&
-      boringVaultAddress &&
-      bridgeKey &&
-      depositAsset &&
-      sourceBridgeKey &&
-      sourceBridgeChainId &&
-      tellerContractAddress &&
-      feeTokenAddress &&
-      tellerAddress &&
-      userAddress
+      !accountantAddress ||
+      !boringVaultAddress ||
+      !bridgeKey ||
+      !depositAsset ||
+      !sourceBridgeKey ||
+      !sourceBridgeChainId ||
+      !tellerContractAddress ||
+      !feeTokenAddress ||
+      !tellerAddress ||
+      !userAddress
     ) {
-      // if chain needs to switch, switch it
-      if (chainId !== sourceBridgeChainId) {
-        await switchChain(wagmiConfig, { chainId: sourceBridgeChainId })
+      dispatch(setErrorTitle('Missing required values'))
+      dispatch(setErrorMessage('Missing required values'))
+      throw new Error('Missing required values')
+    }
+
+    // if chain needs to switch, switch it
+    if (chainId !== sourceBridgeChainId) {
+      await switchChain(wagmiConfig, { chainId: sourceBridgeChainId })
+    }
+
+    let txHash: `0x${string}` | null = null
+
+    if (sourceBridgeKey === bridgeKey) {
+      ///////////////////////////////////////////////////////////////
+      // Source chain and current bridge are the same
+      // Deposit only
+      ///////////////////////////////////////////////////////////////
+
+      // For example, both are Sei,
+      // Deposit without bridging.
+      txHash = await deposit(
+        { depositAsset, depositAmount },
+        {
+          userAddress,
+          tellerContractAddress,
+          boringVaultAddress,
+          accountantAddress,
+          chainId: sourceBridgeChainId,
+        }
+      )
+
+      dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
+      dispatch(setTransactionTxHash(txHash))
+    } else {
+      ///////////////////////////////////////////////////////////////
+      // Source chain and bridge are different
+      // Deposit & Bridge
+      ///////////////////////////////////////////////////////////////
+
+      ///////////////////////////////////////////////////////////////
+      // 1. Load up-to-date preview fee into the store
+      ///////////////////////////////////////////////////////////////
+      if (layerZeroChainSelector) {
+        await dispatch(fetchPreviewFee())
       }
 
-      const depositBridgeData: CrossChainTellerBase.BridgeData = {
-        chainSelector: layerZeroChainSelector || 0,
-        destinationChainReceiver: userAddress,
-        bridgeFeeToken: feeTokenAddress,
-        messageGas: 100000,
-        data: '',
-      }
+      ///////////////////////////////////////////////////////////////
+      // 2. Calculate minimum mint
+      ///////////////////////////////////////////////////////////////
+      const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
+      const minimumMint = calculateMinimumMint(depositAmount, rate)
 
-      let txHash: `0x${string}` | null = null
-      if (sourceBridgeKey === bridgeKey) {
-        ///////////////////////////////////////////////////////////////
-        // Source chain and current bridge are the same
-        // Deposit only
-        ///////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////
+      // 3. Deposit and bridge
+      ///////////////////////////////////////////////////////////////
 
-        // For example, both are Sei,
-        // Deposit without bridging.
-        txHash = await deposit(
-          { depositAsset, depositAmount },
+      // Check if user has enough balance
+      const shouldUseFunCheckout = selectShouldUseFunCheckout(state)
+
+      if (shouldUseFunCheckout) {
+        await beginCheckout(selectDepositAndBridgeCheckoutParams(minimumMint)(state))
+      } else {
+        const depositBridgeData = selectDepositBridgeData(state)
+        const previewFeeAsBigInt = selectPreviewFeeAsBigInt(state)
+        if (!depositBridgeData) throw new Error('Missing deposit bridge data')
+        txHash = await depositAndBridge(
+          { depositAsset, depositAmount, bridgeData: depositBridgeData },
           {
             userAddress,
             tellerContractAddress,
             boringVaultAddress,
             accountantAddress,
             chainId: sourceBridgeChainId,
+            fee: previewFeeAsBigInt,
           }
         )
-
         dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
         dispatch(setTransactionTxHash(txHash))
-      } else {
-        ///////////////////////////////////////////////////////////////
-        // Source chain and bridge are different
-        // Deposit & Bridge
-        ///////////////////////////////////////////////////////////////
-
-        // If the source chain and and destination chains are different.
-        // For example, the source is Ethereum and the destination is Optimism.
-        // Deposit with bridging.
-
-        ///////////////////////////////////////////////////////////////
-        // First: Get updated preview fee
-        ///////////////////////////////////////////////////////////////
-        const exchangeRate = await getRateInQuoteSafe({ quote: depositAsset }, { contractAddress: accountantAddress })
-
-        const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
-
-        let paddedFee = BigInt(0)
-
-        if (layerZeroChainSelector) {
-          const fee = await previewFee(
-            { shareAmount, bridgeData: depositBridgeData },
-            { contractAddress: tellerContractAddress }
-          )
-
-          // Add 1% to the fee for padding to prevent the contract from reverting
-          // This extra amount will be refunded
-          paddedFee = (fee * BigInt(101)) / BigInt(100)
-        }
-
-        ///////////////////////////////////////////////////////////////
-        // Second: Deposit and bridge
-        ///////////////////////////////////////////////////////////////
-        const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
-        const minimumMint = calculateMinimumMint(depositAmount, rate)
-
-        const VERB = 'Mint'
-        const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
-        await beginCheckout({
-          modalTitle: `${VERB} ${fromTokenInfo?.name}`,
-          iconSrc: `/assets/svgs/token-${fromTokenInfo?.key}.svg`,
-          actionsParams: [
-            // Approve the ERC20 token
-            {
-              contractAbi: erc20Abi,
-              contractAddress: depositAsset,
-              functionName: 'approve',
-              functionArgs: [boringVaultAddress, depositAmount],
-            },
-            // Deposit the token
-            {
-              contractAbi: CrossChainTellerBaseAbi.abi as Abi,
-              contractAddress: tellerContractAddress,
-              functionName: 'depositAndBridge',
-              functionArgs: [depositAsset, depositAmount, minimumMint, depositBridgeData],
-              value: paddedFee,
-            },
-          ],
-          targetChain: '1',
-          targetAsset: depositAsset,
-          targetAssetAmount: parseFloat(fromAmount),
-          checkoutItemTitle: `Bridge ${fromTokenInfo?.name}`,
-          checkoutItemDescription: `${VERB} ${fromTokenInfo?.name}`,
-          checkoutItemAmount: parseFloat(fromAmount),
-          expirationTimestampMs: 3600000,
-          disableEditing: true,
-        })
       }
-
-      return { txHash }
-    } else {
-      dispatch(setErrorTitle('Deposit Failed'))
-      dispatch(setErrorMessage('Some required values are missing'))
-      return { txHash: null }
     }
+
+    return { txHash }
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to deposit`

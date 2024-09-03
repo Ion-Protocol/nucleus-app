@@ -1,15 +1,17 @@
 import { RootState } from '@/store'
-import { selectDepositDisabled, selectDepositPending } from '@/store/slices/bridges'
+import { selectDepositDisabled, selectDepositPending, selectShouldUseFunCheckout } from '@/store/slices/bridges'
 import { performDeposit } from '@/store/slices/bridges/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
   const loading = selectDepositPending(state)
   const disabled = selectDepositDisabled(state)
+  const shouldUseFunCheckout = selectShouldUseFunCheckout(state)
 
   return {
     loading,
     disabled,
+    shouldUseFunCheckout: shouldUseFunCheckout && !disabled,
   }
 }
 

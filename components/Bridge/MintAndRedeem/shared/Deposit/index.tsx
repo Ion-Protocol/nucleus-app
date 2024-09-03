@@ -1,8 +1,9 @@
 import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
-import { useConnectModal, useFunkitCheckout } from '@funkit/connect'
+import { Text } from '@chakra-ui/react'
+import { FunkitPaymentsIconLine, useConnectModal, useFunkitCheckout } from '@funkit/connect'
 import { SubmitConnector } from './connector'
 
-function Deposit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
+function Deposit({ onSubmit, loading, disabled, shouldUseFunCheckout }: SubmitConnector.Props) {
   const { openConnectModal } = useConnectModal()
   const { beginCheckout } = useFunkitCheckout({
     onLoginRequired: openConnectModal,
@@ -16,13 +17,15 @@ function Deposit({ onSubmit, loading, disabled }: SubmitConnector.Props) {
     <ConnectAwareButton
       h="fit-content"
       p={2}
+      gap={1}
       isLoading={loading}
       onClick={handleClickSubmit}
       isDisabled={disabled}
       _hover={!loading && !disabled ? {} : undefined}
       _active={!loading && !disabled ? {} : undefined}
     >
-      Mint
+      <Text variant="button">Mint {shouldUseFunCheckout && 'with Fun'}</Text>
+      {shouldUseFunCheckout && <FunkitPaymentsIconLine />}
     </ConnectAwareButton>
   )
 }

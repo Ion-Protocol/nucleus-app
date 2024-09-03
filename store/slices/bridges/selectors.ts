@@ -1,5 +1,7 @@
-import { ChainKey, chainsConfig } from '@/config/chains'
+import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
+import { chainsConfig } from '@/config/chains'
 import { tokensConfig } from '@/config/token'
+import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
 import { RootState } from '@/store'
 import { selectCurrency } from '@/store/slices/currency'
 import { Bridge } from '@/types/Bridge'
@@ -8,11 +10,13 @@ import { TokenKey } from '@/types/TokenKey'
 import { WAD } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
+import { Abi, erc20Abi } from 'viem'
+import { selectAddress } from '../account'
+import { selectBalances } from '../balance'
 import { selectChainKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectBridgeKeyFromRoute } from '../router'
 import { BridgeData } from './initialState'
-import { Currency } from '@/types/Currency'
 
 export const selectBridgesState = (state: RootState) => state.bridges
 export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
@@ -68,6 +72,14 @@ export const selectSourceTokens = createSelector(
 
 export const selectTellerAddress = createSelector([selectBridgeConfig], (bridgeConfig): `0x${string}` | null => {
   return bridgeConfig?.contracts.teller || null
+})
+
+export const selectBoringVaultAddress = createSelector([selectBridgeConfig], (bridgeConfig): `0x${string}` | null => {
+  return bridgeConfig?.contracts.boringVault || null
+})
+
+export const selectAccountantAddress = createSelector([selectBridgeConfig], (bridgeConfig): `0x${string}` | null => {
+  return bridgeConfig?.contracts.accountant || null
 })
 
 export const selectFeeTokenKey = createSelector([selectBridgeConfig], (bridgeConfig): TokenKey | null => {
@@ -255,8 +267,8 @@ export const selectDepositError = createSelector([(state: RootState) => state], 
 })
 
 export const selectPreviewFee = (state: RootState): string | null => state.bridges.previewFee
-export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (previewFee): bigint | null => {
-  return previewFee ? BigInt(previewFee) : null
+export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (previewFee): bigint => {
+  return previewFee ? BigInt(previewFee) : BigInt(0)
 })
 
 export const selectFormattedPreviewFee = createSelector(
@@ -275,8 +287,8 @@ export const selectFormattedPreviewFee = createSelector(
 )
 
 export const selectDepositDisabled = createSelector(
-  [selectBridgeInputValue, selectInputError, selectDepositPending],
-  (from, error, pending): boolean => {
+  [selectBridgeInputValue, selectInputError, selectDepositPending, selectPreviewFeeLoading],
+  (from, error, pending, previewFeeLoading): boolean => {
     return !from.trim() || parseFloat(from) === 0 || !!error || !!pending
   }
 )
@@ -290,3 +302,130 @@ export const selectReceiveOnBridge = createSelector(
     return chainConfig.bridges[receiveOn]?.name || null
   }
 )
+
+export const selectDepositAssetAddress = createSelector(
+  [selectFromTokenKey, selectSourceBridge],
+  (depositAssetTokenKey, sourceBridgeKey) => {
+    if (!depositAssetTokenKey || !sourceBridgeKey) return null
+    return tokensConfig[depositAssetTokenKey]?.chains[sourceBridgeKey as BridgeKey]?.address
+  }
+)
+
+export const selectContractAddressByName = (name: string) =>
+  createSelector([selectBridgeConfig], (bridgeConfig) => {
+    return bridgeConfig?.contracts[name as keyof typeof bridgeConfig.contracts]
+  })
+
+export const selectSelectedTokenBalance = createSelector(
+  [selectSourceBridge, selectFromTokenKey, selectBalances],
+  (sourceBridgeKey, fromTokenKey, balances) => {
+    if (!sourceBridgeKey || !fromTokenKey) return null
+    return balances[fromTokenKey]?.[sourceBridgeKey] || null
+  }
+)
+
+export const selectWalletHasEnoughBalance = createSelector(
+  [selectSelectedTokenBalance, selectDepositAmountAsBigInt],
+  (selectedTokenBalance, depositAmountAsBigInt) => {
+    if (selectedTokenBalance === null) return false
+    return BigInt(selectedTokenBalance) >= depositAmountAsBigInt
+  }
+)
+
+export const selectShouldUseFunCheckout = createSelector([selectWalletHasEnoughBalance], (walletHasEnoughBalance) => {
+  return !walletHasEnoughBalance
+})
+
+export const selectLayerZeroChainSelector = createSelector([selectBridgeConfig], (bridgeConfig): number => {
+  return bridgeConfig?.layerZeroChainSelector || 0
+})
+
+export const selectDepositBridgeData = createSelector(
+  [selectLayerZeroChainSelector, selectAddress, selectFeeTokenAddress],
+  (layerZeroChainSelector, userAddress, feeTokenAddress): CrossChainTellerBase.BridgeData | null => {
+    if (!userAddress || !feeTokenAddress) return null
+    return {
+      chainSelector: layerZeroChainSelector,
+      destinationChainReceiver: userAddress,
+      bridgeFeeToken: feeTokenAddress,
+      messageGas: 100000,
+      data: '',
+    }
+  }
+)
+
+export const selectDepositAndBridgeCheckoutParams = (minimumMint: bigint) =>
+  createSelector(
+    [
+      selectFromTokenKey,
+      selectBridgeConfig,
+      selectDepositAssetAddress,
+      selectDepositAmountAsBigInt,
+      selectAddress,
+      selectFeeTokenAddress,
+      selectPreviewFeeAsBigInt,
+      selectBridgeInputValue,
+      selectContractAddressByName('boringVault'),
+      selectContractAddressByName('teller'),
+      selectDepositBridgeData,
+    ],
+    (
+      depositAssetTokenKey,
+      bridgeConfig,
+      depositAssetAddress,
+      depositAmount,
+      userAddress,
+      feeTokenAddress,
+      feeAsBigInt,
+      fromAmount,
+      boringVaultAddress,
+      tellerContractAddress,
+      depositBridgeData
+    ) => {
+      // Constants
+      const VERB = 'Mint'
+
+      // Values
+      const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
+      const layerZeroChainSelector = bridgeConfig?.layerZeroChainSelector
+
+      // Null checks
+      if (!userAddress || !feeTokenAddress || !feeAsBigInt || !depositAssetAddress) {
+        return null
+      }
+
+      // Derived Values
+      const paddedFee = (feeAsBigInt * BigInt(101)) / BigInt(100)
+
+      // Build the checkout params
+      return {
+        modalTitle: `${VERB} ${fromTokenInfo?.name}`,
+        iconSrc: `/assets/svgs/token-${fromTokenInfo?.key}.svg`,
+        actionsParams: [
+          // Approve the ERC20 token
+          {
+            contractAbi: erc20Abi,
+            contractAddress: depositAssetAddress,
+            functionName: 'approve',
+            functionArgs: [boringVaultAddress, depositAmount],
+          },
+          // Deposit the token
+          {
+            contractAbi: CrossChainTellerBaseAbi.abi as Abi,
+            contractAddress: tellerContractAddress,
+            functionName: 'depositAndBridge',
+            functionArgs: [depositAssetAddress, depositAmount, minimumMint, depositBridgeData],
+            value: paddedFee,
+          },
+        ],
+        targetChain: '1',
+        targetAsset: depositAssetAddress,
+        targetAssetAmount: parseFloat(fromAmount),
+        checkoutItemTitle: `Bridge ${fromTokenInfo?.name}`,
+        checkoutItemDescription: `${VERB} ${fromTokenInfo?.name}`,
+        checkoutItemAmount: parseFloat(fromAmount),
+        expirationTimestampMs: 3600000,
+        disableEditing: true,
+      }
+    }
+  )

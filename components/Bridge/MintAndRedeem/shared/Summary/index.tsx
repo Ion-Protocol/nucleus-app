@@ -1,7 +1,7 @@
-import { InfoOutlineIcon } from '@chakra-ui/icons'
-import { Flex, Skeleton, Text, Tooltip } from '@chakra-ui/react'
-import { SummaryConnector } from './connector'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { Flex, Skeleton, Text } from '@chakra-ui/react'
+import { SummaryConnector } from './connector'
 
 function Summary({ fees, loading }: SummaryConnector.Props) {
   return (
