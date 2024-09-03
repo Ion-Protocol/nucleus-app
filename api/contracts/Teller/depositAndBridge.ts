@@ -23,14 +23,12 @@ export async function depositAndBridge(
     tellerContractAddress,
     boringVaultAddress,
     accountantAddress,
-    chainId,
     fee,
   }: {
     userAddress: `0x${string}`
     tellerContractAddress: `0x${string}`
     boringVaultAddress: `0x${string}`
     accountantAddress: `0x${string}`
-    chainId: number
     fee: bigint
   }
 ): Promise<`0x${string}`> {
@@ -53,7 +51,7 @@ export async function depositAndBridge(
         spenderAddress: boringVaultAddress,
         amount: depositAmount,
       },
-      { chainId }
+      { chainId: 1 }
     )
   }
 
@@ -71,7 +69,7 @@ export async function depositAndBridge(
     address: tellerContractAddress,
     functionName: 'depositAndBridge',
     args: [depositAsset, depositAmount, minimumMint, bridgeData],
-    chainId,
+    chainId: 1,
     value: fee,
   })
 
@@ -83,29 +81,14 @@ export async function depositAndBridge(
     address: tellerContractAddress,
     functionName: 'depositAndBridge',
     args: [depositAsset, depositAmount, minimumMint, bridgeData],
-    chainId,
+    chainId: 1,
     value: fee,
   })
 
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
-  const maxRetries = 5
-  let attempts = 0
-
-  while (attempts < maxRetries) {
-    try {
-      await waitForTransactionReceipt(wagmiConfig, {
-        hash: txHash,
-        timeout: 10000,
-      })
-      break
-    } catch (error) {
-      attempts++
-      if (attempts === maxRetries) throw error
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-    }
-  }
+  await waitForTransactionReceipt(wagmiConfig, { hash: txHash, timeout: 60_000 })
 
   return txHash
 }

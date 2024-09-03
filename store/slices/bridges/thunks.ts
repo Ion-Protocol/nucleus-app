@@ -290,7 +290,6 @@ export const performDeposit = createAsyncThunk<
             tellerContractAddress,
             boringVaultAddress,
             accountantAddress,
-            chainId: sourceBridgeChainId,
             fee: previewFeeAsBigInt,
           }
         )
