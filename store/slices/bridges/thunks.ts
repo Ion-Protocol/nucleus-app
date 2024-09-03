@@ -177,10 +177,6 @@ export const performDeposit = createAsyncThunk<
 >('bridges/performDeposit', async (beginCheckout, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
-    const depositDisabled = selectDepositDisabled(state)
-    if (depositDisabled) {
-      throw new Error('Deposit is disabled')
-    }
 
     const userAddress = selectAddress(state)
     const depositAmount = selectDepositAmountAsBigInt(state)
