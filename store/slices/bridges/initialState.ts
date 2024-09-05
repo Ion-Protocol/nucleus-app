@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/types/BridgeKey'
+import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 
 export interface AsyncMetric {
@@ -6,51 +6,51 @@ export interface AsyncMetric {
   loading: boolean
 }
 
-export interface BridgeData {
+export interface ChainData {
   tvl: AsyncMetric
   rate: AsyncMetric
   error: string | null
 }
 
 export type BridgesState = {
-  data: { [bridgeKey in BridgeKey]: BridgeData }
+  data: { [chainKey in ChainKey]: ChainData }
   overallLoading: boolean
-  inputValue: string
-  selectedFromToken: TokenKey | null
+  depositAmount: string
+  selectedSourceToken: TokenKey | null
   tvlLoading: boolean
   previewFeeLoading: boolean
   previewFee: string | null
-  sourceBridge: BridgeKey
+  sourceChain: ChainKey
   inputError: string | null
-  destinationBridge: BridgeKey | null
+  destinationChain: ChainKey | null
   deposit: {
     pending: boolean
     error: string | null
   }
 }
 
-const initialBridgeData: BridgeData = {
+const initialChainData: ChainData = {
   tvl: { value: null, loading: false },
   rate: { value: null, loading: false },
   error: null,
 }
 
 export const initialState: BridgesState = {
-  data: Object.values(BridgeKey).reduce(
+  data: Object.values(ChainKey).reduce(
     (acc, key) => {
-      acc[key as BridgeKey] = { ...initialBridgeData }
+      acc[key as ChainKey] = { ...initialChainData }
       return acc
     },
-    {} as { [bridgeKey in BridgeKey]: BridgeData }
+    {} as { [chainKey in ChainKey]: ChainData }
   ),
   overallLoading: false,
-  inputValue: '',
-  selectedFromToken: null,
+  depositAmount: '',
+  selectedSourceToken: null,
   tvlLoading: false,
   previewFeeLoading: false,
   previewFee: null,
-  sourceBridge: BridgeKey.ETHEREUM,
-  destinationBridge: BridgeKey.ETHEREUM,
+  sourceChain: ChainKey.ETHEREUM,
+  destinationChain: ChainKey.ETHEREUM,
   inputError: null,
   deposit: {
     pending: false,

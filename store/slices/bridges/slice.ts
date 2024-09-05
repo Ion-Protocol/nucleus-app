@@ -1,21 +1,21 @@
-import { ActionCreatorWithPayload, PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './extraReducers'
 import { initialState } from './initialState'
-import { BridgeKey } from '@/types/BridgeKey'
-import { TokenKey } from '@/types/TokenKey'
 
 const bridgesSlice = createSlice({
   name: 'bridges',
   initialState,
   reducers: {
     setSourceChain: (state, action) => {
-      state.sourceBridge = action.payload
+      state.sourceChain = action.payload
     },
     resetSourceChain: (state) => {
-      state.sourceBridge = BridgeKey.ETHEREUM
+      state.sourceChain = ChainKey.ETHEREUM
     },
     setDestinationChain: (state, action) => {
-      state.destinationBridge = action.payload
+      state.destinationChain = action.payload
     },
     setInputError: (state, action) => {
       state.inputError = action.payload
@@ -24,19 +24,19 @@ const bridgesSlice = createSlice({
       state.inputError = null
     },
     setSelectedFromToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
-      state.selectedFromToken = action.payload.tokenKey
+      state.selectedSourceToken = action.payload.tokenKey
     },
     clearSelectedFromToken: (state) => {
-      state.selectedFromToken = null
+      state.selectedSourceToken = null
     },
     clearPreviewFee: (state) => {
       state.previewFee = null
     },
     setInputValue: (state, action) => {
-      state.inputValue = action.payload
+      state.depositAmount = action.payload
     },
     clearInputValue: (state) => {
-      state.inputValue = ''
+      state.depositAmount = ''
     },
     setInputValueDebounceComplete: () => {}, // only used as an action to trigger a side effect
   },

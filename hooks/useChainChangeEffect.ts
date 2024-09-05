@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/store/hooks'
-import { setChainId } from '@/store/slices/chain'
+import { setNetworkId } from '@/store/slices/chain'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { useChainId } from 'wagmi'
@@ -17,12 +17,12 @@ export function useChainChangeEffect() {
       if (storedChainId && !isNaN(parseInt(storedChainId))) {
         const parsedChainId = parseInt(storedChainId)
         setPreviousChainId(parsedChainId)
-        dispatch(setChainId(parsedChainId))
+        dispatch(setNetworkId(parsedChainId))
       } else {
         // Optionally set a default chain ID if not found or invalid
         const defaultChainId = 1 // mainnet as default
         setPreviousChainId(defaultChainId)
-        dispatch(setChainId(defaultChainId))
+        dispatch(setNetworkId(defaultChainId))
         localStorage.setItem('connectedChainId', defaultChainId.toString())
       }
     }
@@ -33,7 +33,7 @@ export function useChainChangeEffect() {
     if (chainId !== null && previousChainId !== null && chainId !== previousChainId) {
       localStorage.setItem('connectedChainId', chainId.toString())
       setPreviousChainId(chainId)
-      dispatch(setChainId(chainId))
+      dispatch(setNetworkId(chainId))
     }
   }, [chainId, previousChainId, dispatch, router])
 }

@@ -1,4 +1,4 @@
-import { BridgeIcon } from '@/components/config/bridgeIcons'
+import { ChainIcon } from '@/components/config/chainIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
@@ -8,7 +8,7 @@ function YieldBridgeItem({
   tvl,
   name,
   comingSoon,
-  bridgeKey,
+  chainKey,
   description,
   disabled,
   loading,
@@ -17,7 +17,7 @@ function YieldBridgeItem({
 
   function handleClick() {
     if (!disabled) {
-      router.push(`/bridge/${bridgeKey}`)
+      router.push(`/bridge/${chainKey}`)
     }
   }
 
@@ -72,7 +72,7 @@ function YieldBridgeItem({
 
       {/* Logo Section */}
       <Flex flex={1} position="relative">
-        <BridgeIcon bridgeKey={bridgeKey} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
+        <ChainIcon chainKey={chainKey} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
       </Flex>
     </Flex>
   )

@@ -3,17 +3,17 @@ import { deferExecution } from '@/utils/misc'
 import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
-import { selectAvailableBridgeKeys } from '../slices/bridges'
-import { fetchBridgeRate, fetchBridgeTvl } from '../slices/bridges/thunks'
-import { selectChainKey } from '../slices/chain'
+import { selectAvailableChainKeys } from '../slices/bridges'
+import { fetchChainRate, fetchChainTvl } from '../slices/bridges/thunks'
+import { selectNetworkKey } from '../slices/chain'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
   const dispatch = useAppDispatch()
 
-  const chainKey = useAppSelector(selectChainKey)
-  const bridgeKeys = useAppSelector(selectAvailableBridgeKeys)
+  const chainKey = useAppSelector(selectNetworkKey)
+  const chainKeys = useAppSelector(selectAvailableChainKeys)
 
   useEffect(() => {
     if (address) dispatch(setAddress(address))
@@ -24,9 +24,9 @@ export function useStoreInitializer() {
       dispatch(fetchUsdPerEthRate())
       dispatch(fetchUsdPerBtcRate())
 
-      bridgeKeys.forEach((key) => {
-        dispatch(fetchBridgeTvl(key))
-        dispatch(fetchBridgeRate(key))
+      chainKeys.forEach((key) => {
+        dispatch(fetchChainTvl(key))
+        dispatch(fetchChainRate(key))
       })
     })
     // Reason for disabling the eslint rule: eslint is detecting that `state` is not in the dependency array but is used in the useEffect.

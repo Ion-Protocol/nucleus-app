@@ -1,6 +1,6 @@
 import { discordUrl, docsUrl } from '@/config/constants'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { selectBridgesAsArray } from '@/store/slices/bridges'
+import { selectChainsAsArray } from '@/store/slices/bridges'
 import { Divider, Flex } from '@chakra-ui/react'
 import { BridgeNavIcon } from '../shared/icons/Bridge'
 import { DashboardIcon } from '../shared/icons/Dashboard'
@@ -14,10 +14,10 @@ import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
 import { openTermsModal } from '@/store/slices/ui'
 import { TokenIcon } from '../config/tokenIcons'
-import { BridgeIcon } from '../config/bridgeIcons'
+import { ChainIcon } from '../config/chainIcons'
 
 export function NavDrawer() {
-  const bridges = useAppSelector(selectBridgesAsArray)
+  const chains = useAppSelector(selectChainsAsArray)
   const dispatch = useAppDispatch()
 
   function handleClickTermsAndConditions() {
@@ -40,14 +40,14 @@ export function NavDrawer() {
         <Flex direction="column" mt={6} gap={1}>
           <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
           <NavCollapse title="Bridge" leftIcon={<BridgeNavIcon />}>
-            {bridges.map((bridge) => (
+            {chains.map((chain) => (
               <NavItem
-                key={bridge.key}
-                title={bridge.name}
-                href={`/bridge/${bridge.key}`}
-                disabled={bridge.comingSoon}
-                comingSoon={bridge.comingSoon}
-                leftIcon={<BridgeIcon bridgeKey={bridge.key} />}
+                key={chain.key}
+                title={chain.name}
+                href={`/bridge/${chain.key}`}
+                disabled={chain.comingSoon}
+                comingSoon={chain.comingSoon}
+                leftIcon={<ChainIcon chainKey={chain.key} />}
               />
             ))}
           </NavCollapse>

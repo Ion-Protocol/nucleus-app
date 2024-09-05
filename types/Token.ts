@@ -1,4 +1,4 @@
-import { BridgeKey } from '@/types/BridgeKey'
+import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 
 export interface Token {
@@ -7,7 +7,7 @@ export interface Token {
   symbol: string
   chains: Partial<
     Record<
-      BridgeKey,
+      ChainKey,
       {
         address: `0x${string}`
         chainId: number

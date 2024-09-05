@@ -1,7 +1,7 @@
 import { getRate } from '@/api/contracts/Accountant/getRate'
 import { latestRoundData } from '@/api/contracts/Chainlink/latestRoundData'
 import { contractAddresses } from '@/config/contracts'
-import { BridgeKey } from '@/types/BridgeKey'
+import { ChainKey } from '@/types/ChainKey'
 import { Address } from 'viem'
 
 interface RateFetchingStrategy {
@@ -32,30 +32,30 @@ class RateForSwell implements RateFetchingStrategy {
 
 class NotImplementedStrategy implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
-    throw new Error('Exchange rate for this bridge is not yet implemented')
+    throw new Error('Exchange rate for this chain is not yet implemented')
   }
 }
 
 /**
- * Fetches the token per share rate for a given bridge key and accountant address.
+ * Fetches the token per share rate for a given chain key and accountant address.
  *
- * This function maps bridge keys to their respective rate fetching strategies and returns
- * the corresponding rate for the specified bridge.
+ * This function maps chain keys to their respective rate fetching strategies and returns
+ * the corresponding rate for the specified chain.
  *
- * @param bridgeKey - The key of the bridge for which the rate is being fetched.
+ * @param chainKey - The key of the chain for which the rate is being fetched.
  * @param accountantAddress - The address of the accountant contract used to fetch the rate.
  * @returns A promise that resolves to the token per share rate as a bigint.
  */
-export async function getTokenPerShareRate(bridgeKey: BridgeKey, accountantAddress: Address): Promise<bigint> {
-  const strategies: Record<BridgeKey, RateFetchingStrategy> = {
-    [BridgeKey.ETHEREUM]: new NotImplementedStrategy(),
-    [BridgeKey.FRAX]: new RateForFrax(),
-    [BridgeKey.MORPH]: new NotImplementedStrategy(),
-    [BridgeKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: new NotImplementedStrategy(),
-    [BridgeKey.OPTIMISM_SEPOLIA_OPSTACK]: new NotImplementedStrategy(),
-    [BridgeKey.SEI]: new RateForSei(),
-    [BridgeKey.SWELL]: new RateForSwell(),
+export async function getTokenPerShareRate(chainKey: ChainKey, accountantAddress: Address): Promise<bigint> {
+  const strategies: Record<ChainKey, RateFetchingStrategy> = {
+    [ChainKey.ETHEREUM]: new NotImplementedStrategy(),
+    [ChainKey.FRAX]: new RateForFrax(),
+    [ChainKey.MORPH]: new NotImplementedStrategy(),
+    [ChainKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: new NotImplementedStrategy(),
+    [ChainKey.OPTIMISM_SEPOLIA_OPSTACK]: new NotImplementedStrategy(),
+    [ChainKey.SEI]: new RateForSei(),
+    [ChainKey.SWELL]: new RateForSwell(),
   }
 
-  return await strategies[bridgeKey].getRate(accountantAddress)
+  return await strategies[chainKey].getRate(accountantAddress)
 }

@@ -3,7 +3,7 @@ import { IonCard } from '@/components/shared/IonCard'
 import { Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 import { TokenToConnector } from './connector'
 
-function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: TokenToConnector.Props) {
+function TokenDestination({ value, chainToken, tokenBalance, loadingTokenBalance }: TokenToConnector.Props) {
   return (
     <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}
@@ -38,12 +38,12 @@ function TokenTo({ value, bridgeToken, tokenBalance, loadingTokenBalance }: Toke
         />
 
         <Flex gap={2} align="center">
-          <TokenIcon fontSize="28px" tokenKey={bridgeToken?.key || null} />
-          <Text variant="paragraph">{bridgeToken?.name}</Text>
+          <TokenIcon fontSize="28px" tokenKey={chainToken?.key || null} />
+          <Text variant="paragraph">{chainToken?.name}</Text>
         </Flex>
       </Flex>
     </IonCard>
   )
 }
 
-export default TokenToConnector.Connector(TokenTo)
+export default TokenToConnector.Connector(TokenDestination)

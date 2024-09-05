@@ -1,22 +1,22 @@
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
-import { selectBridgeConfig } from '@/store/slices/bridges'
-import { BridgeKey } from '@/types/BridgeKey'
+import { selectChainConfig } from '@/store/slices/bridges'
+import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
-  const bridgeKey = state.router.query?.bridge as BridgeKey
-  const bridgeConfig = selectBridgeConfig(state)
+  const chainKey = state.router.query?.bridge as ChainKey
+  const chainConfig = selectChainConfig(state)
 
   const descriptionLength = uiConfig.pages.bridge.title.descriptionLenth
-  const description = bridgeConfig?.description || ''
+  const description = chainConfig?.description || ''
   const truncatedDescription =
     description.length > descriptionLength ? description.substring(0, descriptionLength) + '...' : description
 
   return {
-    bridgeKey,
-    name: bridgeConfig?.name,
+    chainKey,
+    name: chainConfig?.name,
     description: truncatedDescription,
   }
 }

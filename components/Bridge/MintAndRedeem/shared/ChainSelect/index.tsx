@@ -1,4 +1,4 @@
-import { BridgeIcon } from '@/components/config/bridgeIcons'
+import { ChainIcon } from '@/components/config/chainIcons'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { ChainSelectConnector } from './connector'
@@ -6,7 +6,7 @@ import { ChainSelectConnector } from './connector'
 function ChainSelect({
   chains,
   onChange,
-  selectedBridgeKey,
+  selectedChainKey,
   placeholder,
   primaryText,
   isActive,
@@ -21,13 +21,13 @@ function ChainSelect({
         as={Button}
         rightIcon={isActive ? <ChevronDownIcon /> : undefined}
         textAlign="left"
-        color={!selectedBridgeKey ? 'disabled' : undefined}
+        color={!selectedChainKey ? 'disabled' : undefined}
         bg={role === 'source' ? 'none' : 'formBackground'}
         pointerEvents={role === 'source' ? 'auto' : 'none'}
       >
         <Flex align="center" gap={3}>
-          {selectedBridgeKey && <BridgeIcon bridgeKey={selectedBridgeKey} />}
-          <Text variant="paragraph">{selectedBridgeKey ? primaryText : placeholder}</Text>
+          {selectedChainKey && <ChainIcon chainKey={selectedChainKey} />}
+          <Text variant="paragraph">{selectedChainKey ? primaryText : placeholder}</Text>
         </Flex>
       </MenuButton>
       <MenuList bg="backgroundSecondary" w="100%" px={3}>
@@ -41,7 +41,7 @@ function ChainSelect({
             _hover={{ bg: 'hoverSecondary', border: '1px solid', borderColor: 'border', borderRadius: '8px' }}
           >
             <Flex align="center" gap={3}>
-              <BridgeIcon bridgeKey={chain.key} />
+              <ChainIcon chainKey={chain.key} />
               <Text variant="medium">{chain.name}</Text>
             </Flex>
           </MenuItem>

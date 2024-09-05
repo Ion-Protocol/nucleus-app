@@ -6,7 +6,7 @@ import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
 import { accountReducer } from './slices/account/slice'
 import { balancesReducer } from './slices/balance'
 import { bridgesReducer } from './slices/bridges'
-import { chainReducer } from './slices/chain/slice'
+import { networkReducer } from './slices/chain/slice'
 import { currencyReducer } from './slices/currency/slice'
 import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
@@ -22,7 +22,7 @@ export const store = configureStore({
     account: accountReducer,
     balances: balancesReducer,
     bridges: bridgesReducer,
-    chain: chainReducer,
+    network: networkReducer,
     currency: currencyReducer,
     price: priceReducer,
     router: routerReducer,

@@ -1,36 +1,35 @@
 import { RootState } from '@/store'
 import {
-  selectChainConfig,
-  selectReceiveOnBridge,
-  selectSourceBridge,
-  selectSourceBridges,
+  selectNetworkConfig,
+  selectReceiveOnChain,
+  selectSourceChainKey,
+  selectSourceChains,
   setDestinationChain,
   setSourceChain,
 } from '@/store/slices/bridges'
-import { selectBridgeKeyFromRoute } from '@/store/slices/router'
-import { BridgeKey } from '@/types/BridgeKey'
-import { capitalizeFirstLetter } from '@/utils/string'
+import { selectChainKeyFromRoute } from '@/store/slices/router'
+import { ChainKey } from '@/types/ChainKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role, isActive } = ownProps
 
-  const selectableBridges = selectSourceBridges(state)
-  const chainConfig = selectChainConfig(state)
-  const allBridges = chainConfig?.bridges
-  const selectChain = role === 'source' ? selectSourceBridge : selectBridgeKeyFromRoute
-  const selectedBridgeKey = selectChain(state) || selectableBridges[0]?.key || null
-  const selectedChain = allBridges?.[selectedBridgeKey]
-  const receiveOnBridge = selectReceiveOnBridge(state)
+  const selectableChains = selectSourceChains(state)
+  const chainConfig = selectNetworkConfig(state)
+  const allChains = chainConfig?.chains
+  const selectChain = role === 'source' ? selectSourceChainKey : selectChainKeyFromRoute
+  const selectedChainKey = selectChain(state) || selectableChains[0]?.key || null
+  const selectedChain = allChains?.[selectedChainKey]
+  const receiveOnChain = selectReceiveOnChain(state)
 
-  const selectedChainName = selectedBridgeKey === BridgeKey.ETHEREUM ? 'Ethereum' : selectedChain?.name || ''
+  const selectedChainName = selectedChainKey === ChainKey.ETHEREUM ? 'Ethereum' : selectedChain?.name || ''
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
-  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${receiveOnBridge}`
+  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${receiveOnChain}`
 
   return {
-    chains: selectableBridges,
-    selectedBridgeKey,
+    chains: selectableChains,
+    selectedChainKey,
     placeholder,
     primaryText,
     isActive,

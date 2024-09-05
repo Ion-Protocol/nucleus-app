@@ -2,7 +2,7 @@ import { createFunkitWagmiConfig, getDefaultTransports, getDefaultWallets } from
 import { bitgetWallet, ledgerWallet } from '@funkit/connect/wallets'
 import { http } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
-import { fraxtal, sei, tenderlyStaging } from './networks'
+import { fraxtal, sei, tenderlyStaging } from './tenderly'
 
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 

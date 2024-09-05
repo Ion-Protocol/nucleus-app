@@ -2,30 +2,30 @@ import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
-  selectBridgeInputValue,
-  selectFromTokenKey,
+  selectDepositAmount,
+  selectSourceTokenKey,
   selectInputError,
-  selectSourceBridge,
+  selectSourceChainKey,
   selectSourceTokens,
   setInputValue,
   setSelectedFromToken,
 } from '@/store/slices/bridges'
-import { setBridgeFromMax } from '@/store/slices/bridges/thunks'
-import { selectBridgeKeyFromRoute } from '@/store/slices/router'
+import { setBridgeInputMax } from '@/store/slices/bridges/thunks'
+import { selectChainKeyFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
-  const currentPageBridgeKey = selectBridgeKeyFromRoute(state)
-  const selectedBridgeKey = selectSourceBridge(state)
-  const inputValue = selectBridgeInputValue(state)
+  const currentPageChainKey = selectChainKeyFromRoute(state)
+  const selectedChainKey = selectSourceChainKey(state)
+  const inputValue = selectDepositAmount(state)
   const tokenKeys = selectSourceTokens(state)
   const tokens = tokenKeys.map((key) => tokensConfig[key])
-  const selectedTokenKey = selectFromTokenKey(state) || tokenKeys[0] || null
+  const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
-  const formattedTokenBalance = selectFormattedTokenBalance(selectedBridgeKey, selectedTokenKey)(state)
-  const fromChain = selectSourceBridge(state)
-  const shouldIgnoreBalance = fromChain === currentPageBridgeKey
+  const formattedTokenBalance = selectFormattedTokenBalance(selectedChainKey, selectedTokenKey)(state)
+  const fromChain = selectSourceChainKey(state)
+  const shouldIgnoreBalance = fromChain === currentPageChainKey
 
   return {
     inputValue,
@@ -34,7 +34,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
     error: selectInputError(state),
     tokens,
     selectedToken,
-    bridgeKey: currentPageBridgeKey,
+    currentPageChainKey,
     shouldIgnoreBalance,
   }
 }
@@ -42,7 +42,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
 const mapDispatch = {
   onChange: setInputValue,
   onChangeToken: (token: TokenKey) => setSelectedFromToken({ tokenKey: token }),
-  onMax: () => setBridgeFromMax(),
+  onMax: () => setBridgeInputMax(),
 }
 
 const connector = connect(mapState, mapDispatch)

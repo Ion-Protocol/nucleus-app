@@ -1,5 +1,5 @@
 import { balanceOf } from '@/api/contracts/erc20/balanceOf'
-import { BridgeKey } from '@/types/BridgeKey'
+import { ChainKey } from '@/types/ChainKey'
 import { tokensConfig } from '@/config/token'
 import { TokenKey } from '@/types/TokenKey'
 import { wagmiConfig } from '@/config/wagmi'
@@ -9,7 +9,7 @@ import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
 import { setErrorMessage } from '../status'
 
-type Balances = Record<TokenKey, Record<BridgeKey, string | null>>
+type Balances = Record<TokenKey, Record<ChainKey, string | null>>
 export interface fetchAllTokenBalancesResult {
   balances: Balances
 }
@@ -44,7 +44,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
   // Create token balance param items as an empty array
   // Each object in this array is used as params for the balanceOf function
   let tokenBalanceParamItems: {
-    chainKey: BridgeKey
+    chainKey: ChainKey
     chainId: number
     tokenKey: TokenKey
     tokenAddress: `0x${string}`
@@ -58,7 +58,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
       const chainConfig = tokenConfig.chains[chainKey as keyof typeof tokenConfig.chains]
       if (chainConfig?.chainId && chainConfig?.address && chainConfig?.address !== '0x') {
         tokenBalanceParamItems.push({
-          chainKey: chainKey as BridgeKey,
+          chainKey: chainKey as ChainKey,
           chainId: chainConfig?.chainId,
           tokenKey: tokenKey as TokenKey,
           tokenAddress: chainConfig?.address,
@@ -74,21 +74,21 @@ export const fetchAllTokenBalances = createAsyncThunk<
 
       if (tokenKey === TokenKey.ETH) {
         const { value: balance } = await getBalance(wagmiConfig, { address })
-        return { tokenKey: tokenKey as TokenKey, bridgeKey: chainKey, balance: balance.toString() }
+        return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
       } else if (tokenAddress && chainId) {
         const balance = await balanceOf({ balanceAddress: address, tokenAddress, chainId })
-        return { tokenKey: tokenKey as TokenKey, bridgeKey: chainKey, balance: balance.toString() }
+        return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
       }
     })
 
     const results = await Promise.all(balancePromises)
 
     for (const result of results) {
-      if (result && result.tokenKey && result.bridgeKey) {
+      if (result && result.tokenKey && result.chainKey) {
         if (!balances[result.tokenKey as TokenKey]) {
-          balances[result.tokenKey as TokenKey] = {} as Record<BridgeKey, string | null>
+          balances[result.tokenKey as TokenKey] = {} as Record<ChainKey, string | null>
         }
-        balances[result.tokenKey as TokenKey][result.bridgeKey as BridgeKey] = result.balance
+        balances[result.tokenKey as TokenKey][result.chainKey as ChainKey] = result.balance
       }
     }
 
@@ -133,7 +133,7 @@ export const fetchEthBalance = createAsyncThunk<fetchEthBalanceResult, void, { r
 )
 
 export interface fetchMultiChainTokenBalancesResult {
-  balances: Record<BridgeKey, Record<TokenKey, string | null>>
+  balances: Record<ChainKey, Record<TokenKey, string | null>>
 }
 
 export const fetchMultiChainTokenBalances = createAsyncThunk<
@@ -144,8 +144,8 @@ export const fetchMultiChainTokenBalances = createAsyncThunk<
   const state = getState()
 
   const address = selectAddress(state)
-  const balances: Record<BridgeKey, Record<TokenKey, string | null>> = {} as Record<
-    BridgeKey,
+  const balances: Record<ChainKey, Record<TokenKey, string | null>> = {} as Record<
+    ChainKey,
     Record<TokenKey, string | null>
   >
 

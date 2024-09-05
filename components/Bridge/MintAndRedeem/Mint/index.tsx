@@ -3,7 +3,7 @@ import ChainSelect from '../shared/ChainSelect'
 import Deposit from '../shared/Deposit'
 import Summary from '../shared/Summary'
 import TokenInput from '../shared/TokenInput'
-import TokenTo from '../shared/TokenTo'
+import TokenDestination from '../shared/TokenDestination'
 
 interface MintProps extends ChakraProps {}
 
@@ -13,7 +13,7 @@ export function Mint({ ...props }: MintProps) {
       <ChainSelect role="source" isActive={true} />
       <TokenInput />
       <ChainSelect role="destination" isActive={false} />
-      <TokenTo />
+      <TokenDestination />
       <Summary />
       <Divider />
       <Deposit />

@@ -6,14 +6,14 @@ import {
   clearPreviewFee,
   clearSelectedFromToken,
   resetSourceChain,
-  selectFromTokenKey,
-  selectSourceBridge,
+  selectSourceTokenKey,
+  selectSourceChainKey,
   setInputError,
   setInputValue,
   setSourceChain,
 } from '@/store/slices/bridges'
-import { setChainId } from '@/store/slices/chain'
-import { selectBridgeKeyFromRoute, setQuery } from '@/store/slices/router'
+import { setNetworkId } from '@/store/slices/chain'
+import { selectChainKeyFromRoute, setQuery } from '@/store/slices/router'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**
@@ -26,7 +26,7 @@ export const bridgeSideEffectMiddleware: Middleware =
     const state = getState()
 
     // Side effects for chain change. This triggers when the wallet connects to a different chain/network
-    if (setChainId.match(action)) {
+    if (setNetworkId.match(action)) {
       dispatch(clearPreviewFee())
       dispatch(clearInputValue())
       dispatch(clearSelectedFromToken())
@@ -56,11 +56,11 @@ export const bridgeSideEffectMiddleware: Middleware =
     // Processes input errors
     if (setInputValue.match(action)) {
       const inputValue = action.payload
-      const bridgeKeyFromChainSelector = selectSourceBridge(state)
-      const bridgeKeyFromRoute = selectBridgeKeyFromRoute(state)
-      const selectedTokenKey = selectFromTokenKey(state)
-      const tokenBalanceAsNumber = selectTokenBalanceAsNumber(bridgeKeyFromChainSelector, selectedTokenKey)(state)
-      const shouldCheckForInsufficientBalance = bridgeKeyFromChainSelector === bridgeKeyFromRoute
+      const chainKeyFromChainSelector = selectSourceChainKey(state)
+      const chainKeyFromRoute = selectChainKeyFromRoute(state)
+      const selectedTokenKey = selectSourceTokenKey(state)
+      const tokenBalanceAsNumber = selectTokenBalanceAsNumber(chainKeyFromChainSelector, selectedTokenKey)(state)
+      const shouldCheckForInsufficientBalance = chainKeyFromChainSelector === chainKeyFromRoute
 
       if (shouldCheckForInsufficientBalance && tokenBalanceAsNumber !== null) {
         if (parseFloat(inputValue) > tokenBalanceAsNumber) {

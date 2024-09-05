@@ -2,13 +2,13 @@ import { tokensConfig } from '@/config/token'
 import { TokenKey } from '@/types/TokenKey'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { fetchAllTokenBalances, fetchAllTokenBalancesResult } from './thunks'
-import { BridgeKey } from '@/types/BridgeKey'
+import { ChainKey } from '@/types/ChainKey'
 
 // ==================
 // 1. STATE INTERFACE
 // ==================
 export interface BalancesState {
-  data: Record<TokenKey, Record<BridgeKey, string | null>>
+  data: Record<TokenKey, Record<ChainKey, string | null>>
   loading: boolean
   error: string | null
 }
@@ -20,10 +20,10 @@ const initialState: BalancesState = {
   data: Object.keys(tokensConfig).reduce(
     (acc, tokenKey) => {
       acc[tokenKey as TokenKey] = acc[tokenKey as TokenKey] || {}
-      acc[tokenKey as TokenKey][BridgeKey.ETHEREUM] = null
+      acc[tokenKey as TokenKey][ChainKey.ETHEREUM] = null
       return acc
     },
-    {} as Record<TokenKey, Record<BridgeKey, string | null>>
+    {} as Record<TokenKey, Record<ChainKey, string | null>>
   ),
   loading: false,
   error: null,
