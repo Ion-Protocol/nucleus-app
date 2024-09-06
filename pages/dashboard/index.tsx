@@ -10,7 +10,7 @@ export default function Dashboard() {
         <Text data-testid="dashboard-title" variant="heading2">
           Dashboard
         </Text>
-        <Text variant="smallParagraph">Explore all yield bridges backed by Ion native yield.</Text>
+        <Text variant="smallParagraph">Explore all yield bridges backed by Nucleus native yield.</Text>
       </Flex>
 
       <Flex h={9} />
