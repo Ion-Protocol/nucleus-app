@@ -1,6 +1,7 @@
+import { etherscanBaseUrl } from '@/config/constants'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
-import { selectChainConfig } from '@/store/slices/bridges'
+import { selectChainConfig, selectContractAddressByName } from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
@@ -14,10 +15,14 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   const truncatedDescription =
     description.length > descriptionLength ? description.substring(0, descriptionLength) + '...' : description
 
+  const boringVaultAddress = selectContractAddressByName('boringVault')(state)
+  const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
+
   return {
     chainKey,
     name: chainConfig?.name,
     description: truncatedDescription,
+    etherscanHref,
   }
 }
 
