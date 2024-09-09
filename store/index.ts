@@ -7,7 +7,6 @@ import { accountReducer } from './slices/account/slice'
 import { balancesReducer } from './slices/balance'
 import { bridgesReducer } from './slices/bridges'
 import { networkReducer } from './slices/chain/slice'
-import { currencyReducer } from './slices/currency/slice'
 import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
@@ -23,7 +22,6 @@ export const store = configureStore({
     balances: balancesReducer,
     bridges: bridgesReducer,
     network: networkReducer,
-    currency: currencyReducer,
     price: priceReducer,
     router: routerReducer,
     status: statusReducer,

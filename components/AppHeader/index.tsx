@@ -3,7 +3,6 @@ import { Flex, IconButton, useColorMode } from '@chakra-ui/react'
 import { useActiveTheme } from '@funkit/connect'
 import { useCallback } from 'react'
 import { IonConnectButton } from '../shared/IonConnectButton.tsx'
-import CurrencySelect from './CurrencySelect'
 
 export function AppHeader() {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -24,7 +23,6 @@ export function AppHeader() {
         onClick={handleToggleTheme}
         icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
       />
-      <CurrencySelect />
       <IonConnectButton />
     </Flex>
   )

@@ -3,7 +3,6 @@ import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/token'
 import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
 import { RootState } from '@/store'
-import { selectCurrency } from '@/store/slices/currency'
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
@@ -137,17 +136,17 @@ export const selectActiveChainTvl = createSelector(
 )
 export const selectFormattedChainTvlByKey = (chainKey: ChainKey) =>
   createSelector(
-    [selectChainTvlByKey(chainKey), selectUsdPerEthRate, selectCurrency, selectNetworkConfig],
-    (tvl, price, currency, networkConfig) => {
+    [selectChainTvlByKey(chainKey), selectUsdPerEthRate, selectNetworkConfig],
+    (tvl, price, networkConfig) => {
       const chainConfig = networkConfig?.chains[chainKey]
-      const formattedTvl = currencySwitch(currency, tvl, price, { symbol: chainConfig?.networkSymbol })
+      const formattedTvl = currencySwitch(tvl, price, { symbol: chainConfig?.networkSymbol })
       return formattedTvl || '-'
     }
   )
 export const selectActiveFormattedChainTvl = createSelector(
-  [selectActiveChainTvl, selectUsdPerEthRate, selectCurrency, selectChainConfig],
-  (tvl, price, currency, chainConfig) => {
-    const formattedTvl = currencySwitch(currency, tvl, price, { symbol: chainConfig?.networkSymbol })
+  [selectActiveChainTvl, selectUsdPerEthRate, selectChainConfig],
+  (tvl, price, chainConfig) => {
+    const formattedTvl = currencySwitch(tvl, price, { symbol: chainConfig?.networkSymbol })
     return formattedTvl || '-'
   }
 )
@@ -231,12 +230,12 @@ export const selectPreviewFeeAsBigInt = createSelector([selectPreviewFee], (prev
   return previewFee ? BigInt(previewFee) : BigInt(0)
 })
 export const selectFormattedPreviewFee = createSelector(
-  [selectPreviewFeeAsBigInt, selectUsdPerEthRate, selectCurrency, selectChainConfig],
-  (previewFee, price, currency, chainConfig): string => {
+  [selectPreviewFeeAsBigInt, selectUsdPerEthRate, selectChainConfig],
+  (previewFee, price, chainConfig): string => {
     if (!previewFee) {
       price = BigInt(0)
     }
-    const formattedPreviewFee = currencySwitch(currency, previewFee, price, {
+    const formattedPreviewFee = currencySwitch(previewFee, price, {
       usdDigits: 2,
       ethDigits: 7,
       symbol: chainConfig?.networkSymbol,
