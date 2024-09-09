@@ -1,31 +1,24 @@
 import { RootState } from '@/store'
 import {
-  selectNetworkConfig,
+  selectChainNameByChainKey,
   selectReceiveOnChain,
   selectSourceChainKey,
   selectSourceChains,
   setDestinationChain,
   setSourceChain,
 } from '@/store/slices/bridges'
-import { selectChainKeyFromRoute } from '@/store/slices/router'
-import { ChainKey } from '@/types/ChainKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role, isActive } = ownProps
 
   const selectableChains = selectSourceChains(state)
-  const chainConfig = selectNetworkConfig(state)
-  const allChains = chainConfig?.chains
-  const selectChain = role === 'source' ? selectSourceChainKey : selectChainKeyFromRoute
+  const selectChain = role === 'source' ? selectSourceChainKey : selectReceiveOnChain
   const selectedChainKey = selectChain(state) || selectableChains[0]?.key || null
-  const selectedChain = allChains?.[selectedChainKey]
-  const receiveOnChain = selectReceiveOnChain(state)
-
-  const selectedChainName = selectedChainKey === ChainKey.ETHEREUM ? 'Ethereum' : selectedChain?.name || ''
+  const selectedChainName = selectChainNameByChainKey(selectedChainKey)(state)
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
-  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${receiveOnChain}`
+  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${selectedChainName}`
 
   return {
     chains: selectableChains,

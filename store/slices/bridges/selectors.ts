@@ -89,15 +89,18 @@ export const selectFeeTokenAddress = createSelector(
     return feeToken.chains[sourceChainKey]?.address || null
   }
 )
-export const selectReceiveOnChain = createSelector(
-  [selectChainConfig, selectNetworkConfig],
-  (chainConfig, networkConfig) => {
-    if (!chainConfig || !networkConfig) return null
-    const receiveOn = chainConfig.receiveOn
-    if (receiveOn === ChainKey.ETHEREUM) return 'Ethereum'
-    return networkConfig.chains[receiveOn]?.name || null
-  }
-)
+export const selectReceiveOnChain = createSelector([selectChainConfig, selectNetworkConfig], (chainConfig) => {
+  if (!chainConfig) return null
+  return chainConfig.receiveOn
+})
+
+export const selectChainNameByChainKey = (chainKey: ChainKey) =>
+  createSelector([selectNetworkConfig], (networkConfig) => {
+    if (!networkConfig) return null
+    if (chainKey === ChainKey.ETHEREUM) return 'Ethereum'
+    const chain = networkConfig.chains[chainKey]
+    return chain?.name || null
+  })
 
 /////////////////////////////////////////////////////////////////////
 // Nav Drawer
