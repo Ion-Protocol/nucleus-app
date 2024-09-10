@@ -17,4 +17,5 @@ export interface Chain {
   comingSoon?: boolean
   feeToken: TokenKey
   receiveOn: ChainKey
+  yieldAsset: TokenKey
 }

@@ -36,6 +36,7 @@ const mainnetChains: Chains = {
     networkSymbol: 'ETH',
     layerZeroChainSelector: 30280,
     receiveOn: ChainKey.SEI,
+    yieldAsset: TokenKey.SSETH,
     description:
       'Sei is the first parallelized EVM. This allows Sei to get the best of Solana and Ethereum - a hyper optimized execution layer that benefits from the tooling and mindshare around the EVM.',
   },

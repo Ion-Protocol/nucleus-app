@@ -6,7 +6,8 @@ import { YieldBridgeItemConnector } from './connector'
 
 function YieldBridgeItem({
   tvl,
-  name,
+  yieldAssetName,
+  chainName,
   comingSoon,
   chainKey,
   description,
@@ -40,14 +41,14 @@ function YieldBridgeItem({
       onClick={handleClick}
     >
       {/* Text Section */}
-      <Flex w="225px" py={6} pl={6} direction="column" justify="center">
+      <Flex w="225px" py={6} pl={6} direction="column">
         <Flex align="center" gap={3}>
           {/* Bridge Name */}
-          <Text variant="bigParagraphBold">{name}</Text>
+          <Text variant="bigParagraphBold">{yieldAssetName}</Text>
+          <Text variant="bigParagraph" color="disabledText">
+            {chainName}
+          </Text>
         </Flex>
-
-        {/* Bridge Description */}
-        <Text variant="smallParagraph">{description}</Text>
 
         {!comingSoon ? (
           // Not Coming Soon

@@ -1,7 +1,7 @@
 import { etherscanBaseUrl } from '@/config/constants'
 import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
-import { selectChainConfig, selectContractAddressByName } from '@/store/slices/bridges'
+import { selectChainConfig, selectContractAddressByName, selectYieldAssetNameByChainKey } from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
@@ -10,6 +10,7 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   const chainKey = state.router.query?.bridge as ChainKey
   const chainConfig = selectChainConfig(state)
 
+  const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const descriptionLength = uiConfig.pages.bridge.title.descriptionLenth
   const description = chainConfig?.description || ''
   const truncatedDescription =
@@ -20,7 +21,7 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
 
   return {
     chainKey,
-    name: chainConfig?.name,
+    yieldAssetName,
     description: truncatedDescription,
     etherscanHref,
   }
