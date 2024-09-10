@@ -1,5 +1,4 @@
 import { etherscanBaseUrl } from '@/config/constants'
-import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import { selectChainConfig, selectContractAddressByName, selectYieldAssetNameByChainKey } from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
@@ -11,7 +10,6 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   const chainConfig = selectChainConfig(state)
 
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
-  const chainName = chainConfig?.name || ''
   const description = chainConfig?.description || ''
 
   const boringVaultAddress = selectContractAddressByName('boringVault')(state)
@@ -20,7 +18,6 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   return {
     chainKey,
     yieldAssetName,
-    chainName,
     description,
     etherscanHref,
   }
