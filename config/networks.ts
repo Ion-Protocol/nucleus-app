@@ -60,7 +60,7 @@ const mainnetChains: Chains = {
   [ChainKey.SWELL]: {
     name: 'Swell',
     chainId: 1,
-    comingSoon: false,
+    comingSoon: true,
     contracts: {
       teller: '0x83EDE55dc738d4C2e65c4B55172Fbe3e14D83a4E',
       accountant: '0xf242ab602CbF29Cf9B5f4c3d90CA6EeF947ba6F1',
