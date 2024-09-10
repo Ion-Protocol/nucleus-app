@@ -2,6 +2,7 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonCard } from '@/components/shared/IonCard'
 import { Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 import { TokenToConnector } from './connector'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function TokenDestination({ value, chainToken, tokenBalance, loadingTokenBalance }: TokenToConnector.Props) {
   return (
@@ -11,9 +12,9 @@ function TokenDestination({ value, chainToken, tokenBalance, loadingTokenBalance
         <Text>Amount</Text>
         <Flex color="secondaryText" gap={1}>
           <Text variant="smallParagraph">Balance: </Text>
-          <Skeleton isLoaded={!loadingTokenBalance} minW="25px">
+          <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
             <Text variant="smallParagraph">{tokenBalance}</Text>
-          </Skeleton>
+          </IonSkeleton>
         </Flex>
       </Flex>
 

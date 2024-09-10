@@ -2,6 +2,7 @@ import { IonTooltip } from '@/components/shared/IonTooltip'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Skeleton, Text } from '@chakra-ui/react'
 import { SummaryConnector } from './connector'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function Summary({ fees, loading }: SummaryConnector.Props) {
   return (
@@ -15,11 +16,11 @@ function Summary({ fees, loading }: SummaryConnector.Props) {
             <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
           </IonTooltip>
         </Flex>
-        <Skeleton minW="75px" isLoaded={!loading}>
+        <IonSkeleton minW="75px" isLoaded={!loading}>
           <Text textAlign="right" variant="paragraph">
             {fees}
           </Text>
-        </Skeleton>
+        </IonSkeleton>
       </Flex>
     </Flex>
   )
