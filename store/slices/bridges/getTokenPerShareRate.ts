@@ -14,12 +14,6 @@ class RateForSei implements RateFetchingStrategy {
   }
 }
 
-class RateForFrax implements RateFetchingStrategy {
-  async getRate(accountantAddress: Address): Promise<bigint> {
-    return getRate(accountantAddress)
-  }
-}
-
 class RateForSwell implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     const wbtcPerShareExchangeRate = await getRate(accountantAddress) // 1e9
@@ -49,12 +43,9 @@ class NotImplementedStrategy implements RateFetchingStrategy {
 export async function getTokenPerShareRate(chainKey: ChainKey, accountantAddress: Address): Promise<bigint> {
   const strategies: Record<ChainKey, RateFetchingStrategy> = {
     [ChainKey.ETHEREUM]: new NotImplementedStrategy(),
-    [ChainKey.FRAX]: new RateForFrax(),
-    [ChainKey.MORPH]: new NotImplementedStrategy(),
     [ChainKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: new NotImplementedStrategy(),
     [ChainKey.OPTIMISM_SEPOLIA_OPSTACK]: new NotImplementedStrategy(),
     [ChainKey.SEI]: new RateForSei(),
-    [ChainKey.SWELL]: new RateForSwell(),
   }
 
   return await strategies[chainKey].getRate(accountantAddress)

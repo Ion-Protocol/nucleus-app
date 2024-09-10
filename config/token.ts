@@ -1,7 +1,7 @@
 import { ChainKey } from '@/types/ChainKey'
 import { Token } from '@/types/Token'
 import { TokenKey } from '@/types/TokenKey'
-import { fraxtal, mainnet, sei } from 'wagmi/chains'
+import { mainnet, sei } from 'wagmi/chains'
 
 export const tokensConfig: Record<TokenKey, Token> = {
   [TokenKey.ETH]: {
@@ -14,10 +14,6 @@ export const tokensConfig: Record<TokenKey, Token> = {
         chainId: mainnet.id,
       },
       [ChainKey.SEI]: {
-        address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        chainId: mainnet.id,
-      },
-      [ChainKey.FRAX]: {
         address: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         chainId: mainnet.id,
       },
@@ -35,10 +31,6 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: {
         address: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
         chainId: sei.id,
-      },
-      [ChainKey.FRAX]: {
-        address: '0x',
-        chainId: fraxtal.id,
       },
     },
   },
@@ -119,17 +111,6 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
-  [TokenKey.FRXTLETH]: {
-    key: TokenKey.FRXTLETH,
-    name: 'frxtlETH',
-    symbol: 'FRAX',
-    chains: {
-      [ChainKey.ETHEREUM]: {
-        address: '0x',
-        chainId: mainnet.id,
-      },
-    },
-  },
   [TokenKey.WBTC]: {
     key: TokenKey.WBTC,
     name: 'WBTC',
@@ -160,17 +141,6 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: {
         address: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
         chainId: mainnet.id,
-      },
-    },
-  },
-  [TokenKey.WFRXETH]: {
-    key: TokenKey.WFRXETH,
-    name: 'wfrxETH',
-    symbol: 'WFRXETH',
-    chains: {
-      [ChainKey.FRAX]: {
-        address: '0xfc00000000000000000000000000000000000006',
-        chainId: fraxtal.id,
       },
     },
   },

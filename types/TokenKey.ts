@@ -8,9 +8,7 @@ export enum TokenKey {
   RSWETH = 'rsweth',
   EZETH = 'ezeth',
   OP = 'op',
-  FRXTLETH = 'frxtleth',
   WBTC = 'wbtc',
   SWBTC = 'swbtc',
   RSWBTC = 'rswbtc',
-  WFRXETH = 'wfrxeth',
 }

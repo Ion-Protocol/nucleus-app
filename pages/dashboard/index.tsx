@@ -10,7 +10,7 @@ export default function Dashboard() {
         <Text data-testid="dashboard-title" variant="heading2">
           Dashboard
         </Text>
-        <Text variant="smallParagraph">Explore all yield bridges backed by Nucleus native yield.</Text>
+        <Text variant="smallParagraph">Explore the networks powered by Nucleus.</Text>
       </Flex>
 
       <Flex h={9} />
@@ -23,7 +23,7 @@ export default function Dashboard() {
       <Flex h={16} />
 
       {/* Yield Bridge list */}
-      <Text variant="heading2">Choose Yield Bridge</Text>
+      <Text variant="heading2">Select a Yield Asset</Text>
       <Flex h={8} />
       <YieldBridgeList />
     </Flex>

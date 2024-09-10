@@ -1,7 +1,9 @@
 import { discordUrl, docsUrl } from '@/config/constants'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { selectChainsAsArray } from '@/store/slices/bridges'
+import { openTermsModal } from '@/store/slices/ui'
 import { Divider, Flex } from '@chakra-ui/react'
+import { ChainIcon } from '../config/chainIcons'
 import { BridgeNavIcon } from '../shared/icons/Bridge'
 import { DashboardIcon } from '../shared/icons/Dashboard'
 import { DiscordIcon } from '../shared/icons/Discord'
@@ -12,9 +14,6 @@ import { FooterLink } from './FooterLink'
 import { Logo } from './Logo'
 import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
-import { openTermsModal } from '@/store/slices/ui'
-import { TokenIcon } from '../config/tokenIcons'
-import { ChainIcon } from '../config/chainIcons'
 
 export function NavDrawer() {
   const chains = useAppSelector(selectChainsAsArray)
@@ -39,7 +38,7 @@ export function NavDrawer() {
         <Logo />
         <Flex direction="column" mt={6} gap={1}>
           <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
-          <NavCollapse title="Bridge" leftIcon={<BridgeNavIcon />}>
+          <NavCollapse title="Mint" leftIcon={<BridgeNavIcon />}>
             {chains.map((chain) => (
               <NavItem
                 key={chain.key}

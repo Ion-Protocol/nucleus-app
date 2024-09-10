@@ -3,19 +3,13 @@ import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
 import { EthereumIcon } from '../shared/icons/Ethereum'
-import { FraxIcon } from '../shared/icons/Frax'
-import { MorphLogo } from '../shared/icons/Morph'
 import { OptimismIcon } from '../shared/icons/Optimism'
-import { SwellChainIcon } from '../shared/icons/SwellChain'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
   [ChainKey.SEI]: (props) => <SeiIcon {...props} />,
-  [ChainKey.MORPH]: (props) => <MorphLogo {...props} />,
   [ChainKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: (props) => <OptimismIcon {...props} />,
   [ChainKey.OPTIMISM_SEPOLIA_OPSTACK]: (props) => <OptimismIcon {...props} />,
-  [ChainKey.FRAX]: (props) => <FraxIcon {...props} />,
-  [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
 }
 
 interface ChainIconMapProps extends ChakraProps {
