@@ -1,4 +1,4 @@
-import { ChainIcon } from '@/components/config/chainIcons'
+import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
@@ -7,6 +7,7 @@ import { YieldBridgeItemConnector } from './connector'
 function YieldBridgeItem({
   tvl,
   yieldAssetName,
+  yieldAssetKey,
   chainName,
   comingSoon,
   chainKey,
@@ -72,7 +73,7 @@ function YieldBridgeItem({
 
       {/* Logo Section */}
       <Flex flex={1} position="relative">
-        <ChainIcon chainKey={chainKey} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
+        <TokenIcon tokenKey={yieldAssetKey} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
       </Flex>
     </Flex>
   )

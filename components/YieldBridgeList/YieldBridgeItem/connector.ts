@@ -17,10 +17,12 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const chainName = chainConfig?.name || ''
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const comingSoon = chainConfig?.comingSoon || false
+  const yieldAssetKey = chainConfig?.yieldAsset || null
 
   return {
     tvl,
     yieldAssetName,
+    yieldAssetKey,
     chainName,
     comingSoon,
     chainKey,

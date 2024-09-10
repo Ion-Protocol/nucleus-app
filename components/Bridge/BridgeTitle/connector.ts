@@ -14,10 +14,12 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
 
   const boringVaultAddress = selectContractAddressByName('boringVault')(state)
   const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
+  const yieldAssetKey = chainConfig?.yieldAsset || null
 
   return {
     chainKey,
     yieldAssetName,
+    yieldAssetKey,
     description,
     etherscanHref,
   }

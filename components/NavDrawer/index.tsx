@@ -14,6 +14,8 @@ import { FooterLink } from './FooterLink'
 import { Logo } from './Logo'
 import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
+import { TokenKey } from '@/types/TokenKey'
+import { TokenIcon } from '../config/tokenIcons'
 
 export function NavDrawer() {
   const chains = useAppSelector(selectChainsAsArray)
@@ -46,7 +48,7 @@ export function NavDrawer() {
                 href={`/bridge/${chain.key}`}
                 disabled={chain.comingSoon}
                 comingSoon={chain.comingSoon}
-                leftIcon={<ChainIcon chainKey={chain.key} />}
+                leftIcon={<TokenIcon tokenKey={chain.yieldAsset} />}
               />
             ))}
           </NavCollapse>

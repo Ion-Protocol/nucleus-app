@@ -2,8 +2,16 @@ import { ChainIcon } from '@/components/config/chainIcons'
 import { Flex, IconButton, Link, Text } from '@chakra-ui/react'
 import { BridgeTitleConnector } from './connector'
 import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
+import { TokenIcon } from '@/components/config/tokenIcons'
 
-function BridgeTitle({ chainKey, yieldAssetName, description, etherscanHref, ...props }: BridgeTitleConnector.Props) {
+function BridgeTitle({
+  chainKey,
+  yieldAssetName,
+  yieldAssetKey,
+  description,
+  etherscanHref,
+  ...props
+}: BridgeTitleConnector.Props) {
   return (
     <Flex direction="column" align="center" justify="center" w="100%" gap={2} {...props}>
       <Flex align="center" gap={3} justify="center">
@@ -11,7 +19,7 @@ function BridgeTitle({ chainKey, yieldAssetName, description, etherscanHref, ...
         <Text variant="heading2" mt="4px">
           Mint {yieldAssetName}
         </Text>
-        <ChainIcon chainKey={chainKey} fontSize="32px" />
+        <TokenIcon tokenKey={yieldAssetKey} fontSize="32px" />
         {etherscanHref && (
           <Link href={etherscanHref} isExternal>
             <IconButton
