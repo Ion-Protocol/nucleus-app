@@ -47,6 +47,8 @@ export async function getTokenPerShareRate(chainKey: ChainKey, accountantAddress
     [ChainKey.OPTIMISM_SEPOLIA_OPSTACK]: new NotImplementedStrategy(),
     [ChainKey.SEI]: new RateForSei(),
     [ChainKey.SWELL]: new RateForSwell(),
+    [ChainKey.ECLIPSE]: new NotImplementedStrategy(),
+    [ChainKey.DINERO]: new NotImplementedStrategy(),
   }
 
   return await strategies[chainKey].getRate(accountantAddress)
