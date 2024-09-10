@@ -1,5 +1,6 @@
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
+import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
 
@@ -37,7 +38,22 @@ const mainnetChains: Chains = {
     layerZeroChainSelector: 30280,
     receiveOn: ChainKey.SEI,
     yieldAsset: TokenKey.SSETH,
-    incentiveChains: [ChainKey.SEI, ChainKey.DINERO],
+    incentives: [
+      {
+        chainKey: ChainKey.SEI,
+        rewardPercentage: 7.5,
+      },
+      {
+        chainKey: ChainKey.DINERO,
+        rewardPercentage: 7.5,
+      },
+    ],
+    points: [
+      {
+        pointSystemKey: PointSystemKey.NUCLEUS,
+        multiplier: 2,
+      },
+    ],
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
   },
@@ -59,7 +75,8 @@ const mainnetChains: Chains = {
     receiveOn: ChainKey.ETHEREUM,
     yieldAsset: TokenKey.EARNBTC,
     networkSymbol: 'BTC',
-    incentiveChains: [],
+    incentives: [],
+    points: [],
     description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
   },
   [ChainKey.ECLIPSE]: {
@@ -80,7 +97,8 @@ const mainnetChains: Chains = {
     receiveOn: ChainKey.ETHEREUM,
     yieldAsset: TokenKey.ETH,
     networkSymbol: 'ETH',
-    incentiveChains: [],
+    incentives: [],
+    points: [],
     description: '',
   },
 }

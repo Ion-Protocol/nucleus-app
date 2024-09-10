@@ -18,7 +18,6 @@ export const selectBalancesError = (state: RootState): string | null => state.ba
  */
 export const selectTokenBalance = (chainKey: ChainKey | null, tokenKey: TokenKey | null) =>
   createSelector([selectBalances], (balances): string | null => {
-    console.log('🚀 ~ createSelector ~ balances:', balances)
     if (!chainKey || !tokenKey) return null
     const tokenBalance = balances[tokenKey]?.[chainKey] || null
     return tokenBalance

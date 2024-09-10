@@ -1,4 +1,5 @@
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
+import RewardsAndPoints from '@/components/Bridge/BridgeTitle/RewardsAndPoints'
 import Tvl from '@/components/Bridge/BridgeTitle/Tvl'
 import { MintAndRedeem } from '@/components/Bridge/MintAndRedeem'
 import { useAppSelector } from '@/store/hooks'
@@ -26,6 +27,7 @@ export default function Bridge() {
         {/* TVL */}
         <Flex gap={6}>
           <Tvl />
+          <RewardsAndPoints />
         </Flex>
 
         {/* Spacer */}

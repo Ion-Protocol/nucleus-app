@@ -1,6 +1,6 @@
 import { Flex, Image, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { IonLogoIcon } from '../shared/icons/IonLogo'
+import { NucleusLogoIcon } from '../shared/icons/NucleusLogoBlack'
 
 export function Logo() {
   const router = useRouter()
@@ -11,7 +11,7 @@ export function Logo() {
 
   return (
     <Flex alignItems="center" gap={3} onClick={handleClick} cursor="pointer">
-      <IonLogoIcon fontSize="28px" />
+      <NucleusLogoIcon fontSize="28px" />
       <Text variant="heading2" mt="6px">
         Nucleus
       </Text>

@@ -1,6 +1,17 @@
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { Contracts } from './Contracts'
+import { PointSystemKey } from './PointSystem'
+
+interface IncentiveSystem {
+  chainKey: ChainKey
+  rewardPercentage: number
+}
+
+interface PointSystem {
+  pointSystemKey: PointSystemKey
+  multiplier: number
+}
 
 export interface Chain {
   name: string
@@ -18,5 +29,6 @@ export interface Chain {
   feeToken: TokenKey
   receiveOn: ChainKey
   yieldAsset: TokenKey
-  incentiveChains: ChainKey[]
+  incentives: IncentiveSystem[]
+  points: PointSystem[]
 }

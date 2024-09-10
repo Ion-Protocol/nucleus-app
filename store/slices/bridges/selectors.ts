@@ -16,6 +16,7 @@ import { selectNetworkKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectChainKeyFromRoute } from '../router'
 import { ChainData } from './initialState'
+import { RewardsAndPointsRow } from '@/components/Bridge/BridgeTitle/RewardsAndPoints/RewardsAndPointsTooltip'
 
 /////////////////////////////////////////////////////////////////////
 // Principal Selectors: Influences the result of many other selectors
@@ -160,6 +161,36 @@ export const selectActiveFormattedChainTvl = createSelector(
   (tvl, price, chainConfig) => {
     const formattedTvl = currencySwitch(tvl, price, { symbol: chainConfig?.networkSymbol })
     return formattedTvl || '-'
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
+// Rewards & Points
+/////////////////////////////////////////////////////////////////////
+export const selectIncentiveSystems = createSelector([selectChainConfig], (chainConfig) => {
+  return chainConfig?.incentives || []
+})
+export const selectPointsSystems = createSelector([selectChainConfig], (chainConfig) => {
+  return chainConfig?.points || []
+})
+export const selectIncentiveChainKeys = createSelector([selectIncentiveSystems], (incentiveSystems) => {
+  return incentiveSystems.map((incentiveSystem) => incentiveSystem.chainKey)
+})
+export const selectRewardsAndPointsRows = createSelector(
+  [selectIncentiveSystems, selectPointsSystems],
+  (incentiveSystems, pointSystems) => {
+    const rows: RewardsAndPointsRow[] = []
+    for (let i = 0; i < incentiveSystems.length; i++) {
+      const incentiveSystem = incentiveSystems[i]
+      const pointSystem = pointSystems[i]
+      rows.push({
+        rewards: incentiveSystem
+          ? { chainKey: incentiveSystem.chainKey, rewardPercentage: incentiveSystem.rewardPercentage }
+          : null,
+        points: pointSystem ? { pointSystemKey: pointSystem.pointSystemKey, multiplier: pointSystem.multiplier } : null,
+      })
+    }
+    return rows
   }
 )
 

@@ -1,6 +1,6 @@
 import { createIcon } from '@chakra-ui/react'
 
-export const IonLogoIcon = createIcon({
+export const NucleusLogoBlackIcon = createIcon({
   displayName: 'IonLogoIcon',
   viewBox: '0 0 66 66',
   path: (

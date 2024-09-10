@@ -1,8 +1,8 @@
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { InfoOutlineIcon } from '@chakra-ui/icons'
-import { Flex, Text, Tooltip } from '@chakra-ui/react'
-import { TvlConnector } from './connector'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { Flex, Text } from '@chakra-ui/react'
+import { TvlConnector } from './connector'
 
 function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
   return (
@@ -13,7 +13,7 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
       py={6}
       px={6}
       direction="column"
-      gap={2}
+      gap={3}
       align="center"
       w="100%"
     >

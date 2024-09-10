@@ -15,7 +15,7 @@ function YieldBridgeItem({
   chainKey,
   disabled,
   loading,
-  incentiveChains,
+  incentiveChainKeys,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
@@ -67,8 +67,8 @@ function YieldBridgeItem({
             <Flex direction="column" gap={1}>
               <Text variant="smallParagraph">Rewards</Text>
               <MultiIcon
-                icons={incentiveChains.map((chainKey) => (
-                  <ChainIcon chainKey={chainKey} key={chainKey} />
+                icons={incentiveChainKeys.map((chainKey) => (
+                  <ChainIcon fontSize="14px" chainKey={chainKey} key={chainKey} />
                 ))}
               />
             </Flex>

@@ -12,10 +12,10 @@ export function MultiIcon({ icons, ...props }: MultiIconProps) {
           key={index}
           position="absolute"
           top="0"
-          left={`${index * 15}px`}
+          left={`${index * 20}px`}
           bg="white"
           borderRadius="100px"
-          p="2px"
+          p="5px"
           border="1px solid"
           borderColor="border"
         >
