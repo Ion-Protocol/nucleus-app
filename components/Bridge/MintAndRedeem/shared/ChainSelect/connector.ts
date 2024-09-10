@@ -18,7 +18,7 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const selectedChainName = selectChainNameByChainKey(selectedChainKey)(state)
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
-  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${selectedChainName}`
+  const primaryText = role === 'source' ? `Deposit on ${selectedChainName}` : `Receive on ${selectedChainName}`
 
   return {
     chains: selectableChains,

@@ -26,15 +26,14 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.WEETH]: (props) => <TokenWeethIcon {...props} />,
   [TokenKey.WSTETH]: (props) => <WstethIcon {...props} />,
   [TokenKey.SEIYANETH]: (props) => <TokenSeiyanethIcon {...props} />,
+  [TokenKey.SSETH]: (props) => <TokenSeiyanethIcon {...props} />,
   [TokenKey.RSETH]: (props) => <TokenRsethIcon {...props} />,
   [TokenKey.RSWETH]: (props) => <RswethIcon {...props} />,
   [TokenKey.EZETH]: (props) => <TokenEzethIcon {...props} />,
   [TokenKey.OP]: (props) => <OptimismIcon {...props} />,
-  [TokenKey.FRXTLETH]: (props) => <TokenFrxtlethIcon {...props} />,
   [TokenKey.WBTC]: (props) => <TokenWbtcIcon {...props} />,
   [TokenKey.SWBTC]: (props) => <TokenSwbtcIcon {...props} />,
   [TokenKey.RSWBTC]: (props) => <TokenRswbtcIcon {...props} />,
-  [TokenKey.WFRXETH]: (props) => <TokenWfrxethIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

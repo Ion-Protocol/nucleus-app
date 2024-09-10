@@ -22,7 +22,7 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
 
   // Look up list of available token keys from the chain config
   const chainConfig = selectChainConfig(state)
-  const chainTokenKey = chainConfig?.nativeToken || null
+  const chainTokenKey = chainConfig?.yieldAsset || null
   const chainToken = chainTokenKey ? tokensConfig[chainTokenKey] : null
 
   const tokenBalance = selectFormattedTokenBalance(ChainKey.ETHEREUM, chainTokenKey)(state)
