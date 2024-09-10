@@ -1,5 +1,5 @@
 import { AppDispatch } from '@/store'
-import { selectChainConfig, selectDepositDisabled, setInputValueDebounceComplete } from '@/store/slices/bridges'
+import { selectChainConfig, selectShouldTriggerPreviewFee, setInputValueDebounceComplete } from '@/store/slices/bridges'
 import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
 import { Middleware } from '@reduxjs/toolkit'
 
@@ -13,10 +13,8 @@ export const previewFeeMiddleware: Middleware =
   (action) => {
     if (setInputValueDebounceComplete.match(action)) {
       const state = getState()
-      const disabled = selectDepositDisabled(state)
-      const chainConfig = selectChainConfig(state)
-      const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
-      if (!disabled && layerZeroChainSelector) {
+      const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
+      if (shouldTriggerPreviewFee) {
         dispatch(fetchPreviewFee())
       }
     }

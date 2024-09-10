@@ -234,6 +234,25 @@ export const selectBridgeRate = createSelector([selectChainData], (bridgeData): 
 })
 
 /////////////////////////////////////////////////////////////////////
+// Balance
+/////////////////////////////////////////////////////////////////////
+export const selectSelectedTokenBalance = createSelector(
+  [selectSourceChainKey, selectSourceTokenKey, selectBalances],
+  (sourceChainKey, fromTokenKey, balances) => {
+    if (!sourceChainKey || !fromTokenKey) return null
+    return balances[fromTokenKey]?.[sourceChainKey] || null
+  }
+)
+
+export const selectWalletHasEnoughBalance = createSelector(
+  [selectSelectedTokenBalance, selectDepositAmountAsBigInt],
+  (selectedTokenBalance, depositAmountAsBigInt) => {
+    if (selectedTokenBalance === null) return false
+    return BigInt(selectedTokenBalance) >= depositAmountAsBigInt
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
 // Preview Fee
 /////////////////////////////////////////////////////////////////////
 export const selectPreviewFeeLoading = (state: RootState) => state.bridges.previewFeeLoading
@@ -255,23 +274,13 @@ export const selectFormattedPreviewFee = createSelector(
     return formattedPreviewFee
   }
 )
-
-/////////////////////////////////////////////////////////////////////
-// Balance
-/////////////////////////////////////////////////////////////////////
-export const selectSelectedTokenBalance = createSelector(
-  [selectSourceChainKey, selectSourceTokenKey, selectBalances],
-  (sourceChainKey, fromTokenKey, balances) => {
-    if (!sourceChainKey || !fromTokenKey) return null
-    return balances[fromTokenKey]?.[sourceChainKey] || null
-  }
-)
-
-export const selectWalletHasEnoughBalance = createSelector(
-  [selectSelectedTokenBalance, selectDepositAmountAsBigInt],
-  (selectedTokenBalance, depositAmountAsBigInt) => {
-    if (selectedTokenBalance === null) return false
-    return BigInt(selectedTokenBalance) >= depositAmountAsBigInt
+export const selectShouldTriggerPreviewFee = createSelector(
+  [selectDepositAmount, selectInputError, selectLayerZeroChainSelector],
+  (from, error, layerZeroChainSelector): boolean => {
+    const isNotEmpty = from.trim().length > 0
+    const isGreaterThanZero = parseFloat(from) > 0
+    const hasNoError = !error
+    return isNotEmpty && isGreaterThanZero && hasNoError && layerZeroChainSelector !== null
   }
 )
 
@@ -283,13 +292,13 @@ export const selectDepositPending = createSelector([(state: RootState) => state]
   return bridgesState.deposit.pending
 })
 export const selectDepositDisabled = createSelector(
-  [selectDepositAmount, selectInputError, selectDepositPending],
-  (from, error, pending): boolean => {
+  [selectDepositAmount, selectInputError, selectDepositPending, selectPreviewFee],
+  (from, error, pending, previewFee): boolean => {
     const isEmpty = from.trim().length === 0
     const isLessThanOrEqualToZero = parseFloat(from) <= 0
     const isError = !!error
     const isPending = !!pending
-    return isEmpty || isLessThanOrEqualToZero || isError || isPending
+    return isEmpty || isLessThanOrEqualToZero || isError || isPending || previewFee === null
   }
 )
 export const selectDepositBridgeData = createSelector(
