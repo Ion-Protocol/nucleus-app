@@ -32,7 +32,7 @@ export function RewardsAndPointsTooltip({ rows }: RewardsAndTooltipsProps) {
           <React.Fragment key={index}>
             <Flex borderRight="1px solid" borderColor="border">
               {row.rewards && (
-                <Flex align="center" gap={2} py={2} mr={5}>
+                <Flex align="center" gap={2} py={2} mr={10}>
                   <ChainIcon fontSize="20px" chainKey={row.rewards.chainKey} />
                   <Text variant="paragraph" color="text">
                     {row.rewards.rewardPercentage}%

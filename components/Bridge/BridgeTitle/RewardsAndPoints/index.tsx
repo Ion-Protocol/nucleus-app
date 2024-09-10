@@ -21,11 +21,24 @@ function RewardsAndPoints({ rewardsAndPointsRows, incentiveChainKeys }: RewardsA
         <Text variant="paragraph">Rewards & Points</Text>
       </Flex>
       <Tooltip
+        offset={[0, 18]}
         hasArrow
         placement="bottom"
         label={<RewardsAndPointsTooltip rows={rewardsAndPointsRows} />}
         p={0}
         bg="backgroundSecondary"
+        borderRadius="8px"
+        boxShadow="none"
+        border="1px solid"
+        borderColor="border"
+        sx={{
+          '.chakra-tooltip__arrow-wrapper .chakra-tooltip__arrow': {
+            mt: '-2px',
+            borderTop: '1px solid',
+            borderLeft: '1px solid',
+            borderColor: 'border',
+          },
+        }}
       >
         <Flex>
           <MultiIcon
