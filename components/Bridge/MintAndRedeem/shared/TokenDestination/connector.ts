@@ -5,6 +5,7 @@ import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slic
 import { selectChainConfig, selectDepositAmount, selectBridgeRate } from '@/store/slices/bridges'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { ConnectedProps, connect } from 'react-redux'
+import { selectChainKeyFromRoute } from '@/store/slices/router'
 
 const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   // Calculate destination value
@@ -25,7 +26,8 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   const chainTokenKey = chainConfig?.yieldAsset || null
   const chainToken = chainTokenKey ? tokensConfig[chainTokenKey] : null
 
-  const tokenBalance = selectFormattedTokenBalance(ChainKey.ETHEREUM, chainTokenKey)(state)
+  const chainFromRoute = selectChainKeyFromRoute(state)
+  const tokenBalance = selectFormattedTokenBalance(chainFromRoute, chainTokenKey)(state)
 
   return {
     value: destinationAmountFormatted,

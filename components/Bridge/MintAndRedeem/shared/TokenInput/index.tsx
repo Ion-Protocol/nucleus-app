@@ -1,11 +1,9 @@
-import { Button, Divider, Flex, Input, Skeleton, Text } from '@chakra-ui/react'
+import { IonCard } from '@/components/shared/IonCard'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
+import { useState } from 'react'
 import TokenSelect from '../TokenSelect'
 import { TokenInputConnector } from './connector'
-import { useState } from 'react'
-import { IonCard } from '@/components/shared/IonCard'
-import { IonTooltip } from '@/components/shared/IonTooltip'
-import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
-import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function TokenInput({
   error,

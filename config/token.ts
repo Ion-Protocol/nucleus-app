@@ -149,9 +149,9 @@ export const tokensConfig: Record<TokenKey, Token> = {
     name: 'ssETH',
     symbol: 'SSETH',
     chains: {
-      [ChainKey.ETHEREUM]: {
+      [ChainKey.SEI]: {
         address: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
-        chainId: mainnet.id,
+        chainId: sei.id,
       },
     },
   },

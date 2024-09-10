@@ -1,10 +1,9 @@
-import { ChainKey } from '@/types/ChainKey'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber } from '@/utils/bigint'
 import { createSelector } from '@reduxjs/toolkit'
-import { TokenKey } from '@/types/TokenKey'
-import { selectDepositAmountAsBigInt, selectSourceChainKey, selectSourceTokenKey } from '../bridges'
 
 export const selectBalances = (state: RootState): Record<TokenKey, Record<ChainKey, string | null>> =>
   state.balances.data
