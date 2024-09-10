@@ -60,6 +60,26 @@ const mainnetChains: Chains = {
     networkSymbol: 'BTC',
     description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
   },
+  [ChainKey.ECLIPSE]: {
+    name: 'Eclipse',
+    chainId: 1,
+    comingSoon: true,
+    contracts: {
+      teller: '0x',
+      accountant: '0x',
+      boringVault: '0x',
+    },
+    sourceChains: [ChainKey.ETHEREUM],
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH],
+    },
+    nativeToken: TokenKey.ETH,
+    feeToken: TokenKey.ETH,
+    receiveOn: ChainKey.ETHEREUM,
+    yieldAsset: TokenKey.ETH,
+    networkSymbol: 'ETH',
+    description: '',
+  },
 }
 
 export const networksConfig: Record<NetworkKey, NetworkConfig> = {

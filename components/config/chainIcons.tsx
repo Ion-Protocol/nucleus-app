@@ -5,6 +5,7 @@ import React from 'react'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { OptimismIcon } from '../shared/icons/Optimism'
 import { SwellChainIcon } from '../shared/icons/SwellChain'
+import { EclipseIcon } from '../shared/icons/Eclipse'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
@@ -12,6 +13,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.
   [ChainKey.OPTIMISM_SEPOLIA_LAYER_ZERO]: (props) => <OptimismIcon {...props} />,
   [ChainKey.OPTIMISM_SEPOLIA_OPSTACK]: (props) => <OptimismIcon {...props} />,
   [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
+  [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
 }
 
 interface ChainIconMapProps extends ChakraProps {

@@ -4,4 +4,5 @@ export enum ChainKey {
   OPTIMISM_SEPOLIA_OPSTACK = 'optimism_sepolia_opstack',
   SEI = 'sei',
   SWELL = 'swell',
+  ECLIPSE = 'eclipse',
 }
