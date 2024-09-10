@@ -6,7 +6,7 @@ import { useAppSelector } from '@/store/hooks'
 import { selectChainKeyFromRoute } from '@/store/slices/router'
 import { Flex } from '@chakra-ui/react'
 
-export default function Bridge() {
+export default function Token() {
   // Make sure the router query properly contains the bridge key before loading the bridge page.
   // This should only take one-ish iteration to complete, so there is no visible loading state.
   // Now we can assert that chainKey is not null for every child component.

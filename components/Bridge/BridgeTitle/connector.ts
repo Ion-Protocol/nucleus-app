@@ -6,7 +6,7 @@ import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
-  const chainKey = state.router.query?.bridge as ChainKey
+  const chainKey = state.router.query?.token as ChainKey
   const chainConfig = selectChainConfig(state)
 
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)

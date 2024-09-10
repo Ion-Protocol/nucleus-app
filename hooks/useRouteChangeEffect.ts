@@ -7,7 +7,7 @@ import { RouterQuery, setPath, setQuery } from '@/store/slices/router'
 /**
  * Custom hook to handle side effects based on route changes.
  * Dispatches an action to set the navigation drawer open state
- * when the route starts with '/bridge/'.
+ * when the route starts with '/token/'.
  */
 export function useRouteChangeEffect() {
   const router = useRouter()
@@ -15,8 +15,8 @@ export function useRouteChangeEffect() {
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      // Opens the bridge section of the navbar on the left of the screen when the route starts with '/bridge/'.
-      if (url.startsWith('/bridge/')) {
+      // Opens the bridge section of the navbar on the left of the screen when the route starts with '/token/'.
+      if (url.startsWith('/token/')) {
         dispatch(setBridgeNavOpen(true))
       }
 

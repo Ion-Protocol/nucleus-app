@@ -1,9 +1,6 @@
 import { discordUrl, docsUrl } from '@/config/constants'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { selectChainsAsArray } from '@/store/slices/bridges'
-import { openTermsModal } from '@/store/slices/ui'
 import { Divider, Flex } from '@chakra-ui/react'
-import { ChainIcon } from '../config/chainIcons'
+import { TokenIcon } from '../config/tokenIcons'
 import { BridgeNavIcon } from '../shared/icons/Bridge'
 import { DashboardIcon } from '../shared/icons/Dashboard'
 import { DiscordIcon } from '../shared/icons/Discord'
@@ -14,17 +11,10 @@ import { FooterLink } from './FooterLink'
 import { Logo } from './Logo'
 import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
-import { TokenKey } from '@/types/TokenKey'
-import { TokenIcon } from '../config/tokenIcons'
+import { NavDrawerConnector } from './connector'
+import { tokensConfig } from '@/config/token'
 
-export function NavDrawer() {
-  const chains = useAppSelector(selectChainsAsArray)
-  const dispatch = useAppDispatch()
-
-  function handleClickTermsAndConditions() {
-    dispatch(openTermsModal())
-  }
-
+function NavDrawer({ chains, openTermsModal }: NavDrawerConnector.Props) {
   return (
     <Flex
       direction="column"
@@ -44,8 +34,8 @@ export function NavDrawer() {
             {chains.map((chain) => (
               <NavItem
                 key={chain.key}
-                title={chain.name}
-                href={`/bridge/${chain.key}`}
+                title={tokensConfig[chain.yieldAsset].name}
+                href={`/token/${chain.key}`}
                 disabled={chain.comingSoon}
                 comingSoon={chain.comingSoon}
                 leftIcon={<TokenIcon tokenKey={chain.yieldAsset} />}
@@ -59,8 +49,10 @@ export function NavDrawer() {
       <Flex pt={6} direction="column">
         <FooterLink title="Docs" href={docsUrl} icon={<DocsIcon />} openNewTab />
         <FooterLink title="Discord" href={discordUrl} icon={<DiscordIcon />} openNewTab />
-        <FooterLink title="Terms & Conditions" onClick={handleClickTermsAndConditions} icon={<TermsIcon />} />
+        <FooterLink title="Terms & Conditions" onClick={openTermsModal} icon={<TermsIcon />} />
       </Flex>
     </Flex>
   )
 }
+
+export default NavDrawerConnector.Connector(NavDrawer)
