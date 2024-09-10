@@ -1,11 +1,10 @@
-import { ChainKey } from '@/types/ChainKey'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
-import { selectChainConfig, selectDepositAmount, selectBridgeRate } from '@/store/slices/bridges'
+import { selectBridgeRate, selectChainConfig, selectDepositAmount } from '@/store/slices/bridges'
+import { selectChainKeyFromRoute } from '@/store/slices/router'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { ConnectedProps, connect } from 'react-redux'
-import { selectChainKeyFromRoute } from '@/store/slices/router'
 
 const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   // Calculate destination value

@@ -45,7 +45,6 @@ function TokenInput({
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          type="number"
           variant="unstyled"
           size="lg"
           fontFamily="var(--font-ppformula)"

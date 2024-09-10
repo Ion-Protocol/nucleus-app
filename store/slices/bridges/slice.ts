@@ -3,6 +3,7 @@ import { TokenKey } from '@/types/TokenKey'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './extraReducers'
 import { initialState } from './initialState'
+import { sanitizeDepositInput } from '@/utils/string'
 
 const bridgesSlice = createSlice({
   name: 'bridges',
@@ -33,8 +34,9 @@ const bridgesSlice = createSlice({
       state.previewFee = null
     },
     setInputValue: (state, action) => {
-      state.depositAmount = action.payload
+      state.depositAmount = sanitizeDepositInput(action.payload, state.depositAmount)
     },
+
     clearInputValue: (state) => {
       state.depositAmount = ''
     },
