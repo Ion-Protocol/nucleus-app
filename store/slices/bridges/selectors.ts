@@ -313,12 +313,13 @@ export const selectFormattedPreviewFee = createSelector(
   }
 )
 export const selectShouldTriggerPreviewFee = createSelector(
-  [selectDepositAmount, selectInputError, selectLayerZeroChainSelector],
-  (from, error, layerZeroChainSelector): boolean => {
+  [selectDepositAmount, selectInputError, selectLayerZeroChainSelector, selectSourceChainKey],
+  (from, error, layerZeroChainSelector, sourceChainKey): boolean => {
     const isNotEmpty = from.trim().length > 0
     const isGreaterThanZero = parseFloat(from) > 0
     const hasNoError = !error
-    return isNotEmpty && isGreaterThanZero && hasNoError && layerZeroChainSelector !== null
+    const isOnL1 = sourceChainKey === ChainKey.ETHEREUM
+    return isNotEmpty && isGreaterThanZero && hasNoError && layerZeroChainSelector !== null && isOnL1
   }
 )
 
@@ -330,13 +331,14 @@ export const selectDepositPending = createSelector([(state: RootState) => state]
   return bridgesState.deposit.pending
 })
 export const selectDepositDisabled = createSelector(
-  [selectDepositAmount, selectInputError, selectDepositPending, selectPreviewFee],
-  (from, error, pending, previewFee): boolean => {
+  [selectDepositAmount, selectInputError, selectDepositPending, selectPreviewFee, selectShouldTriggerPreviewFee],
+  (from, error, pending, previewFee, shouldTriggerPreviewFee): boolean => {
     const isEmpty = from.trim().length === 0
     const isLessThanOrEqualToZero = parseFloat(from) <= 0
     const isError = !!error
     const isPending = !!pending
-    return isEmpty || isLessThanOrEqualToZero || isError || isPending || previewFee === null
+    const isPreviewFeeApplicableButNotReady = shouldTriggerPreviewFee && previewFee === null
+    return isEmpty || isLessThanOrEqualToZero || isError || isPending || isPreviewFeeApplicableButNotReady
   }
 )
 export const selectDepositBridgeData = createSelector(
@@ -356,9 +358,12 @@ export const selectDepositBridgeData = createSelector(
 /////////////////////////////////////////////////////////////////////
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////
-export const selectShouldUseFunCheckout = createSelector([selectWalletHasEnoughBalance], (walletHasEnoughBalance) => {
-  return !walletHasEnoughBalance
-})
+export const selectShouldUseFunCheckout = createSelector(
+  [selectWalletHasEnoughBalance, selectSourceChainKey],
+  (walletHasEnoughBalance, sourceChainKey) => {
+    return !walletHasEnoughBalance && sourceChainKey === ChainKey.ETHEREUM
+  }
+)
 
 export const selectDepositAndBridgeCheckoutParams = (minimumMint: bigint) =>
   createSelector(
