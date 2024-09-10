@@ -1,4 +1,5 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
+import { RewardsAndPointsRow } from '@/components/Bridge/BridgeTitle/RewardsAndPoints/RewardsAndPointsTooltip'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/token'
 import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
@@ -11,12 +12,13 @@ import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
 import { Abi, erc20Abi } from 'viem'
 import { selectAddress } from '../account'
-import { selectBalances, selectTokenBalanceAsNumber } from '../balance'
+import { selectBalances } from '../balance'
 import { selectNetworkKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectChainKeyFromRoute } from '../router'
 import { ChainData } from './initialState'
-import { RewardsAndPointsRow } from '@/components/Bridge/BridgeTitle/RewardsAndPoints/RewardsAndPointsTooltip'
+
+const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
 /////////////////////////////////////////////////////////////////////
 // Principal Selectors: Influences the result of many other selectors
@@ -261,21 +263,31 @@ export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount],
   return BigInt(parseFloat(depositAmountAsString) * WAD.number)
 })
 
+export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], (sourceChainKey) => {
+  const isFunkitEnabled = USE_FUNKIT
+  const isSourceChainEthereum = sourceChainKey === ChainKey.ETHEREUM
+  return isFunkitEnabled && isSourceChainEthereum
+})
+
 export const selectInputError = createSelector(
-  [selectDepositAmount, selectSourceChainKey, selectChainKeyFromRoute, selectSourceTokenKey, selectBalances],
-  (inputValue, chainKeyFromChainSelector, chainKeyFromRoute, selectedTokenKey, balances) => {
+  [
+    selectDepositAmount,
+    selectSourceChainKey,
+    selectChainKeyFromRoute,
+    selectSourceTokenKey,
+    selectBalances,
+    selectShouldIgnoreBalance,
+  ],
+  (inputValue, chainKeyFromChainSelector, chainKeyFromRoute, selectedTokenKey, balances, shouldIgnoreBalance) => {
+    if (shouldIgnoreBalance) return null
     if (!selectedTokenKey) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
     const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance)))
-    const shouldCheckForInsufficientBalance = chainKeyFromChainSelector === chainKeyFromRoute
+    if (tokenBalanceAsNumber === null) return null
 
-    if (shouldCheckForInsufficientBalance && tokenBalanceAsNumber !== null) {
-      if (parseFloat(inputValue) > tokenBalanceAsNumber) {
-        return 'Insufficient balance'
-      } else {
-        return null
-      }
+    if (parseFloat(inputValue) > tokenBalanceAsNumber) {
+      return 'Insufficient balance'
     } else {
       return null
     }
@@ -333,14 +345,15 @@ export const selectFormattedPreviewFee = createSelector(
 )
 export const selectShouldTriggerPreviewFee = createSelector(
   [selectDepositAmount, selectInputError, selectLayerZeroChainSelector, selectSourceChainKey, selectAddress],
-  (from, error, layerZeroChainSelector, sourceChainKey, address): boolean => {
+  (inputAmount, error, layerZeroChainSelector, sourceChainKey, address): boolean => {
     const isConnected = !!address
     const isOnL1 = sourceChainKey === ChainKey.ETHEREUM
     const hasLayerZeroChainSelector = layerZeroChainSelector !== null
-    const isNotEmpty = from.trim().length > 0
-    const isGreaterThanZero = parseFloat(from) > 0
+    const isNotEmpty = inputAmount.trim().length > 0
+    const isGreaterThanZero = parseFloat(inputAmount) > 0
     const hasNoError = !error
-    return isConnected && isOnL1 && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
+    const result = isConnected && isOnL1 && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
+    return result
   }
 )
 
@@ -382,7 +395,9 @@ export const selectDepositBridgeData = createSelector(
 export const selectShouldUseFunCheckout = createSelector(
   [selectWalletHasEnoughBalance, selectSourceChainKey],
   (walletHasEnoughBalance, sourceChainKey) => {
-    return !walletHasEnoughBalance && sourceChainKey === ChainKey.ETHEREUM
+    const isFunkitEnabled = USE_FUNKIT
+    const isSourceChainEthereum = sourceChainKey === ChainKey.ETHEREUM
+    return isFunkitEnabled && !walletHasEnoughBalance && isSourceChainEthereum
   }
 )
 

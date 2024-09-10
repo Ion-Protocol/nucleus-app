@@ -1,6 +1,6 @@
 import { AppDispatch } from '@/store'
-import { selectChainConfig, selectShouldTriggerPreviewFee, setInputValueDebounceComplete } from '@/store/slices/bridges'
-import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
+import { selectShouldTriggerPreviewFee, setInputValueDebounceComplete } from '@/store/slices/bridges'
+import { fetchPreviewFee, setBridgeInputMax } from '@/store/slices/bridges/thunks'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**

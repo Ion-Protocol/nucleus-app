@@ -30,7 +30,9 @@ const bridgesSlice = createSlice({
     setInputValue: (state, action) => {
       state.depositAmount = sanitizeDepositInput(action.payload, state.depositAmount)
     },
-
+    setInputValueBypassDebounce: (state, action) => {
+      state.depositAmount = action.payload
+    },
     clearInputValue: (state) => {
       state.depositAmount = ''
     },
@@ -46,6 +48,7 @@ export const {
   clearSelectedFromToken,
   setDestinationChain,
   setInputValue,
+  setInputValueBypassDebounce,
   setInputValueDebounceComplete,
   setSelectedFromToken,
   setSourceChain,

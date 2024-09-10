@@ -21,19 +21,21 @@ import { selectChainKeyFromRoute } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import { getTokenPerShareRate } from './getTokenPerShareRate'
 import {
-  selectDepositAmount,
   selectChainConfig,
   selectContractAddressByName,
+  selectDepositAmount,
   selectDepositAmountAsBigInt,
   selectDepositAndBridgeCheckoutParams,
   selectDepositBridgeData,
   selectFeeTokenAddress,
   selectNetworkConfig,
+  selectShouldTriggerPreviewFee,
   selectShouldUseFunCheckout,
   selectSourceChainId,
   selectSourceChainKey,
   selectSourceTokenKey,
 } from './selectors'
+import { setInputValue, setInputValueBypassDebounce } from './slice'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -102,19 +104,20 @@ export const fetchChainTvl = createAsyncThunk<FetchChainTvlResult, ChainKey, { r
  * @returns A promise that resolves to an object containing the bridge key and the maximum token balance.
  * @throws An error if the bridge key is missing in the router query.
  */
-export const setBridgeInputMax = createAsyncThunk<
-  { inputValue: string },
-  void,
-  { state: RootState; rejectValue: string }
->('bridges/setBridgeInputMax', async (_, { getState, rejectWithValue, dispatch }) => {
-  const state = getState() as RootState
-  const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
-  const tokenKey = selectSourceTokenKey(state)
-  const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
-  const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
+export const setBridgeInputMax = createAsyncThunk<void, void, { state: RootState; rejectValue: string }>(
+  'bridges/setBridgeInputMax',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    const state = getState() as RootState
+    const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
+    const tokenKey = selectSourceTokenKey(state)
+    const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
+    const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
 
-  return { inputValue: tokenBalanceAsNumber }
-})
+    // Using dispatch within the thunk to trigger the setInputValue action so
+    // that the the previewFee side effect will also trigger
+    dispatch(setInputValue(tokenBalanceAsNumber))
+  }
+)
 
 export interface fetchChainRateResult {
   rate: string
@@ -325,18 +328,12 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const chainConfig = selectChainConfig(state)
       const depositAmount = selectDepositAmountAsBigInt(state)
       const chainKeyFromSelector = selectSourceChainKey(state)
-      const chainKeyFromRoute = selectChainKeyFromRoute(state)
       const depositAssetTokenKey = selectSourceTokenKey(state)
       const chainId = selectSourceChainId(state)
       const userAddress = selectAddress(state)
 
       if (!depositAssetTokenKey || !chainKeyFromSelector) {
         return rejectWithValue('Missing deposit asset token key')
-      }
-
-      // Preview fee is not necessary if doing a deposit from the L2 to the L2
-      if (chainKeyFromRoute === chainKeyFromSelector) {
-        return { fee: '0' }
       }
 
       const depositAssetAddress = tokensConfig[depositAssetTokenKey]?.chains[chainKeyFromSelector]?.address

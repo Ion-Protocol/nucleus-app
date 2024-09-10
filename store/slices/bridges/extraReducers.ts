@@ -80,12 +80,4 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     .addCase(performDeposit.rejected, (state, action) => {
       state.deposit.pending = false
     })
-
-    ///////////////////////////////
-    // Bridge From Max Input
-    ///////////////////////////////
-    .addCase(setBridgeInputMax.fulfilled, (state, action) => {
-      const { inputValue } = action.payload
-      state.depositAmount = inputValue
-    })
 }

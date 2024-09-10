@@ -14,15 +14,17 @@ import {
 import { useState } from 'react'
 import { FullErrorIcon } from '../../FullErrorIcon'
 import { ErrorModalConnector } from './connector'
+import { uiConfig } from '@/config/ui'
 
 /**
  * Renders an error modal component.
  *
- * @param errorMessage - The error message to be displayed in the modal.
+ * @param error - The error to be displayed in the modal.
  * @param clearError - A function to clear the error and close the modal.
  * @returns The error modal component.
  */
 function ErrorModal({ error, clearError }: ErrorModalConnector.Props) {
+  const errorMessageMaxLength = uiConfig.errorModal.messageMaxLength
   const [isFullModalOpen, setFullModalOpen] = useState(false)
 
   const handleClose = () => {
@@ -37,7 +39,9 @@ function ErrorModal({ error, clearError }: ErrorModalConnector.Props) {
   }
 
   const truncatedMessage =
-    error.message && error.message.length > 250 ? `${error.message.slice(0, 250)}...` : error.message
+    error.message && error.message.length > errorMessageMaxLength
+      ? `${error.message.slice(0, errorMessageMaxLength)}...`
+      : error.message
 
   return (
     <>

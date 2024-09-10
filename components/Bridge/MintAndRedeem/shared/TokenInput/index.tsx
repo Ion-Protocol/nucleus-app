@@ -56,7 +56,7 @@ function TokenInput({
         {error && <Text color="error.main">{error}</Text>}
         <Flex gap={3} align="center">
           {/* Max Button */}
-          {shouldIgnoreBalance && (
+          {!shouldIgnoreBalance && (
             <Flex gap={3}>
               <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
                 <Text color="disabledText" variant="smallParagraph">

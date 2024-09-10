@@ -3,9 +3,10 @@ import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
   selectDepositAmount,
-  selectSourceTokenKey,
   selectInputError,
+  selectShouldIgnoreBalance,
   selectSourceChainKey,
+  selectSourceTokenKey,
   selectSourceTokens,
   setInputValue,
   setSelectedFromToken,
@@ -24,8 +25,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
   const formattedTokenBalance = selectFormattedTokenBalance(selectedChainKey, selectedTokenKey)(state)
-  const fromChain = selectSourceChainKey(state)
-  const shouldIgnoreBalance = fromChain === currentPageChainKey
+  const shouldIgnoreBalance = selectShouldIgnoreBalance(state)
 
   return {
     inputValue,

@@ -10,4 +10,7 @@ export const uiConfig = {
         'Select an ecosystem, mint a default asset, and explore applications in Nucleus-powered networks.',
     },
   },
+  errorModal: {
+    messageMaxLength: 200,
+  },
 }
