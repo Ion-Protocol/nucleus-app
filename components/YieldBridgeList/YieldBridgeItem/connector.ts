@@ -1,5 +1,3 @@
-import { ChainKey } from '@/types/ChainKey'
-import { uiConfig } from '@/config/ui'
 import { RootState } from '@/store'
 import {
   selectChainConfigByKey,
@@ -7,6 +5,7 @@ import {
   selectTvlLoading,
   selectYieldAssetNameByChainKey,
 } from '@/store/slices/bridges'
+import { ChainKey } from '@/types/ChainKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
@@ -19,19 +18,12 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const comingSoon = chainConfig?.comingSoon || false
 
-  const maxDescriptionLength = uiConfig.pages.dashboard.yieldBridges.descriptionLength
-  let description = chainConfig?.description || ''
-  if (description && description.length > maxDescriptionLength) {
-    description = `${description.slice(0, maxDescriptionLength)}...`
-  }
-
   return {
     tvl,
     yieldAssetName,
     chainName,
     comingSoon,
     chainKey,
-    description,
     disabled,
     loading,
   }

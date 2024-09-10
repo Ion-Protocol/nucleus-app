@@ -10,7 +10,6 @@ function YieldBridgeItem({
   chainName,
   comingSoon,
   chainKey,
-  description,
   disabled,
   loading,
 }: YieldBridgeItemConnector.Props) {
