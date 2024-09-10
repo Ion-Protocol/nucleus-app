@@ -95,7 +95,7 @@ const mainnetChains: Chains = {
     nativeToken: TokenKey.ETH,
     feeToken: TokenKey.ETH,
     receiveOn: ChainKey.ETHEREUM,
-    yieldAsset: TokenKey.ETH,
+    yieldAsset: TokenKey.TETH,
     networkSymbol: 'ETH',
     incentives: [],
     points: [],

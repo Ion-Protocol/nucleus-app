@@ -166,4 +166,15 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
+  [TokenKey.TETH]: {
+    key: TokenKey.TETH,
+    name: 'tETH',
+    symbol: 'TETH',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0x',
+        chainId: mainnet.id,
+      },
+    },
+  },
 }
