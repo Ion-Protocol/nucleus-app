@@ -152,14 +152,14 @@ export const selectFormattedChainTvlByKey = (chainKey: ChainKey) =>
     [selectChainTvlByKey(chainKey), selectUsdPerEthRate, selectNetworkConfig],
     (tvl, price, networkConfig) => {
       const chainConfig = networkConfig?.chains[chainKey]
-      const formattedTvl = currencySwitch(tvl, price, { symbol: chainConfig?.networkSymbol })
+      const formattedTvl = currencySwitch(tvl, price)
       return formattedTvl || '-'
     }
   )
 export const selectActiveFormattedChainTvl = createSelector(
   [selectActiveChainTvl, selectUsdPerEthRate, selectChainConfig],
   (tvl, price, chainConfig) => {
-    const formattedTvl = currencySwitch(tvl, price, { symbol: chainConfig?.networkSymbol })
+    const formattedTvl = currencySwitch(tvl, price)
     return formattedTvl || '-'
   }
 )
@@ -327,7 +327,6 @@ export const selectFormattedPreviewFee = createSelector(
     const formattedPreviewFee = currencySwitch(previewFee, price, {
       usdDigits: 2,
       ethDigits: 7,
-      symbol: chainConfig?.networkSymbol,
     })
     return formattedPreviewFee
   }

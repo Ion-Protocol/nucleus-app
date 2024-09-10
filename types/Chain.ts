@@ -23,8 +23,6 @@ export interface Chain {
   sourceTokens: Partial<{
     [chain in ChainKey]: TokenKey[]
   }>
-  nativeToken: TokenKey
-  networkSymbol: string
   comingSoon?: boolean
   feeToken: TokenKey
   receiveOn: ChainKey

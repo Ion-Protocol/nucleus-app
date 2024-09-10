@@ -12,9 +12,9 @@ import { numberToToken, numberToUsd } from './number'
 export function currencySwitch(
   value: bigint | number | null,
   price: bigint,
-  opts?: { usdDigits?: number; ethDigits?: number; symbol?: string }
+  opts?: { usdDigits?: number; ethDigits?: number }
 ): string {
-  const { usdDigits = 0, ethDigits = 0, symbol = 'ETH' } = opts || {}
+  const { usdDigits = 0, ethDigits = 0 } = opts || {}
   if (value === null) {
     value = BigInt(0)
   }
