@@ -56,7 +56,7 @@ const mainnetChains: Chains = {
     nativeToken: TokenKey.RSWBTC,
     feeToken: TokenKey.ETH,
     receiveOn: ChainKey.ETHEREUM,
-    yieldAsset: TokenKey.RSWBTC,
+    yieldAsset: TokenKey.EARNBTC,
     networkSymbol: 'BTC',
     description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
   },

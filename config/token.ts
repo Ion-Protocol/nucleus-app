@@ -144,6 +144,17 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
+  [TokenKey.EARNBTC]: {
+    key: TokenKey.EARNBTC,
+    name: 'earnBTC',
+    symbol: 'EARNBTC',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
+        chainId: mainnet.id,
+      },
+    },
+  },
   [TokenKey.SSETH]: {
     key: TokenKey.SSETH,
     name: 'ssETH',
