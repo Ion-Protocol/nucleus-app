@@ -11,10 +11,8 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   const chainConfig = selectChainConfig(state)
 
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
-  const descriptionLength = uiConfig.pages.bridge.title.descriptionLenth
+  const chainName = chainConfig?.name || ''
   const description = chainConfig?.description || ''
-  const truncatedDescription =
-    description.length > descriptionLength ? description.substring(0, descriptionLength) + '...' : description
 
   const boringVaultAddress = selectContractAddressByName('boringVault')(state)
   const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
@@ -22,7 +20,8 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   return {
     chainKey,
     yieldAssetName,
-    description: truncatedDescription,
+    chainName,
+    description,
     etherscanHref,
   }
 }

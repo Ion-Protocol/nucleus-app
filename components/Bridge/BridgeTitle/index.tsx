@@ -24,9 +24,7 @@ function BridgeTitle({ chainKey, yieldAssetName, description, etherscanHref, ...
           </Link>
         )}
       </Flex>
-      <Text variant="smallParagraph">
-        Select your deposit asset and select the destination chain that you want to mint the native yield token on.
-      </Text>
+      <Text variant="smallParagraph">{description}</Text>
     </Flex>
   )
 }

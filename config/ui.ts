@@ -9,10 +9,5 @@ export const uiConfig = {
       announcementBody:
         'Select an ecosystem, mint a default asset, and explore applications in Nucleus-powered networks.',
     },
-    bridge: {
-      title: {
-        descriptionLenth: 300,
-      },
-    },
   },
 }
