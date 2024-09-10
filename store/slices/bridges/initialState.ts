@@ -21,7 +21,6 @@ export type BridgesState = {
   previewFeeLoading: boolean
   previewFee: string | null
   sourceChain: ChainKey
-  inputError: string | null
   destinationChain: ChainKey | null
   deposit: {
     pending: boolean
@@ -51,7 +50,6 @@ export const initialState: BridgesState = {
   previewFee: null,
   sourceChain: ChainKey.ETHEREUM,
   destinationChain: ChainKey.ETHEREUM,
-  inputError: null,
   deposit: {
     pending: false,
     error: null,

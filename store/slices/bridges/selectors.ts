@@ -6,12 +6,12 @@ import { RootState } from '@/store'
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { WAD } from '@/utils/bigint'
+import { bigIntToNumber, WAD } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
 import { Abi, erc20Abi } from 'viem'
 import { selectAddress } from '../account'
-import { selectBalances } from '../balance'
+import { selectBalances, selectTokenBalanceAsNumber } from '../balance'
 import { selectNetworkKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectChainKeyFromRoute } from '../router'
@@ -228,18 +228,6 @@ export const selectSourceChainId = createSelector(
   }
 )
 
-/////////////////////////////////////////////////////////////////////
-// Deposit amount input
-/////////////////////////////////////////////////////////////////////
-export const selectDepositAmount = createSelector([selectBridgesState], (bridgesState): string => {
-  return bridgesState.depositAmount
-})
-export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount], (depositAmountAsString): bigint => {
-  if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
-  return BigInt(parseFloat(depositAmountAsString) * WAD.number)
-})
-export const selectInputError = createSelector([selectBridgesState], (bridgesState) => bridgesState.inputError)
-
 // Token dropdown menu
 export const selectSourceTokens = createSelector(
   [selectChainConfig, selectSourceChainKey],
@@ -259,6 +247,38 @@ export const selectDepositAssetAddress = createSelector(
   (depositAssetTokenKey, sourceChainKey) => {
     if (!depositAssetTokenKey || !sourceChainKey) return null
     return tokensConfig[depositAssetTokenKey]?.chains[sourceChainKey as ChainKey]?.address
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
+// Deposit amount input
+/////////////////////////////////////////////////////////////////////
+export const selectDepositAmount = createSelector([selectBridgesState], (bridgesState): string => {
+  return bridgesState.depositAmount
+})
+export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount], (depositAmountAsString): bigint => {
+  if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
+  return BigInt(parseFloat(depositAmountAsString) * WAD.number)
+})
+
+export const selectInputError = createSelector(
+  [selectDepositAmount, selectSourceChainKey, selectChainKeyFromRoute, selectSourceTokenKey, selectBalances],
+  (inputValue, chainKeyFromChainSelector, chainKeyFromRoute, selectedTokenKey, balances) => {
+    if (!selectedTokenKey) return null
+    const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
+    if (!tokenBalance) return null
+    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance)))
+    const shouldCheckForInsufficientBalance = chainKeyFromChainSelector === chainKeyFromRoute
+
+    if (shouldCheckForInsufficientBalance && tokenBalanceAsNumber !== null) {
+      if (parseFloat(inputValue) > tokenBalanceAsNumber) {
+        return 'Insufficient balance'
+      } else {
+        return null
+      }
+    } else {
+      return null
+    }
   }
 )
 
@@ -313,13 +333,15 @@ export const selectFormattedPreviewFee = createSelector(
   }
 )
 export const selectShouldTriggerPreviewFee = createSelector(
-  [selectDepositAmount, selectInputError, selectLayerZeroChainSelector, selectSourceChainKey],
-  (from, error, layerZeroChainSelector, sourceChainKey): boolean => {
+  [selectDepositAmount, selectInputError, selectLayerZeroChainSelector, selectSourceChainKey, selectAddress],
+  (from, error, layerZeroChainSelector, sourceChainKey, address): boolean => {
+    const isConnected = !!address
+    const isOnL1 = sourceChainKey === ChainKey.ETHEREUM
+    const hasLayerZeroChainSelector = layerZeroChainSelector !== null
     const isNotEmpty = from.trim().length > 0
     const isGreaterThanZero = parseFloat(from) > 0
     const hasNoError = !error
-    const isOnL1 = sourceChainKey === ChainKey.ETHEREUM
-    return isNotEmpty && isGreaterThanZero && hasNoError && layerZeroChainSelector !== null && isOnL1
+    return isConnected && isOnL1 && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
   }
 )
 

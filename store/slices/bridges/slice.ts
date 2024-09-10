@@ -18,12 +18,6 @@ const bridgesSlice = createSlice({
     setDestinationChain: (state, action) => {
       state.destinationChain = action.payload
     },
-    setInputError: (state, action) => {
-      state.inputError = action.payload
-    },
-    clearInputError: (state) => {
-      state.inputError = null
-    },
     setSelectedFromToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
       state.selectedSourceToken = action.payload.tokenKey
     },
@@ -46,13 +40,11 @@ const bridgesSlice = createSlice({
 })
 
 export const {
-  clearInputError,
   resetSourceChain,
   clearInputValue,
   clearPreviewFee,
   clearSelectedFromToken,
   setDestinationChain,
-  setInputError,
   setInputValue,
   setInputValueDebounceComplete,
   setSelectedFromToken,

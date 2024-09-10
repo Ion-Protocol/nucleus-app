@@ -23,9 +23,9 @@ const mainnetChains: Chains = {
     chainId: sei.id,
     comingSoon: false,
     contracts: {
-      teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
-      accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
-      boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
+      teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
+      accountant: '0x6035832F65b0cf20064681505b73A6dE307a04cB',
+      boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
     },
     sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
     sourceTokens: {

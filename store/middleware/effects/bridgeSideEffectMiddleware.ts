@@ -1,19 +1,15 @@
 import { AppDispatch } from '@/store'
-import { selectTokenBalance, selectTokenBalanceAsNumber } from '@/store/slices/balance'
+import { setAddress } from '@/store/slices/account'
 import {
-  clearInputError,
   clearInputValue,
   clearPreviewFee,
   clearSelectedFromToken,
   resetSourceChain,
-  selectSourceTokenKey,
-  selectSourceChainKey,
-  setInputError,
-  setInputValue,
   setSourceChain,
 } from '@/store/slices/bridges'
+import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
 import { setNetworkId } from '@/store/slices/chain'
-import { selectChainKeyFromRoute, setQuery } from '@/store/slices/router'
+import { setQuery } from '@/store/slices/router'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**
@@ -25,12 +21,19 @@ export const bridgeSideEffectMiddleware: Middleware =
   (action) => {
     const state = getState()
 
+    // Side effects for wallet connection or change
+    if (setAddress.match(action)) {
+      // When the user first opens the app, their wallet will not be connected.
+      // The user will likely input values into the deposit input field, then they will click "Connect wallet".
+      // At this point we need to trigger fetching the preview fee, otherwise the "Mint" button will remain disabled.
+      dispatch(fetchPreviewFee())
+    }
+
     // Side effects for chain change. This triggers when the wallet connects to a different chain/network
     if (setNetworkId.match(action)) {
       dispatch(clearPreviewFee())
       dispatch(clearInputValue())
       dispatch(clearSelectedFromToken())
-      dispatch(clearInputError())
       dispatch(resetSourceChain())
     }
 
@@ -39,7 +42,6 @@ export const bridgeSideEffectMiddleware: Middleware =
       dispatch(clearPreviewFee())
       dispatch(clearInputValue())
       dispatch(clearSelectedFromToken())
-      dispatch(clearInputError())
       dispatch(resetSourceChain())
     }
 
@@ -49,28 +51,6 @@ export const bridgeSideEffectMiddleware: Middleware =
       dispatch(clearPreviewFee())
       dispatch(clearInputValue())
       dispatch(clearSelectedFromToken())
-      dispatch(clearInputError())
-    }
-
-    // Side effects for input value changes
-    // Processes input errors
-    if (setInputValue.match(action)) {
-      const inputValue = action.payload
-      const chainKeyFromChainSelector = selectSourceChainKey(state)
-      const chainKeyFromRoute = selectChainKeyFromRoute(state)
-      const selectedTokenKey = selectSourceTokenKey(state)
-      const tokenBalanceAsNumber = selectTokenBalanceAsNumber(chainKeyFromChainSelector, selectedTokenKey)(state)
-      const shouldCheckForInsufficientBalance = chainKeyFromChainSelector === chainKeyFromRoute
-
-      if (shouldCheckForInsufficientBalance && tokenBalanceAsNumber !== null) {
-        if (parseFloat(inputValue) > tokenBalanceAsNumber) {
-          dispatch(setInputError('Insufficient balance'))
-        } else {
-          dispatch(clearInputError())
-        }
-      } else {
-        dispatch(clearInputError())
-      }
     }
 
     return next(action)
