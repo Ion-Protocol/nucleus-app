@@ -17,7 +17,7 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
     rateAsBigInt > 0 ? (depositAmountAsBigInt * WAD.bigint) / rateAsBigInt : depositAmountAsBigInt
   const destinationAmountFormatted = bigIntToNumber(destinationAmountAsBigInt, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
+    maximumFractionDigits: 100, // just a large number
   })
 
   // Look up list of available token keys from the chain config
