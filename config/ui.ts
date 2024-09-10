@@ -4,9 +4,10 @@ export const uiConfig = {
       yieldBridges: {
         descriptionLength: 90,
       },
-      announcementTag: 'NEW FEATURE',
-      announcementHeader: 'Announcement Banner',
-      announcementBody: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
+      announcementTag: 'Explore Now',
+      announcementHeader: 'Nucleus is Live!',
+      announcementBody:
+        'Select an ecosystem, mint a default asset, and explore applications in Nucleus-powered networks.',
     },
     bridge: {
       title: {

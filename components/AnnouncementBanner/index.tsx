@@ -16,7 +16,7 @@ export function AnnouncementBanner() {
     >
       <Flex bg="backgroundSecondary" position="relative" justify="space-between" w="100%">
         {/* Left Side */}
-        <Flex direction="column" p={6} gap={3} minW="500px" maxW="500px" flex={1}>
+        <Flex direction="column" p={6} gap={3} minW="550px" maxW="550px" flex={1}>
           <Flex
             bg="background"
             px={3}
