@@ -18,4 +18,5 @@ export interface Chain {
   feeToken: TokenKey
   receiveOn: ChainKey
   yieldAsset: TokenKey
+  incentiveChains: ChainKey[]
 }

@@ -14,6 +14,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.
   [ChainKey.OPTIMISM_SEPOLIA_OPSTACK]: (props) => <OptimismIcon {...props} />,
   [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
   [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
+  [ChainKey.DINERO]: (props) => <SwellChainIcon {...props} />,
 }
 
 interface ChainIconMapProps extends ChakraProps {

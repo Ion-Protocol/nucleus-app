@@ -37,6 +37,7 @@ const mainnetChains: Chains = {
     layerZeroChainSelector: 30280,
     receiveOn: ChainKey.SEI,
     yieldAsset: TokenKey.SSETH,
+    incentiveChains: [ChainKey.SEI, ChainKey.DINERO],
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
   },
@@ -58,6 +59,7 @@ const mainnetChains: Chains = {
     receiveOn: ChainKey.ETHEREUM,
     yieldAsset: TokenKey.EARNBTC,
     networkSymbol: 'BTC',
+    incentiveChains: [],
     description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
   },
   [ChainKey.ECLIPSE]: {
@@ -78,6 +80,7 @@ const mainnetChains: Chains = {
     receiveOn: ChainKey.ETHEREUM,
     yieldAsset: TokenKey.ETH,
     networkSymbol: 'ETH',
+    incentiveChains: [],
     description: '',
   },
 }

@@ -3,6 +3,8 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
+import { MultiIcon } from '@/components/shared/MulitiIcon'
+import { ChainIcon } from '@/components/config/chainIcons'
 
 function YieldBridgeItem({
   tvl,
@@ -13,6 +15,7 @@ function YieldBridgeItem({
   chainKey,
   disabled,
   loading,
+  incentiveChains,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
@@ -41,9 +44,9 @@ function YieldBridgeItem({
       onClick={handleClick}
     >
       {/* Text Section */}
-      <Flex w="225px" py={6} pl={6} direction="column">
+      <Flex w="225px" direction="column" justify="space-between" pl={6} py={5}>
+        {/* Bridge Name */}
         <Flex align="center" gap={3}>
-          {/* Bridge Name */}
           <Text variant="bigParagraphBold">{yieldAssetName}</Text>
           <Text variant="bigParagraph" color="disabledText">
             {chainName}
@@ -51,8 +54,7 @@ function YieldBridgeItem({
         </Flex>
 
         {!comingSoon ? (
-          // Not Coming Soon
-          <Flex mt={3} gap={6}>
+          <>
             {/* TVL */}
             <Flex direction="column">
               <Text variant="smallParagraph">TVL</Text>
@@ -60,10 +62,19 @@ function YieldBridgeItem({
                 <Text variant="paragraphBold">{comingSoon ? '-' : tvl}</Text>
               </IonSkeleton>
             </Flex>
-          </Flex>
+
+            {/* Rewards */}
+            <Flex direction="column" gap={1}>
+              <Text variant="smallParagraph">Rewards</Text>
+              <MultiIcon
+                icons={incentiveChains.map((chainKey) => (
+                  <ChainIcon chainKey={chainKey} key={chainKey} />
+                ))}
+              />
+            </Flex>
+          </>
         ) : (
-          // Coming Soon
-          <Flex mt={3}>
+          <Flex mb={6}>
             <Button pointerEvents="none">
               <Text variant="button">COMING SOON</Text>
             </Button>

@@ -18,6 +18,7 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const comingSoon = chainConfig?.comingSoon || false
   const yieldAssetKey = chainConfig?.yieldAsset || null
+  const incentiveChains = chainConfig?.incentiveChains || []
 
   return {
     tvl,
@@ -28,6 +29,7 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
     chainKey,
     disabled,
     loading,
+    incentiveChains,
   }
 }
 
