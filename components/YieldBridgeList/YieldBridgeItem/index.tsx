@@ -54,11 +54,11 @@ function YieldBridgeItem({
 
         {!comingSoon ? (
           <>
-            <Flex>
+            <Flex w="138px" justify="space-between">
               {/* TVL */}
-              <Flex direction="column">
+              <Flex direction="column" w="100%" mr={6}>
                 <Text variant="smallParagraph">TVL</Text>
-                <IonSkeleton isLoaded={!loading} w="100px">
+                <IonSkeleton isLoaded={!loading} w="100%">
                   <Text variant="paragraphBold">{tvl}</Text>
                 </IonSkeleton>
               </Flex>
