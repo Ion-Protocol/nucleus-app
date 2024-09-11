@@ -22,6 +22,20 @@ function RewardsIconRow({
       boxShadow="none"
       border="1px solid"
       borderColor="border"
+      modifiers={[
+        {
+          name: 'flip',
+          options: {
+            fallbackPlacements: [],
+          },
+        },
+        {
+          name: 'preventOverflow',
+          options: {
+            boundary: 'viewport',
+          },
+        },
+      ]}
       sx={{
         '.chakra-tooltip__arrow-wrapper .chakra-tooltip__arrow': {
           mt: '-2px',
