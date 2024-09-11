@@ -8,7 +8,7 @@ export function MintAndRedeem() {
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   return (
-    <Flex w="650px" border="1px solid" borderColor="border" bg="backgroundSecondary" borderRadius="8px" py={6} px={6}>
+    <Flex w="660px" border="1px solid" borderColor="border" bg="backgroundSecondary" borderRadius="8px" py={6} px={6}>
       <Tabs w="100%" borderColor="border" index={selectedIndex} onChange={setSelectedIndex}>
         {/* Tab Buttons */}
         <TabList>

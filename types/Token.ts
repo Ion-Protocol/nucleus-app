@@ -4,6 +4,7 @@ import { TokenKey } from '@/types/TokenKey'
 export interface Token {
   key: TokenKey
   name: string
+  fullName?: string
   symbol: string
   chains: Partial<
     Record<

@@ -158,6 +158,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
   [TokenKey.SSETH]: {
     key: TokenKey.SSETH,
     name: 'ssETH',
+    fullName: 'Super Seiyan ETH',
     symbol: 'SSETH',
     chains: {
       [ChainKey.SEI]: {

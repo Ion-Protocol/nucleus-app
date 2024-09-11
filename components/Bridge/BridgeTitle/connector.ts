@@ -1,6 +1,10 @@
 import { etherscanBaseUrl } from '@/config/constants'
 import { RootState } from '@/store'
-import { selectChainConfig, selectContractAddressByName, selectYieldAssetNameByChainKey } from '@/store/slices/bridges'
+import {
+  selectChainConfig,
+  selectContractAddressByName,
+  selectYieldAssetFullNameByChainKey,
+} from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
@@ -9,7 +13,7 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   const chainKey = state.router.query?.chain as ChainKey
   const chainConfig = selectChainConfig(state)
 
-  const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
+  const yieldAssetFullName = selectYieldAssetFullNameByChainKey(chainKey)(state)
   const description = chainConfig?.description || ''
 
   const boringVaultAddress = selectContractAddressByName('boringVault')(state)
@@ -20,7 +24,7 @@ const mapState = (state: RootState, ownProps: BridgeTitleOwnProps) => {
   return {
     chainKey,
     chainName,
-    yieldAssetName,
+    yieldAssetFullName,
     yieldAssetKey,
     description,
     etherscanHref,

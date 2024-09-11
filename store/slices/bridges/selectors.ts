@@ -115,6 +115,11 @@ export const selectYieldAssetNameByChainKey = (chainKey: ChainKey) =>
     if (!yieldAsset) return null
     return tokensConfig[yieldAsset].name
   })
+export const selectYieldAssetFullNameByChainKey = (chainKey: ChainKey) =>
+  createSelector([selectYieldAssetByChainKey(chainKey)], (yieldAsset) => {
+    if (!yieldAsset) return null
+    return tokensConfig[yieldAsset].fullName || ''
+  })
 
 /////////////////////////////////////////////////////////////////////
 // Nav Drawer

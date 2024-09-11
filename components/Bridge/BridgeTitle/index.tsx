@@ -5,7 +5,7 @@ import { BridgeTitleConnector } from './connector'
 
 function BridgeTitle({
   chainKey,
-  yieldAssetName,
+  yieldAssetFullName,
   yieldAssetKey,
   chainName,
   description,
@@ -18,7 +18,7 @@ function BridgeTitle({
         {/* Font does not align perfectly with the icons, add margin top of -4px to compensate */}
         <TokenIcon tokenKey={yieldAssetKey} fontSize="32px" mt="-4px" />
         <Text ml={1} variant="heading2">
-          Mint {yieldAssetName}
+          Mint {yieldAssetFullName}
         </Text>
         <Text variant="heading2" color="disabledText">
           |
