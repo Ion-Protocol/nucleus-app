@@ -1,4 +1,5 @@
 import BridgeTitle from '@/components/Bridge/BridgeTitle'
+import Apy from '@/components/Bridge/BridgeTitle/Apy'
 import RewardsAndPoints from '@/components/Bridge/BridgeTitle/RewardsAndPoints'
 import Tvl from '@/components/Bridge/BridgeTitle/Tvl'
 import { MintAndRedeem } from '@/components/Bridge/MintAndRedeem'
@@ -27,6 +28,7 @@ export default function Token() {
         {/* TVL */}
         <Flex gap={6}>
           <Tvl />
+          <Apy />
           <RewardsAndPoints />
         </Flex>
 

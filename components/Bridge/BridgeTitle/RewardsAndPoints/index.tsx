@@ -18,9 +18,7 @@ function RewardsAndPoints() {
       align="center"
       w="100%"
     >
-      <Flex gap={2} align="center">
-        <Text variant="paragraph">Rewards & Points</Text>
-      </Flex>
+      <Text variant="paragraph">Rewards & Points</Text>
       <RewardsIconRow chainKey={chainKey} />
     </Flex>
   )

@@ -13,4 +13,5 @@ export const uiConfig = {
   errorModal: {
     messageMaxLength: 200,
   },
+  hardcodedApy: '4.0%',
 }

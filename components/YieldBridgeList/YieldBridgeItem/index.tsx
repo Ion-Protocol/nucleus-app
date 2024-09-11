@@ -4,6 +4,8 @@ import RewardsIconRow from '@/components/shared/RewardsIconRow'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
+import { uiConfig } from '@/config/ui'
+import { hardcodedApy } from '@/config/constants'
 
 function YieldBridgeItem({
   tvl,
@@ -25,10 +27,10 @@ function YieldBridgeItem({
 
   return (
     <Flex
-      h="175px"
+      h="190px"
       border="1px solid"
       borderColor="border"
-      w="350px"
+      w="330px"
       borderRadius="16px"
       overflow="hidden"
       cursor={disabled ? 'not-allowed' : 'pointer'}
@@ -53,12 +55,20 @@ function YieldBridgeItem({
 
         {!comingSoon ? (
           <>
-            {/* TVL */}
-            <Flex direction="column">
-              <Text variant="smallParagraph">TVL</Text>
-              <IonSkeleton isLoaded={!loading} w="100px">
-                <Text variant="paragraphBold">{comingSoon ? '-' : tvl}</Text>
-              </IonSkeleton>
+            <Flex>
+              {/* TVL */}
+              <Flex direction="column">
+                <Text variant="smallParagraph">TVL</Text>
+                <IonSkeleton isLoaded={!loading} w="100px">
+                  <Text variant="paragraphBold">{tvl}</Text>
+                </IonSkeleton>
+              </Flex>
+
+              {/* APY */}
+              <Flex direction="column">
+                <Text variant="smallParagraph">APY</Text>
+                <Text variant="paragraphBold">{hardcodedApy}</Text>
+              </Flex>
             </Flex>
 
             {/* Rewards */}

@@ -23,7 +23,7 @@ export default function Dashboard() {
       <Flex h={16} />
 
       {/* Yield Bridge list */}
-      <Text variant="heading2">Select a Yield Asset</Text>
+      <Text variant="heading2">Select a Network Asset</Text>
       <Flex h={8} />
       <YieldBridgeList />
     </Flex>

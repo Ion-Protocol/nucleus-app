@@ -18,7 +18,9 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
       w="100%"
     >
       <Flex gap={2} align="center">
-        <Text variant="paragraph">Total Value Locked</Text>
+        <Text variant="paragraph" whiteSpace="nowrap">
+          Total Value Locked
+        </Text>
         <IonTooltip label="Total value of assets backing the native yield asset.">
           <InfoOutlineIcon color="infoIcon" />
         </IonTooltip>
