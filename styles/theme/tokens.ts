@@ -1,56 +1,84 @@
 export const semanticTokens = {
   colors: {
-    border: {
-      default: 'neutral.100',
-      _dark: 'midnight.700',
+    primary: {
+      default: 'darkMode.500',
+      _dark: 'neutral.500',
     },
-    borderSubtle: {
-      default: 'neutral.200',
-      _dark: 'midnight.600',
+    border: {
+      default: 'neutral.600',
+      _dark: 'darkMode.300',
+    },
+    borderLight: {
+      default: 'neutral.600',
+      _dark: 'darkMode.200',
     },
     background: {
-      default: 'white',
-      _dark: 'midnight.900',
+      default: 'neutral.500',
+      _dark: 'darkMode.500',
     },
     backgroundSecondary: {
-      default: 'white',
-      _dark: 'midnight.800',
+      default: 'neutral.400',
+      _dark: 'darkMode.400',
     },
-    text: {
-      default: 'neutral.900',
-      _dark: 'white',
-    },
-    secondaryText: {
-      default: 'neutral.500',
-      _dark: 'midnight.200',
-    },
-    selected: {
-      default: 'primary.50',
-      _dark: 'midnight.800',
-    },
-    selectedSecondary: {
-      default: 'neutral.50',
-      _dark: 'midnight.700',
-    },
-    hover: {
-      default: 'primary.50',
-      _dark: 'midnight.800',
-    },
-    hoverSecondary: {
-      default: 'primary.100',
-      _dark: 'midnight.700',
+    backgroundAlternate: {
+      default: 'neutral.200',
+      _dark: 'darkMode.300',
     },
     active: {
-      default: 'primary.100',
-      _dark: 'midnight.700',
+      default: 'neutral.200',
+      _dark: 'darkMode.300',
     },
-    disabled: {
+    drawerBackground: {
+      default: 'neutral.400',
+      _dark: 'darkMode.500',
+    },
+    formBackground: {
       default: 'neutral.500',
-      _dark: 'midnight.400',
+      _dark: 'darkMode.300',
+    },
+    text: {
+      default: 'darkMode.500',
+      _dark: 'white',
+    },
+    textInverse: {
+      default: 'white',
+      _dark: 'darkMode.500',
+    },
+    textSecondary: {
+      default: 'darkMode.300',
+      _dark: 'darkMode.200',
+    },
+    hover: {
+      default: 'neutral.200',
+      _dark: 'darkMode.700',
+    },
+    hoverSecondary: {
+      default: 'neutral.300',
+      _dark: 'darkMode.300',
+    },
+    navDrawerSelected: {
+      default: 'neutral.300',
+      _dark: 'darkMode.900',
+    },
+    modalParagraph: {
+      default: '#6B7280',
+      _dark: 'white',
+    },
+    infoIcon: {
+      default: 'darkMode.200',
+      _dark: 'darkMode.200',
+    },
+    disabledText: {
+      default: 'neutral.700',
+      _dark: 'darkMode.200',
     },
     shadow: {
       default: 'shadow.light',
       _dark: 'shadow.dark',
+    },
+    tooltip: {
+      default: 'neutral.800',
+      _dark: 'darkMode.50',
     },
     link: {
       default: 'primary.500',
@@ -98,66 +126,20 @@ export const semanticTokens = {
         _dark: 'red.lighter',
       },
     },
-    timeRange: {
-      background: {
-        default: 'neutral.50',
-        _dark: 'midnight.890',
-      },
-      unselectedText: {
-        default: 'neutral.500',
-        _dark: 'neutral.600',
-      },
-      selectedBackground: {
-        default: 'white',
-        _dark: 'midnight.700',
-      },
-    },
-    chart: {
-      grid: {
-        default: 'neutral.200',
-        _dark: 'midnight.500',
-      },
-      line: {
-        default: 'primary.600',
-        _dark: 'primary.600',
-      },
-    },
-    table: {
-      background: {
-        default: 'neutral.50',
-        _dark: 'midnight.890',
-      },
-    },
-    tooltip: {
-      background: {
-        default: 'neutral.800',
-        _dark: 'midnight.50',
-      },
-      color: {
-        default: 'neutral.50',
-        _dark: 'neutral.800',
-      },
-    },
     skeleton: {
       startColor: {
-        default: 'neutral.500',
-        _dark: 'midnight.400',
+        default: 'neutral.600',
+        _dark: 'darkMode.300',
       },
       endColor: {
-        default: 'neutral.200',
-        _dark: 'midnight.800',
+        default: 'neutral.700',
+        _dark: 'darkMode.400',
       },
     },
     code: {
       background: {
         default: 'neutral.50',
-        _dark: 'midnight.890',
-      },
-    },
-    clip: {
-      background: {
-        default: 'neutral.200',
-        _dark: 'midnight.600',
+        _dark: 'darkMode.800',
       },
     },
   },

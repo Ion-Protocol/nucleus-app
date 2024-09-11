@@ -23,7 +23,7 @@ export function FooterLink({ title, href, icon, openNewTab, onClick }: FooterLin
       >
         <Flex align="center" gap={3}>
           {icon}
-          <Text variant="large">{title}</Text>
+          <Text variant="paragraph">{title}</Text>
         </Flex>
         {openNewTab && <OpenNewTabIcon fontSize="12px" />}
       </Flex>

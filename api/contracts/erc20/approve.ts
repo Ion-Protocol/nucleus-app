@@ -11,21 +11,25 @@ import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagm
  * @param options.amount - The amount of tokens to be approved.
  * @returns A promise that resolves to the transaction receipt.
  */
-export async function approve({
-  tokenAddress,
-  spenderAddress,
-  amount,
-}: {
-  tokenAddress: `0x${string}`
-  spenderAddress: `0x${string}`
-  amount: bigint
-}) {
+export async function approve(
+  {
+    tokenAddress,
+    spenderAddress,
+    amount,
+  }: {
+    tokenAddress: `0x${string}`
+    spenderAddress: `0x${string}`
+    amount: bigint
+  },
+  { chainId }: { chainId: number }
+) {
   // Simulate the transaction to catch any errors
   await simulateContract(wagmiConfig, {
     abi: erc20Abi,
     address: tokenAddress,
     functionName: 'approve',
     args: [spenderAddress, amount],
+    chainId,
   })
 
   // Approve the spender

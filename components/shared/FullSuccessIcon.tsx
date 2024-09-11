@@ -1,5 +1,4 @@
 import { Flex } from '@chakra-ui/react'
-import { ErrorIcon } from './icons/ErrorIcon'
 import { CheckIcon } from './icons/Check'
 
 export function FullSuccessIcon() {

@@ -1,67 +1,93 @@
-import { BridgeIcon } from '@/components/config/bridgeIcons'
+import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { Flex, Text } from '@chakra-ui/react'
+import RewardsIconRow from '@/components/shared/RewardsIconRow'
+import { hardcodedApy } from '@/config/constants'
+import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
 
-function YieldBridgeItem({ bridge, disabled, loading }: YieldBridgeItemConnector.Props) {
+function YieldBridgeItem({
+  tvl,
+  yieldAssetName,
+  yieldAssetKey,
+  chainName,
+  comingSoon,
+  chainKey,
+  disabled,
+  loading,
+}: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
   function handleClick() {
     if (!disabled) {
-      router.push(`/bridge/${bridge.key}`)
+      router.push(`/tokens/${yieldAssetKey}`)
     }
   }
 
   return (
     <Flex
-      h="175px"
+      h="190px"
       border="1px solid"
       borderColor="border"
-      w="350px"
+      w="330px"
       borderRadius="16px"
       overflow="hidden"
       cursor={disabled ? 'not-allowed' : 'pointer'}
-      _hover={{ bg: disabled ? 'default' : 'hover' }}
+      transition="transform 0.1s ease, box-shadow 0.1s ease"
+      _hover={{
+        bg: disabled ? 'default' : 'backgroundSecondary',
+        boxShadow: !disabled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
+        transform: !disabled ? 'translate(1px, -1px)' : 'none',
+      }}
       _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
     >
       {/* Text Section */}
-      <Flex w="225px" py={6} pl={6} direction="column" justify="center">
+      <Flex w="225px" direction="column" justify="space-between" pl={6} py={5}>
+        {/* Bridge Name */}
         <Flex align="center" gap={3}>
-          {/* Bridge Name */}
-          <Text variant="header3">{bridge.name}</Text>
-
-          {/* Coming soon marker */}
-          {bridge.comingSoon && <Text color="secondaryText">Coming soon</Text>}
+          <Text variant="bigParagraphBold">{yieldAssetName}</Text>
+          <Text variant="bigParagraph" color="disabledText">
+            {chainName}
+          </Text>
         </Flex>
 
-        {/* Bridge Description */}
-        <Text>{bridge.description}</Text>
+        {!comingSoon ? (
+          <>
+            <Flex w="138px" justify="space-between">
+              {/* TVL */}
+              <Flex direction="column" w="100%" mr={6}>
+                <Text variant="smallParagraph">TVL</Text>
+                <IonSkeleton isLoaded={!loading} w="100%">
+                  <Text variant="paragraphBold">{tvl}</Text>
+                </IonSkeleton>
+              </Flex>
 
-        {/* TVL & APY */}
-        <Flex mt={3} gap={6}>
-          {/* TVL */}
-          <Flex direction="column">
-            <Text>TVL</Text>
-            <IonSkeleton isLoaded={!loading} w="100px">
-              <Text variant="large">{bridge.comingSoon ? '-' : bridge.tvl.formatted}</Text>
-            </IonSkeleton>
-          </Flex>
+              {/* APY */}
+              <Flex direction="column">
+                <Text variant="smallParagraph">APY</Text>
+                <Text variant="paragraphBold">{hardcodedApy}</Text>
+              </Flex>
+            </Flex>
 
-          {/* APY */}
-          <Flex direction="column">
-            <Text>APY</Text>
-            <IonSkeleton isLoaded={!loading}>
-              <Text variant="large">{bridge.comingSoon ? '-' : bridge.apy.formatted}</Text>
-            </IonSkeleton>
+            {/* Rewards */}
+            <Flex direction="column" gap={1}>
+              <Text variant="smallParagraph">Rewards</Text>
+              <RewardsIconRow w="fit-content" chainKey={chainKey} />
+            </Flex>
+          </>
+        ) : (
+          <Flex mb={6}>
+            <Button pointerEvents="none">
+              <Text variant="button">COMING SOON</Text>
+            </Button>
           </Flex>
-        </Flex>
+        )}
       </Flex>
 
       {/* Logo Section */}
       <Flex flex={1} position="relative">
-        <BridgeIcon bridgeKey={bridge.key} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
+        <TokenIcon tokenKey={yieldAssetKey} fontSize="160px" position="absolute" bottom="14px" right="-37px" />
       </Flex>
     </Flex>
   )

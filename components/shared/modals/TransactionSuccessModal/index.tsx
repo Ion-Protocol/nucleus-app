@@ -30,7 +30,7 @@ function TransactionSuccessModal({ message, txHash, onClose }: SuccessModalConne
               <Text variant="bigParagraph">Transaction Complete</Text>
               <TxHashTag txHash={txHash} gap={1} />
               <Flex direction="column" align="center" gap={2}>
-                <Text textAlign="center" variant="smallParagraphBold">
+                <Text textAlign="center" variant="smallParagraph">
                   {message}
                 </Text>
               </Flex>

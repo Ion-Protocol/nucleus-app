@@ -1,9 +1,12 @@
-import { TokenKey, tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber } from '@/utils/bigint'
 import { createSelector } from '@reduxjs/toolkit'
 
-export const selectBalances = (state: RootState): Record<TokenKey, string> => state.balances.data
+export const selectBalances = (state: RootState): Record<TokenKey, Record<ChainKey, string | null>> =>
+  state.balances.data
 export const selectBalancesLoading = (state: RootState): boolean => state.balances.loading
 export const selectBalancesError = (state: RootState): string | null => state.balances.error
 
@@ -13,9 +16,11 @@ export const selectBalancesError = (state: RootState): string | null => state.ba
  * @param tokenKey - The key of the token.
  * @returns The balance value for the specified token key.
  */
-export const selectTokenBalance = (tokenKey: TokenKey) =>
-  createSelector([selectBalances], (balances): string => {
-    return balances[tokenKey]
+export const selectTokenBalance = (chainKey: ChainKey | null, tokenKey: TokenKey | null) =>
+  createSelector([selectBalances], (balances): string | null => {
+    if (!chainKey || !tokenKey) return null
+    const tokenBalance = balances[tokenKey]?.[chainKey] || null
+    return tokenBalance
   })
 
 /**
@@ -24,9 +29,19 @@ export const selectTokenBalance = (tokenKey: TokenKey) =>
  * @param tokenKey - The key of the token.
  * @returns The formatted balance as a string.
  */
-export const selectFormattedTokenBalance = (tokenKey: TokenKey) =>
-  createSelector([selectTokenBalance(tokenKey)], (balance): string => {
+export const selectFormattedTokenBalance = (chainKey: ChainKey | null, tokenKey: TokenKey | null) =>
+  createSelector([selectTokenBalance(chainKey, tokenKey)], (balance): string => {
+    if (balance === null || tokenKey === null || chainKey === null) return '-'
     const balanceAsBigInt = BigInt(balance)
-    const balanceAsNumber = bigIntToNumber(balanceAsBigInt)
-    return `${balanceAsNumber}${tokensConfig[tokenKey].name}`
+    const balanceAsNumber = bigIntToNumber(balanceAsBigInt, {
+      decimals: 18,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 8,
+    })
+    return `${balanceAsNumber} ${tokensConfig[tokenKey]?.name}`
+  })
+
+export const selectTokenBalanceAsNumber = (chainKey: ChainKey | null, tokenKey: TokenKey | null) =>
+  createSelector([selectTokenBalance(chainKey, tokenKey)], (balance): number | null => {
+    return balance ? parseFloat(bigIntToNumber(BigInt(balance))) : null
   })

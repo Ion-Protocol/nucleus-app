@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { fetchEthPrice, FetchPriceResult } from './thunks'
+import { fetchUsdPerEthRate, FetchRateResult, fetchUsdPerBtcRate } from './thunks'
 
 // ==================
 // 1. STATE INTERFACE
 // ==================
 export interface PricesState {
-  data: string
+  usdPerEthRate: string
+  usdPerBtcRate: string
   loading: boolean
   error: string | null
 }
@@ -14,7 +15,8 @@ export interface PricesState {
 // 2. INITIAL STATE
 // ==================
 const initialState: PricesState = {
-  data: BigInt(0).toString(),
+  usdPerEthRate: BigInt(0).toString(),
+  usdPerBtcRate: BigInt(0).toString(),
   loading: true,
   error: null,
 }
@@ -28,16 +30,30 @@ const pricesSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchEthPrice.pending, (state) => {
+      // USD per ETH exchange rate or ETH price
+      .addCase(fetchUsdPerEthRate.pending, (state) => {
         state.loading = true
       })
-      .addCase(fetchEthPrice.fulfilled, (state, action: PayloadAction<FetchPriceResult>) => {
+      .addCase(fetchUsdPerEthRate.fulfilled, (state, action: PayloadAction<FetchRateResult>) => {
         state.loading = false
-        state.data = action.payload.price
+        state.usdPerEthRate = action.payload.rate
       })
-      .addCase(fetchEthPrice.rejected, (state, action: PayloadAction<string | undefined>) => {
+      .addCase(fetchUsdPerEthRate.rejected, (state, action: PayloadAction<string | undefined>) => {
         state.loading = false
-        state.error = action.payload || 'Failed to fetch WE-ETH price'
+        state.error = action.payload || 'Failed to fetch ETH price'
+      })
+
+      // USD per BTC exchange rate
+      .addCase(fetchUsdPerBtcRate.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(fetchUsdPerBtcRate.fulfilled, (state, action: PayloadAction<FetchRateResult>) => {
+        state.loading = false
+        state.usdPerBtcRate = action.payload.rate
+      })
+      .addCase(fetchUsdPerBtcRate.rejected, (state, action: PayloadAction<string | undefined>) => {
+        state.loading = false
+        state.error = action.payload || 'Failed to fetch BTC price'
       })
   },
 })

@@ -1,6 +1,7 @@
 import { Tag, TagProps, Text, Tooltip } from '@chakra-ui/react'
 import { PropsWithChildren, useState } from 'react'
 import { ClipIcon } from '../icons/ClipIcon'
+import { IonTooltip } from '../IonTooltip'
 
 interface TxHashTagProps extends TagProps, PropsWithChildren {
   txHash: {
@@ -26,11 +27,21 @@ export function TxHashTag({ children, txHash, ...props }: TxHashTagProps) {
   }
 
   return (
-    <Tooltip label="Copied!" isOpen={showTooltip} placement="right" shouldWrapChildren>
-      <Tag borderRadius="100px" px={3} bg="clip.background" cursor="pointer" onClick={handleCopy} {...props}>
+    <IonTooltip label="Copied!" isOpen={showTooltip} placement="right" shouldWrapChildren>
+      <Tag
+        borderRadius="100px"
+        px={3}
+        bg="none"
+        cursor="pointer"
+        border="1px solid"
+        borderColor="textSecondary"
+        color="textSecondary"
+        onClick={handleCopy}
+        {...props}
+      >
         <ClipIcon />
         <Text>{txHash.formatted}</Text>
       </Tag>
-    </Tooltip>
+    </IonTooltip>
   )
 }

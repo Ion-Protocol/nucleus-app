@@ -1,15 +1,31 @@
-import { BridgeKey } from '@/config/bridges'
 import { RootState } from '@/store'
-import { selectBridgeByKey, selectBridgeLoadingByKey } from '@/store/slices/bridges'
+import {
+  selectChainConfigByKey,
+  selectFormattedChainTvlByKey,
+  selectTvlLoading,
+  selectYieldAssetNameByChainKey,
+} from '@/store/slices/bridges'
+import { ChainKey } from '@/types/ChainKey'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
-  const { bridgeKey } = ownProps
-  const bridge = selectBridgeByKey(bridgeKey)(state)
-  const disabled = bridge.comingSoon
-  const loading = selectBridgeLoadingByKey(bridgeKey)(state)
+  const { chainKey } = ownProps
+  const chainConfig = selectChainConfigByKey(chainKey)(state)
+  const disabled = chainConfig?.comingSoon
+  const loading = selectTvlLoading(state)
+  const tvl = selectFormattedChainTvlByKey(chainKey)(state)
+  const chainName = chainConfig?.name || ''
+  const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
+  const comingSoon = chainConfig?.comingSoon || false
+  const yieldAssetKey = chainConfig?.yieldAsset || null
+
   return {
-    bridge,
+    tvl,
+    yieldAssetName,
+    yieldAssetKey,
+    chainName,
+    comingSoon,
+    chainKey,
     disabled,
     loading,
   }
@@ -22,7 +38,7 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 interface YieldBridgeItemOwnProps {
-  bridgeKey: BridgeKey
+  chainKey: ChainKey
 }
 
 interface YieldBridgeItemProps extends PropsFromRedux, YieldBridgeItemOwnProps {}

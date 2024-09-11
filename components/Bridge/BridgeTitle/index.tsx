@@ -1,22 +1,44 @@
-import { BridgeIcon } from '@/components/config/bridgeIcons'
-import { Flex, Text } from '@chakra-ui/react'
+import { TokenIcon } from '@/components/config/tokenIcons'
+import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
+import { Divider, Flex, IconButton, Link, Text } from '@chakra-ui/react'
 import { BridgeTitleConnector } from './connector'
-import Tvl from './Tvl'
 
-function BridgeTitle({ bridgeKey, name, description, ...props }: BridgeTitleConnector.Props) {
+function BridgeTitle({
+  chainKey,
+  yieldAssetFullName,
+  yieldAssetKey,
+  chainName,
+  description,
+  etherscanHref,
+  ...props
+}: BridgeTitleConnector.Props) {
   return (
-    <Flex align="center" justify="space-between" w="100%" {...props}>
-      <Flex direction="column" gap={2} w="700px">
-        <Flex align="center" gap={3}>
-          <Text variant="header1">Bridge {name}</Text>
-          <BridgeIcon bridgeKey={bridgeKey} fontSize="32px" />
-        </Flex>
-        <Text>{description}</Text>
-        <Text>
-          Select your deposit asset and select the destination chain that you want to mint the native yield token on.
+    <Flex direction="column" align="center" justify="center" w="100%" gap={2} {...props}>
+      <Flex align="center" gap={2} justify="center">
+        {/* Font does not align perfectly with the icons, add margin top of -4px to compensate */}
+        <TokenIcon tokenKey={yieldAssetKey} fontSize="32px" mt="-4px" />
+        <Text ml={1} variant="heading2">
+          Mint {yieldAssetFullName}
         </Text>
+        <Text variant="heading2" color="disabledText">
+          |
+        </Text>
+        <Text variant="heading2" color="disabledText">
+          {chainName}
+        </Text>
+        {etherscanHref && (
+          <Link href={etherscanHref} isExternal mt="-4px">
+            <IconButton
+              ml={-2}
+              aria-label="Open in Etherscan"
+              icon={<OpenNewTabIcon color="disabledText" />}
+              variant="ghost"
+              size="sm"
+            />
+          </Link>
+        )}
       </Flex>
-      <Tvl />
+      <Text variant="smallParagraph">{description}</Text>
     </Flex>
   )
 }

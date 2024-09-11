@@ -1,4 +1,4 @@
 export enum Currency {
   USD = 'USD',
-  ETH = 'ETH',
+  ETH_BTC = 'ETH/BTC',
 }

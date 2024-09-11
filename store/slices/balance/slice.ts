@@ -1,12 +1,14 @@
-import { TokenKey, tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/token'
+import { TokenKey } from '@/types/TokenKey'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { fetchAllTokenBalances, fetchAllTokenBalancesResult } from './thunks'
+import { ChainKey } from '@/types/ChainKey'
 
 // ==================
 // 1. STATE INTERFACE
 // ==================
 export interface BalancesState {
-  data: Record<TokenKey, string>
+  data: Record<TokenKey, Record<ChainKey, string | null>>
   loading: boolean
   error: string | null
 }
@@ -17,10 +19,11 @@ export interface BalancesState {
 const initialState: BalancesState = {
   data: Object.keys(tokensConfig).reduce(
     (acc, tokenKey) => {
-      acc[tokenKey as TokenKey] = '0'
+      acc[tokenKey as TokenKey] = acc[tokenKey as TokenKey] || {}
+      acc[tokenKey as TokenKey][ChainKey.ETHEREUM] = null
       return acc
     },
-    {} as Record<TokenKey, string>
+    {} as Record<TokenKey, Record<ChainKey, string | null>>
   ),
   loading: false,
   error: null,
@@ -32,7 +35,11 @@ const initialState: BalancesState = {
 const balancesSlice = createSlice({
   name: 'balances',
   initialState,
-  reducers: {},
+  reducers: {
+    clearBalances: (state) => {
+      state.data = initialState.data
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Liquidity
@@ -50,4 +57,5 @@ const balancesSlice = createSlice({
   },
 })
 
+export const { clearBalances } = balancesSlice.actions
 export const balancesReducer = balancesSlice.reducer

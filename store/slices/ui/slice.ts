@@ -6,6 +6,7 @@ import { RootState } from '@/store'
 // ==================
 export interface UIState {
   isBridgeNavOpen: boolean
+  isTermsModalOpen: boolean
 }
 
 // ==================
@@ -13,6 +14,7 @@ export interface UIState {
 // ==================
 const initialState: UIState = {
   isBridgeNavOpen: false,
+  isTermsModalOpen: false,
 }
 
 // ==================
@@ -28,10 +30,18 @@ const uiSlice = createSlice({
     setBridgeNavOpen(state, action: PayloadAction<boolean>) {
       state.isBridgeNavOpen = action.payload
     },
+    openTermsModal(state) {
+      state.isTermsModalOpen = true
+    },
+    closeTermsModal(state) {
+      state.isTermsModalOpen = false
+    },
   },
 })
 
-export const { toggleBridgeNav, setBridgeNavOpen } = uiSlice.actions
+export const { toggleBridgeNav, setBridgeNavOpen, openTermsModal, closeTermsModal } = uiSlice.actions
 
 export const selectBridgeNavOpen = (state: RootState) => state.ui.isBridgeNavOpen
+export const selectTermsModalOpen = (state: RootState) => state.ui.isTermsModalOpen
+
 export const UIReducer = uiSlice.reducer

@@ -1,4 +1,14 @@
-# Ion Yield Bridge
+```
+ .-. .-..-. .-.  ,--,  ,-.    ,---.  .-. .-.   .---.
+ |  \| || | | |.' .')  | |    | .-'  | | | |  ( .-._)
+ |   | || | | ||  |(_) | |    | `-.  | | | | (_) \
+ | |\  || | | |\  \    | |    | .-'  | | | | _  \ \
+ | | |)|| `-')| \  `-. | `--. |  `--.| `-')|( `-'  )
+ /(  (_)`---(_)  \____\|( __.'/( __.'`---(_) `----'
+(__)                   (_)   (__)
+```
+
+# Nucleus App
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -57,5 +67,27 @@ To contribute, please follow these steps:
 
 2. **Clone your fork**: Clone your forked repository to your local machine.
    ```bash
-   git clone https://github.com/your-username/ion-yield-bridge.git
+   git clone https://github.com/your-username/nucleus-app.git
    ```
+
+## Code Structure
+
+- **Pages**: The `pages` directory contains the application's routes.
+- **Components**: Reusable UI components are located in the `components` directory.
+- **Store**: The Redux store configuration and slices are in the `store` directory.
+- **Config**: Configuration files for various services and settings are in the `config` directory.
+- **Styles**: Global styles and theme configurations are in the `styles` directory.
+
+## Environment Variables
+
+Make sure to set the following environment variables in your `.env` file:
+
+- `NEXT_PUBLIC_FUNKIT_API_KEY`: Your Funkit API key.
+- `TENDERLY_RPC_URL`: The RPC URL for Tenderly.
+- `WALLET_CONNECT_PROJECT_ID`: Your Wallet Connect project ID.
+
+## Additional Resources
+
+- **Sentry**: This application uses Sentry for error tracking. Configuration files for Sentry can be found in the root directory.
+- **Chakra UI**: The application uses Chakra UI for styling and components. Refer to the [Chakra UI documentation](https://chakra-ui.com/docs/getting-started) for more information.
+- **Redux**: The application uses Redux for state management, providing a predictable state container for JavaScript applications.

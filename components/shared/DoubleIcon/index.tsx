@@ -6,7 +6,7 @@ interface DoubleIconProps extends ChakraProps {
 
 export function DoubleIcon({ icons, ...props }: DoubleIconProps) {
   return (
-    <Flex position="relative" alignItems="center" {...props} w="50px">
+    <Flex position="relative" alignItems="center" w="40px" {...props}>
       <Flex
         position="absolute"
         left="15px"

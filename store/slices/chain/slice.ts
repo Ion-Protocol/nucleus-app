@@ -1,27 +1,37 @@
-import { ChainKey } from '@/config/chains'
+import { NetworkKey, networksConfig } from '@/config/networks'
 import { RootState } from '@/store'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface ChainState {
-  chainKey: ChainKey
+interface NetworkState {
+  networkKey: NetworkKey | null
+  networkId: number | null
 }
 
-const initialState: ChainState = {
-  chainKey: ChainKey.ETHEREUM,
+const initialState: NetworkState = {
+  networkKey: null,
+  networkId: null,
 }
 
-const chainSlice = createSlice({
-  name: 'chain',
+const networkSlice = createSlice({
+  name: 'network',
   initialState,
   reducers: {
-    setChainKey(state, action: PayloadAction<ChainKey>) {
-      state.chainKey = action.payload
+    setNetworkId(state, action: PayloadAction<number>) {
+      state.networkId = action.payload
     },
   },
 })
 
-export const selectChain = (state: RootState) => {
-  return state.chain.chainKey
+export const selectNetworkId = (state: RootState): number | null => {
+  return state.network.networkId
 }
-export const { setChainKey } = chainSlice.actions
-export const chainReducer = chainSlice.reducer
+
+export const selectNetworkKey = createSelector([selectNetworkId], (networkId): NetworkKey | null => {
+  const networkKey =
+    (Object.keys(networksConfig).find((key) => networksConfig[key as NetworkKey].id === networkId) as NetworkKey) ||
+    null
+  return networkKey
+})
+
+export const { setNetworkId } = networkSlice.actions
+export const networkReducer = networkSlice.reducer
