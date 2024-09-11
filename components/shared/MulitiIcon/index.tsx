@@ -15,7 +15,7 @@ export function MultiIcon({ icons, ...props }: MultiIconProps) {
           left={`${index * 20}px`}
           bg="white"
           borderRadius="100px"
-          p="5px"
+          p="4px"
           border="1px solid"
           borderColor="border"
         >

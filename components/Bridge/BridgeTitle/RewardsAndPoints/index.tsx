@@ -1,10 +1,11 @@
-import { ChainIcon } from '@/components/config/chainIcons'
-import { MultiIcon } from '@/components/shared/MulitiIcon'
-import { Flex, Text, Tooltip } from '@chakra-ui/react'
-import { RewardsAndPointsConnector } from './connector'
-import { RewardsAndPointsTooltip } from './RewardsAndPointsTooltip'
+import { Flex, Text } from '@chakra-ui/react'
+import RewardsIconRow from '@/components/shared/RewardsIconRow'
+import { useAppSelector } from '@/store/hooks'
+import { selectChainKeyFromRoute } from '@/store/slices/router'
 
-function RewardsAndPoints({ rewardsAndPointsRows, incentiveChainKeys }: RewardsAndPointsConnector.Props) {
+function RewardsAndPoints() {
+  const chainKey = useAppSelector(selectChainKeyFromRoute)
+
   return (
     <Flex
       border="1px solid"
@@ -20,36 +21,9 @@ function RewardsAndPoints({ rewardsAndPointsRows, incentiveChainKeys }: RewardsA
       <Flex gap={2} align="center">
         <Text variant="paragraph">Rewards & Points</Text>
       </Flex>
-      <Tooltip
-        offset={[0, 18]}
-        hasArrow
-        placement="bottom"
-        label={<RewardsAndPointsTooltip rows={rewardsAndPointsRows} />}
-        p={0}
-        bg="backgroundSecondary"
-        borderRadius="8px"
-        boxShadow="none"
-        border="1px solid"
-        borderColor="border"
-        sx={{
-          '.chakra-tooltip__arrow-wrapper .chakra-tooltip__arrow': {
-            mt: '-2px',
-            borderTop: '1px solid',
-            borderLeft: '1px solid',
-            borderColor: 'border',
-          },
-        }}
-      >
-        <Flex>
-          <MultiIcon
-            icons={incentiveChainKeys.map((chainKey) => (
-              <ChainIcon key={chainKey} chainKey={chainKey} />
-            ))}
-          />
-        </Flex>
-      </Tooltip>
+      <RewardsIconRow chainKey={chainKey} />
     </Flex>
   )
 }
 
-export default RewardsAndPointsConnector.Connector(RewardsAndPoints)
+export default RewardsAndPoints

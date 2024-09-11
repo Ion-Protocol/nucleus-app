@@ -1,5 +1,4 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
-import { RewardsAndPointsRow } from '@/components/Bridge/BridgeTitle/RewardsAndPoints/RewardsAndPointsTooltip'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/token'
 import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
@@ -17,6 +16,7 @@ import { selectNetworkKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectChainKeyFromRoute } from '../router'
 import { ChainData } from './initialState'
+import { RewardsAndPointsRow } from '@/components/shared/RewardsIconRow/RewardsAndPointsTooltipLabel'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 

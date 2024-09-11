@@ -1,10 +1,9 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import RewardsIconRow from '@/components/shared/RewardsIconRow'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
-import { MultiIcon } from '@/components/shared/MulitiIcon'
-import { ChainIcon } from '@/components/config/chainIcons'
 
 function YieldBridgeItem({
   tvl,
@@ -15,7 +14,6 @@ function YieldBridgeItem({
   chainKey,
   disabled,
   loading,
-  incentiveChainKeys,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
@@ -66,11 +64,7 @@ function YieldBridgeItem({
             {/* Rewards */}
             <Flex direction="column" gap={1}>
               <Text variant="smallParagraph">Rewards</Text>
-              <MultiIcon
-                icons={incentiveChainKeys.map((chainKey) => (
-                  <ChainIcon fontSize="14px" chainKey={chainKey} key={chainKey} />
-                ))}
-              />
+              <RewardsIconRow w="fit-content" chainKey={chainKey} />
             </Flex>
           </>
         ) : (

@@ -2,7 +2,6 @@ import { RootState } from '@/store'
 import {
   selectChainConfigByKey,
   selectFormattedChainTvlByKey,
-  selectIncentiveChainKeysForBridge,
   selectTvlLoading,
   selectYieldAssetNameByChainKey,
 } from '@/store/slices/bridges'
@@ -19,7 +18,6 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const comingSoon = chainConfig?.comingSoon || false
   const yieldAssetKey = chainConfig?.yieldAsset || null
-  const incentiveChainKeys = selectIncentiveChainKeysForBridge(chainKey)(state)
 
   return {
     tvl,
@@ -30,7 +28,6 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
     chainKey,
     disabled,
     loading,
-    incentiveChainKeys,
   }
 }
 

@@ -10,11 +10,11 @@ export interface RewardsAndPointsRow {
   points: { pointSystemKey: PointSystemKey; multiplier: number } | null
 }
 
-interface RewardsAndTooltipsProps {
+interface RewardsAndPointsTooltipLabelProps {
   rows: RewardsAndPointsRow[]
 }
 
-export function RewardsAndPointsTooltip({ rows }: RewardsAndTooltipsProps) {
+export function RewardsAndPointsTooltipLabel({ rows }: RewardsAndPointsTooltipLabelProps) {
   return (
     <Flex py={2} px={6}>
       <Grid templateColumns="repeat(2, 1fr)" gap={0} alignItems="stretch">
