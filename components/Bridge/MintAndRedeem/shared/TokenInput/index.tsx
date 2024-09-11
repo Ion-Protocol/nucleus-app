@@ -1,9 +1,11 @@
 import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import TokenSelect from '../TokenSelect'
 import { TokenInputConnector } from './connector'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 
 function TokenInput({
   error,
@@ -20,12 +22,30 @@ function TokenInput({
   const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'}>
+    <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'} pt={shouldIgnoreBalance ? 3 : 5}>
       {/* Top Row */}
-      <Flex justify="space-between">
-        <Text variant="smallParagraph" color={error ? 'error.main' : 'text'}>
-          Amount
-        </Text>
+      <Flex justify="space-between" align="center">
+        {shouldIgnoreBalance ? (
+          <Flex
+            border="1px solid"
+            borderColor="borderLight"
+            borderRadius="4px"
+            gap={2}
+            align="center"
+            py={1}
+            px={2}
+            bg="backgroundAlternate"
+          >
+            <Text>You may input any amount here</Text>
+            <IonTooltip label="Upon pressing mint, choose an asset that you want to spend from your crosschain wallet balances">
+              <InfoOutlineIcon color="infoIcon" fontSize="13px" />
+            </IonTooltip>
+          </Flex>
+        ) : (
+          <Text variant="smallParagraph" color={error ? 'error.main' : 'text'}>
+            Amount
+          </Text>
+        )}
 
         <Flex color="secondaryText" gap={1}>
           <>

@@ -20,6 +20,10 @@ export const semanticTokens = {
       default: 'neutral.400',
       _dark: 'darkMode.400',
     },
+    backgroundAlternate: {
+      default: 'neutral.200',
+      _dark: 'darkMode.300',
+    },
     active: {
       default: 'neutral.200',
       _dark: 'darkMode.300',
