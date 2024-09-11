@@ -5,9 +5,10 @@ import {
   clearPreviewFee,
   clearSelectedFromToken,
   resetSourceChain,
+  setSelectedFromToken,
   setSourceChain,
 } from '@/store/slices/bridges'
-import { fetchPreviewFee } from '@/store/slices/bridges/thunks'
+import { fetchPreviewFee, fetchTokenRateInQuote } from '@/store/slices/bridges/thunks'
 import { setNetworkId } from '@/store/slices/chain'
 import { setQuery } from '@/store/slices/router'
 import { Middleware } from '@reduxjs/toolkit'
@@ -51,6 +52,11 @@ export const bridgeSideEffectMiddleware: Middleware =
       dispatch(clearPreviewFee())
       dispatch(clearInputValue())
       dispatch(clearSelectedFromToken())
+    }
+
+    if (setSelectedFromToken.match(action)) {
+      const sourceTokenKey = action.payload.tokenKey
+      dispatch(fetchTokenRateInQuote(sourceTokenKey))
     }
 
     return next(action)

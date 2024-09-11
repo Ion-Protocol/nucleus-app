@@ -27,6 +27,9 @@ const bridgesSlice = createSlice({
     clearPreviewFee: (state) => {
       state.previewFee = null
     },
+    setTokenRateInQuoteLoading: (state, action: PayloadAction<boolean>) => {
+      state.tokenRateInQuoteLoading = action.payload
+    },
     setInputValue: (state, action) => {
       state.depositAmount = sanitizeDepositInput(action.payload, state.depositAmount)
     },

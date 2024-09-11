@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectAvailableChainKeys } from '../slices/bridges'
-import { fetchChainRate, fetchChainTvl } from '../slices/bridges/thunks'
+import { fetchChainTvl } from '../slices/bridges/thunks'
 import { selectNetworkKey } from '../slices/chain'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 
@@ -26,7 +26,7 @@ export function useStoreInitializer() {
 
       chainKeys.forEach((key) => {
         dispatch(fetchChainTvl(key))
-        dispatch(fetchChainRate(key))
+        // dispatch(fetchChainRate(key))
       })
     })
     // Reason for disabling the eslint rule: eslint is detecting that `state` is not in the dependency array but is used in the useEffect.

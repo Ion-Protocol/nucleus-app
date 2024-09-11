@@ -251,6 +251,10 @@ export const selectDepositAssetAddress = createSelector(
     return tokensConfig[depositAssetTokenKey]?.chains[sourceChainKey as ChainKey]?.address
   }
 )
+export const selectTokenAddressByTokenKey = (tokenKey: TokenKey) =>
+  createSelector([selectSourceChainKey], (sourceChainKey) => {
+    return tokensConfig[tokenKey]?.chains[sourceChainKey as ChainKey]?.address
+  })
 
 /////////////////////////////////////////////////////////////////////
 // Deposit amount input
@@ -298,9 +302,11 @@ export const selectInputError = createSelector(
 // Bridge Rate
 // Used to calculate the destination amount based on the deposit amount
 /////////////////////////////////////////////////////////////////////
-export const selectBridgeRate = createSelector([selectChainData], (bridgeData): string | number | null => {
-  if (!bridgeData) return null
-  return bridgeData.rate.value
+export const selectTokenRateInQuote = createSelector([selectBridgesState], (bridgesState) => {
+  return bridgesState.tokenRateInQuote
+})
+export const selectTokenRateInQuoteLoading = createSelector([selectBridgesState], (bridgesState) => {
+  return bridgesState.tokenRateInQuoteLoading
 })
 
 /////////////////////////////////////////////////////////////////////

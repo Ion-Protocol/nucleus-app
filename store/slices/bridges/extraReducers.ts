@@ -2,14 +2,13 @@ import { ChainKey } from '@/types/ChainKey'
 import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { BridgesState } from './initialState'
 import {
-  fetchChainRateResult,
+  FetchChainRateResult,
   FetchChainTvlResult,
   FetchPreviewFeeResult,
-  fetchChainRate,
   fetchChainTvl,
   fetchPreviewFee,
+  fetchTokenRateInQuote,
   performDeposit,
-  setBridgeInputMax,
 } from './thunks'
 
 /**
@@ -39,19 +38,15 @@ export function extraReducers(builder: ActionReducerMapBuilder<BridgesState>) {
     ///////////////////////////////
     // Rate
     ///////////////////////////////
-    .addCase(fetchChainRate.pending, (state, action) => {
-      state.overallLoading = true
+    .addCase(fetchTokenRateInQuote.pending, (state) => {
+      state.tokenRateInQuoteLoading = true
     })
-    .addCase(
-      fetchChainRate.fulfilled,
-      (state, action: PayloadAction<{ chainKey: ChainKey; result: fetchChainRateResult }>) => {
-        const chainData = state.data[action.payload.chainKey]
-        chainData.rate.value = action.payload.result.rate
-        state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.rate.loading)
-      }
-    )
-    .addCase(fetchChainRate.rejected, (state, action) => {
-      state.overallLoading = Object.values(state.data).some((b) => b.tvl.loading || b.rate.loading)
+    .addCase(fetchTokenRateInQuote.fulfilled, (state, action: PayloadAction<{ result: FetchChainRateResult }>) => {
+      state.tokenRateInQuote = action.payload.result.rate
+      state.tokenRateInQuoteLoading = false
+    })
+    .addCase(fetchTokenRateInQuote.rejected, (state) => {
+      state.tokenRateInQuoteLoading = false
     })
 
     ///////////////////////////////

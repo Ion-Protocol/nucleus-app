@@ -4,7 +4,13 @@ import { Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 import { TokenToConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
-function TokenDestination({ value, chainToken, tokenBalance, loadingTokenBalance }: TokenToConnector.Props) {
+function TokenDestination({
+  value,
+  chainToken,
+  tokenBalance,
+  loadingTokenBalance,
+  loadingTokenRate,
+}: TokenToConnector.Props) {
   return (
     <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}
@@ -21,22 +27,26 @@ function TokenDestination({ value, chainToken, tokenBalance, loadingTokenBalance
       {/* Bottom Row */}
       <Flex align="center" gap={3} mt={3}>
         {/* Input Box */}
-        <Input
-          disabled
-          _disabled={{
-            cursor: 'text',
-            color: 'disabled',
-          }}
-          color="textSecondary"
-          cursor="pointer"
-          value={value}
-          variant="unstyled"
-          size="lg"
-          placeholder="Amount"
-          fontFamily="var(--font-ppformula)"
-          fontSize="18px"
-          letterSpacing="0.05em"
-        />
+        <Flex w="full">
+          <IonSkeleton isLoaded={!loadingTokenRate} minW="250px" w="50%">
+            <Input
+              disabled
+              _disabled={{
+                cursor: 'text',
+                color: 'disabled',
+              }}
+              color="textSecondary"
+              cursor="pointer"
+              value={value}
+              variant="unstyled"
+              size="lg"
+              placeholder="Amount"
+              fontFamily="var(--font-ppformula)"
+              fontSize="18px"
+              letterSpacing="0.05em"
+            />
+          </IonSkeleton>
+        </Flex>
 
         <Flex gap={2} align="center">
           <TokenIcon fontSize="28px" tokenKey={chainToken?.key || null} />

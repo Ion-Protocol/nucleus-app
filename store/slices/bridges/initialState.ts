@@ -8,7 +8,6 @@ export interface AsyncMetric {
 
 export interface ChainData {
   tvl: AsyncMetric
-  rate: AsyncMetric
   error: string | null
 }
 
@@ -19,6 +18,8 @@ export type BridgesState = {
   selectedSourceToken: TokenKey | null
   tvlLoading: boolean
   previewFeeLoading: boolean
+  tokenRateInQuote: string | null
+  tokenRateInQuoteLoading: boolean
   previewFee: string | null
   sourceChain: ChainKey
   destinationChain: ChainKey | null
@@ -30,7 +31,6 @@ export type BridgesState = {
 
 const initialChainData: ChainData = {
   tvl: { value: null, loading: false },
-  rate: { value: null, loading: false },
   error: null,
 }
 
@@ -45,6 +45,8 @@ export const initialState: BridgesState = {
   overallLoading: false,
   depositAmount: '',
   selectedSourceToken: null,
+  tokenRateInQuote: null,
+  tokenRateInQuoteLoading: false,
   tvlLoading: false,
   previewFeeLoading: false,
   previewFee: null,

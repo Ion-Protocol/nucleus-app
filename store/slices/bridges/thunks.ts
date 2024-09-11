@@ -34,8 +34,10 @@ import {
   selectSourceChainId,
   selectSourceChainKey,
   selectSourceTokenKey,
+  selectTokenAddressByTokenKey,
 } from './selectors'
 import { setInputValue, setInputValueBypassDebounce } from './slice'
+import { TokenKey } from '@/types/TokenKey'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -119,33 +121,30 @@ export const setBridgeInputMax = createAsyncThunk<void, void, { state: RootState
   }
 )
 
-export interface fetchChainRateResult {
-  rate: string
+export interface FetchChainRateResult {
+  rate: string | null
 }
 
-/**
- * Fetches the chain rate for a given chain key.
- * @param chainKey - The key of the chain.
- * @returns A promise that resolves to an object containing the chain key and the fetched chain rate.
- * @throws If there is an error while fetching the rate.
- */
-export const fetchChainRate = createAsyncThunk<
-  { chainKey: ChainKey; result: fetchChainRateResult },
-  ChainKey,
+export const fetchTokenRateInQuote = createAsyncThunk<
+  { result: FetchChainRateResult },
+  TokenKey,
   { rejectValue: string; state: RootState }
->('bridges/fetchChainRate', async (chainKey, { getState, rejectWithValue, dispatch }) => {
+>('bridges/fetchTokenRateInQuote', async (depositAssetKey, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
-    const chainConfig = selectChainConfig(state)
-    const accountantAddress = chainConfig?.contracts?.accountant
-    if (chainConfig?.comingSoon || !accountantAddress) {
-      return { chainKey, result: { rate: '0' } }
-    }
-    const rateAsBigInt = await getRate(accountantAddress)
-    return { chainKey, result: { rate: rateAsBigInt.toString() } }
+    const accountantAddress = selectContractAddressByName('accountant')(state)
+    const despositAssetAddress = selectTokenAddressByTokenKey(depositAssetKey)(state)
+
+    if (!despositAssetAddress || !accountantAddress) return { result: { rate: null } }
+
+    const rateAsBigInt = await getRateInQuoteSafe(
+      { quote: despositAssetAddress },
+      { contractAddress: accountantAddress }
+    )
+    return { result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to fetch rate for chain ${chainKey}`
+    const errorMessage = `Failed to fetch rate for token ${depositAssetKey}`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
     dispatch(setErrorMessage(fullErrorMessage))
