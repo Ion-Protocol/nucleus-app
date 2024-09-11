@@ -8,6 +8,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
 import { setErrorMessage } from '../status'
+import { sei } from 'viem/chains'
 
 type Balances = Record<TokenKey, Record<ChainKey, string | null>>
 export interface fetchAllTokenBalancesResult {
@@ -73,8 +74,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
       const { chainKey, chainId, tokenKey, tokenAddress } = tokenBalanceParamItem
 
       if (tokenKey === TokenKey.ETH) {
-        const { value: balance } = await getBalance(wagmiConfig, { address })
-        return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
+        return { tokenKey: tokenKey as TokenKey, chainKey, balance: '0' }
       } else if (tokenAddress && chainId) {
         const balance = await balanceOf({ balanceAddress: address, tokenAddress, chainId })
         return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }

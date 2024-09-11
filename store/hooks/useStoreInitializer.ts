@@ -26,7 +26,6 @@ export function useStoreInitializer() {
 
       chainKeys.forEach((key) => {
         dispatch(fetchChainTvl(key))
-        // dispatch(fetchChainRate(key))
       })
     })
     // Reason for disabling the eslint rule: eslint is detecting that `state` is not in the dependency array but is used in the useEffect.

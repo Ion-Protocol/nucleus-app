@@ -33,7 +33,11 @@ export const selectFormattedTokenBalance = (chainKey: ChainKey | null, tokenKey:
   createSelector([selectTokenBalance(chainKey, tokenKey)], (balance): string => {
     if (balance === null || tokenKey === null || chainKey === null) return '-'
     const balanceAsBigInt = BigInt(balance)
-    const balanceAsNumber = bigIntToNumber(balanceAsBigInt)
+    const balanceAsNumber = bigIntToNumber(balanceAsBigInt, {
+      decimals: 18,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 8,
+    })
     return `${balanceAsNumber} ${tokensConfig[tokenKey]?.name}`
   })
 
