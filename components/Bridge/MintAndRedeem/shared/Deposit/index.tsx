@@ -24,8 +24,14 @@ function Deposit({ onSubmit, loading, disabled, shouldUseFunCheckout }: SubmitCo
       _hover={!loading && !disabled ? {} : undefined}
       _active={!loading && !disabled ? {} : undefined}
     >
-      <Text variant="button">Mint {shouldUseFunCheckout && 'with Fun'}</Text>
-      {shouldUseFunCheckout && <FunkitPaymentsIconLine />}
+      {shouldUseFunCheckout ? (
+        <>
+          <Text variant="button">Buy with Fun</Text>
+          <FunkitPaymentsIconLine />
+        </>
+      ) : (
+        <Text variant="button">Mint</Text>
+      )}
     </ConnectAwareButton>
   )
 }

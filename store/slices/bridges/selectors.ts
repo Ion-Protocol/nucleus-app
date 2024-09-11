@@ -439,7 +439,7 @@ export const selectDepositAndBridgeCheckoutParams = (minimumMint: bigint) =>
       depositBridgeData
     ) => {
       // Constants
-      const VERB = 'Mint'
+      const VERB = 'Buy'
 
       // Values
       const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
@@ -450,7 +450,7 @@ export const selectDepositAndBridgeCheckoutParams = (minimumMint: bigint) =>
       }
 
       // Derived Values
-      const paddedFee = (feeAsBigInt * BigInt(101)) / BigInt(100)
+      // const paddedFee = (feeAsBigInt * BigInt(101)) / BigInt(100)
 
       // Build the checkout params
       return {
@@ -458,29 +458,30 @@ export const selectDepositAndBridgeCheckoutParams = (minimumMint: bigint) =>
         iconSrc: `/assets/svgs/token-${fromTokenInfo?.key}.svg`,
         actionsParams: [
           // Approve the ERC20 token
-          {
-            contractAbi: erc20Abi,
-            contractAddress: depositAssetAddress,
-            functionName: 'approve',
-            functionArgs: [boringVaultAddress, depositAmount],
-          },
-          // Deposit the token
-          {
-            contractAbi: CrossChainTellerBaseAbi.abi as Abi,
-            contractAddress: tellerContractAddress,
-            functionName: 'depositAndBridge',
-            functionArgs: [depositAssetAddress, depositAmount, minimumMint, depositBridgeData],
-            value: paddedFee,
-          },
+          // {
+          //   contractAbi: erc20Abi,
+          //   contractAddress: depositAssetAddress,
+          //   functionName: 'approve',
+          //   functionArgs: [boringVaultAddress, depositAmount],
+          // },
+          // // Deposit the token
+          // {
+          //   contractAbi: CrossChainTellerBaseAbi.abi as Abi,
+          //   contractAddress: tellerContractAddress,
+          //   functionName: 'depositAndBridge',
+          //   functionArgs: [depositAssetAddress, depositAmount, minimumMint, depositBridgeData],
+          //   value: paddedFee,
+          // },
         ],
         targetChain: '1',
         targetAsset: depositAssetAddress,
         targetAssetAmount: parseFloat(fromAmount),
-        checkoutItemTitle: `Bridge ${fromTokenInfo?.name}`,
+        targetAssetTicker: fromTokenInfo?.name,
+        checkoutItemTitle: `${VERB} ${fromTokenInfo?.name}`,
         checkoutItemDescription: `${VERB} ${fromTokenInfo?.name}`,
         checkoutItemAmount: parseFloat(fromAmount),
         expirationTimestampMs: 3600000,
-        disableEditing: true,
+        disableEditing: false,
       }
     }
   )
