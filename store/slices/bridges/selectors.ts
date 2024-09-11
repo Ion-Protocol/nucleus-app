@@ -238,6 +238,14 @@ export const selectSourceChainId = createSelector(
   }
 )
 
+export const selectSourceChainIdFromRoute = createSelector(
+  [selectChainKeyFromRoute, selectNetworkConfig],
+  (chainKey, networkConfig) => {
+    if (!chainKey) return null
+    return networkConfig?.chains[chainKey as ChainKey]?.chainId || null
+  }
+)
+
 // Token dropdown menu
 export const selectSourceTokens = createSelector(
   [selectChainConfig, selectSourceChainKey],

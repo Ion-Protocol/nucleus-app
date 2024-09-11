@@ -1,4 +1,3 @@
-import { getRate } from '@/api/contracts/Accountant/getRate'
 import { getRateInQuote } from '@/api/contracts/Accountant/getRateInQuote'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
@@ -11,6 +10,7 @@ import { tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumber } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { switchChain } from 'wagmi/actions'
@@ -29,15 +29,14 @@ import {
   selectDepositBridgeData,
   selectFeeTokenAddress,
   selectNetworkConfig,
-  selectShouldTriggerPreviewFee,
   selectShouldUseFunCheckout,
   selectSourceChainId,
+  selectSourceChainIdFromRoute,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { setInputValue, setInputValueBypassDebounce } from './slice'
-import { TokenKey } from '@/types/TokenKey'
+import { setInputValue } from './slice'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -65,16 +64,17 @@ export const fetchChainTvl = createAsyncThunk<FetchChainTvlResult, ChainKey, { r
     const state = getState()
     const networkConfig = selectNetworkConfig(state)
     const chainConfig = networkConfig?.chains[chainKey]
+    const chainIdFromRoute = selectSourceChainIdFromRoute(state)
 
     const vaultAddress = chainConfig?.contracts.boringVault
     const accountantAddress = chainConfig?.contracts.accountant
-    if (!vaultAddress || !accountantAddress) {
+    if (!vaultAddress || !accountantAddress || !chainIdFromRoute) {
       return { tvl: '0', chainKey: chainKey }
     }
 
     try {
       // Fetch total supply of shares
-      const totalSharesSupply = await getTotalSupply(vaultAddress)
+      const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: chainIdFromRoute })
 
       // Fetch exchange rate
       const tokenPerShareRate = await getTokenPerShareRate(chainKey, accountantAddress) // 1e18
