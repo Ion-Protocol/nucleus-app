@@ -88,7 +88,7 @@ function YieldBridgeItem({
 
       {/* Logo Section */}
       <Flex flex={1} position="relative">
-        <TokenIcon tokenKey={yieldAssetKey} fontSize="160px" position="absolute" bottom="-20px" right="-40px" />
+        <TokenIcon tokenKey={yieldAssetKey} fontSize="160px" position="absolute" bottom="14px" right="-37px" />
       </Flex>
     </Flex>
   )
