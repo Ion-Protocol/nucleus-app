@@ -1,11 +1,10 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import RewardsIconRow from '@/components/shared/RewardsIconRow'
+import { hardcodedApy } from '@/config/constants'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
-import { uiConfig } from '@/config/ui'
-import { hardcodedApy } from '@/config/constants'
 
 function YieldBridgeItem({
   tvl,

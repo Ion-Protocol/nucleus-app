@@ -1,7 +1,7 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
+import { RewardsAndPointsRow } from '@/components/shared/RewardsIconRow/RewardsAndPointsTooltipLabel'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/token'
-import CrossChainTellerBaseAbi from '@/contracts/CrossChainTellerBase.json'
 import { RootState } from '@/store'
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
@@ -9,14 +9,12 @@ import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber, WAD } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
 import { createSelector } from 'reselect'
-import { Abi, erc20Abi } from 'viem'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
 import { selectNetworkKey } from '../chain'
 import { selectUsdPerEthRate } from '../price'
 import { selectChainKeyFromRoute } from '../router'
 import { ChainData } from './initialState'
-import { RewardsAndPointsRow } from '@/components/shared/RewardsIconRow/RewardsAndPointsTooltipLabel'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -180,7 +178,8 @@ export const selectIncentiveSystemsForBridge = (chainKey: ChainKey) =>
     return chainConfig?.incentives || []
   })
 export const selectPointsSystemsForBridge = (chainKey: ChainKey) =>
-  createSelector([selectChainConfig], (chainConfig) => {
+  createSelector([selectNetworkConfig], (networkConfig) => {
+    const chainConfig = networkConfig?.chains[chainKey]
     return chainConfig?.points || []
   })
 export const selectIncentiveChainKeysForBridge = (chainKey: ChainKey) =>
