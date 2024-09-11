@@ -15,6 +15,9 @@ import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { WstethIcon } from '../shared/icons/Wsteth'
 import { TokenTethIcon } from '../shared/icons/TokenTeth'
+import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
+import { TokenPufethIcon } from '../shared/icons/TokenPufeth'
+import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
 
 function DefaultIcon() {
   return <></>
@@ -36,6 +39,9 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.RSWBTC]: (props) => <TokenRswbtcIcon {...props} />,
   [TokenKey.EARNBTC]: (props) => <TokenEarnbtcIcon {...props} />,
   [TokenKey.TETH]: (props) => <TokenTethIcon {...props} />,
+  [TokenKey.APXETH]: (props) => <TokenApxethIcon {...props} />,
+  [TokenKey.PUFETH]: (props) => <TokenPufethIcon {...props} />,
+  [TokenKey.SFRXETH]: (props) => <TokenWfrxethIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

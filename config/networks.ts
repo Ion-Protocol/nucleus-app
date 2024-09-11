@@ -29,7 +29,17 @@ const mainnetChains: Chains = {
     },
     sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.WEETH, TokenKey.RSETH, TokenKey.RSWETH],
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.EZETH,
+        TokenKey.WSTETH,
+        TokenKey.APXETH,
+        TokenKey.PUFETH,
+        TokenKey.RSWETH,
+        TokenKey.RSETH,
+        TokenKey.WEETH,
+        TokenKey.SFRXETH,
+      ],
       [ChainKey.SEI]: [TokenKey.WETH],
     },
     feeToken: TokenKey.ETH,

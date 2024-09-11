@@ -178,4 +178,37 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
+  [TokenKey.APXETH]: {
+    key: TokenKey.APXETH,
+    name: 'apxETH',
+    symbol: 'APXETH',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0x9Ba021B0a9b958B5E75cE9f6dff97C7eE52cb3E6',
+        chainId: mainnet.id,
+      },
+    },
+  },
+  [TokenKey.PUFETH]: {
+    key: TokenKey.PUFETH,
+    name: 'pufETH',
+    symbol: 'PUFETH',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0xD9A442856C234a39a81a089C06451EBAa4306a72',
+        chainId: mainnet.id,
+      },
+    },
+  },
+  [TokenKey.SFRXETH]: {
+    key: TokenKey.SFRXETH,
+    name: 'sfrxETH',
+    symbol: 'SFRXETH',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0xac3E018457B222d93114458476f3E3416Abbe38F',
+        chainId: mainnet.id,
+      },
+    },
+  },
 }
