@@ -1,10 +1,11 @@
 import { ChainKey } from '@/types/ChainKey'
 import { RootState } from '@/store'
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { TokenKey } from '@/types/TokenKey'
 
 // Add fields to RouterQuery as needed
 export interface RouterQuery {
-  token?: ChainKey | null
+  chain?: ChainKey | null
 }
 
 interface RouterState {
@@ -43,7 +44,7 @@ export const selectRouterQuery = (state: RootState) => {
 }
 
 export const selectChainKeyFromRoute = createSelector([selectRouterQuery], (routerQuery): ChainKey | null => {
-  const chainKey = routerQuery?.token
+  const chainKey = routerQuery?.chain
   if (!chainKey) return null
   return chainKey
 })

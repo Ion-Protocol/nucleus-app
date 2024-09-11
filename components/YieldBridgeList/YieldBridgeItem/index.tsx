@@ -21,7 +21,7 @@ function YieldBridgeItem({
 
   function handleClick() {
     if (!disabled) {
-      router.push(`/token/${chainKey}`)
+      router.push(`/tokens/${yieldAssetKey}`)
     }
   }
 

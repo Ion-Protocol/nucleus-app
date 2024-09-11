@@ -35,7 +35,7 @@ function NavDrawer({ chains, openTermsModal }: NavDrawerConnector.Props) {
               <NavItem
                 key={chain.key}
                 title={tokensConfig[chain.yieldAsset].name}
-                href={`/token/${chain.key}`}
+                href={`/tokens/${chain.yieldAsset}`}
                 disabled={chain.comingSoon}
                 comingSoon={chain.comingSoon}
                 leftIcon={<TokenIcon tokenKey={chain.yieldAsset} />}
