@@ -1,5 +1,9 @@
 import { RootState } from '@/store'
-import { selectIncentiveChainKeysForBridge, selectRewardsAndPointsRows } from '@/store/slices/bridges'
+import {
+  selectIncentiveChainKeysForBridge,
+  selectPointSystemKeysForBridge,
+  selectRewardsAndPointsRows,
+} from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
@@ -11,15 +15,18 @@ const mapState = (state: RootState, ownProps: RewardsIconRowOwnProps) => {
     return {
       rewardsAndPointsRows: [],
       incentiveChainKeys: [],
+      pointSystemKeys: [],
     }
   }
 
   const rewardsAndPointsRows = selectRewardsAndPointsRows(chainKey)(state)
   const incentiveChainKeys = selectIncentiveChainKeysForBridge(chainKey)(state)
+  const pointSystemKeys = selectPointSystemKeysForBridge(chainKey)(state)
 
   return {
     rewardsAndPointsRows,
     incentiveChainKeys,
+    pointSystemKeys,
   }
 }
 

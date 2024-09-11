@@ -3,10 +3,13 @@ import { MultiIcon } from '@/components/shared/MulitiIcon'
 import { Flex, Tooltip } from '@chakra-ui/react'
 import { RewardsIconRowConnector } from './connector'
 import { RewardsAndPointsTooltipLabel } from './RewardsAndPointsTooltipLabel'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 
 function RewardsIconRow({
   rewardsAndPointsRows,
   incentiveChainKeys,
+  pointSystemKeys,
   chainKey,
   ...props
 }: RewardsIconRowConnector.Props) {
@@ -45,12 +48,17 @@ function RewardsIconRow({
         },
       }}
     >
-      <Flex {...props}>
+      <Flex align="center" {...props}>
         <MultiIcon
-          icons={incentiveChainKeys.map((incentiveChainKey) => (
-            <ChainIcon key={incentiveChainKey} chainKey={incentiveChainKey} />
-          ))}
+          icons={incentiveChainKeys
+            .map((incentiveChainKey) => <ChainIcon key={incentiveChainKey} chainKey={incentiveChainKey} />)
+            .concat(
+              pointSystemKeys.map((pointSystemKey) => (
+                <PointSystemIcon key={pointSystemKey} pointSystemKey={pointSystemKey} />
+              ))
+            )}
         />
+        <InfoOutlineIcon color="infoIcon" h="13px" ml="-4px" />
       </Flex>
     </Tooltip>
   )

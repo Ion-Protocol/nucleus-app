@@ -186,6 +186,10 @@ export const selectIncentiveChainKeysForBridge = (chainKey: ChainKey) =>
   createSelector([selectIncentiveSystemsForBridge(chainKey)], (incentiveSystems) => {
     return incentiveSystems.map((incentiveSystem) => incentiveSystem.chainKey)
   })
+export const selectPointSystemKeysForBridge = (chainKey: ChainKey) =>
+  createSelector([selectPointsSystemsForBridge(chainKey)], (pointSystems) => {
+    return pointSystems.map((pointSystem) => pointSystem.pointSystemKey)
+  })
 export const selectRewardsAndPointsRows = (chainKey: ChainKey) =>
   createSelector(
     [selectIncentiveSystemsForBridge(chainKey), selectPointsSystemsForBridge(chainKey)],
