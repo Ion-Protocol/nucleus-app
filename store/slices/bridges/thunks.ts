@@ -64,17 +64,17 @@ export const fetchChainTvl = createAsyncThunk<FetchChainTvlResult, ChainKey, { r
     const state = getState()
     const networkConfig = selectNetworkConfig(state)
     const chainConfig = networkConfig?.chains[chainKey]
-    const chainIdFromRoute = selectSourceChainIdFromRoute(state)
+    const chainId = chainConfig?.chainId
 
     const vaultAddress = chainConfig?.contracts.boringVault
     const accountantAddress = chainConfig?.contracts.accountant
-    if (!vaultAddress || !accountantAddress || !chainIdFromRoute) {
+    if (!vaultAddress || !accountantAddress || !chainId) {
       return { tvl: '0', chainKey: chainKey }
     }
 
     try {
       // Fetch total supply of shares
-      const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: chainIdFromRoute })
+      const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId })
 
       // Fetch exchange rate
       const tokenPerShareRate = await getTokenPerShareRate(chainKey, accountantAddress) // 1e18
