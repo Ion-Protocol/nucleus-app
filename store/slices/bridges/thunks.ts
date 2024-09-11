@@ -134,12 +134,13 @@ export const fetchTokenRateInQuote = createAsyncThunk<
     const state = getState()
     const accountantAddress = selectContractAddressByName('accountant')(state)
     const despositAssetAddress = selectTokenAddressByTokenKey(depositAssetKey)(state)
+    const chainId = selectSourceChainId(state)
 
-    if (!despositAssetAddress || !accountantAddress) return { result: { rate: null } }
+    if (!despositAssetAddress || !accountantAddress || !chainId) return { result: { rate: null } }
 
     const rateAsBigInt = await getRateInQuoteSafe(
       { quote: despositAssetAddress },
-      { contractAddress: accountantAddress }
+      { contractAddress: accountantAddress, chainId }
     )
     return { result: { rate: rateAsBigInt.toString() } }
   } catch (e) {
@@ -360,7 +361,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
         const exchangeRate = await getRateInQuoteSafe(
           { quote: depositAssetAddress },
-          { contractAddress: accountantContractAddress }
+          { contractAddress: accountantContractAddress, chainId }
         )
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
