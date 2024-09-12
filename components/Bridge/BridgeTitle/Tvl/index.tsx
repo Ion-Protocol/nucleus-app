@@ -21,7 +21,7 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
         <Text variant="paragraph" whiteSpace="nowrap">
           Total Value Locked
         </Text>
-        <IonTooltip label="Total value of assets backing the native yield asset.">
+        <IonTooltip label="Total value of assets backing the network asset.">
           <InfoOutlineIcon color="infoIcon" />
         </IonTooltip>
       </Flex>
