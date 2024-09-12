@@ -1,48 +1,56 @@
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { selectTermsModalOpen } from '@/store/slices/status'
 import {
+  Text,
   Button,
+  Flex,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Textarea,
+  Checkbox,
 } from '@chakra-ui/react'
-import { SuccessModalConnector } from '../TransactionSuccessModal/connector'
+import { TermsModalConnector } from './connector'
+import { Terms } from '@/components/config/Terms'
+import { TermsIcon } from '../../icons/Terms'
+import { terms } from '@/components/config/terms'
+import { FullTermsIcon } from '../../FullTermsIcon'
+import { useState } from 'react'
 
-/**
- * Renders an success modal component.
- *
- * @param successMessage - The success message to be displayed in the modal.
- * @param clearSuccess - A function to clear the success and close the modal.
- * @returns The success modal component.
- */
-function SuccessModal() {
-  const dispatch = useAppDispatch()
-  const termsModalOpen = useAppSelector(selectTermsModalOpen)
+function TermsModal({ isOpen, onAccept }: TermsModalConnector.Props) {
+  const [isTermsAccepted, setIsTermsAccepted] = useState(false)
 
-  const handleAccept = () => {
-    localStorage.setItem('termsAccepted', 'true')
+  function handleAccept() {
+    onAccept()
   }
 
   return (
-    <div></div>
-    // <Modal isOpen={!!message} onClose={handleClose} isCentered>
-    //   <ModalOverlay />
-    //   <ModalContent bg="backgroundSecondary">
-    //     <ModalHeader>Success</ModalHeader>
-    //     <ModalCloseButton />
-    //     <ModalBody>{message}</ModalBody>
-    //     <ModalFooter>
-    //       <Button colorScheme="blue" onClick={handleClose}>
-    //         Close
-    //       </Button>
-    //     </ModalFooter>
-    //   </ModalContent>
-    // </Modal>
+    <Modal isOpen={isOpen} onClose={() => {}} isCentered size="lg">
+      <ModalOverlay />
+      <ModalContent bg="backgroundSecondary">
+        <Flex direction="column" align="center" pt={9} gap={3}>
+          <FullTermsIcon />
+          <Text variant="bigParagraph">Terms & Conditions</Text>
+          <Flex direction="column" align="center" gap={2}>
+            <Flex h="500px" overflow="auto" mx={6} px={2} my={6}>
+              <Text variant="medium" color="secondaryText">
+                {terms}
+              </Text>
+            </Flex>
+          </Flex>
+          <Checkbox onChange={() => setIsTermsAccepted(!isTermsAccepted)} isChecked={isTermsAccepted}>
+            <Text variant="medium">I have read and agree to the terms & conditions</Text>
+          </Checkbox>
+        </Flex>
+        <ModalFooter>
+          <Button colorScheme="blue" onClick={handleAccept} isDisabled={!isTermsAccepted}>
+            Accept
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
 }
 
-export default SuccessModalConnector.Connector(SuccessModal)
+export default TermsModalConnector.Connector(TermsModal)

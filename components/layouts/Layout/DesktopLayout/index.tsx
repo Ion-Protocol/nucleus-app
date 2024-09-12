@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { Flex } from '@chakra-ui/react'
-import { NavDrawer } from '@/components/NavDrawer'
+import NavDrawer from '@/components/NavDrawer'
 import { AppHeader } from '@/components/AppHeader'
 
 export function DesktopLayout({ children }: PropsWithChildren) {

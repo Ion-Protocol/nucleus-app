@@ -29,28 +29,19 @@ export function bigIntToNumber(
 }
 
 /**
- * Converts a BigInt value to a percentage string.
- * @param value - The BigInt value to convert.
- * @returns The percentage string representation of the BigInt value.
- */
-export function bigIntToPercent(value: bigint, decimals = 18): string {
-  const numberValue = parseFloat(formatUnits(value, decimals)).toFixed(2)
-  return `${numberValue}%`
-}
-
-/**
  * Converts a bigint value to USD currency.
  *
  * @param value - The bigint value to convert.
  * @param price - The bigint price to use for conversion.
  * @returns The converted value as a string in USD currency format.
  */
-export function bigIntToUsd(value: bigint, decimals = 18): string {
-  const formattedValue = value / BigInt(10 ** decimals)
+export function bigIntToUsd(value: bigint, opts?: { decimals?: number; digits?: number }): string {
+  const { decimals = 18, digits = 0 } = opts || {}
+  const formattedValue = Number(value) / 10 ** decimals
   return formattedValue.toLocaleString('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: 0,
+    maximumFractionDigits: digits,
   })
 }
 
@@ -59,6 +50,6 @@ export function bigIntToUsd(value: bigint, decimals = 18): string {
  * @param value - The BigInt value to convert.
  * @returns The string representation of the BigInt value in ETH.
  */
-export function bigIntToEth(value: bigint): string {
-  return `${bigIntToNumber(value)} ETH`
+export function bigIntToToken(value: bigint, symbol: string, opts?: { digits?: number }): string {
+  return `${bigIntToNumber(value, { maximumFractionDigits: opts?.digits })} ${symbol}`
 }

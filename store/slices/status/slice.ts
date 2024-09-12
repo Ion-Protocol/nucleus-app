@@ -1,9 +1,6 @@
 import { RootState } from '@/store'
-import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { selectBalancesLoading } from '../balance'
-import { selectBridgesLoading } from '../bridges'
-import { selectPriceLoading } from '../price'
 import { truncateTxHash } from '@/utils/string'
+import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface StatusState {
   error: {
@@ -14,7 +11,7 @@ interface StatusState {
     successMessage: string | null
     txHash: string | null
   }
-  termsModalOpen: boolean
+  termsAccepted: boolean
 }
 
 const initialState: StatusState = {
@@ -26,7 +23,7 @@ const initialState: StatusState = {
     successMessage: null,
     txHash: null,
   },
-  termsModalOpen: false,
+  termsAccepted: false,
 }
 
 const statusSlice = createSlice({
@@ -52,20 +49,14 @@ const statusSlice = createSlice({
       state.transaction.successMessage = null
       state.transaction.txHash = null
     },
-    openTermsModal(state) {
-      state.termsModalOpen = true
+    acceptTerms(state) {
+      state.termsAccepted = true
     },
-    closeTermsModal(state) {
-      state.termsModalOpen = false
+    setTermsAccepted(state, action: PayloadAction<boolean>) {
+      state.termsAccepted = action.payload
     },
   },
 })
-
-// A selector to get global loading state
-export const selectLoading = createSelector(
-  [selectBalancesLoading, selectPriceLoading, selectBridgesLoading],
-  (balancesLoading, priceLoading, bridgesLoading) => balancesLoading || priceLoading || bridgesLoading
-)
 
 export const {
   setErrorMessage,
@@ -74,14 +65,14 @@ export const {
   setTransactionSuccessMessage,
   setTransactionTxHash,
   clearTransactionSuccess,
-  openTermsModal,
-  closeTermsModal,
+  acceptTerms,
+  setTermsAccepted,
 } = statusSlice.actions
 export const selectError = (state: RootState) => state.status.error
 export const selectErrorMessage = (state: RootState) => state.status.error.message
 export const selectErrorTitle = (state: RootState) => state.status.error.title
 export const selectTransactionSuccessMessage = (state: RootState) => state.status.transaction.successMessage
-export const selectTermsModalOpen = (state: RootState) => state.status.termsModalOpen
+export const selectTermsAccepted = (state: RootState) => state.status.termsAccepted
 export const statusReducer = statusSlice.reducer
 export const selectTransactionSuccessHash = (state: RootState) => state.status.transaction.txHash
 export const selectTruncatedTransactionSuccessHash = createSelector(selectTransactionSuccessHash, (txHash) =>

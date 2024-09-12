@@ -1,4 +1,5 @@
 export const contractAddresses: Record<string, `0x${string}`> = {
-  chainlink: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
-  ionLens: '0xe89AF12af000C4f76a57A3aD16ef8277a727DC81',
+  chainlinkUsdPerEth: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
+  chainlinkBtcPerWbtc: '0xfdFD9C85aD200c506Cf9e21F1FD8dd01932FBB23',
+  chainlinkUsdPerBtc: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
 }

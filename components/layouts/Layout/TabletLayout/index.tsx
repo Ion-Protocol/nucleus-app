@@ -1,5 +1,5 @@
 import { AppHeader } from '@/components/AppHeader'
-import { NavDrawer } from '@/components/NavDrawer'
+import NavDrawer from '@/components/NavDrawer'
 import { Flex } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
 

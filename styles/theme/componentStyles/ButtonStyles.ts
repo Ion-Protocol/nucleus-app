@@ -11,9 +11,9 @@ const getSelectedSecondaryColor = (props: StyleFunctionProps) => {
 
 export const ButtonStyles: ComponentStyleConfig = {
   baseStyle: {
-    borderRadius: '5px',
+    borderRadius: '10px',
     paddingX: 6,
-    paddingY: 3,
+    paddingTop: '2px',
     display: 'flex',
     alignItems: 'center',
     lineHeight: '2',
@@ -21,16 +21,19 @@ export const ButtonStyles: ComponentStyleConfig = {
   },
   variants: {
     solid: (props) => ({
-      color: 'white',
+      fontFamily: 'var(--font-ppformula)',
+      color: 'textInverse',
       textStyle: 'button',
-      background: buttonGradient(props),
+      background: 'primary',
+      fontSize: '14px',
+      fontWeight: 'normal',
       _hover: {
-        background: buttonGradient(props),
-        filter: 'brightness(0.9)',
+        background: 'primary',
+        filter: 'brightness(0.8)',
       },
       _active: {
-        background: buttonGradient(props),
-        filter: 'brightness(0.7)',
+        background: 'primary',
+        filter: 'brightness(0.6)',
       },
     }),
     outline: (props) => ({

@@ -1,46 +1,33 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { debounceMiddleware } from './middleware/debounceMiddleware'
+import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
+import { bridgeSideEffectMiddleware } from './middleware/effects/bridgeSideEffectMiddleware'
+import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
 import { accountReducer } from './slices/account/slice'
 import { balancesReducer } from './slices/balance'
 import { bridgesReducer } from './slices/bridges'
+import { networkReducer } from './slices/chain/slice'
 import { priceReducer } from './slices/price'
-import { netApyReducer } from './slices/netApy'
-import { netApyApi } from './slices/netApy/api'
-import { positionsReducer } from './slices/positions'
-import { positionsApi } from './slices/positions/api'
-import { assetApysReducer } from './slices/assetApys'
-import { assetApysApi } from './slices/assetApys/api'
-import { ionPoolReducer } from './slices/ionPool'
-import { ionLensReducer } from './slices/ionLens'
-import { chainReducer } from './slices/chain/slice'
-import { currencyReducer } from './slices/currency/slice'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
 
+const regularMiddlewares = [debounceMiddleware]
+const sideEffectMiddlewares = [previewFeeMiddleware, bridgeSideEffectMiddleware, termsAcceptedMiddleware]
+
+// Configure the store and inject the LibraryContext as an extra argument for thunks
 export const store = configureStore({
   reducer: {
     account: accountReducer,
-    assetApys: assetApysReducer,
     balances: balancesReducer,
     bridges: bridgesReducer,
-    chain: chainReducer,
-    currency: currencyReducer,
-    ionLens: ionLensReducer,
-    ionPool: ionPoolReducer,
-    netApy: netApyReducer,
-    positions: positionsReducer,
+    network: networkReducer,
     price: priceReducer,
     router: routerReducer,
     status: statusReducer,
     ui: UIReducer,
-
-    // API reducers
-    [netApyApi.reducerPath]: netApyApi.reducer,
-    [positionsApi.reducerPath]: positionsApi.reducer,
-    [assetApysApi.reducerPath]: assetApysApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(netApyApi.middleware, positionsApi.middleware, assetApysApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(regularMiddlewares).concat(sideEffectMiddlewares),
 })
 
 export type RootState = ReturnType<typeof store.getState>

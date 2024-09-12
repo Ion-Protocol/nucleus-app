@@ -1,5 +1,4 @@
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
 import { wagmiConfig } from '@/config/wagmi'
 import TellerWithMultiAssetSupport from '@/contracts/TellerWithMultiAssetSupport.json'
 import { Abi } from 'viem'
@@ -16,18 +15,26 @@ export async function deposit(
     depositAsset: `0x${string}`
     depositAmount: bigint
   },
-  { bridgeKey, userAddress }: { bridgeKey: BridgeKey; userAddress: `0x${string}` }
+  {
+    userAddress,
+    tellerContractAddress,
+    boringVaultAddress,
+    accountantAddress,
+    chainId,
+  }: {
+    userAddress: `0x${string}`
+    tellerContractAddress: `0x${string}`
+    boringVaultAddress: `0x${string}`
+    accountantAddress: `0x${string}`
+    chainId: number
+  }
 ) {
-  const bridge = bridgesConfig[bridgeKey]
-  const callingContractAddress = bridge.contracts.teller
-  const allowanceContractAddress = bridge.contracts.boringVault
-
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
   const allowanceAsBigInt = await allowance({
     tokenAddress: depositAsset,
-    spenderAddress: allowanceContractAddress,
+    spenderAddress: boringVaultAddress,
     userAddress,
   })
 
@@ -35,17 +42,20 @@ export async function deposit(
   // Approve
   ////////////////////////////////
   if (depositAmount > allowanceAsBigInt) {
-    await approve({
-      tokenAddress: depositAsset,
-      spenderAddress: allowanceContractAddress,
-      amount: depositAmount,
-    })
+    await approve(
+      {
+        tokenAddress: depositAsset,
+        spenderAddress: boringVaultAddress,
+        amount: depositAmount,
+      },
+      { chainId }
+    )
   }
 
   ////////////////////////////////
   // Calculate Minimum Mint
   ////////////////////////////////
-  const rate = await getRateInQuote({ quote: depositAsset }, { bridgeKey })
+  const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
   const minimumMint = calculateMinimumMint(depositAmount, rate)
 
   ////////////////////////////////
@@ -53,7 +63,7 @@ export async function deposit(
   ////////////////////////////////
   await simulateContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: callingContractAddress,
+    address: tellerContractAddress,
     functionName: 'deposit',
     args: [depositAsset, depositAmount, minimumMint],
   })
@@ -61,9 +71,9 @@ export async function deposit(
   ////////////////////////////////
   // Write
   ////////////////////////////////
-  const hash = await writeContract(wagmiConfig, {
+  const txHash = await writeContract(wagmiConfig, {
     abi: TellerWithMultiAssetSupport.abi as Abi,
-    address: callingContractAddress,
+    address: tellerContractAddress,
     functionName: 'deposit',
     args: [depositAsset, depositAmount, minimumMint],
   })
@@ -71,9 +81,19 @@ export async function deposit(
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
-  const { blockHash } = await waitForTransactionReceipt(wagmiConfig, {
-    hash,
-  })
+  const maxRetries = 5
+  let attempts = 0
 
-  return blockHash
+  while (attempts < maxRetries) {
+    try {
+      await waitForTransactionReceipt(wagmiConfig, { hash: txHash, timeout: 10000 })
+      break
+    } catch (error) {
+      attempts++
+      if (attempts === maxRetries) throw error
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+  }
+
+  return txHash
 }

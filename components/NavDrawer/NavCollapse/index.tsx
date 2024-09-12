@@ -1,10 +1,11 @@
-import { Box, Collapse, Flex, Text } from '@chakra-ui/react'
+import { Box, Collapse, Flex, Text, useColorMode } from '@chakra-ui/react'
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import React from 'react'
 import { NavCollapseConnector } from './connector'
 
 function NavCollapse({ title, leftIcon, children, isOpen, toggle }: NavCollapseConnector.Props) {
   const iconWithSize = leftIcon ? React.cloneElement(leftIcon, { height: '20px', width: '20px' }) : null
+  const { colorMode } = useColorMode()
 
   const handleClick = () => {
     toggle()
@@ -18,13 +19,16 @@ function NavCollapse({ title, leftIcon, children, isOpen, toggle }: NavCollapseC
           align="center"
           p={2}
           cursor="pointer"
-          _hover={{ bg: 'hover' }}
+          border="1px solid"
+          borderColor="transparent"
+          _hover={{ bg: 'hover', border: '1px solid', borderColor: colorMode === 'light' ? 'border' : 'transparent' }}
           _active={{ bg: 'active' }}
           justify="space-between"
         >
           <Flex gap={3}>
             <Box w="36px">{iconWithSize}</Box>
-            <Text userSelect="none" variant="large">
+            {/* marginTop of 4px is to compensate for some strange font offset */}
+            <Text userSelect="none" variant="large" mt="4px">
               {title}
             </Text>
           </Flex>

@@ -1,15 +1,24 @@
-import { TokenKey } from '@/config/token'
+import { TokenKey } from '@/types/TokenKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
 import { EthereumIcon } from '../shared/icons/Ethereum'
-import { MorphIcon } from '../shared/icons/MorphIcon'
+import { OptimismIcon } from '../shared/icons/Optimism'
 import { RswethIcon } from '../shared/icons/Rsweth'
-import { SeiIcon } from '../shared/icons/Sei'
+import { TokenEarnbtcIcon } from '../shared/icons/TokenEarnbtc'
 import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
 import { TokenRsethIcon } from '../shared/icons/TokenRseth'
+import { TokenRswbtcIcon } from '../shared/icons/TokenRswbtc'
+import { TokenSeiyanethIcon } from '../shared/icons/TokenSeiyaneth'
+import { TokenSwbtcIcon } from '../shared/icons/TokenSwbtc'
+import { TokenWbtcIcon } from '../shared/icons/TokenWbtc'
 import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { WstethIcon } from '../shared/icons/Wsteth'
+import { TokenTethIcon } from '../shared/icons/TokenTeth'
+import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
+import { TokenPufethIcon } from '../shared/icons/TokenPufeth'
+import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
+import { TokenSsethIcon } from '../shared/icons/TokenSseth'
 
 function DefaultIcon() {
   return <></>
@@ -20,11 +29,20 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.WETH]: (props) => <TokenWethIcon {...props} />,
   [TokenKey.WEETH]: (props) => <TokenWeethIcon {...props} />,
   [TokenKey.WSTETH]: (props) => <WstethIcon {...props} />,
-  [TokenKey.SEI]: (props) => <SeiIcon {...props} />,
+  [TokenKey.SEIYANETH]: (props) => <TokenSsethIcon {...props} />,
+  [TokenKey.SSETH]: (props) => <TokenSsethIcon {...props} />,
   [TokenKey.RSETH]: (props) => <TokenRsethIcon {...props} />,
   [TokenKey.RSWETH]: (props) => <RswethIcon {...props} />,
   [TokenKey.EZETH]: (props) => <TokenEzethIcon {...props} />,
-  [TokenKey.MRPH]: (props) => <MorphIcon />,
+  [TokenKey.OP]: (props) => <OptimismIcon {...props} />,
+  [TokenKey.WBTC]: (props) => <TokenWbtcIcon {...props} />,
+  [TokenKey.SWBTC]: (props) => <TokenSwbtcIcon {...props} />,
+  [TokenKey.RSWBTC]: (props) => <TokenRswbtcIcon {...props} />,
+  [TokenKey.EARNBTC]: (props) => <TokenEarnbtcIcon {...props} />,
+  [TokenKey.TETH]: (props) => <TokenTethIcon {...props} />,
+  [TokenKey.APXETH]: (props) => <TokenApxethIcon {...props} />,
+  [TokenKey.PUFETH]: (props) => <TokenPufethIcon {...props} />,
+  [TokenKey.SFRXETH]: (props) => <TokenWfrxethIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

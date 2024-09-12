@@ -1,59 +1,57 @@
-import { BridgeKey, bridgesConfig } from '@/config/bridges'
-import { ChainKey } from '@/config/chains'
-import { TokenKey } from '@/config/token'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 
 export interface AsyncMetric {
-  value: string | number
+  value: string | number | null
   loading: boolean
 }
 
-export interface BridgeData {
+export interface ChainData {
   tvl: AsyncMetric
-  apy: AsyncMetric
-  rate: AsyncMetric
   error: string | null
-  from: string
-  selectedFromToken: TokenKey | null
-  selectedToToken: TokenKey | null
 }
 
 export type BridgesState = {
-  data: { [bridgeKey in BridgeKey]: BridgeData }
+  data: { [chainKey in ChainKey]: ChainData }
   overallLoading: boolean
+  depositAmount: string
+  selectedSourceToken: TokenKey | null
+  tvlLoading: boolean
+  previewFeeLoading: boolean
+  tokenRateInQuote: string | null
+  tokenRateInQuoteLoading: boolean
+  previewFee: string | null
   sourceChain: ChainKey
-  inputError: string | null
-  destinationChain: ChainKey
+  destinationChain: ChainKey | null
   deposit: {
     pending: boolean
     error: string | null
   }
 }
 
-// Initialize the data object by iterating over all the bridge keys and setting the initial state
-const initializeData = (): { [key in BridgeKey]: BridgeData } => {
-  const data: { [key in BridgeKey]: BridgeData } = {} as any
-
-  Object.values(BridgeKey).forEach((key) => {
-    data[key] = {
-      tvl: { value: BigInt(0).toString(), loading: false },
-      apy: { value: BigInt(0).toString(), loading: false },
-      rate: { value: BigInt(0).toString(), loading: false },
-      error: null,
-      from: '',
-      selectedFromToken: bridgesConfig[key].sourceTokens[0],
-      selectedToToken: bridgesConfig[key].destinationTokens[0],
-    }
-  })
-
-  return data
+const initialChainData: ChainData = {
+  tvl: { value: null, loading: false },
+  error: null,
 }
 
 export const initialState: BridgesState = {
-  data: initializeData(),
-  overallLoading: true,
+  data: Object.values(ChainKey).reduce(
+    (acc, key) => {
+      acc[key as ChainKey] = { ...initialChainData }
+      return acc
+    },
+    {} as { [chainKey in ChainKey]: ChainData }
+  ),
+  overallLoading: false,
+  depositAmount: '',
+  selectedSourceToken: null,
+  tokenRateInQuote: null,
+  tokenRateInQuoteLoading: false,
+  tvlLoading: false,
+  previewFeeLoading: false,
+  previewFee: null,
   sourceChain: ChainKey.ETHEREUM,
   destinationChain: ChainKey.ETHEREUM,
-  inputError: null,
   deposit: {
     pending: false,
     error: null,

@@ -2,13 +2,16 @@ export const uiConfig = {
   pages: {
     dashboard: {
       yieldBridges: {
-        descrptionLength: 55,
+        descriptionLength: 90,
       },
-    },
-    bridge: {
-      title: {
-        descriptionLenth: 300,
-      },
+      announcementTag: 'Explore Now',
+      announcementHeader: 'Nucleus is Live!',
+      announcementBody:
+        'Select an ecosystem, mint a default asset, and explore applications in Nucleus-powered networks.',
     },
   },
+  errorModal: {
+    messageMaxLength: 200,
+  },
+  hardcodedApy: '4.0%',
 }
