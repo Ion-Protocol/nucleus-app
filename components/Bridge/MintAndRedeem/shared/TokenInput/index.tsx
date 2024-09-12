@@ -37,7 +37,7 @@ function TokenInput({
             bg="backgroundAlternate"
           >
             <Text>You may input any amount here</Text>
-            <IonTooltip label="Upon pressing mint, choose an asset that you want to spend from your crosschain wallet balances">
+            <IonTooltip label="You will be able to use crosschain balances or fiat onramps to purchase the necessary deposit asset">
               <InfoOutlineIcon color="infoIcon" fontSize="13px" />
             </IonTooltip>
           </Flex>
