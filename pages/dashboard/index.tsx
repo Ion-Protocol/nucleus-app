@@ -4,7 +4,7 @@ import { Flex, Text } from '@chakra-ui/react'
 
 export default function Dashboard() {
   return (
-    <Flex p={9} pr={3} direction="column">
+    <Flex p={9} pr={3} direction="column" pb="150px">
       {/* Page title */}
       <Flex direction="column" gap={1}>
         <Text data-testid="dashboard-title" variant="heading2">
