@@ -16,7 +16,6 @@ function RewardsIconRow({
   return (
     <Tooltip
       offset={[0, 18]}
-      hasArrow
       placement="bottom"
       label={<RewardsAndPointsTooltipLabel rows={rewardsAndPointsRows} />}
       p={0}
@@ -25,28 +24,6 @@ function RewardsIconRow({
       boxShadow="none"
       border="1px solid"
       borderColor="border"
-      modifiers={[
-        {
-          name: 'flip',
-          options: {
-            fallbackPlacements: [],
-          },
-        },
-        {
-          name: 'preventOverflow',
-          options: {
-            boundary: 'viewport',
-          },
-        },
-      ]}
-      sx={{
-        '.chakra-tooltip__arrow-wrapper .chakra-tooltip__arrow': {
-          mt: '-2px',
-          borderTop: '1px solid',
-          borderLeft: '1px solid',
-          borderColor: 'border',
-        },
-      }}
     >
       <Flex align="center" {...props}>
         <MultiIcon
