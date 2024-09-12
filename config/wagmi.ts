@@ -6,13 +6,14 @@ import { sei, tenderlyStaging } from './tenderly'
 
 const MAINNET_CHAINSTACK_URL = process.env.NEXT_PUBLIC_MAINNET_CHAINSTACK_URL || ''
 const SEI_RPC_URL = process.env.NEXT_PUBLIC_SEI_RPC_URL || ''
-
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+const SHOW_TENDERLY = process.env.NEXT_PUBLIC_SHOW_TENDERLY === 'true'
+console.log('🚀 ~ SHOW_TENDERLY:', SHOW_TENDERLY)
 
 const chains = [] as any
 
 chains.push(mainnet)
-if (process.env.NEXT_PUBLIC_SHOW_TENDERLY) {
+if (SHOW_TENDERLY) {
   chains.push(tenderlyStaging)
 }
 chains.push(sei)
