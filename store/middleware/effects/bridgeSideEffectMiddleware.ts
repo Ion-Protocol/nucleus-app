@@ -5,12 +5,15 @@ import {
   clearPreviewFee,
   clearSelectedFromToken,
   resetSourceChain,
+  selectChainConfig,
   setSelectedFromToken,
   setSourceChain,
 } from '@/store/slices/bridges'
 import { fetchPreviewFee, fetchTokenRateInQuote } from '@/store/slices/bridges/thunks'
 import { setNetworkId } from '@/store/slices/chain'
 import { setQuery } from '@/store/slices/router'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**
@@ -51,7 +54,17 @@ export const bridgeSideEffectMiddleware: Middleware =
     if (setSourceChain.match(action)) {
       dispatch(clearPreviewFee())
       dispatch(clearInputValue())
-      dispatch(clearSelectedFromToken())
+
+      // Set the selected token to the first source token found in the network
+      // config based on source chain
+      const sourceChainKey = action.payload as ChainKey
+      const chainConfig = selectChainConfig(state)
+      const sourceTokens = chainConfig?.sourceTokens[sourceChainKey]
+      if (!sourceTokens) return
+      const firstToken = sourceTokens[0]
+      if (firstToken) {
+        dispatch(setSelectedFromToken({ tokenKey: firstToken as TokenKey }))
+      }
     }
 
     if (setSelectedFromToken.match(action)) {
