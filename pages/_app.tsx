@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <link rel="icon" type="image/png" href="/assets/images/IonLogo.png" />
+        <link rel="icon" type="image/png" href="/assets/images/nucleus-with-bg.png" />
         <title>Nucleus App</title>
       </Head>
       <WagmiProvider config={wagmiConfig}>
