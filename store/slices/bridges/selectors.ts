@@ -227,7 +227,7 @@ export const selectFormattedNetApy = (chainKey: ChainKey) =>
 export const selectShouldShowMessageForLargeNetApy = (chainKey: ChainKey) =>
   createSelector([selectNetApy(chainKey)], (netApy) => {
     if (!netApy) return false
-    if (netApy >= 1000) {
+    if (netApy >= 250) {
       return true
     }
     return false
