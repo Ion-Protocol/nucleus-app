@@ -5,7 +5,11 @@ import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
-import { nativeAddress } from '@/config/constants'
+import {
+  nativeAddress,
+  pollBalanceAfterTransactionAttempts,
+  pollBalanceAfterTransactionInterval,
+} from '@/config/constants'
 import { tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
@@ -27,16 +31,14 @@ import {
   selectDepositAmountAsBigInt,
   selectDepositAndBridgeCheckoutParams,
   selectDepositBridgeData,
-  selectFeeTokenAddress,
   selectNetworkConfig,
   selectShouldUseFunCheckout,
   selectSourceChainId,
-  selectSourceChainIdFromRoute,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { setInputValue } from './slice'
+import { clearInputValue, setInputValue } from './slice'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -113,7 +115,9 @@ export const setBridgeInputMax = createAsyncThunk<void, void, { state: RootState
     const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
     const tokenKey = selectSourceTokenKey(state)
     const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
-    const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
+    const tokenBalanceAsNumber = tokenBalance
+      ? bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 })
+      : '0'
 
     // Using dispatch within the thunk to trigger the setInputValue action so
     // that the the previewFee side effect will also trigger
@@ -130,7 +134,6 @@ export const fetchTokenRateInQuote = createAsyncThunk<
   TokenKey,
   { rejectValue: string; state: RootState }
 >('bridges/fetchTokenRateInQuote', async (depositAssetKey, { getState, rejectWithValue, dispatch }) => {
-  console.log('fetch rate')
   try {
     const state = getState()
     const accountantAddress = selectContractAddressByName('accountant')(state)
@@ -184,7 +187,6 @@ export const performDeposit = createAsyncThunk<
     const chainConfig = selectChainConfig(state)
     const sourceChainId = selectSourceChainId(state)
     const tellerAddress = selectContractAddressByName('teller')(state)
-    const feeTokenAddress = selectFeeTokenAddress(state)
 
     const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
     const tellerContractAddress = chainConfig?.contracts.teller
@@ -204,7 +206,6 @@ export const performDeposit = createAsyncThunk<
       !chainKeyFromSelector ||
       !sourceChainId ||
       !tellerContractAddress ||
-      !feeTokenAddress ||
       !tellerAddress ||
       !userAddress
     ) {
@@ -293,16 +294,24 @@ export const performDeposit = createAsyncThunk<
         dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
         dispatch(setTransactionTxHash(txHash))
         dispatch(fetchAllTokenBalances())
+        dispatch(clearInputValue())
       }
+    }
+
+    // Poll balance after transaction every 10 seconds for 2 minutes
+    for (let i = 0; i < pollBalanceAfterTransactionAttempts; i++) {
+      setTimeout(() => {
+        dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+      }, i * pollBalanceAfterTransactionInterval)
     }
 
     return { txHash }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to deposit`
+    const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorTitle('Deposit Not Verified'))
     dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }

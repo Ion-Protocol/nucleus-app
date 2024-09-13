@@ -81,19 +81,14 @@ export async function deposit(
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
-  const maxRetries = 5
-  let attempts = 0
-
-  while (attempts < maxRetries) {
-    try {
-      await waitForTransactionReceipt(wagmiConfig, { hash: txHash, timeout: 10000 })
-      break
-    } catch (error) {
-      attempts++
-      if (attempts === maxRetries) throw error
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-    }
-  }
+  await waitForTransactionReceipt(wagmiConfig, {
+    hash: txHash,
+    timeout: 60_000,
+    confirmations: 1,
+    pollingInterval: 10_000,
+    retryCount: 5,
+    retryDelay: 5_000,
+  })
 
   return txHash
 }

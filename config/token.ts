@@ -211,4 +211,26 @@ export const tokensConfig: Record<TokenKey, Token> = {
       },
     },
   },
+  [TokenKey.SEI]: {
+    key: TokenKey.SEI,
+    name: 'Sei',
+    symbol: 'SEI',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0x',
+        chainId: 1,
+      },
+    },
+  },
+  [TokenKey.DINERO]: {
+    key: TokenKey.DINERO,
+    name: 'Dinero',
+    symbol: 'DINERO',
+    chains: {
+      [ChainKey.ETHEREUM]: {
+        address: '0x6DF0E641FC9847c0c6Fde39bE6253045440c14d3',
+        chainId: 1,
+      },
+    },
+  },
 }

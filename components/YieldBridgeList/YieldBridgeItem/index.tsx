@@ -1,10 +1,11 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import RewardsIconRow from '@/components/shared/RewardsIconRow'
-import { hardcodedApy } from '@/config/constants'
+import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
+import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 
 function YieldBridgeItem({
   tvl,
@@ -14,7 +15,11 @@ function YieldBridgeItem({
   comingSoon,
   chainKey,
   disabled,
-  loading,
+  tvlLoading,
+  formattedNetApy,
+  netApyLoading,
+  shouldShowMessageForLargeNetApy,
+  fullFormattedNetApy,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
@@ -36,8 +41,6 @@ function YieldBridgeItem({
       transition="transform 0.1s ease, box-shadow 0.1s ease"
       _hover={{
         bg: disabled ? 'default' : 'backgroundSecondary',
-        boxShadow: !disabled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
-        transform: !disabled ? 'translate(1px, -1px)' : 'none',
       }}
       _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
@@ -58,7 +61,7 @@ function YieldBridgeItem({
               {/* TVL */}
               <Flex direction="column" w="100%" mr={6}>
                 <Text variant="smallParagraph">TVL</Text>
-                <IonSkeleton isLoaded={!loading} w="100%">
+                <IonSkeleton isLoaded={!tvlLoading} w="100%">
                   <Text variant="paragraphBold">{tvl}</Text>
                 </IonSkeleton>
               </Flex>
@@ -66,14 +69,24 @@ function YieldBridgeItem({
               {/* APY */}
               <Flex direction="column">
                 <Text variant="smallParagraph">APY</Text>
-                <Text variant="paragraphBold">{hardcodedApy}</Text>
+                <IonSkeleton isLoaded={!netApyLoading} w="100%">
+                  <IonTooltip
+                    label={
+                      shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
+                    }
+                  >
+                    <Text variant="paragraphBold">{formattedNetApy}</Text>
+                  </IonTooltip>
+                </IonSkeleton>
               </Flex>
             </Flex>
 
             {/* Rewards */}
-            <Flex direction="column" gap={1}>
+            <Flex direction="column" gap={1} w="fit-content">
               <Text variant="smallParagraph">Rewards</Text>
-              <RewardsIconRow w="fit-content" chainKey={chainKey} />
+              <RewardsTooltip chainKey={chainKey}>
+                <RewardsIconRow w="fit-content" chainKey={chainKey} />
+              </RewardsTooltip>
             </Flex>
           </>
         ) : (

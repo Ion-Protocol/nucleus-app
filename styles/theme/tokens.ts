@@ -22,7 +22,7 @@ export const semanticTokens = {
     },
     backgroundAlternate: {
       default: 'neutral.200',
-      _dark: 'darkMode.300',
+      _dark: 'darkMode.400',
     },
     active: {
       default: 'neutral.200',
@@ -79,6 +79,10 @@ export const semanticTokens = {
     tooltip: {
       default: 'neutral.800',
       _dark: 'darkMode.50',
+    },
+    tooltipLabel: {
+      default: 'neutral.900',
+      _dark: 'darkMode.200',
     },
     link: {
       default: 'primary.500',

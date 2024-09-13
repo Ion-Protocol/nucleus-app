@@ -1,5 +1,4 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
-import { RewardsAndPointsRow } from '@/components/shared/RewardsIconRow/RewardsAndPointsTooltipLabel'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
@@ -8,13 +7,16 @@ import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber, WAD } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
+import { numberToPercent } from '@/utils/number'
 import { createSelector } from 'reselect'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
 import { selectNetworkKey } from '../chain'
-import { selectUsdPerEthRate } from '../price'
+import { selectPriceLoading, selectUsdPerEthRate } from '../price'
 import { selectChainKeyFromRoute } from '../router'
+import { calculateApy } from './calculateApy'
 import { ChainData } from './initialState'
+import { hardcodedApy } from '@/config/constants'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -118,7 +120,6 @@ export const selectYieldAssetFullNameByChainKey = (chainKey: ChainKey) =>
     if (!yieldAsset) return null
     return tokensConfig[yieldAsset].fullName || ''
   })
-
 /////////////////////////////////////////////////////////////////////
 // Nav Drawer
 /////////////////////////////////////////////////////////////////////
@@ -170,46 +171,92 @@ export const selectActiveFormattedChainTvl = createSelector(
 )
 
 /////////////////////////////////////////////////////////////////////
+// APY
+/////////////////////////////////////////////////////////////////////
+
+export const selectTokenApy = (apyTokenKey: TokenKey, chainKey: ChainKey) =>
+  createSelector(
+    [selectNetworkConfig, selectChainTvlByKey(chainKey), selectUsdPerEthRate],
+    (networkConfig, tvlInEth, usdPerEthRate) => {
+      const apyData = networkConfig?.chains[chainKey]?.tokenApyData[apyTokenKey]
+      if (!apyData) return null
+      return calculateApy(apyData, tvlInEth, usdPerEthRate)
+    }
+  )
+
+export const selectFormattedTokenApy = (apyTokenKey: TokenKey, chainKey: ChainKey) =>
+  createSelector([selectTokenApy(apyTokenKey, chainKey)], (tokenApy): string | null => {
+    if (tokenApy === null) return null
+    return numberToPercent(tokenApy)
+  })
+
+export const selectTokenApyLoading = createSelector(
+  [selectTvlLoading, selectPriceLoading],
+  (tvlLoading, priceLoading) => {
+    return tvlLoading || priceLoading
+  }
+)
+
+export const selectNetApy = (chainKey: ChainKey) =>
+  createSelector(
+    [selectNetworkConfig, selectChainTvlByKey(chainKey), selectUsdPerEthRate],
+    (networkConfig, tvlInEth, usdPerEthRate) => {
+      const chainConfig = chainKey ? networkConfig?.chains[chainKey] : null
+      if (!chainConfig) return null
+
+      const tokenIncentiveSum = Object.keys(chainConfig?.tokenApyData).reduce((sum, tokenKey) => {
+        const apyData = chainConfig.tokenApyData[tokenKey as TokenKey]
+        if (!apyData) return sum
+        const apy = calculateApy(apyData, tvlInEth, usdPerEthRate)
+        return sum + apy
+      }, 0)
+
+      return tokenIncentiveSum + hardcodedApy
+    }
+  )
+
+export const selectFormattedNetApy = (chainKey: ChainKey) =>
+  createSelector([selectNetApy(chainKey)], (netApy) => {
+    if (!netApy) return '0.0%'
+    if (netApy >= 1000) {
+      return '>999%'
+    }
+    return numberToPercent(netApy)
+  })
+
+export const selectShouldShowMessageForLargeNetApy = (chainKey: ChainKey) =>
+  createSelector([selectNetApy(chainKey)], (netApy) => {
+    if (!netApy) return false
+    if (netApy >= 1000) {
+      return true
+    }
+    return false
+  })
+
+export const selectNetApyLoading = createSelector(
+  [selectTvlLoading, selectPriceLoading],
+  (tvlLoading, priceLoading) => {
+    return tvlLoading || priceLoading
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
 // Rewards & Points
 /////////////////////////////////////////////////////////////////////
-export const selectIncentiveSystemsForBridge = (chainKey: ChainKey) =>
-  createSelector([selectNetworkConfig], (networkConfig) => {
-    const chainConfig = networkConfig?.chains[chainKey]
-    return chainConfig?.incentives || []
-  })
 export const selectPointsSystemsForBridge = (chainKey: ChainKey) =>
   createSelector([selectNetworkConfig], (networkConfig) => {
     const chainConfig = networkConfig?.chains[chainKey]
     return chainConfig?.points || []
   })
 export const selectIncentiveChainKeysForBridge = (chainKey: ChainKey) =>
-  createSelector([selectIncentiveSystemsForBridge(chainKey)], (incentiveSystems) => {
-    return incentiveSystems.map((incentiveSystem) => incentiveSystem.chainKey)
+  createSelector([selectNetworkConfig], (networkConfig): ChainKey[] => {
+    const tokenApyData = networkConfig?.chains[chainKey]?.tokenApyData
+    return tokenApyData ? (Object.keys(tokenApyData) as ChainKey[]) : []
   })
 export const selectPointSystemKeysForBridge = (chainKey: ChainKey) =>
   createSelector([selectPointsSystemsForBridge(chainKey)], (pointSystems) => {
     return pointSystems.map((pointSystem) => pointSystem.pointSystemKey)
   })
-export const selectRewardsAndPointsRows = (chainKey: ChainKey) =>
-  createSelector(
-    [selectIncentiveSystemsForBridge(chainKey), selectPointsSystemsForBridge(chainKey)],
-    (incentiveSystems, pointSystems) => {
-      const rows: RewardsAndPointsRow[] = []
-      for (let i = 0; i < incentiveSystems.length; i++) {
-        const incentiveSystem = incentiveSystems[i]
-        const pointSystem = pointSystems[i]
-        rows.push({
-          rewards: incentiveSystem
-            ? { chainKey: incentiveSystem.chainKey, rewardPercentage: incentiveSystem.rewardPercentage }
-            : null,
-          points: pointSystem
-            ? { pointSystemKey: pointSystem.pointSystemKey, multiplier: pointSystem.multiplier }
-            : null,
-        })
-      }
-      return rows
-    }
-  )
 
 /////////////////////////////////////////////////////////////////////
 // Chain dropdown menu
@@ -284,9 +331,12 @@ export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount],
 })
 
 export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], (sourceChainKey) => {
-  const isFunkitEnabled = USE_FUNKIT
-  const isSourceChainEthereum = sourceChainKey === ChainKey.ETHEREUM
-  return isFunkitEnabled && isSourceChainEthereum
+  // TODO: Just remove this selector and it's functionality
+  return false
+})
+
+export const selectShouldIgnoreErrors = createSelector([selectSourceChainKey], (sourceChainKey) => {
+  return sourceChainKey === ChainKey.ETHEREUM
 })
 
 export const selectInputError = createSelector(
@@ -297,13 +347,23 @@ export const selectInputError = createSelector(
     selectSourceTokenKey,
     selectBalances,
     selectShouldIgnoreBalance,
+    selectShouldIgnoreErrors,
   ],
-  (inputValue, chainKeyFromChainSelector, chainKeyFromRoute, selectedTokenKey, balances, shouldIgnoreBalance) => {
+  (
+    inputValue,
+    chainKeyFromChainSelector,
+    chainKeyFromRoute,
+    selectedTokenKey,
+    balances,
+    shouldIgnoreBalance,
+    shouldIgnoreErrors
+  ) => {
+    if (shouldIgnoreErrors) return null
     if (shouldIgnoreBalance) return null
     if (!selectedTokenKey) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
-    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance)))
+    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
     if (tokenBalanceAsNumber === null) return null
 
     if (parseFloat(inputValue) > tokenBalanceAsNumber) {
