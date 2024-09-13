@@ -24,3 +24,7 @@ export function numberToToken(value: number, symbol: string, opts?: { digits?: n
   const { digits = 3 } = opts || {}
   return `${value.toFixed(digits)} ${symbol}`
 }
+
+export function numberToPercent(value: number, decimals: number = 1): string {
+  return `${value.toFixed(decimals)}%`
+}

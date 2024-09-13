@@ -17,4 +17,6 @@ export enum TokenKey {
   APXETH = 'apxeth',
   PUFETH = 'pufeth',
   SFRXETH = 'sfrxeth',
+  SEI = 'sei',
+  DINERO = 'dinero',
 }

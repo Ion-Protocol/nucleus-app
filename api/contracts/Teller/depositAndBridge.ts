@@ -88,7 +88,14 @@ export async function depositAndBridge(
   ////////////////////////////////
   // Wait for Transaction Receipt
   ////////////////////////////////
-  await waitForTransactionReceipt(wagmiConfig, { hash: txHash, timeout: 60_000 })
+  await waitForTransactionReceipt(wagmiConfig, {
+    hash: txHash,
+    timeout: 60_000,
+    confirmations: 1,
+    pollingInterval: 10_000,
+    retryCount: 5,
+    retryDelay: 5_000,
+  })
 
   return txHash
 }

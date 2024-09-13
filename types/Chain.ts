@@ -5,12 +5,20 @@ import { PointSystemKey } from './PointSystem'
 
 interface IncentiveSystem {
   chainKey: ChainKey
+  name: string
   rewardPercentage: number
 }
 
 interface PointSystem {
   pointSystemKey: PointSystemKey
+  name: string
   multiplier: number
+}
+
+export interface TokenApyDataItem {
+  startDate: number
+  endDate: number
+  distribution: number // Token distribution within the time range in USD
 }
 
 export interface Chain {
@@ -27,6 +35,6 @@ export interface Chain {
   feeToken: TokenKey
   receiveOn: ChainKey
   yieldAsset: TokenKey
-  incentives: IncentiveSystem[]
   points: PointSystem[]
+  tokenApyData: Partial<Record<TokenKey, TokenApyDataItem[]>>
 }

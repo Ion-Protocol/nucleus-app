@@ -27,16 +27,14 @@ import {
   selectDepositAmountAsBigInt,
   selectDepositAndBridgeCheckoutParams,
   selectDepositBridgeData,
-  selectFeeTokenAddress,
   selectNetworkConfig,
   selectShouldUseFunCheckout,
   selectSourceChainId,
-  selectSourceChainIdFromRoute,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { setInputValue } from './slice'
+import { clearInputValue, setInputValue } from './slice'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -184,7 +182,6 @@ export const performDeposit = createAsyncThunk<
     const chainConfig = selectChainConfig(state)
     const sourceChainId = selectSourceChainId(state)
     const tellerAddress = selectContractAddressByName('teller')(state)
-    const feeTokenAddress = selectFeeTokenAddress(state)
 
     const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
     const tellerContractAddress = chainConfig?.contracts.teller
@@ -204,7 +201,6 @@ export const performDeposit = createAsyncThunk<
       !chainKeyFromSelector ||
       !sourceChainId ||
       !tellerContractAddress ||
-      !feeTokenAddress ||
       !tellerAddress ||
       !userAddress
     ) {
@@ -293,6 +289,7 @@ export const performDeposit = createAsyncThunk<
         dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
         dispatch(setTransactionTxHash(txHash))
         dispatch(fetchAllTokenBalances())
+        dispatch(clearInputValue())
       }
     }
 

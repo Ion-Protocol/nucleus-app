@@ -79,10 +79,6 @@ export const textStyles = {
     fontSize: '18px',
     fontWeight: 'bold',
   },
-  caption: {
-    fontSize: '12px',
-    fontWeight: 'bold',
-  },
   small: {
     fontSize: '12px',
   },

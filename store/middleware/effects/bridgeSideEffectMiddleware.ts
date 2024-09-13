@@ -33,14 +33,6 @@ export const bridgeSideEffectMiddleware: Middleware =
       dispatch(fetchPreviewFee())
     }
 
-    // Side effects for chain change. This triggers when the wallet connects to a different chain/network
-    if (setNetworkId.match(action)) {
-      dispatch(clearPreviewFee())
-      dispatch(clearInputValue())
-      dispatch(clearSelectedFromToken())
-      dispatch(resetSourceChain())
-    }
-
     // Side effects for a bridge page change. This triggers when the user navigates to a different bridge page.
     if (setQuery.match(action)) {
       dispatch(clearPreviewFee())
