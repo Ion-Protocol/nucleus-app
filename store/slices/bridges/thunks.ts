@@ -296,10 +296,10 @@ export const performDeposit = createAsyncThunk<
     return { txHash }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to deposit`
+    const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorTitle('Deposit Not Verified'))
     dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }
