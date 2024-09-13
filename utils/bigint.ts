@@ -16,7 +16,7 @@ export const WAD = {
  * @param value - The bigint value to format.
  * @returns The formatted value as a string.
  */
-export function bigIntToNumber(
+export function bigIntToNumberAsString(
   value: bigint,
   opts: { decimals?: number; minimumFractionDigits?: number; maximumFractionDigits?: number } = {}
 ): string {
@@ -26,6 +26,10 @@ export function bigIntToNumber(
     minimumFractionDigits: minimumFractionDigits,
     maximumFractionDigits: maximumFractionDigits,
   }).format(numberValue)
+}
+
+export function bigIntToNumber(value: bigint, opts: { decimals?: number } = {}): number {
+  return parseFloat(formatUnits(value, opts.decimals || 18))
 }
 
 /**
@@ -51,5 +55,5 @@ export function bigIntToUsd(value: bigint, opts?: { decimals?: number; digits?: 
  * @returns The string representation of the BigInt value in ETH.
  */
 export function bigIntToToken(value: bigint, symbol: string, opts?: { digits?: number }): string {
-  return `${bigIntToNumber(value, { maximumFractionDigits: opts?.digits })} ${symbol}`
+  return `${bigIntToNumberAsString(value, { maximumFractionDigits: opts?.digits })} ${symbol}`
 }

@@ -2,7 +2,7 @@ import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumber } from '@/utils/bigint'
+import { bigIntToNumberAsString } from '@/utils/bigint'
 import { createSelector } from '@reduxjs/toolkit'
 
 export const selectBalances = (state: RootState): Record<TokenKey, Record<ChainKey, string | null>> =>
@@ -33,7 +33,7 @@ export const selectFormattedTokenBalance = (chainKey: ChainKey | null, tokenKey:
   createSelector([selectTokenBalance(chainKey, tokenKey)], (balance): string => {
     if (balance === null || tokenKey === null || chainKey === null) return '-'
     const balanceAsBigInt = BigInt(balance)
-    const balanceAsNumber = bigIntToNumber(balanceAsBigInt, {
+    const balanceAsNumber = bigIntToNumberAsString(balanceAsBigInt, {
       decimals: 18,
       minimumFractionDigits: 0,
       maximumFractionDigits: 8,
@@ -43,5 +43,5 @@ export const selectFormattedTokenBalance = (chainKey: ChainKey | null, tokenKey:
 
 export const selectTokenBalanceAsNumber = (chainKey: ChainKey | null, tokenKey: TokenKey | null) =>
   createSelector([selectTokenBalance(chainKey, tokenKey)], (balance): number | null => {
-    return balance ? parseFloat(bigIntToNumber(BigInt(balance))) : null
+    return balance ? parseFloat(bigIntToNumberAsString(BigInt(balance))) : null
   })

@@ -5,9 +5,9 @@ import { RootState } from '@/store'
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumber, WAD } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
-import { numberToPercent } from '@/utils/number'
+import { abbreviateNumber, numberToPercent } from '@/utils/number'
 import { createSelector } from 'reselect'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
@@ -154,19 +154,19 @@ export const selectActiveChainTvl = createSelector(
   }
 )
 export const selectFormattedChainTvlByKey = (chainKey: ChainKey) =>
-  createSelector(
-    [selectChainTvlByKey(chainKey), selectUsdPerEthRate, selectNetworkConfig],
-    (tvl, price, networkConfig) => {
-      const chainConfig = networkConfig?.chains[chainKey]
-      const formattedTvl = currencySwitch(tvl, price)
-      return formattedTvl || '-'
-    }
-  )
+  createSelector([selectChainTvlByKey(chainKey), selectUsdPerEthRate], (tvl, price) => {
+    if (!tvl) return '-'
+    const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+    const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+    return abbreviateNumber(tvlInUsdAsNumber)
+  })
 export const selectActiveFormattedChainTvl = createSelector(
-  [selectActiveChainTvl, selectUsdPerEthRate, selectChainConfig],
-  (tvl, price, chainConfig) => {
-    const formattedTvl = currencySwitch(tvl, price)
-    return formattedTvl || '-'
+  [selectActiveChainTvl, selectUsdPerEthRate],
+  (tvl, price) => {
+    if (!tvl) return '-'
+    const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+    const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+    return abbreviateNumber(tvlInUsdAsNumber)
   }
 )
 
@@ -363,7 +363,7 @@ export const selectInputError = createSelector(
     if (!selectedTokenKey) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
-    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
+    const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
     if (tokenBalanceAsNumber === null) return null
 
     if (parseFloat(inputValue) > tokenBalanceAsNumber) {

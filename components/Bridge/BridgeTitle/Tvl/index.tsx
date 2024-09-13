@@ -25,7 +25,7 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
           <InfoOutlineIcon color="infoIcon" />
         </IonTooltip>
       </Flex>
-      <IonSkeleton w="150px" isLoaded={!loading}>
+      <IonSkeleton minW="150px" isLoaded={!loading}>
         <Text textAlign="center" variant="bigNumbers">
           {tvlFormatted}
         </Text>
