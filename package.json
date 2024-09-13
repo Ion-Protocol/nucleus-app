@@ -20,7 +20,7 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@funkit/connect": "2.0.4",
+    "@funkit/connect": "2.0.11",
     "@rainbow-me/rainbowkit": "^2.1.2",
     "@reduxjs/toolkit": "^2.2.5",
     "@sentry/nextjs": "^8.7.0",
