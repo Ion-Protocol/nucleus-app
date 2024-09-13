@@ -30,26 +30,9 @@ function TransactionSuccessModal({ message, txHash, onClose, shouldShowLayerZero
             <Flex direction="column" align="center" pt={9} gap={3}>
               <FullSuccessIcon />
               <Text variant="bigParagraph">Transaction Complete</Text>
+              <Text variant="smallParagraph">{message}</Text>
+              {shouldShowLayerZeroLink && <Text>View the status of your bridge transaction here.</Text>}
               <TxHashTag txHash={txHash} gap={1} />
-              <Flex direction="column" align="center" gap={2}>
-                <Text textAlign="center" variant="smallParagraph">
-                  {message}
-                </Text>
-                {shouldShowLayerZeroLink && (
-                  <Text>
-                    View the status of your bridge transaction{' '}
-                    <Link
-                      href={`${layerZeroBaseUrl}${txHash.raw}`}
-                      color="textSecondary"
-                      style={{ textDecoration: 'underline' }}
-                      isExternal
-                    >
-                      here
-                    </Link>
-                    .
-                  </Text>
-                )}
-              </Flex>
             </Flex>
           </ModalBody>
           <ModalFooter>

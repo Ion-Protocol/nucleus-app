@@ -5,7 +5,11 @@ import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
-import { nativeAddress } from '@/config/constants'
+import {
+  nativeAddress,
+  pollBalanceAfterTransactionAttempts,
+  pollBalanceAfterTransactionInterval,
+} from '@/config/constants'
 import { tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
@@ -111,7 +115,9 @@ export const setBridgeInputMax = createAsyncThunk<void, void, { state: RootState
     const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
     const tokenKey = selectSourceTokenKey(state)
     const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
-    const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
+    const tokenBalanceAsNumber = tokenBalance
+      ? bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 })
+      : '0'
 
     // Using dispatch within the thunk to trigger the setInputValue action so
     // that the the previewFee side effect will also trigger
@@ -293,13 +299,20 @@ export const performDeposit = createAsyncThunk<
       }
     }
 
+    // Poll balance after transaction every 10 seconds for 2 minutes
+    for (let i = 0; i < pollBalanceAfterTransactionAttempts; i++) {
+      setTimeout(() => {
+        dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+      }, i * pollBalanceAfterTransactionInterval)
+    }
+
     return { txHash }
   } catch (e) {
     const error = e as Error
-    const errorMessage = `Failed to deposit`
+    const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
     const fullErrorMessage = `${errorMessage}\n${error.message}`
     console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Deposit Failed'))
+    dispatch(setErrorTitle('Deposit Not Verified'))
     dispatch(setErrorMessage(fullErrorMessage))
     return rejectWithValue(errorMessage)
   }

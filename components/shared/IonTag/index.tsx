@@ -1,33 +1,20 @@
-import { Tag, TagProps, Text, Tooltip } from '@chakra-ui/react'
-import { PropsWithChildren, useState } from 'react'
+import { etherscanBaseUrl, layerZeroBaseUrl } from '@/config/constants'
+import { Link, Tag, TagProps, Text } from '@chakra-ui/react'
+import { PropsWithChildren } from 'react'
 import { ClipIcon } from '../icons/ClipIcon'
-import { IonTooltip } from '../IonTooltip'
+import { OpenNewTabIcon } from '../icons/OpenNewTab'
 
 interface TxHashTagProps extends TagProps, PropsWithChildren {
   txHash: {
     raw: string | null
     formatted: string | null
   }
+  shouldShowLayerZeroLink?: boolean
 }
 
-export function TxHashTag({ children, txHash, ...props }: TxHashTagProps) {
-  const [showTooltip, setShowTooltip] = useState(false)
-
-  const handleCopy = () => {
-    if (!txHash.raw) return
-    navigator.clipboard
-      .writeText(txHash.raw)
-      .then(() => {
-        setShowTooltip(true)
-        setTimeout(() => setShowTooltip(false), 3000)
-      })
-      .catch((error) => {
-        console.error('Failed to copy:', error)
-      })
-  }
-
+export function TxHashTag({ children, txHash, shouldShowLayerZeroLink = true, ...props }: TxHashTagProps) {
   return (
-    <IonTooltip label="Copied!" isOpen={showTooltip} placement="right" shouldWrapChildren>
+    <Link href={`${shouldShowLayerZeroLink ? layerZeroBaseUrl : etherscanBaseUrl}${txHash.raw}`} isExternal>
       <Tag
         borderRadius="100px"
         px={3}
@@ -36,12 +23,11 @@ export function TxHashTag({ children, txHash, ...props }: TxHashTagProps) {
         border="1px solid"
         borderColor="textSecondary"
         color="textSecondary"
-        onClick={handleCopy}
         {...props}
       >
-        <ClipIcon />
         <Text>{txHash.formatted}</Text>
+        <OpenNewTabIcon fontSize="12px" color="textSecondary" />
       </Tag>
-    </IonTooltip>
+    </Link>
   )
 }

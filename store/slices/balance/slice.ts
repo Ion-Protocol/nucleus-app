@@ -42,9 +42,10 @@ const balancesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Liquidity
-      .addCase(fetchAllTokenBalances.pending, (state) => {
-        state.loading = true
+      .addCase(fetchAllTokenBalances.pending, (state, action) => {
+        if (!action.meta.arg?.ignoreLoading) {
+          state.loading = true
+        }
       })
       .addCase(fetchAllTokenBalances.fulfilled, (state, action: PayloadAction<fetchAllTokenBalancesResult>) => {
         state.loading = false
