@@ -142,7 +142,7 @@ export const selectChainTvlByKey = (chainKey: ChainKey) =>
   createSelector([selectBridgesData], (bridgesData) => {
     const tvl = bridgesData[chainKey].tvl.value
     if (!tvl) return BigInt(0)
-    return BigInt(tvl)
+    return BigInt(tvl.toString())
   })
 export const selectActiveChainTvl = createSelector(
   [selectBridgesData, selectChainKeyFromRoute],
@@ -150,7 +150,7 @@ export const selectActiveChainTvl = createSelector(
     if (chainKey === null) return null
     const tvl = bridgesData[chainKey].tvl.value
     if (tvl === null) return null
-    return BigInt(tvl)
+    return BigInt(tvl.toString())
   }
 )
 export const selectFormattedChainTvlByKey = (chainKey: ChainKey) =>
@@ -327,7 +327,7 @@ export const selectDepositAmount = createSelector([selectBridgesState], (bridges
 })
 export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount], (depositAmountAsString): bigint => {
   if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
-  return BigInt(parseFloat(depositAmountAsString) * WAD.number)
+  return BigInt((parseFloat(depositAmountAsString) * WAD.number).toString())
 })
 
 export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], (sourceChainKey) => {
