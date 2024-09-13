@@ -111,7 +111,9 @@ export const setBridgeInputMax = createAsyncThunk<void, void, { state: RootState
     const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
     const tokenKey = selectSourceTokenKey(state)
     const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
-    const tokenBalanceAsNumber = tokenBalance ? bigIntToNumber(BigInt(tokenBalance)) : '0'
+    const tokenBalanceAsNumber = tokenBalance
+      ? bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 })
+      : '0'
 
     // Using dispatch within the thunk to trigger the setInputValue action so
     // that the the previewFee side effect will also trigger

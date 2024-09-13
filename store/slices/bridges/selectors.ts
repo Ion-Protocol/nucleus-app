@@ -331,9 +331,8 @@ export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount],
 })
 
 export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], (sourceChainKey) => {
-  const isFunkitEnabled = USE_FUNKIT
-  const isSourceChainEthereum = sourceChainKey === ChainKey.ETHEREUM
-  return isFunkitEnabled && isSourceChainEthereum
+  // TODO: Just remove this selector and it's functionality
+  return false
 })
 
 export const selectInputError = createSelector(
@@ -350,7 +349,7 @@ export const selectInputError = createSelector(
     if (!selectedTokenKey) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
-    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance)))
+    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
     if (tokenBalanceAsNumber === null) return null
 
     if (parseFloat(inputValue) > tokenBalanceAsNumber) {
