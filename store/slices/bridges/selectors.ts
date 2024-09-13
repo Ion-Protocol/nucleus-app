@@ -335,6 +335,10 @@ export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], 
   return false
 })
 
+export const selectShouldIgnoreErrors = createSelector([selectSourceChainKey], (sourceChainKey) => {
+  return sourceChainKey === ChainKey.ETHEREUM
+})
+
 export const selectInputError = createSelector(
   [
     selectDepositAmount,
@@ -343,8 +347,18 @@ export const selectInputError = createSelector(
     selectSourceTokenKey,
     selectBalances,
     selectShouldIgnoreBalance,
+    selectShouldIgnoreErrors,
   ],
-  (inputValue, chainKeyFromChainSelector, chainKeyFromRoute, selectedTokenKey, balances, shouldIgnoreBalance) => {
+  (
+    inputValue,
+    chainKeyFromChainSelector,
+    chainKeyFromRoute,
+    selectedTokenKey,
+    balances,
+    shouldIgnoreBalance,
+    shouldIgnoreErrors
+  ) => {
+    if (shouldIgnoreErrors) return null
     if (shouldIgnoreBalance) return null
     if (!selectedTokenKey) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]

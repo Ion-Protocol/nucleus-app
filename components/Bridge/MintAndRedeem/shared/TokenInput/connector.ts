@@ -5,6 +5,7 @@ import {
   selectDepositAmount,
   selectInputError,
   selectShouldIgnoreBalance,
+  selectShouldIgnoreErrors,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectSourceTokens,
@@ -25,7 +26,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
   const formattedTokenBalance = selectFormattedTokenBalance(selectedChainKey, selectedTokenKey)(state)
-  const shouldIgnoreBalance = selectShouldIgnoreBalance(state)
+  const shouldIgnoreErrors = selectShouldIgnoreErrors(state)
 
   return {
     inputValue,
@@ -35,7 +36,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
     tokens,
     selectedToken,
     currentPageChainKey,
-    shouldIgnoreBalance,
+    shouldIgnoreErrors,
   }
 }
 
