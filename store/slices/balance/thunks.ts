@@ -13,6 +13,7 @@ import { sei } from 'viem/chains'
 type Balances = Record<TokenKey, Record<ChainKey, string | null>>
 export interface fetchAllTokenBalancesResult {
   balances: Balances
+  options?: { ignoreLoading?: boolean }
 }
 
 /**
@@ -29,79 +30,92 @@ export interface fetchAllTokenBalancesResult {
  */
 export const fetchAllTokenBalances = createAsyncThunk<
   fetchAllTokenBalancesResult,
-  void,
+  { ignoreLoading?: boolean } | undefined,
   { rejectValue: string; state: RootState }
->('balances/fetchAllTokenBalances', async (_, { getState, rejectWithValue, dispatch }) => {
-  const state = getState()
+>(
+  'balances/fetchAllTokenBalances',
+  async (options, { getState, rejectWithValue, dispatch }) => {
+    const state = getState()
 
-  const address = selectAddress(state)
+    const address = selectAddress(state)
 
-  const balances: Balances = {} as Balances
+    const balances: Balances = {} as Balances
 
-  if (!address) {
-    return rejectWithValue('No address found in state.')
-  }
-
-  // Create token balance param items as an empty array
-  // Each object in this array is used as params for the balanceOf function
-  let tokenBalanceParamItems: {
-    chainKey: ChainKey
-    chainId: number
-    tokenKey: TokenKey
-    tokenAddress: `0x${string}`
-  }[] = []
-
-  // Iterate over each token in the tokensConfig and create token balance param items
-  for (const tokenKey in tokensConfig) {
-    const tokenConfig = tokensConfig[tokenKey as TokenKey]
-    const chainKeys = Object.keys(tokenConfig.chains)
-    for (const chainKey of chainKeys) {
-      const chainConfig = tokenConfig.chains[chainKey as keyof typeof tokenConfig.chains]
-      if (chainConfig?.chainId && chainConfig?.address && chainConfig?.address !== '0x') {
-        tokenBalanceParamItems.push({
-          chainKey: chainKey as ChainKey,
-          chainId: chainConfig?.chainId,
-          tokenKey: tokenKey as TokenKey,
-          tokenAddress: chainConfig?.address,
-        })
-      }
+    if (!address) {
+      return rejectWithValue('No address found in state.')
     }
-  }
 
-  // Fetch the balances for each token using the token balance param items
-  try {
-    const balancePromises = tokenBalanceParamItems.map(async (tokenBalanceParamItem) => {
-      const { chainKey, chainId, tokenKey, tokenAddress } = tokenBalanceParamItem
+    // Create token balance param items as an empty array
+    // Each object in this array is used as params for the balanceOf function
+    let tokenBalanceParamItems: {
+      chainKey: ChainKey
+      chainId: number
+      tokenKey: TokenKey
+      tokenAddress: `0x${string}`
+    }[] = []
 
-      if (tokenKey === TokenKey.ETH) {
-        return { tokenKey: tokenKey as TokenKey, chainKey, balance: '0' }
-      } else if (tokenAddress && chainId) {
-        const balance = await balanceOf({ balanceAddress: address, tokenAddress, chainId })
-        return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
-      }
-    })
-
-    const results = await Promise.all(balancePromises)
-
-    for (const result of results) {
-      if (result && result.tokenKey && result.chainKey) {
-        if (!balances[result.tokenKey as TokenKey]) {
-          balances[result.tokenKey as TokenKey] = {} as Record<ChainKey, string | null>
+    // Iterate over each token in the tokensConfig and create token balance param items
+    for (const tokenKey in tokensConfig) {
+      const tokenConfig = tokensConfig[tokenKey as TokenKey]
+      const chainKeys = Object.keys(tokenConfig.chains)
+      for (const chainKey of chainKeys) {
+        const chainConfig = tokenConfig.chains[chainKey as keyof typeof tokenConfig.chains]
+        if (chainConfig?.chainId && chainConfig?.address && chainConfig?.address !== '0x') {
+          tokenBalanceParamItems.push({
+            chainKey: chainKey as ChainKey,
+            chainId: chainConfig?.chainId,
+            tokenKey: tokenKey as TokenKey,
+            tokenAddress: chainConfig?.address,
+          })
         }
-        balances[result.tokenKey as TokenKey][result.chainKey as ChainKey] = result.balance
       }
     }
 
-    return { balances }
-  } catch (e) {
-    const error = e as Error
-    const errorMessage = `Failed to fetch token balance for address ${address}.`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setErrorMessage(fullErrorMessage))
-    return rejectWithValue(errorMessage)
+    // Fetch the balances for each token using the token balance param items
+    try {
+      const balancePromises = tokenBalanceParamItems.map(async (tokenBalanceParamItem) => {
+        const { chainKey, chainId, tokenKey, tokenAddress } = tokenBalanceParamItem
+
+        if (tokenKey === TokenKey.ETH) {
+          return { tokenKey: tokenKey as TokenKey, chainKey, balance: '0' }
+        } else if (tokenAddress && chainId) {
+          const balance = await balanceOf({ balanceAddress: address, tokenAddress, chainId })
+          return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
+        }
+      })
+
+      const results = await Promise.all(balancePromises)
+
+      for (const result of results) {
+        if (result && result.tokenKey && result.chainKey) {
+          if (!balances[result.tokenKey as TokenKey]) {
+            balances[result.tokenKey as TokenKey] = {} as Record<ChainKey, string | null>
+          }
+          balances[result.tokenKey as TokenKey][result.chainKey as ChainKey] = result.balance
+        }
+      }
+
+      return { balances }
+    } catch (e) {
+      const error = e as Error
+      const errorMessage = `Failed to fetch token balance for address ${address}.`
+      const fullErrorMessage = `${errorMessage}\n${error.message}`
+      console.error(fullErrorMessage)
+      dispatch(setErrorMessage(fullErrorMessage))
+      return rejectWithValue(errorMessage)
+    }
+  },
+
+  // Setup a method to fetch token balanace without loading state.
+  // This passes the ignoreLoading thunk argument to the fetchAllTokenBalances.pending action.
+  // By doing this we can optionally ignore loading state for this thunk.
+  // Example usage: dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+  {
+    getPendingMeta: ({ arg }) => {
+      return { ignoreLoading: arg?.ignoreLoading }
+    },
   }
-})
+)
 
 export interface fetchEthBalanceResult {
   balance: string
