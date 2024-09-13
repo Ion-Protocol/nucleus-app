@@ -5,7 +5,11 @@ import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
 import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
-import { nativeAddress } from '@/config/constants'
+import {
+  nativeAddress,
+  pollBalanceAfterTransactionAttempts,
+  pollBalanceAfterTransactionInterval,
+} from '@/config/constants'
 import { tokensConfig } from '@/config/token'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
@@ -293,6 +297,13 @@ export const performDeposit = createAsyncThunk<
         dispatch(fetchAllTokenBalances())
         dispatch(clearInputValue())
       }
+    }
+
+    // Poll balance after transaction every 10 seconds for 2 minutes
+    for (let i = 0; i < pollBalanceAfterTransactionAttempts; i++) {
+      setTimeout(() => {
+        dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+      }, i * pollBalanceAfterTransactionInterval)
     }
 
     return { txHash }

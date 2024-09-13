@@ -7,3 +7,5 @@ export const hardcodedApy = 4 // 4%
 export const msInOneYear = 31_556_952_000
 export const mintSlippage = 0.005 // 0.5%
 export const pollBalanceInterval = 30_000 // 30 seconds
+export const pollBalanceAfterTransactionInterval = 10_000 // 10 seconds
+export const pollBalanceAfterTransactionAttempts = 12 // 2 minutes worth of attempts
