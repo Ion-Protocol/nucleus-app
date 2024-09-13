@@ -218,8 +218,8 @@ export const selectNetApy = (chainKey: ChainKey) =>
 export const selectFormattedNetApy = (chainKey: ChainKey) =>
   createSelector([selectNetApy(chainKey)], (netApy) => {
     if (!netApy) return '0.0%'
-    if (netApy >= 1000) {
-      return '>999%'
+    if (netApy >= 250) {
+      return '>250%'
     }
     return numberToPercent(netApy)
   })

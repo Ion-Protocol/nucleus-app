@@ -38,14 +38,13 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
     formattedApy: string | null
     etherscanUrl: string | null
   }[] = Object.keys(chainConfig?.tokenApyData).map((tokenKey) => {
-    const apy = selectTokenApy(tokenKey as TokenKey, chainKey)(state)|| 0
-    const apyPerc = apy * 100
+    const apy = selectTokenApy(tokenKey as TokenKey, chainKey)(state) || 0
     const tokenAddress = tokensConfig[tokenKey as TokenKey].chains[ChainKey.ETHEREUM]?.address
     return {
       tokenKey: tokenKey as TokenKey,
       name: tokensConfig[tokenKey as TokenKey].symbol,
       etherscanUrl: tokenAddress !== '0x' ? `${etherscanBaseUrl}${tokenAddress}` : null,
-      formattedApy: `${apyPerc?.toFixed(1)}%`,
+      formattedApy: `${apy?.toFixed(1)}%`,
     }
   })
 
