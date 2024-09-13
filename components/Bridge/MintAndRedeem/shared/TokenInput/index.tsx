@@ -17,15 +17,15 @@ function TokenInput({
   tokenBalance,
   loadingTokenBalance,
   tokens,
-  shouldIgnoreBalance,
+  shouldIgnoreErrors,
 }: TokenInputConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'} pt={shouldIgnoreBalance ? 3 : 5}>
+    <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'} pt={shouldIgnoreErrors ? 3 : 5}>
       {/* Top Row */}
       <Flex justify="space-between" align="center">
-        {shouldIgnoreBalance ? (
+        {shouldIgnoreErrors ? (
           <Flex
             border="1px solid"
             borderColor="borderLight"
@@ -76,16 +76,14 @@ function TokenInput({
         {error && <Text color="error.main">{error}</Text>}
         <Flex gap={3} align="center">
           {/* Max Button */}
-          {!shouldIgnoreBalance && (
-            <Flex gap={3}>
-              <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
-                <Text color="disabledText" variant="smallParagraph">
-                  MAX
-                </Text>
-              </Button>
-              <Divider orientation="vertical" h="36px" borderColor="border" />
-            </Flex>
-          )}
+          <Flex gap={3}>
+            <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
+              <Text color="disabledText" variant="smallParagraph">
+                MAX
+              </Text>
+            </Button>
+            <Divider orientation="vertical" h="36px" borderColor="border" />
+          </Flex>
 
           {/* Token Select */}
           <TokenSelect tokens={tokens} selected={selectedToken} onChange={onChangeToken} />
