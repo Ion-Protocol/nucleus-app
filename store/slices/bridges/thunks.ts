@@ -34,7 +34,7 @@ import {
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { setInputValue } from './slice'
+import { clearInputValue, setInputValue } from './slice'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -289,6 +289,7 @@ export const performDeposit = createAsyncThunk<
         dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
         dispatch(setTransactionTxHash(txHash))
         dispatch(fetchAllTokenBalances())
+        dispatch(clearInputValue())
       }
     }
 
