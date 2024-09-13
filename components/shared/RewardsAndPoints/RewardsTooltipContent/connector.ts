@@ -1,4 +1,4 @@
-import { hardcodedApy } from '@/config/constants'
+import { etherscanBaseUrl, hardcodedApy } from '@/config/constants'
 import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import {
@@ -43,7 +43,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
     return {
       tokenKey: tokenKey as TokenKey,
       name: tokensConfig[tokenKey as TokenKey].symbol,
-      etherscanUrl: tokenAddress !== '0x' ? `https://etherscan.io/address/${tokenAddress}` : null,
+      etherscanUrl: tokenAddress !== '0x' ? `${etherscanBaseUrl}${tokenAddress}` : null,
       formattedApy: `${apy?.toFixed(1)}%`,
     }
   })
