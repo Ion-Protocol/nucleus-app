@@ -1,8 +1,8 @@
-import { hardcodedApy } from '@/config/constants'
-import { uiConfig } from '@/config/ui'
 import { Flex, Text } from '@chakra-ui/react'
+import { ApyConnector } from './connector'
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
-function Apy() {
+function Apy({ netApy, loading }: ApyConnector.Props) {
   return (
     <Flex
       border="1px solid"
@@ -16,9 +16,11 @@ function Apy() {
       w="100%"
     >
       <Text variant="paragraph">APY</Text>
-      <Text variant="bigNumbers">{hardcodedApy}</Text>
+      <IonSkeleton isLoaded={!loading}>
+        <Text variant="bigNumbers">{netApy}</Text>
+      </IonSkeleton>
     </Flex>
   )
 }
 
-export default Apy
+export default ApyConnector.Connector(Apy)

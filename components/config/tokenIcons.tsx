@@ -1,24 +1,25 @@
 import { TokenKey } from '@/types/TokenKey'
 import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
+import { DineroIcon } from '../shared/icons/Dinero'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { OptimismIcon } from '../shared/icons/Optimism'
 import { RswethIcon } from '../shared/icons/Rsweth'
+import { SeiIcon } from '../shared/icons/Sei'
+import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
 import { TokenEarnbtcIcon } from '../shared/icons/TokenEarnbtc'
 import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
+import { TokenPufethIcon } from '../shared/icons/TokenPufeth'
 import { TokenRsethIcon } from '../shared/icons/TokenRseth'
 import { TokenRswbtcIcon } from '../shared/icons/TokenRswbtc'
-import { TokenSeiyanethIcon } from '../shared/icons/TokenSeiyaneth'
+import { TokenSsethIcon } from '../shared/icons/TokenSseth'
 import { TokenSwbtcIcon } from '../shared/icons/TokenSwbtc'
+import { TokenTethIcon } from '../shared/icons/TokenTeth'
 import { TokenWbtcIcon } from '../shared/icons/TokenWbtc'
 import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
-import { WstethIcon } from '../shared/icons/Wsteth'
-import { TokenTethIcon } from '../shared/icons/TokenTeth'
-import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
-import { TokenPufethIcon } from '../shared/icons/TokenPufeth'
 import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
-import { TokenSsethIcon } from '../shared/icons/TokenSseth'
+import { WstethIcon } from '../shared/icons/Wsteth'
 
 function DefaultIcon() {
   return <></>
@@ -43,6 +44,8 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.APXETH]: (props) => <TokenApxethIcon {...props} />,
   [TokenKey.PUFETH]: (props) => <TokenPufethIcon {...props} />,
   [TokenKey.SFRXETH]: (props) => <TokenWfrxethIcon {...props} />,
+  [TokenKey.SEI]: (props) => <SeiIcon {...props} />,
+  [TokenKey.DINERO]: (props) => <DineroIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

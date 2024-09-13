@@ -2,6 +2,8 @@ import { RootState } from '@/store'
 import {
   selectChainConfigByKey,
   selectFormattedChainTvlByKey,
+  selectFormattedNetApy,
+  selectNetApyLoading,
   selectTvlLoading,
   selectYieldAssetNameByChainKey,
 } from '@/store/slices/bridges'
@@ -12,12 +14,14 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const { chainKey } = ownProps
   const chainConfig = selectChainConfigByKey(chainKey)(state)
   const disabled = chainConfig?.comingSoon
-  const loading = selectTvlLoading(state)
+  const tvlLoading = selectTvlLoading(state)
   const tvl = selectFormattedChainTvlByKey(chainKey)(state)
   const chainName = chainConfig?.name || ''
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const comingSoon = chainConfig?.comingSoon || false
   const yieldAssetKey = chainConfig?.yieldAsset || null
+  const netApy = selectFormattedNetApy(chainKey)(state)
+  const netApyLoading = selectNetApyLoading(state)
 
   return {
     tvl,
@@ -27,7 +31,9 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
     comingSoon,
     chainKey,
     disabled,
-    loading,
+    tvlLoading,
+    netApy,
+    netApyLoading,
   }
 }
 

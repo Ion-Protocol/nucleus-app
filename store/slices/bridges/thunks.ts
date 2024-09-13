@@ -27,11 +27,9 @@ import {
   selectDepositAmountAsBigInt,
   selectDepositAndBridgeCheckoutParams,
   selectDepositBridgeData,
-  selectFeeTokenAddress,
   selectNetworkConfig,
   selectShouldUseFunCheckout,
   selectSourceChainId,
-  selectSourceChainIdFromRoute,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
@@ -184,7 +182,6 @@ export const performDeposit = createAsyncThunk<
     const chainConfig = selectChainConfig(state)
     const sourceChainId = selectSourceChainId(state)
     const tellerAddress = selectContractAddressByName('teller')(state)
-    const feeTokenAddress = selectFeeTokenAddress(state)
 
     const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
     const tellerContractAddress = chainConfig?.contracts.teller
@@ -204,7 +201,6 @@ export const performDeposit = createAsyncThunk<
       !chainKeyFromSelector ||
       !sourceChainId ||
       !tellerContractAddress ||
-      !feeTokenAddress ||
       !tellerAddress ||
       !userAddress
     ) {
