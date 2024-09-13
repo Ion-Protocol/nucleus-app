@@ -134,7 +134,6 @@ export const fetchTokenRateInQuote = createAsyncThunk<
   TokenKey,
   { rejectValue: string; state: RootState }
 >('bridges/fetchTokenRateInQuote', async (depositAssetKey, { getState, rejectWithValue, dispatch }) => {
-  console.log('fetch rate')
   try {
     const state = getState()
     const accountantAddress = selectContractAddressByName('accountant')(state)

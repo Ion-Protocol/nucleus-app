@@ -28,7 +28,7 @@ function TokenDestination({
       <Flex align="center" gap={3} mt={3}>
         {/* Input Box */}
         <Flex w="full">
-          <IonSkeleton isLoaded={!loadingTokenRate} minW="250px" w="50%">
+          <IonSkeleton isLoaded={!loadingTokenRate} minW="250px" w="60%">
             <Input
               disabled
               _disabled={{
