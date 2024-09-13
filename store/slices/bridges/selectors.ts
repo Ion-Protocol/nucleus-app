@@ -5,9 +5,9 @@ import { RootState } from '@/store'
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumber, bigIntToNumberAsString, WAD } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
-import { abbreviateNumber, numberToPercent } from '@/utils/number'
+import { abbreviateNumber, convertToDecimals, numberToPercent } from '@/utils/number'
 import { createSelector } from 'reselect'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
@@ -327,7 +327,7 @@ export const selectDepositAmount = createSelector([selectBridgesState], (bridges
 })
 export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount], (depositAmountAsString): bigint => {
   if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
-  return BigInt((parseFloat(depositAmountAsString) * WAD.number).toString())
+  return BigInt(convertToDecimals(depositAmountAsString, 18))
 })
 
 export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], (sourceChainKey) => {

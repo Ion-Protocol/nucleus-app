@@ -42,3 +42,14 @@ export function abbreviateNumber(num: number): string {
     })
   }
 }
+
+export function convertToDecimals(input: string, decimals: number = 18): string {
+  // Split the input into the whole number and decimal parts
+  const [whole, decimal = ''] = input.split('.')
+
+  // Add the right number of zeroes to the decimal part to match the specified decimals
+  const decimalPadded = (decimal + '0'.repeat(decimals)).slice(0, decimals)
+
+  // Return the whole number part concatenated with the decimal part
+  return whole + decimalPadded
+}
