@@ -3,11 +3,14 @@ import {
   selectChainConfigByKey,
   selectFormattedChainTvlByKey,
   selectFormattedNetApy,
+  selectNetApy,
   selectNetApyLoading,
+  selectShouldShowMessageForLargeNetApy,
   selectTvlLoading,
   selectYieldAssetNameByChainKey,
 } from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
+import { numberToPercent } from '@/utils/number'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
@@ -20,8 +23,12 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const yieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
   const comingSoon = chainConfig?.comingSoon || false
   const yieldAssetKey = chainConfig?.yieldAsset || null
-  const netApy = selectFormattedNetApy(chainKey)(state)
+  const formattedNetApy = selectFormattedNetApy(chainKey)(state)
+  const rawNetApy = selectNetApy(chainKey)(state)
+  const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}%`
+
   const netApyLoading = selectNetApyLoading(state)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(chainKey)(state)
 
   return {
     tvl,
@@ -32,8 +39,10 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
     chainKey,
     disabled,
     tvlLoading,
-    netApy,
+    formattedNetApy,
+    fullFormattedNetApy,
     netApyLoading,
+    shouldShowMessageForLargeNetApy,
   }
 }
 

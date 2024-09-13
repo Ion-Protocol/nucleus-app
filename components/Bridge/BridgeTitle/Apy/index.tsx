@@ -1,8 +1,9 @@
 import { Flex, Text } from '@chakra-ui/react'
 import { ApyConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 
-function Apy({ netApy, loading }: ApyConnector.Props) {
+function Apy({ formattedNetApy, fullFormattedNetApy, loading, shouldShowMessageForLargeNetApy }: ApyConnector.Props) {
   return (
     <Flex
       border="1px solid"
@@ -17,7 +18,11 @@ function Apy({ netApy, loading }: ApyConnector.Props) {
     >
       <Text variant="paragraph">APY</Text>
       <IonSkeleton isLoaded={!loading}>
-        <Text variant="bigNumbers">{netApy}</Text>
+        <IonTooltip
+          label={shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined}
+        >
+          <Text variant="bigNumbers">{formattedNetApy}</Text>
+        </IonTooltip>
       </IonSkeleton>
     </Flex>
   )

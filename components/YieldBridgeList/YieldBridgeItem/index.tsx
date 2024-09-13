@@ -5,6 +5,7 @@ import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
 import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 
 function YieldBridgeItem({
   tvl,
@@ -15,8 +16,10 @@ function YieldBridgeItem({
   chainKey,
   disabled,
   tvlLoading,
-  netApy,
+  formattedNetApy,
   netApyLoading,
+  shouldShowMessageForLargeNetApy,
+  fullFormattedNetApy,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
 
@@ -67,7 +70,13 @@ function YieldBridgeItem({
               <Flex direction="column">
                 <Text variant="smallParagraph">APY</Text>
                 <IonSkeleton isLoaded={!netApyLoading} w="100%">
-                  <Text variant="paragraphBold">{netApy}</Text>
+                  <IonTooltip
+                    label={
+                      shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
+                    }
+                  >
+                    <Text variant="paragraphBold">{formattedNetApy}</Text>
+                  </IonTooltip>
                 </IonSkeleton>
               </Flex>
             </Flex>

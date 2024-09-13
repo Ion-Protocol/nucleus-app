@@ -1,16 +1,26 @@
 import { RootState } from '@/store'
-import { selectFormattedNetApy, selectNetApyLoading } from '@/store/slices/bridges'
+import {
+  selectFormattedNetApy,
+  selectNetApy,
+  selectNetApyLoading,
+  selectShouldShowMessageForLargeNetApy,
+} from '@/store/slices/bridges'
 import { selectChainKeyFromRoute } from '@/store/slices/router'
+import { numberToPercent } from '@/utils/number'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ApyOwnProps) => {
   const chainKeyFromRoute = selectChainKeyFromRoute(state)
-  if (!chainKeyFromRoute) return { netApy: '', loading: false }
-  const netApy = selectFormattedNetApy(chainKeyFromRoute)(state)
+  if (!chainKeyFromRoute)
+    return { formattedNetApy: '', fullFormattedNetApy: '', loading: false, shouldShowMessageForLargeNetApy: false }
+  const formattedNetApy = selectFormattedNetApy(chainKeyFromRoute)(state)
+  const rawNetApy = selectNetApy(chainKeyFromRoute)(state)
+  const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}%`
   const loading = selectNetApyLoading(state)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(chainKeyFromRoute)(state)
 
-  return { netApy, loading }
+  return { formattedNetApy, fullFormattedNetApy, loading, shouldShowMessageForLargeNetApy }
 }
 
 const mapDispatch = {}
