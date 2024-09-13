@@ -249,9 +249,9 @@ export const selectPointsSystemsForBridge = (chainKey: ChainKey) =>
     return chainConfig?.points || []
   })
 export const selectIncentiveChainKeysForBridge = (chainKey: ChainKey) =>
-  createSelector([selectNetworkConfig], (networkConfig) => {
+  createSelector([selectNetworkConfig], (networkConfig): ChainKey[] => {
     const tokenApyData = networkConfig?.chains[chainKey]?.tokenApyData
-    return tokenApyData ? Object.keys(tokenApyData) : []
+    return tokenApyData ? (Object.keys(tokenApyData) as ChainKey[]) : []
   })
 export const selectPointSystemKeysForBridge = (chainKey: ChainKey) =>
   createSelector([selectPointsSystemsForBridge(chainKey)], (pointSystems) => {
