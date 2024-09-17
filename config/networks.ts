@@ -1,8 +1,9 @@
-import { Chain } from '@/types/Chain'
+import { NetworkAssets } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
+import { tokensConfig } from './token'
 
 export enum NetworkKey {
   MAINNET = 'mainnet',
@@ -10,23 +11,19 @@ export enum NetworkKey {
   SEI = 'sei',
 }
 
-type Chains = Partial<Record<ChainKey, Chain>>
 export interface NetworkConfig {
   id: number
   name: string
-  chains: Chains
+  assets: NetworkAssets
 }
 
-const mainnetChains: Chains = {
-  [ChainKey.SEI]: {
-    name: 'Sei',
-    chainId: sei.id,
-    comingSoon: false,
-    contracts: {
-      teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
-      accountant: '0x6035832F65b0cf20064681505b73A6dE307a04cB',
-      boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
-    },
+const mainnetNetworkAssets: NetworkAssets = {
+  [TokenKey.SSETH]: {
+    token: tokensConfig[TokenKey.SSETH],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
+    chain: ChainKey.SEI,
+    deployedOn: ChainKey.SEI,
     sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
     sourceTokens: {
       [ChainKey.ETHEREUM]: [
@@ -45,20 +42,24 @@ const mainnetChains: Chains = {
         TokenKey.SEIYANETH
       ],
     },
-    feeToken: TokenKey.ETH,
+    contracts: {
+      teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
+      accountant: '0x6035832F65b0cf20064681505b73A6dE307a04cB',
+      boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
+    },
     layerZeroChainSelector: 30280,
     receiveOn: ChainKey.SEI,
-    yieldAsset: TokenKey.SSETH,
     points: [
       {
-        pointSystemKey: PointSystemKey.NUCLEUS,
+        key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        multiplier: 2,
+        pointsMultiplier: 2,
       },
     ],
-    tokenApyData: {
+    apys: {
       [TokenKey.SEI]: [
         {
+          tokenKey: TokenKey.SEI,
           startDate: 1726199999000, // 9/12/24 11:59:59pm EST
           endDate: 1734065999000, // 12/12/24 11:59:59pm EST
           distribution: 62_500, // $62,500
@@ -66,54 +67,47 @@ const mainnetChains: Chains = {
       ],
       [TokenKey.DINERO]: [
         {
+          tokenKey: TokenKey.DINERO,
           startDate: 1726199999000, // 9/12/24 11:59:59pm EST
           endDate: 1734065999000, // 12/12/24 11:59:59pm EST
           distribution: 62_500, // $62,500
         },
       ],
     },
-    description:
-      'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
   },
-  [ChainKey.SWELL]: {
-    name: 'Swell',
-    chainId: 1,
+  [TokenKey.EARNBTC]: {
+    token: tokensConfig[TokenKey.EARNBTC],
     comingSoon: true,
-    contracts: {
-      teller: '0x83EDE55dc738d4C2e65c4B55172Fbe3e14D83a4E',
-      accountant: '0xf242ab602CbF29Cf9B5f4c3d90CA6EeF947ba6F1',
-      boringVault: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
-    },
-    sourceChains: [ChainKey.ETHEREUM],
-    sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WBTC, TokenKey.SWBTC],
-    },
-    feeToken: TokenKey.ETH,
-    receiveOn: ChainKey.ETHEREUM,
-    yieldAsset: TokenKey.EARNBTC,
-    points: [],
-    tokenApyData: {},
-    description: 'Swell is a liquid staking protocol for ETH, offering yield with flexible liquidity.',
-  },
-  [ChainKey.ECLIPSE]: {
-    name: 'Eclipse',
-    chainId: 1,
-    comingSoon: true,
+    description: '',
+    chain: ChainKey.SWELL,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: [],
+    sourceTokens: {},
     contracts: {
       teller: '0x',
       accountant: '0x',
       boringVault: '0x',
     },
-    sourceChains: [ChainKey.ETHEREUM],
-    sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH],
-    },
-    feeToken: TokenKey.ETH,
     receiveOn: ChainKey.ETHEREUM,
-    yieldAsset: TokenKey.TETH,
     points: [],
-    tokenApyData: {},
+    apys: {},
+  },
+  [TokenKey.TETH]: {
+    token: tokensConfig[TokenKey.TETH],
+    comingSoon: true,
     description: '',
+    chain: ChainKey.ECLIPSE,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: [],
+    sourceTokens: {},
+    contracts: {
+      teller: '0x',
+      accountant: '0x',
+      boringVault: '0x',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [],
+    apys: {},
   },
 }
 
@@ -121,16 +115,16 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.MAINNET]: {
     id: 1,
     name: 'Ethereum',
-    chains: mainnetChains,
+    assets: mainnetNetworkAssets,
   },
   [NetworkKey.TENDERLY_MAINNET]: {
     id: 99099127,
     name: 'Ion Testnet',
-    chains: mainnetChains,
+    assets: mainnetNetworkAssets,
   },
   [NetworkKey.SEI]: {
     id: sei.id,
     name: 'Sei',
-    chains: mainnetChains,
+    assets: mainnetNetworkAssets,
   },
 }

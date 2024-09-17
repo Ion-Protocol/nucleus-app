@@ -1,40 +1,31 @@
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { Contracts } from './Contracts'
-import { PointSystemKey } from './PointSystem'
-
-interface IncentiveSystem {
-  chainKey: ChainKey
-  name: string
-  rewardPercentage: number
-}
-
-interface PointSystem {
-  pointSystemKey: PointSystemKey
-  name: string
-  multiplier: number
-}
+import { PointSystem, PointSystemKey } from './PointSystem'
+import { Token } from './Token'
 
 export interface TokenApyDataItem {
+  tokenKey: TokenKey
   startDate: number
   endDate: number
   distribution: number // Token distribution within the time range in USD
 }
 
-export interface Chain {
-  name: string
-  chainId: number
-  layerZeroChainSelector?: number
+export interface NetworkAsset {
+  token: Token
+  comingSoon?: boolean
   description: string
+  chain: ChainKey
+  deployedOn: ChainKey
   sourceChains: ChainKey[]
   contracts: Contracts
+  layerZeroChainSelector?: number
   sourceTokens: Partial<{
     [chain in ChainKey]: TokenKey[]
   }>
-  comingSoon?: boolean
-  feeToken: TokenKey
   receiveOn: ChainKey
-  yieldAsset: TokenKey
   points: PointSystem[]
-  tokenApyData: Partial<Record<TokenKey, TokenApyDataItem[]>>
+  apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
 }
+
+export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

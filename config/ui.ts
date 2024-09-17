@@ -1,7 +1,7 @@
 export const uiConfig = {
   pages: {
     dashboard: {
-      yieldBridges: {
+      networkAssets: {
         descriptionLength: 90,
       },
       announcementTag: 'Explore Now',

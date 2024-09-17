@@ -1,17 +1,17 @@
 import { AppDispatch } from '@/store'
-import { selectShouldTriggerPreviewFee, setInputValueDebounceComplete } from '@/store/slices/bridges'
-import { fetchPreviewFee, setBridgeInputMax } from '@/store/slices/bridges/thunks'
+import { selectShouldTriggerPreviewFee, setDepositAmountDebounceComplete } from '@/store/slices/networkAssets'
+import { fetchPreviewFee, setDepositAmountMax } from '@/store/slices/networkAssets/thunks'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**
  * Middleware function that handles preview fee actions.
- * Fetches the preview fee when the bridge "from" (deposit) value is set after a debounce.
+ * Fetches the preview fee when the deposit amount is set after a debounce.
  */
 export const previewFeeMiddleware: Middleware =
   ({ dispatch, getState }: { dispatch: AppDispatch; getState: () => any }) =>
   (next) =>
   (action) => {
-    if (setInputValueDebounceComplete.match(action)) {
+    if (setDepositAmountDebounceComplete.match(action)) {
       const state = getState()
       const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
       if (shouldTriggerPreviewFee) {

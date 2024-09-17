@@ -1,5 +1,5 @@
 import { AnnouncementBanner } from '@/components/AnnouncementBanner'
-import YieldBridgeList from '@/components/YieldBridgeList'
+import NetworkAssetList from '@/components/NetworkAssetList'
 import { Flex, Text } from '@chakra-ui/react'
 
 export default function Dashboard() {
@@ -22,10 +22,10 @@ export default function Dashboard() {
 
       <Flex h={16} />
 
-      {/* Yield Bridge list */}
+      {/* Network asset list */}
       <Text variant="heading2">Select a Network Asset</Text>
       <Flex h={8} />
-      <YieldBridgeList />
+      <NetworkAssetList />
     </Flex>
   )
 }

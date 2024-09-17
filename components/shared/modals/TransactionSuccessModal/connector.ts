@@ -1,5 +1,5 @@
 import { RootState } from '@/store'
-import { selectSourceChainKey } from '@/store/slices/bridges'
+import { selectSourceChainKey } from '@/store/slices/networkAssets'
 import {
   clearTransactionSuccess,
   selectTransactionSuccessHash,

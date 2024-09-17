@@ -5,7 +5,7 @@ import { TokenKey } from '@/types/TokenKey'
 
 // Add fields to RouterQuery as needed
 export interface RouterQuery {
-  chain?: ChainKey | null
+  token?: TokenKey | null
 }
 
 interface RouterState {
@@ -43,10 +43,10 @@ export const selectRouterQuery = (state: RootState) => {
   return state.router.query
 }
 
-export const selectChainKeyFromRoute = createSelector([selectRouterQuery], (routerQuery): ChainKey | null => {
-  const chainKey = routerQuery?.chain
-  if (!chainKey) return null
-  return chainKey
+export const selectNetworkAssetFromRoute = createSelector([selectRouterQuery], (routerQuery): TokenKey | null => {
+  const tokenKey = routerQuery?.token
+  if (!tokenKey) return null
+  return tokenKey
 })
 
 export const routerReducer = routerSlice.reducer

@@ -1,7 +1,6 @@
 import {
   Button,
   Flex,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,7 +12,6 @@ import {
 import { FullSuccessIcon } from '../../FullSuccessIcon'
 import { TxHashTag } from '../../IonTag'
 import { SuccessModalConnector } from './connector'
-import { layerZeroBaseUrl } from '@/config/constants'
 
 function TransactionSuccessModal({ message, txHash, onClose, shouldShowLayerZeroLink }: SuccessModalConnector.Props) {
   const handleClose = () => {
@@ -31,7 +29,7 @@ function TransactionSuccessModal({ message, txHash, onClose, shouldShowLayerZero
               <FullSuccessIcon />
               <Text variant="bigParagraph">Transaction Complete</Text>
               <Text variant="smallParagraph">{message}</Text>
-              {shouldShowLayerZeroLink && <Text>View the status of your bridge transaction here.</Text>}
+              {shouldShowLayerZeroLink && <Text>View the status of your transaction here.</Text>}
               <TxHashTag txHash={txHash} gap={1} />
             </Flex>
           </ModalBody>

@@ -1,17 +1,17 @@
-import BridgeTitle from '@/components/Bridge/BridgeTitle'
-import Apy from '@/components/Bridge/BridgeTitle/Apy'
-import RewardsAndPoints from '@/components/Bridge/BridgeTitle/RewardsAndPoints'
-import Tvl from '@/components/Bridge/BridgeTitle/Tvl'
-import { MintAndRedeem } from '@/components/Bridge/MintAndRedeem'
+import { MintAndRedeem } from '@/components/NetworkAsset/MintAndRedeem'
+import NetworkAssetTitle from '@/components/NetworkAsset/NetworkAssetTitle'
+import Apy from '@/components/NetworkAsset/NetworkAssetTitle/Apy'
+import RewardsAndPoints from '@/components/NetworkAsset/NetworkAssetTitle/RewardsAndPoints'
+import Tvl from '@/components/NetworkAsset/NetworkAssetTitle/Tvl'
 import { useAppSelector } from '@/store/hooks'
-import { selectChainKeyFromRoute } from '@/store/slices/router'
+import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { Flex } from '@chakra-ui/react'
 
 export default function Token() {
-  // Make sure the router query properly contains the bridge key before loading the bridge page.
+  // Make sure the router query properly contains the network asset key before loading the network asset page.
   // This should only take one-ish iteration to complete, so there is no visible loading state.
   // Now we can assert that chainKey is not null for every child component.
-  const chainKey = useAppSelector(selectChainKeyFromRoute)
+  const chainKey = useAppSelector(selectNetworkAssetFromRoute)
   if (chainKey === null) {
     return <></>
   }
@@ -20,7 +20,7 @@ export default function Token() {
     <Flex direction="column" w="100%" align="center">
       <Flex direction="column" h="100%" pt={20}>
         {/* Title & Description */}
-        <BridgeTitle />
+        <NetworkAssetTitle />
 
         {/* Spacer */}
         <Flex h={8} />
