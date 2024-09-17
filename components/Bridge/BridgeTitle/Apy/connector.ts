@@ -16,7 +16,7 @@ const mapState = (state: RootState, ownProps: ApyOwnProps) => {
     return { formattedNetApy: '', fullFormattedNetApy: '', loading: false, shouldShowMessageForLargeNetApy: false }
   const formattedNetApy = selectFormattedNetApy(chainKeyFromRoute)(state)
   const rawNetApy = selectNetApy(chainKeyFromRoute)(state)
-  const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}%`
+  const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}`
   const loading = selectNetApyLoading(state)
   const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(chainKeyFromRoute)(state)
 

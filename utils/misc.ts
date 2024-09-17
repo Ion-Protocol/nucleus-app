@@ -6,3 +6,5 @@
 export const deferExecution = (callback: () => void) => {
   setTimeout(callback, 0)
 }
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

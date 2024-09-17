@@ -15,7 +15,7 @@ import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { WAD, bigIntToNumber } from '@/utils/bigint'
+import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { switchChain } from 'wagmi/actions'
 import { selectAddress } from '../account/slice'
@@ -39,6 +39,7 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearInputValue, setInputValue } from './slice'
+import { sleep } from '@/utils/misc'
 
 export interface FetchChainTvlResult {
   chainKey: ChainKey
@@ -116,7 +117,7 @@ export const setBridgeInputMax = createAsyncThunk<void, void, { state: RootState
     const tokenKey = selectSourceTokenKey(state)
     const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
     const tokenBalanceAsNumber = tokenBalance
-      ? bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 })
+      ? bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 })
       : '0'
 
     // Using dispatch within the thunk to trigger the setInputValue action so

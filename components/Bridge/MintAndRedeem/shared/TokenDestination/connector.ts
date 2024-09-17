@@ -8,7 +8,8 @@ import {
   selectTokenRateInQuoteLoading,
 } from '@/store/slices/bridges'
 import { selectChainKeyFromRoute } from '@/store/slices/router'
-import { WAD, bigIntToNumber } from '@/utils/bigint'
+import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
+import { convertToDecimals } from '@/utils/number'
 import { ConnectedProps, connect } from 'react-redux'
 import { formatUnits } from 'viem'
 
@@ -16,13 +17,12 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
   // Calculate destination value
   const from = selectDepositAmount(state)
   const rate = selectTokenRateInQuote(state)
-  const depositAmountAsNUmber = parseFloat(from)
-  const depositAmountAsBigInt = depositAmountAsNUmber ? BigInt(depositAmountAsNUmber * WAD.number) : BigInt(0)
+  const depositAmountAsBigInt = BigInt(convertToDecimals(from, 18))
   const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
   const destinationAmountAsBigInt =
     rateAsBigInt > 0 ? (depositAmountAsBigInt * WAD.bigint) / rateAsBigInt : depositAmountAsBigInt
   const numberValue = parseFloat(formatUnits(destinationAmountAsBigInt, 18))
-  const destinationAmountFormatted = bigIntToNumber(destinationAmountAsBigInt, {
+  const destinationAmountFormatted = bigIntToNumberAsString(destinationAmountAsBigInt, {
     minimumFractionDigits: 0,
     maximumFractionDigits: numberValue < 1 ? 18 : 8,
   })

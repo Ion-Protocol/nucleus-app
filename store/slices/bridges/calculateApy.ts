@@ -20,6 +20,6 @@ export function calculateApy(apyData: TokenApyDataItem[], tvlInEthAsBigInt: bigi
   const tvlInUsdAsNumber = parseFloat(formatUnits(tvlInUsdAsBigInt, 18))
 
   const annualizedTotalReward = distribution * (msInOneYear / timeRangeInMs)
-  const apy = annualizedTotalReward / tvlInUsdAsNumber * 100
+  const apy = (annualizedTotalReward / tvlInUsdAsNumber) * 100
   return apy
 }

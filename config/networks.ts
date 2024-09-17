@@ -56,18 +56,16 @@ const mainnetChains: Chains = {
     tokenApyData: {
       [TokenKey.SEI]: [
         {
-          // startDate: 1726199999000, // 9/12/24 11:59:59pm EST
-          startDate: 1726113599000, // 9/11/24 11:59:59pm EST
+          startDate: 1726199999000, // 9/12/24 11:59:59pm EST
           endDate: 1734065999000, // 12/12/24 11:59:59pm EST
-          distribution: 125_000, // $125,000
+          distribution: 62_500, // $62,500
         },
       ],
       [TokenKey.DINERO]: [
         {
-          // startDate: 1726199999000, // 9/12/24 11:59:59pm EST
-          startDate: 1726113599000, // 9/11/24 11:59:59pm EST
+          startDate: 1726199999000, // 9/12/24 11:59:59pm EST
           endDate: 1734065999000, // 12/12/24 11:59:59pm EST
-          distribution: 125_000, // $125,000
+          distribution: 62_500, // $62,500
         },
       ],
     },

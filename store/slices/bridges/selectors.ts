@@ -5,9 +5,9 @@ import { RootState } from '@/store'
 import { Chain } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumber, WAD } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
-import { numberToPercent } from '@/utils/number'
+import { abbreviateNumber, convertToDecimals, numberToPercent } from '@/utils/number'
 import { createSelector } from 'reselect'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
@@ -142,7 +142,7 @@ export const selectChainTvlByKey = (chainKey: ChainKey) =>
   createSelector([selectBridgesData], (bridgesData) => {
     const tvl = bridgesData[chainKey].tvl.value
     if (!tvl) return BigInt(0)
-    return BigInt(tvl)
+    return BigInt(tvl.toString())
   })
 export const selectActiveChainTvl = createSelector(
   [selectBridgesData, selectChainKeyFromRoute],
@@ -150,23 +150,23 @@ export const selectActiveChainTvl = createSelector(
     if (chainKey === null) return null
     const tvl = bridgesData[chainKey].tvl.value
     if (tvl === null) return null
-    return BigInt(tvl)
+    return BigInt(tvl.toString())
   }
 )
 export const selectFormattedChainTvlByKey = (chainKey: ChainKey) =>
-  createSelector(
-    [selectChainTvlByKey(chainKey), selectUsdPerEthRate, selectNetworkConfig],
-    (tvl, price, networkConfig) => {
-      const chainConfig = networkConfig?.chains[chainKey]
-      const formattedTvl = currencySwitch(tvl, price)
-      return formattedTvl || '-'
-    }
-  )
+  createSelector([selectChainTvlByKey(chainKey), selectUsdPerEthRate], (tvl, price) => {
+    if (!tvl) return '-'
+    const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+    const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+    return abbreviateNumber(tvlInUsdAsNumber)
+  })
 export const selectActiveFormattedChainTvl = createSelector(
-  [selectActiveChainTvl, selectUsdPerEthRate, selectChainConfig],
-  (tvl, price, chainConfig) => {
-    const formattedTvl = currencySwitch(tvl, price)
-    return formattedTvl || '-'
+  [selectActiveChainTvl, selectUsdPerEthRate],
+  (tvl, price) => {
+    if (!tvl) return '-'
+    const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+    const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+    return abbreviateNumber(tvlInUsdAsNumber)
   }
 )
 
@@ -227,7 +227,7 @@ export const selectFormattedNetApy = (chainKey: ChainKey) =>
 export const selectShouldShowMessageForLargeNetApy = (chainKey: ChainKey) =>
   createSelector([selectNetApy(chainKey)], (netApy) => {
     if (!netApy) return false
-    if (netApy >= 1000) {
+    if (netApy >= 250) {
       return true
     }
     return false
@@ -327,7 +327,7 @@ export const selectDepositAmount = createSelector([selectBridgesState], (bridges
 })
 export const selectDepositAmountAsBigInt = createSelector([selectDepositAmount], (depositAmountAsString): bigint => {
   if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
-  return BigInt(parseFloat(depositAmountAsString) * WAD.number)
+  return BigInt(convertToDecimals(depositAmountAsString, 18))
 })
 
 export const selectShouldIgnoreBalance = createSelector([selectSourceChainKey], (sourceChainKey) => {
@@ -363,7 +363,7 @@ export const selectInputError = createSelector(
     if (!selectedTokenKey) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
-    const tokenBalanceAsNumber = parseFloat(bigIntToNumber(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
+    const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
     if (tokenBalanceAsNumber === null) return null
 
     if (parseFloat(inputValue) > tokenBalanceAsNumber) {

@@ -28,3 +28,28 @@ export function numberToToken(value: number, symbol: string, opts?: { digits?: n
 export function numberToPercent(value: number, decimals: number = 1): string {
   return `${value.toFixed(decimals)}%`
 }
+
+export function abbreviateNumber(num: number): string {
+  if (num >= 1_000_000_000) {
+    return `$${(num / 1_000_000_000).toFixed(2)}B`
+  } else if (num >= 1_000_000) {
+    return `$${(num / 1_000_000).toFixed(2)}M`
+  } else {
+    return num.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    })
+  }
+}
+
+export function convertToDecimals(input: string, decimals: number = 18): string {
+  // Split the input into the whole number and decimal parts
+  const [whole, decimal = ''] = input.split('.')
+
+  // Add the right number of zeroes to the decimal part to match the specified decimals
+  const decimalPadded = (decimal + '0'.repeat(decimals)).slice(0, decimals)
+
+  // Return the whole number part concatenated with the decimal part
+  return whole + decimalPadded
+}
