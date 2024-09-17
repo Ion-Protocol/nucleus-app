@@ -3,14 +3,17 @@ import { tokensConfig } from '@/config/token'
 import { RootState } from '@/store'
 import {
   selectFormattedNetApy,
+  selectNetApy,
   selectNetworkConfig,
   selectPointsSystemsForBridge,
+  selectShouldShowMessageForLargeNetApy,
   selectTokenApy,
   selectYieldAssetByChainKey,
   selectYieldAssetNameByChainKey,
 } from '@/store/slices/bridges'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
+import { numberToPercent } from '@/utils/number'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
@@ -26,6 +29,8 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
       tokenIncentives: [],
       rewards: [],
       netApy: '',
+      fullFormattedNetApy: '',
+      shouldShowMessageForLargeNetApy: false,
     }
   }
   const defaultYieldAssetKey = selectYieldAssetByChainKey(chainKey)(state)
@@ -50,7 +55,10 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
 
   const rewards = selectPointsSystemsForBridge(chainKey)(state)
 
+  const rawNetApy = selectNetApy(chainKey)(state)
+  const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}`
   const netApy = selectFormattedNetApy(chainKey)(state)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(chainKey)(state)
 
   return {
     defaultYieldAssetKey,
@@ -59,6 +67,8 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
     tokenIncentives,
     rewards,
     netApy,
+    fullFormattedNetApy,
+    shouldShowMessageForLargeNetApy,
   }
 }
 

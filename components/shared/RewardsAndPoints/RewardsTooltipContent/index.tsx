@@ -1,8 +1,9 @@
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
-import { InfoIcon } from '@chakra-ui/icons'
+import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import { Divider, Flex, Link, Text } from '@chakra-ui/react'
 import { RewardsTooltipContentConnector } from './connector'
+import { IonTooltip } from '../../IonTooltip'
 
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
@@ -11,6 +12,8 @@ export function RewardsTooltipContent({
   tokenIncentives,
   rewards,
   netApy,
+  fullFormattedNetApy,
+  shouldShowMessageForLargeNetApy,
 }: RewardsTooltipContentConnector.Props) {
   return (
     <Flex direction="column" p={3} gap={3}>
@@ -43,9 +46,14 @@ export function RewardsTooltipContent({
 
       {/* Token Incentives */}
       <Flex direction="column">
-        <Text variant="smallParagraph" color="tooltipLabel">
-          Token Incentives
-        </Text>
+        <Flex align="center" gap={2}>
+          <Text variant="smallParagraph" color="tooltipLabel">
+            Token Incentives
+          </Text>
+          <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
+            <InfoOutlineIcon fontSize="12px" color="infoIcon" />
+          </IonTooltip>
+        </Flex>
         {tokenIncentives.map((tokenIncentive) => (
           <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
             <Flex gap={2}>
@@ -98,14 +106,18 @@ export function RewardsTooltipContent({
       <Divider />
 
       {/* Net Apy */}
-      <Flex justify="space-between">
-        <Text variant="smallParagraphBold" color="text">
-          Net APY
-        </Text>
-        <Text variant="smallParagraphBold" color="text">
-          {netApy}
-        </Text>
-      </Flex>
+      <IonTooltip
+        label={shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined}
+      >
+        <Flex justify="space-between">
+          <Text variant="smallParagraphBold" color="text">
+            Net APY
+          </Text>
+          <Text variant="smallParagraphBold" color="text">
+            {netApy}
+          </Text>
+        </Flex>
+      </IonTooltip>
     </Flex>
   )
 }
