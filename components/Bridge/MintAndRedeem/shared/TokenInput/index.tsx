@@ -36,8 +36,8 @@ function TokenInput({
             px={2}
             bg="backgroundAlternate"
           >
-            <Text>You may input any amount here</Text>
-            <IonTooltip label="You will be able to use crosschain balances or fiat onramps to purchase the necessary deposit asset">
+            <Text>Try inputting any amount!</Text>
+            <IonTooltip label="If you do not have one of the default supported assets, input any amount and Nucleus will allow you to deposit other assets or use fiat onramps">
               <InfoOutlineIcon color="infoIcon" fontSize="13px" />
             </IonTooltip>
           </Flex>
