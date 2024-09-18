@@ -65,6 +65,10 @@ export const tokensConfig: Record<TokenKey, Token> = {
         address: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
         chainId: mainnet.id,
       },
+      [ChainKey.SEI]: {
+        address: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
+        chainId: sei.id
+      }
     },
   },
   [TokenKey.RSETH]: {

@@ -40,7 +40,10 @@ const mainnetChains: Chains = {
         TokenKey.WEETH,
         TokenKey.SFRXETH,
       ],
-      [ChainKey.SEI]: [TokenKey.WETH],
+      [ChainKey.SEI]: [
+        TokenKey.WETH,
+        TokenKey.SEIYANETH
+      ],
     },
     feeToken: TokenKey.ETH,
     layerZeroChainSelector: 30280,
