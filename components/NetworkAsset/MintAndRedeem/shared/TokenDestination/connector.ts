@@ -2,22 +2,44 @@ import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
-  selectNetworkAssetConfig,
   selectDepositAmount,
+  selectNetworkAssetConfig,
   selectTokenRateInQuote,
   selectTokenRateInQuoteLoading,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
+import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
 import { convertToDecimals } from '@/utils/number'
 import { ConnectedProps, connect } from 'react-redux'
 import { formatUnits } from 'viem'
 
-const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
-  // Calculate destination value
-  const from = selectDepositAmount(state)
+interface MapStateProps {
+  value: string
+  loadingTokenRate: boolean
+  networkAssetKey: TokenKey | null
+  networkAssetName: string
+  tokenBalance: string | null
+  loadingTokenBalance: boolean
+}
+
+const mapState = (state: RootState, ownProps: TokenToOwnProps): MapStateProps => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) {
+    return {
+      value: '',
+      loadingTokenRate: false,
+      networkAssetKey: null,
+      networkAssetName: '',
+      tokenBalance: null,
+      loadingTokenBalance: false,
+    }
+  }
+  const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
+  const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
+  const depositAmount = selectDepositAmount(state)
   const rate = selectTokenRateInQuote(state)
-  const depositAmountAsBigInt = BigInt(convertToDecimals(from, 18))
+  const depositAmountAsBigInt = BigInt(convertToDecimals(depositAmount, 18))
   const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
   const destinationAmountAsBigInt =
     rateAsBigInt > 0 ? (depositAmountAsBigInt * WAD.bigint) / rateAsBigInt : depositAmountAsBigInt
@@ -29,18 +51,13 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps) => {
 
   const tokenRateInQuoteLoading = selectTokenRateInQuoteLoading(state)
 
-  // Look up list of available token keys from the chain config
-  const chainConfig = selectNetworkAssetConfig(state)
-  const chainTokenKey = chainConfig?.yieldAsset || null
-  const chainToken = chainTokenKey ? tokensConfig[chainTokenKey] : null
-
-  const chainFromRoute = selectNetworkAssetFromRoute(state)
-  const tokenBalance = selectFormattedTokenBalance(chainFromRoute, chainTokenKey)(state)
+  const tokenBalance = selectFormattedTokenBalance(networkAssetConfig?.chain, networkAssetFromRoute)(state)
 
   return {
     value: destinationAmountFormatted,
     loadingTokenRate: tokenRateInQuoteLoading,
-    chainToken,
+    networkAssetKey: networkAssetFromRoute,
+    networkAssetName,
     tokenBalance,
     loadingTokenBalance: selectBalancesLoading(state),
   }

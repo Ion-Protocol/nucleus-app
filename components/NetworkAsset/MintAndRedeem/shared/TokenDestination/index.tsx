@@ -6,7 +6,8 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function TokenDestination({
   value,
-  chainToken,
+  networkAssetKey,
+  networkAssetName,
   tokenBalance,
   loadingTokenBalance,
   loadingTokenRate,
@@ -49,8 +50,8 @@ function TokenDestination({
         </Flex>
 
         <Flex gap={2} align="center">
-          <TokenIcon fontSize="28px" tokenKey={chainToken?.key || null} />
-          <Text variant="paragraph">{chainToken?.name}</Text>
+          <TokenIcon fontSize="28px" tokenKey={networkAssetKey} />
+          <Text variant="paragraph">{networkAssetName}</Text>
         </Flex>
       </Flex>
     </IonCard>
