@@ -1,5 +1,5 @@
 import { balanceOf } from '@/api/contracts/erc20/balanceOf'
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'

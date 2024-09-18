@@ -1,4 +1,4 @@
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { TokenKey } from '@/types/TokenKey'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { fetchAllTokenBalances, fetchAllTokenBalancesResult } from './thunks'

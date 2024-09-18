@@ -1,7 +1,7 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { hardcodedApy } from '@/config/constants'
 import { networksConfig } from '@/config/networks'
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { NetworkAsset } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'

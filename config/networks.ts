@@ -3,7 +3,7 @@ import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
-import { tokensConfig } from './token'
+import { tokensConfig } from './tokens'
 
 export enum NetworkKey {
   MAINNET = 'mainnet',

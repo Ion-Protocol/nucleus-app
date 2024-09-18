@@ -1,5 +1,5 @@
 import { etherscanBaseUrl, hardcodedApy } from '@/config/constants'
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import {
   selectFormattedNetApy,

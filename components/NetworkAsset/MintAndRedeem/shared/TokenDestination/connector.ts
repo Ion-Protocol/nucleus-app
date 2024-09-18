@@ -1,4 +1,4 @@
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {

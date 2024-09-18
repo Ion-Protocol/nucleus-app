@@ -1,4 +1,4 @@
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { selectNetworkAssetsAsArray } from '@/store/slices/networkAssets'
 import { openTermsModal } from '@/store/slices/ui'
