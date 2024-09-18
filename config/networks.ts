@@ -37,10 +37,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         TokenKey.WEETH,
         TokenKey.SFRXETH,
       ],
-      [ChainKey.SEI]: [
-        TokenKey.WETH,
-        TokenKey.SEIYANETH
-      ],
+      [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     contracts: {
       teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',

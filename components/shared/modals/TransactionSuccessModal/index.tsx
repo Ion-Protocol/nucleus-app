@@ -13,7 +13,13 @@ import { FullSuccessIcon } from '../../FullSuccessIcon'
 import { TxHashTag } from '../../IonTag'
 import { SuccessModalConnector } from './connector'
 
-function TransactionSuccessModal({ message, txHash, onClose, shouldShowLayerZeroLink }: SuccessModalConnector.Props) {
+function TransactionSuccessModal({
+  message,
+  txHash,
+  onClose,
+  shouldShowLayerZeroLink,
+  txBaseUrl,
+}: SuccessModalConnector.Props) {
   const handleClose = () => {
     onClose()
   }
@@ -30,7 +36,7 @@ function TransactionSuccessModal({ message, txHash, onClose, shouldShowLayerZero
               <Text variant="bigParagraph">Transaction Complete</Text>
               <Text variant="smallParagraph">{message}</Text>
               {shouldShowLayerZeroLink && <Text>View the status of your transaction here.</Text>}
-              <TxHashTag txHash={txHash} gap={1} />
+              <TxHashTag txHash={txHash} baseUrl={txBaseUrl} gap={1} />
             </Flex>
           </ModalBody>
           <ModalFooter>
