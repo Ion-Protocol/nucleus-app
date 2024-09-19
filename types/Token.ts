@@ -1,18 +1,11 @@
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
+import { Address } from 'viem'
 
 export interface Token {
   key: TokenKey
   name: string
   fullName?: string
   symbol: string
-  chains: Partial<
-    Record<
-      ChainKey,
-      {
-        address: `0x${string}`
-        chainId: number
-      }
-    >
-  >
+  addresses: Partial<Record<ChainKey, Address>>
 }

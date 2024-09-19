@@ -1,15 +1,15 @@
-import { ChainIcon } from '@/components/config/chainIcons'
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
+import { TokenIcon } from '@/components/config/tokenIcons'
 import { MultiIcon } from '@/components/shared/MulitiIcon'
 import { Flex } from '@chakra-ui/react'
 import { RewardsIconRowConnector } from './connector'
 
-function RewardsIconRow({ incentiveChainKeys, pointSystemKeys, chainKey, ...props }: RewardsIconRowConnector.Props) {
+function RewardsIconRow({ apyTokenKeys, pointSystemKeys, tokenKey, ...props }: RewardsIconRowConnector.Props) {
   return (
     <Flex align="center" {...props}>
       <MultiIcon
-        icons={incentiveChainKeys
-          .map((incentiveChainKey) => <ChainIcon key={incentiveChainKey} chainKey={incentiveChainKey} />)
+        icons={apyTokenKeys
+          .map((apyTokenKey) => <TokenIcon key={apyTokenKey} tokenKey={apyTokenKey} />)
           .concat(
             pointSystemKeys.map((pointSystemKey) => (
               <PointSystemIcon key={pointSystemKey} pointSystemKey={pointSystemKey} />

@@ -89,15 +89,15 @@ export function RewardsTooltipContent({
           Rewards
         </Text>
         {rewards.map((reward) => (
-          <Flex key={reward.pointSystemKey} align="center" justify="space-between" mt={1}>
+          <Flex key={reward.key} align="center" justify="space-between" mt={1}>
             <Flex gap={2}>
-              <PointSystemIcon pointSystemKey={reward.pointSystemKey} fontSize="20px" />
+              <PointSystemIcon pointSystemKey={reward.key} fontSize="20px" />
               <Text variant="smallParagraph" color="text">
                 {reward.name}
               </Text>
             </Flex>
             <Text variant="smallParagraph" color="text">
-              {reward.multiplier}X
+              {reward.pointsMultiplier}X
             </Text>
           </Flex>
         ))}

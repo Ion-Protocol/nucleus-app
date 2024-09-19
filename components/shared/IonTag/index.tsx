@@ -9,12 +9,12 @@ interface TxHashTagProps extends TagProps, PropsWithChildren {
     raw: string | null
     formatted: string | null
   }
-  shouldShowLayerZeroLink?: boolean
+  baseUrl: string
 }
 
-export function TxHashTag({ children, txHash, shouldShowLayerZeroLink = true, ...props }: TxHashTagProps) {
+export function TxHashTag({ children, txHash, baseUrl, ...props }: TxHashTagProps) {
   return (
-    <Link href={`${shouldShowLayerZeroLink ? layerZeroBaseUrl : etherscanBaseUrl}${txHash.raw}`} isExternal>
+    <Link href={`${baseUrl}${txHash.raw}`} isExternal>
       <Tag
         borderRadius="100px"
         px={3}

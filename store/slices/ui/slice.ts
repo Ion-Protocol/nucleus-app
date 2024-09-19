@@ -5,7 +5,7 @@ import { RootState } from '@/store'
 // 1. STATE INTERFACE
 // ==================
 export interface UIState {
-  isBridgeNavOpen: boolean
+  isNetworkAssetNavOpen: boolean
   isTermsModalOpen: boolean
 }
 
@@ -13,7 +13,7 @@ export interface UIState {
 // 2. INITIAL STATE
 // ==================
 const initialState: UIState = {
-  isBridgeNavOpen: false,
+  isNetworkAssetNavOpen: false,
   isTermsModalOpen: false,
 }
 
@@ -24,11 +24,11 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    toggleBridgeNav(state) {
-      state.isBridgeNavOpen = !state.isBridgeNavOpen
+    toggleNetworkAssetNav(state) {
+      state.isNetworkAssetNavOpen = !state.isNetworkAssetNavOpen
     },
-    setBridgeNavOpen(state, action: PayloadAction<boolean>) {
-      state.isBridgeNavOpen = action.payload
+    setNetworkAssetNavOpen(state, action: PayloadAction<boolean>) {
+      state.isNetworkAssetNavOpen = action.payload
     },
     openTermsModal(state) {
       state.isTermsModalOpen = true
@@ -39,9 +39,9 @@ const uiSlice = createSlice({
   },
 })
 
-export const { toggleBridgeNav, setBridgeNavOpen, openTermsModal, closeTermsModal } = uiSlice.actions
+export const { toggleNetworkAssetNav, setNetworkAssetNavOpen, openTermsModal, closeTermsModal } = uiSlice.actions
 
-export const selectBridgeNavOpen = (state: RootState) => state.ui.isBridgeNavOpen
+export const selectNetworkAssetNavOpen = (state: RootState) => state.ui.isNetworkAssetNavOpen
 export const selectTermsModalOpen = (state: RootState) => state.ui.isTermsModalOpen
 
 export const UIReducer = uiSlice.reducer
