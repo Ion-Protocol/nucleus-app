@@ -19,7 +19,7 @@ function RewardsTooltip({ tokenKey, children, ...chakraProps }: RewardsTooltipPr
           onClick={(e) => e.stopPropagation()} // Prevent event bubbling
           w="260px"
           p={0}
-          bg="backgroundAlternate"
+          bg="iconBackground"
           borderRadius="10px"
           boxShadow="none"
           border="1px solid"
