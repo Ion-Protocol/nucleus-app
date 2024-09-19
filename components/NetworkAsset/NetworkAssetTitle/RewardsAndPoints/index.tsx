@@ -20,6 +20,7 @@ function RewardsAndPoints() {
         gap={3}
         align="center"
         w="100%"
+        bg="backgroundSecondary"
       >
         <Flex gap={2} align="center">
           <Text variant="paragraph" whiteSpace="nowrap">

@@ -13,11 +13,11 @@ export function MultiIcon({ icons, ...props }: MultiIconProps) {
           position="absolute"
           top="0"
           left={`${index * 20}px`}
-          bg="white"
-          borderRadius="100px"
+          bg="iconBackground"
           p="4px"
+          borderRadius="100px"
           border="1px solid"
-          borderColor="border"
+          borderColor="borderLight"
         >
           {icon}
         </Flex>

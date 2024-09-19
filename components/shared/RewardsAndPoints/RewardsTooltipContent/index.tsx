@@ -26,7 +26,7 @@ export function RewardsTooltipContent({
 
       {/* Default Yield */}
       <Flex direction="column">
-        <Text variant="smallParagraph" color="tooltipLabel">
+        <Text variant="smallParagraph" color="textSecondary">
           Default Yield
         </Text>
         <Flex align="center" justify="space-between" mt={1}>
@@ -42,12 +42,12 @@ export function RewardsTooltipContent({
         </Flex>
       </Flex>
 
-      <Divider />
+      <Divider borderColor="borderLight" />
 
       {/* Token Incentives */}
       <Flex direction="column">
         <Flex align="center" gap={2}>
-          <Text variant="smallParagraph" color="tooltipLabel">
+          <Text variant="smallParagraph" color="textSecondary">
             Token Incentives
           </Text>
           <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
@@ -81,11 +81,11 @@ export function RewardsTooltipContent({
         ))}
       </Flex>
 
-      <Divider />
+      <Divider borderColor="borderLight" />
 
       {/* Rewards */}
       <Flex direction="column">
-        <Text variant="smallParagraph" color="tooltipLabel">
+        <Text variant="smallParagraph" color="textSecondary">
           Rewards
         </Text>
         {rewards.map((reward) => (
@@ -103,7 +103,7 @@ export function RewardsTooltipContent({
         ))}
       </Flex>
 
-      <Divider />
+      <Divider borderColor="borderLight" />
 
       {/* Net Apy */}
       <IonTooltip
