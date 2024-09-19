@@ -14,8 +14,8 @@ const mapState = (state: RootState, ownProps: RewardsIconRowOwnProps) => {
     }
   }
 
-  const apyTokenKeys = selectApyTokenKeys(networkAssetKey)(state)
-  const pointSystemKeys = selectPointSystemKeysForNetworkAsset(networkAssetKey)(state)
+  const apyTokenKeys = selectApyTokenKeys(state, networkAssetKey)
+  const pointSystemKeys = selectPointSystemKeysForNetworkAsset(state, networkAssetKey)
 
   return {
     apyTokenKeys,

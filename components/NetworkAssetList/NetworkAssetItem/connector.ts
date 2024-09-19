@@ -15,19 +15,19 @@ import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const { networkAssetKey } = ownProps
-  const networkAssetConfig = selectNetworkAssetConfigByKey(networkAssetKey)(state)
+  const networkAssetConfig = selectNetworkAssetConfigByKey(state, networkAssetKey)
   const disabled = networkAssetConfig?.comingSoon
   const tvlLoading = selectTvlLoading(state)
-  const tvl = selectFormattedNetworkAssetTvlByKey(networkAssetKey)(state)
+  const tvl = selectFormattedNetworkAssetTvlByKey(state, networkAssetKey)
   const networkAssetName = networkAssetConfig?.token.name
   const chainName = networkAssetConfig ? chainsConfig[networkAssetConfig.chain].name : ''
   const comingSoon = networkAssetConfig?.comingSoon || null
-  const formattedNetApy = selectFormattedNetApy(networkAssetKey)(state)
-  const rawNetApy = selectNetApy(networkAssetKey)(state)
+  const formattedNetApy = selectFormattedNetApy(state, networkAssetKey)
+  const rawNetApy = selectNetApy(state, networkAssetKey)
   const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}%`
 
   const netApyLoading = selectNetApyLoading(state)
-  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(networkAssetKey)(state)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(state, networkAssetKey)
 
   return {
     tvl,

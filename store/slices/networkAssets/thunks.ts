@@ -68,7 +68,7 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
 >('balances/fetchNetworkAssetTvl', async (tokenKey, { getState, rejectWithValue, dispatch }) => {
   const state = getState()
 
-  const networkAssetConfig = selectNetworkAssetConfigByKey(tokenKey)(state)
+  const networkAssetConfig = selectNetworkAssetConfigByKey(state, tokenKey)
   if (!networkAssetConfig) {
     return { tvl: '0', tokenKey }
   }
@@ -126,7 +126,7 @@ export const setDepositAmountMax = createAsyncThunk<void, void, { state: RootSta
     const state = getState() as RootState
     const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
     const tokenKey = selectSourceTokenKey(state)
-    const tokenBalance = selectTokenBalance(chainKeyFromSourceChain, tokenKey)(state)
+    const tokenBalance = selectTokenBalance(state, chainKeyFromSourceChain, tokenKey)
     const tokenBalanceAsNumber = tokenBalance
       ? bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 })
       : '0'
@@ -148,8 +148,8 @@ export const fetchTokenRateInQuote = createAsyncThunk<
 >('bridges/fetchTokenRateInQuote', async (depositAssetKey, { getState, rejectWithValue, dispatch }) => {
   try {
     const state = getState()
-    const accountantAddress = selectContractAddressByName('accountant')(state)
-    const despositAssetAddress = selectTokenAddressByTokenKey(depositAssetKey)(state)
+    const accountantAddress = selectContractAddressByName(state, 'accountant')
+    const despositAssetAddress = selectTokenAddressByTokenKey(state, depositAssetKey)
     const chainId = selectSourceChainId(state)
 
     if (!despositAssetAddress || !accountantAddress || !chainId) return { result: { rate: null } }
@@ -198,7 +198,7 @@ export const performDeposit = createAsyncThunk<
     const chainKeyFromSelector = selectSourceChainKey(state)
     const chainConfig = selectNetworkAssetConfig(state)
     const sourceChainId = selectSourceChainId(state)
-    const tellerAddress = selectContractAddressByName('teller')(state)
+    const tellerAddress = selectContractAddressByName(state, 'teller')
 
     const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
     const tellerContractAddress = chainConfig?.contracts.teller
@@ -273,12 +273,6 @@ export const performDeposit = createAsyncThunk<
       }
 
       ///////////////////////////////////////////////////////////////
-      // 2. Calculate minimum mint
-      ///////////////////////////////////////////////////////////////
-      const rate = await getRateInQuote({ quote: depositAsset }, { contractAddress: accountantAddress })
-      const minimumMint = calculateMinimumMint(depositAmount, rate)
-
-      ///////////////////////////////////////////////////////////////
       // 3. Deposit and bridge
       ///////////////////////////////////////////////////////////////
 
@@ -286,7 +280,7 @@ export const performDeposit = createAsyncThunk<
       const shouldUseFunCheckout = selectShouldUseFunCheckout(state)
 
       if (shouldUseFunCheckout) {
-        const params = selectDepositAndBridgeCheckoutParams(minimumMint)(state)
+        const params = selectDepositAndBridgeCheckoutParams(state)
         if (params === null) {
           throw new Error('Missing checkout params')
         }

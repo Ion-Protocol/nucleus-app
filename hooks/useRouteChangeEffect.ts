@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/store/hooks'
-import { setPath, setQuery } from '@/store/slices/router'
+import { setPath, setQuery, setRouterReady } from '@/store/slices/router'
 import { setNetworkAssetNavOpen } from '@/store/slices/ui'
 import { TokenKey } from '@/types/TokenKey'
 import { useRouter } from 'next/router'
@@ -15,8 +15,10 @@ export function useRouteChangeEffect() {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      // Opens the network asset section of the navbar on the left of the screen when the route starts with '/tokens/'.
+    const handleRouteChange = async (url: string) => {
+      dispatch(setRouterReady(router.isReady))
+
+      // Opens the network assaet section of the navbar on the left of the screen when the route starts with '/tokens/'.
       if (url.startsWith('/tokens/')) {
         dispatch(setNetworkAssetNavOpen(true))
       }
@@ -25,6 +27,7 @@ export function useRouteChangeEffect() {
       const query = router.query as { tokens: TokenKey }
       if (Object.keys(query).length > 0) {
         dispatch(setQuery({ token: query.tokens }))
+        localStorage.setItem('networkAsset', query.tokens)
       }
     }
 

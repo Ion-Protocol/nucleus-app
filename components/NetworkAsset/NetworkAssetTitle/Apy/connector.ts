@@ -11,14 +11,14 @@ import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ApyOwnProps) => {
-  const chainKeyFromRoute = selectNetworkAssetFromRoute(state)
-  if (!chainKeyFromRoute)
+  const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
+  if (!networkAssetFromRoute)
     return { formattedNetApy: '', fullFormattedNetApy: '', loading: false, shouldShowMessageForLargeNetApy: false }
-  const formattedNetApy = selectFormattedNetApy(chainKeyFromRoute)(state)
-  const rawNetApy = selectNetApy(chainKeyFromRoute)(state)
+  const formattedNetApy = selectFormattedNetApy(state, networkAssetFromRoute)
+  const rawNetApy = selectNetApy(state, networkAssetFromRoute)
   const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}`
   const loading = selectNetApyLoading(state)
-  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(chainKeyFromRoute)(state)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(state, networkAssetFromRoute)
 
   return { formattedNetApy, fullFormattedNetApy, loading, shouldShowMessageForLargeNetApy }
 }
