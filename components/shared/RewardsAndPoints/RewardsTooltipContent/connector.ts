@@ -34,7 +34,7 @@ interface MapStateToPropsType {
 
 const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): MapStateToPropsType => {
   const { tokenKey: networkAssetKey } = ownProps
-  const networkAssetConfig = networkAssetKey ? selectNetworkAssetConfigByKey(networkAssetKey)(state) : null
+  const networkAssetConfig = networkAssetKey ? selectNetworkAssetConfigByKey(state, networkAssetKey) : null
   if (!networkAssetKey || !networkAssetConfig) {
     return {
       defaultYieldAssetKey: null,
@@ -56,7 +56,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
     formattedApy: string | null
     etherscanUrl: string | null
   }[] = Object.keys(networkAssetConfig.apys).map((apyTokenKey) => {
-    const apy = selectNetworkAssetApy(networkAssetKey, apyTokenKey as TokenKey)(state) || 0
+    const apy = selectNetworkAssetApy(state, networkAssetKey, apyTokenKey as TokenKey) || 0
     const tokenAddress = tokensConfig[apyTokenKey as TokenKey].addresses[ChainKey.ETHEREUM]
     return {
       tokenKey: apyTokenKey as TokenKey,
@@ -66,12 +66,12 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
     }
   })
 
-  const rewards = selectPointsSystemForNetworkAsset(networkAssetKey)(state)
+  const rewards = selectPointsSystemForNetworkAsset(state, networkAssetKey)
 
-  const rawNetApy = selectNetApy(networkAssetKey)(state)
+  const rawNetApy = selectNetApy(state, networkAssetKey)
   const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}`
-  const netApy = selectFormattedNetApy(networkAssetKey)(state)
-  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(networkAssetKey)(state)
+  const netApy = selectFormattedNetApy(state, networkAssetKey)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(state, networkAssetKey)
 
   return {
     defaultYieldAssetKey: networkAssetKey,

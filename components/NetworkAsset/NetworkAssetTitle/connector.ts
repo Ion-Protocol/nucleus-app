@@ -1,18 +1,20 @@
 import { etherscanBaseUrl } from '@/config/constants'
 import { RootState } from '@/store'
 import { selectContractAddressByName, selectNetworkAssetConfig } from '@/store/slices/networkAssets'
-import { TokenKey } from '@/types/TokenKey'
+import { selectNetworkAssetFromRoute, selectRouterReady } from '@/store/slices/router'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: NetworkAssetTitleOwnProps) => {
-  const networkAssetKey = state.router.query?.token as TokenKey
+  const networkAssetKey = selectNetworkAssetFromRoute(state) || null
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const networkAssetFullName = networkAssetConfig?.token?.fullName
   const networkAssetName = networkAssetConfig?.token?.name
   const description = networkAssetConfig?.description || ''
+  const isRouterReady = selectRouterReady(state)
+  const isRouterLoading = !networkAssetKey && !isRouterReady
 
-  const boringVaultAddress = selectContractAddressByName('boringVault')(state)
+  const boringVaultAddress = selectContractAddressByName(state, 'boringVault')
   const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
 
   return {
@@ -21,6 +23,7 @@ const mapState = (state: RootState, ownProps: NetworkAssetTitleOwnProps) => {
     networkAssetKey,
     description,
     etherscanHref,
+    isRouterLoading,
   }
 }
 

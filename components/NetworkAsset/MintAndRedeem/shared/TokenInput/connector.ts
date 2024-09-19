@@ -24,7 +24,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const tokens = tokenKeys.map((key) => tokensConfig[key])
   const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
-  const formattedTokenBalance = selectFormattedTokenBalance(selectedChainKey, selectedTokenKey)(state)
+  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
   const shouldIgnoreBalance = selectShouldIgnoreBalance(state)
 
   return {
