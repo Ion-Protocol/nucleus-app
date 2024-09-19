@@ -1,6 +1,7 @@
 import { chainsConfig } from '@/config/chains'
 import { RootState } from '@/store'
 import {
+  selectNetworkAssetConfig,
   selectReceiveOnChain,
   selectSourceChainKey,
   selectSourceChains,
@@ -11,12 +12,20 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role, isActive } = ownProps
 
+  let selectedChainKey = selectSourceChainKey(state)
+
+  const networkAssetConfig = selectNetworkAssetConfig(state)
   const selectableChains = selectSourceChains(state)
-  const selectedChainKey = selectSourceChainKey(state)
   const selectedChainName = chainsConfig[selectedChainKey].name
+  const chainKeyOfNetworkAsset = networkAssetConfig?.chain
+  const chainNameOfNetworkAsset = chainKeyOfNetworkAsset ? chainsConfig[chainKeyOfNetworkAsset].name : ''
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
-  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${selectedChainName}`
+  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${chainNameOfNetworkAsset}`
+
+  if (role === 'destination' && chainKeyOfNetworkAsset) {
+    selectedChainKey = chainKeyOfNetworkAsset
+  }
 
   return {
     chains: selectableChains,

@@ -5,8 +5,8 @@ import { NetworkAssetTitleConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function NetworkAssetTitle({
-  networkAssetName,
   networkAssetFullName,
+  chainNameOfNetworkAsset,
   networkAssetKey,
   description,
   etherscanHref,
@@ -26,7 +26,7 @@ function NetworkAssetTitle({
             |
           </Text>
           <Text variant="heading2" color="disabledText">
-            {networkAssetName}
+            {chainNameOfNetworkAsset}
           </Text>
           {etherscanHref && (
             <Link href={etherscanHref} isExternal mt="-4px">

@@ -1,3 +1,4 @@
+import { chainsConfig } from '@/config/chains'
 import { etherscanBaseUrl } from '@/config/constants'
 import { RootState } from '@/store'
 import { selectContractAddressByName, selectNetworkAssetConfig } from '@/store/slices/networkAssets'
@@ -9,17 +10,18 @@ const mapState = (state: RootState, ownProps: NetworkAssetTitleOwnProps) => {
   const networkAssetKey = selectNetworkAssetFromRoute(state) || null
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const networkAssetFullName = networkAssetConfig?.token?.fullName
-  const networkAssetName = networkAssetConfig?.token?.name
   const description = networkAssetConfig?.description || ''
   const isRouterReady = selectRouterReady(state)
   const isRouterLoading = !networkAssetKey && !isRouterReady
+
+  const chainNameOfNetworkAsset = networkAssetConfig?.chain ? chainsConfig[networkAssetConfig.chain].name : ''
 
   const boringVaultAddress = selectContractAddressByName(state, 'boringVault')
   const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
 
   return {
-    networkAssetName,
     networkAssetFullName,
+    chainNameOfNetworkAsset,
     networkAssetKey,
     description,
     etherscanHref,
