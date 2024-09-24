@@ -40,7 +40,9 @@ function NetworkAssetTitle({
             </Link>
           )}
         </Flex>
-        <Text variant="smallParagraph">{description}</Text>
+        <Text textAlign="center" maxW="650px" variant="smallParagraph">
+          {description}
+        </Text>
       </Flex>
     </IonSkeleton>
   )

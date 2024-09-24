@@ -5,6 +5,7 @@ export enum TokenKey {
   RSETH = 'rseth',
   RSWBTC = 'rswbtc',
   EARNBTC = 'earnbtc',
+  EARNETH = 'earneth',
   RSWETH = 'rsweth',
   SEIYANETH = 'seiyaneth',
   SSETH = 'sseth',

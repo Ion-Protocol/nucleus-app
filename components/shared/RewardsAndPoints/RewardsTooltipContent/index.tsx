@@ -42,44 +42,48 @@ export function RewardsTooltipContent({
         </Flex>
       </Flex>
 
-      <Divider borderColor="borderLight" />
-
       {/* Token Incentives */}
-      <Flex direction="column">
-        <Flex align="center" gap={2}>
-          <Text variant="smallParagraph" color="textSecondary">
-            Token Incentives
-          </Text>
-          <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
-            <InfoOutlineIcon fontSize="12px" color="infoIcon" />
-          </IonTooltip>
-        </Flex>
-        {tokenIncentives.map((tokenIncentive) => (
-          <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
-            <Flex gap={2}>
-              <TokenIcon tokenKey={tokenIncentive.tokenKey} fontSize="20px" />
-              {tokenIncentive.etherscanUrl ? (
-                <Link
-                  href={tokenIncentive.etherscanUrl}
-                  isExternal
-                  style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
-                >
-                  <Text variant="smallParagraph" color="text">
-                    {tokenIncentive.name}
-                  </Text>
-                </Link>
-              ) : (
-                <Text variant="smallParagraph" color="text">
-                  {tokenIncentive.name}
-                </Text>
-              )}
+      {tokenIncentives.length > 0 && (
+        <>
+          <Divider borderColor="borderLight" />
+
+          <Flex direction="column">
+            <Flex align="center" gap={2}>
+              <Text variant="smallParagraph" color="textSecondary">
+                Token Incentives
+              </Text>
+              <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
+                <InfoOutlineIcon fontSize="12px" color="infoIcon" />
+              </IonTooltip>
             </Flex>
-            <Text variant="smallParagraph" color="text">
-              {tokenIncentive.formattedApy}
-            </Text>
+            {tokenIncentives.map((tokenIncentive) => (
+              <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
+                <Flex gap={2}>
+                  <TokenIcon tokenKey={tokenIncentive.tokenKey} fontSize="20px" />
+                  {tokenIncentive.etherscanUrl ? (
+                    <Link
+                      href={tokenIncentive.etherscanUrl}
+                      isExternal
+                      style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                    >
+                      <Text variant="smallParagraph" color="text">
+                        {tokenIncentive.name}
+                      </Text>
+                    </Link>
+                  ) : (
+                    <Text variant="smallParagraph" color="text">
+                      {tokenIncentive.name}
+                    </Text>
+                  )}
+                </Flex>
+                <Text variant="smallParagraph" color="text">
+                  {tokenIncentive.formattedApy}
+                </Text>
+              </Flex>
+            ))}
           </Flex>
-        ))}
-      </Flex>
+        </>
+      )}
 
       <Divider borderColor="borderLight" />
 

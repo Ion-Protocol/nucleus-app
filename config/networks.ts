@@ -72,21 +72,34 @@ const mainnetNetworkAssets: NetworkAssets = {
       ],
     },
   },
-  [TokenKey.EARNBTC]: {
-    token: tokensConfig[TokenKey.EARNBTC],
-    comingSoon: true,
-    description: '',
+  [TokenKey.EARNETH]: {
+    token: tokensConfig[TokenKey.EARNETH],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [],
-    sourceTokens: {},
+    sourceChains: [ChainKey.ETHEREUM],
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH],
+    },
     contracts: {
-      teller: '0x',
-      accountant: '0x',
-      boringVault: '0x',
+      teller: '0x685aDb4797fb38D4Fc4a69750aa048B398160429',
+      accountant: '0x411c78BC8c36c3c66784514f28c56209e1DF2755',
+      boringVault: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
     },
     receiveOn: ChainKey.ETHEREUM,
-    points: [],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.SWELL,
+        name: 'Swell',
+        pointsMultiplier: 3,
+      },
+    ],
     apys: {},
   },
   [TokenKey.TETH]: {

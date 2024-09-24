@@ -17,7 +17,7 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const selectableChains = selectSourceChains(state)
   const selectedChainName = chainsConfig[selectedChainKey].name
-  const chainKeyOfNetworkAsset = networkAssetConfig?.chain
+  const chainKeyOfNetworkAsset = networkAssetConfig?.deployedOn
   const chainNameOfNetworkAsset = chainKeyOfNetworkAsset ? chainsConfig[chainKeyOfNetworkAsset].name : ''
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'

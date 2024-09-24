@@ -110,6 +110,15 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
     },
   },
+  [TokenKey.EARNETH]: {
+    key: TokenKey.EARNETH,
+    name: 'earnETH',
+    fullName: 'Earn ETH',
+    symbol: 'EARNETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
+    },
+  },
   [TokenKey.SSETH]: {
     key: TokenKey.SSETH,
     name: 'ssETH',
