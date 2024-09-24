@@ -76,6 +76,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     token: tokensConfig[TokenKey.EARNETH],
     description:
       'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
+    comingSoon: true,
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: [ChainKey.ETHEREUM],
