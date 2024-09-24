@@ -141,7 +141,7 @@ export const selectActiveChainTvl = (state: RootState) => {
 export const selectFormattedNetworkAssetTvlByKey = (state: RootState, tokenKey: TokenKey) => {
   const tvl = selectNetworkAssetTvlByKey(state, tokenKey)
   const price = selectUsdPerEthRate(state)
-  if (!tvl) return '-'
+  if (tvl === null) return '-'
   const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
   const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
   return abbreviateNumber(tvlInUsdAsNumber)
@@ -151,7 +151,7 @@ export const selectFormattedNetworkAssetTvlByKey = (state: RootState, tokenKey: 
 export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
   const tvl = selectActiveChainTvl(state)
   const price = selectUsdPerEthRate(state)
-  if (!tvl) return '-'
+  if (tvl === null) return '-'
   const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
   const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
   return abbreviateNumber(tvlInUsdAsNumber)
@@ -423,17 +423,21 @@ export const selectFormattedPreviewFee = (state: RootState): string => {
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
   const inputAmount = selectDepositAmount(state)
   const error = selectInputError(state)
   const layerZeroChainSelector = selectLayerZeroChainSelector(state)
   const sourceChainKey = selectSourceChainKey(state)
   const address = selectAddress(state)
+
   const isConnected = !!address
-  const willUseBridge = sourceChainKey === ChainKey.ETHEREUM
+  // Will use the bridge if the source is Ethereum and the network is not deployed on Ethereum
+  const willUseBridge = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
   const hasLayerZeroChainSelector = layerZeroChainSelector !== null
   const isNotEmpty = inputAmount.trim().length > 0
   const isGreaterThanZero = parseFloat(inputAmount) > 0
   const hasNoError = !error
+
   return isConnected && willUseBridge && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
 }
 
@@ -453,12 +457,14 @@ export const selectDepositDisabled = (state: RootState): boolean => {
   const error = selectInputError(state)
   const pending = selectDepositPending(state)
   const previewFee = selectPreviewFee(state)
+
   const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
   const isEmpty = from.trim().length === 0
   const isLessThanOrEqualToZero = parseFloat(from) <= 0
   const isError = !!error
   const isPending = !!pending
   const isPreviewFeeApplicableButNotReady = shouldTriggerPreviewFee && previewFee === null
+
   return isEmpty || isLessThanOrEqualToZero || isError || isPending || isPreviewFeeApplicableButNotReady
 }
 
@@ -486,8 +492,8 @@ export const selectShouldUseFunCheckout = (state: RootState) => {
   const walletHasEnoughBalance = selectWalletHasEnoughBalance(state)
   const sourceChainKey = selectSourceChainKey(state)
   const isFunkitEnabled = USE_FUNKIT
-  const isSourceChainEthereum = sourceChainKey === ChainKey.ETHEREUM
-  return isFunkitEnabled && !walletHasEnoughBalance && isSourceChainEthereum
+  const networkShouldUseFun = sourceChainKey === ChainKey.ETHEREUM
+  return isFunkitEnabled && !walletHasEnoughBalance && networkShouldUseFun
 }
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.

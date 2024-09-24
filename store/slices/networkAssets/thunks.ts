@@ -196,19 +196,20 @@ export const performDeposit = createAsyncThunk<
     const chainId = selectNetworkId(state)
     const chainKeyFromRoute = selectNetworkAssetFromRoute(state)
     const chainKeyFromSelector = selectSourceChainKey(state)
-    const chainConfig = selectNetworkAssetConfig(state)
+    const networkAssetConfig = selectNetworkAssetConfig(state)
     const sourceChainId = selectSourceChainId(state)
     const tellerAddress = selectContractAddressByName(state, 'teller')
 
-    const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
-    const tellerContractAddress = chainConfig?.contracts.teller
-    const boringVaultAddress = chainConfig?.contracts.boringVault
-    const accountantAddress = chainConfig?.contracts.accountant
+    const layerZeroChainSelector = networkAssetConfig?.layerZeroChainSelector
+    const tellerContractAddress = networkAssetConfig?.contracts.teller
+    const boringVaultAddress = networkAssetConfig?.contracts.boringVault
+    const accountantAddress = networkAssetConfig?.contracts.accountant
     const depositAssetTokenKey = selectSourceTokenKey(state)
     const depositAsset =
       depositAssetTokenKey && chainKeyFromSelector
         ? tokensConfig[depositAssetTokenKey]?.addresses[chainKeyFromSelector as ChainKey]
         : null
+    const deployedOn = networkAssetConfig?.deployedOn
 
     if (
       !accountantAddress ||
@@ -219,7 +220,8 @@ export const performDeposit = createAsyncThunk<
       !sourceChainId ||
       !tellerContractAddress ||
       !tellerAddress ||
-      !userAddress
+      !userAddress ||
+      !deployedOn
     ) {
       dispatch(setErrorTitle('Missing required values'))
       dispatch(setErrorMessage('Missing required values'))
@@ -233,14 +235,19 @@ export const performDeposit = createAsyncThunk<
 
     let txHash: `0x${string}` | null = null
 
-    if (chainKeyFromSelector !== ChainKey.ETHEREUM) {
+    const depositingToSameChain = chainKeyFromSelector === deployedOn
+    if (depositingToSameChain) {
       ///////////////////////////////////////////////////////////////
-      // Source chain is not Ethereum
+      // Depositing on same chain without bridging
       // Deposit only
       ///////////////////////////////////////////////////////////////
 
       // For example, both are Sei,
       // Deposit without bridging.
+      const deployedOnChainId = chainsConfig[deployedOn].id
+      if (!deployedOnChainId) {
+        throw new Error(`Chain ${deployedOn} does not exist in the chain config`)
+      }
       txHash = await deposit(
         { depositAsset, depositAmount },
         {
@@ -248,7 +255,7 @@ export const performDeposit = createAsyncThunk<
           tellerContractAddress,
           boringVaultAddress,
           accountantAddress,
-          chainId: sourceChainId,
+          chainId: deployedOnChainId,
         }
       )
 

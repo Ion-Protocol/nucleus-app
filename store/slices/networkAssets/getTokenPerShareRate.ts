@@ -14,7 +14,7 @@ class RateForSseth implements RateFetchingStrategy {
   }
 }
 
-class RateForSwell implements RateFetchingStrategy {
+class RateForEarnETH implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     const wbtcPerShareExchangeRate = await getRate(accountantAddress) // 1e9
     const { answer: btcPerWbtcExchangeRate } = await latestRoundData(contractAddresses.chainlinkBtcPerWbtc) // 1e9
@@ -43,6 +43,7 @@ class NotImplementedStrategy implements RateFetchingStrategy {
 export async function getTokenPerShareRate(networkAssetKey: TokenKey, accountantAddress: Address): Promise<bigint> {
   const rateStrategies: Partial<Record<TokenKey, RateFetchingStrategy>> = {
     [TokenKey.SSETH]: new RateForSseth(),
+    [TokenKey.EARNETH]: new RateForEarnETH(),
   }
 
   const rateStrategy = rateStrategies[networkAssetKey] || new NotImplementedStrategy()

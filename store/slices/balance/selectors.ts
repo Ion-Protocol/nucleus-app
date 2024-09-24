@@ -14,8 +14,8 @@ export const selectBalancesError = (state: RootState): string | null => state.ba
 export const selectTokenBalance = (state: RootState, chainKey: ChainKey | null, tokenKey: TokenKey | null) => {
   const balances = selectBalances(state)
   if (!chainKey || !tokenKey) return null
-  const tokenBalance = balances[tokenKey]?.[chainKey] || null
-  return tokenBalance
+  const tokenBalance = balances[tokenKey]?.[chainKey]
+  return tokenBalance || null
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.

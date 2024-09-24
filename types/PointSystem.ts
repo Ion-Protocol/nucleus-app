@@ -1,6 +1,7 @@
 export enum PointSystemKey {
   ION = 'ion',
   NUCLEUS = 'nucleus',
+  SWELL = 'swell',
 }
 
 export interface PointSystem {
