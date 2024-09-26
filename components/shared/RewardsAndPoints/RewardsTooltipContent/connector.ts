@@ -1,27 +1,41 @@
 import { etherscanBaseUrl, hardcodedApy } from '@/config/constants'
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import {
   selectFormattedNetApy,
   selectNetApy,
-  selectNetworkConfig,
-  selectPointsSystemsForBridge,
+  selectNetworkAssetApy,
+  selectNetworkAssetConfigByKey,
+  selectPointsSystemForNetworkAsset,
   selectShouldShowMessageForLargeNetApy,
-  selectTokenApy,
-  selectYieldAssetByChainKey,
-  selectYieldAssetNameByChainKey,
-} from '@/store/slices/bridges'
+} from '@/store/slices/networkAssets'
 import { ChainKey } from '@/types/ChainKey'
+import { PointSystem } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
-const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => {
-  const { chainKey } = ownProps
-  const networkConfig = selectNetworkConfig(state)
-  const chainConfig = chainKey ? networkConfig?.chains[chainKey] : null
-  if (!chainKey || !chainConfig) {
+interface MapStateToPropsType {
+  defaultYieldAssetKey: TokenKey | null
+  defaultYieldAssetName: string
+  defaultYieldAssetPercent: string
+  tokenIncentives: {
+    tokenKey: TokenKey
+    name: string
+    formattedApy: string | null
+    etherscanUrl: string | null
+  }[]
+  rewards: PointSystem[]
+  netApy: string
+  fullFormattedNetApy: string
+  shouldShowMessageForLargeNetApy: boolean
+}
+
+const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): MapStateToPropsType => {
+  const { tokenKey: networkAssetKey } = ownProps
+  const networkAssetConfig = networkAssetKey ? selectNetworkAssetConfigByKey(state, networkAssetKey) : null
+  if (!networkAssetKey || !networkAssetConfig) {
     return {
       defaultYieldAssetKey: null,
       defaultYieldAssetName: '',
@@ -33,8 +47,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
       shouldShowMessageForLargeNetApy: false,
     }
   }
-  const defaultYieldAssetKey = selectYieldAssetByChainKey(chainKey)(state)
-  const defaultYieldAssetName = selectYieldAssetNameByChainKey(chainKey)(state)
+  const defaultYieldAssetName = tokensConfig[networkAssetKey as TokenKey].name
   const defaultYieldAssetPercent = `${hardcodedApy.toFixed(1)}%`
 
   const tokenIncentives: {
@@ -42,26 +55,26 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps) => 
     name: string
     formattedApy: string | null
     etherscanUrl: string | null
-  }[] = Object.keys(chainConfig?.tokenApyData).map((tokenKey) => {
-    const apy = selectTokenApy(tokenKey as TokenKey, chainKey)(state) || 0
-    const tokenAddress = tokensConfig[tokenKey as TokenKey].chains[ChainKey.ETHEREUM]?.address
+  }[] = Object.keys(networkAssetConfig.apys).map((apyTokenKey) => {
+    const apy = selectNetworkAssetApy(state, networkAssetKey, apyTokenKey as TokenKey) || 0
+    const tokenAddress = tokensConfig[apyTokenKey as TokenKey].addresses[ChainKey.ETHEREUM]
     return {
-      tokenKey: tokenKey as TokenKey,
-      name: tokensConfig[tokenKey as TokenKey].symbol,
+      tokenKey: apyTokenKey as TokenKey,
+      name: tokensConfig[apyTokenKey as TokenKey].symbol,
       etherscanUrl: tokenAddress !== '0x' ? `${etherscanBaseUrl}${tokenAddress}` : null,
       formattedApy: `${apy?.toFixed(1)}%`,
     }
   })
 
-  const rewards = selectPointsSystemsForBridge(chainKey)(state)
+  const rewards = selectPointsSystemForNetworkAsset(state, networkAssetKey)
 
-  const rawNetApy = selectNetApy(chainKey)(state)
+  const rawNetApy = selectNetApy(state, networkAssetKey)
   const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}`
-  const netApy = selectFormattedNetApy(chainKey)(state)
-  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(chainKey)(state)
+  const netApy = selectFormattedNetApy(state, networkAssetKey)
+  const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(state, networkAssetKey)
 
   return {
-    defaultYieldAssetKey,
+    defaultYieldAssetKey: networkAssetKey,
     defaultYieldAssetName,
     defaultYieldAssetPercent,
     tokenIncentives,
@@ -79,7 +92,7 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 interface RewardsTooltipContentOwnProps {
-  chainKey: ChainKey | null
+  tokenKey: TokenKey | null
 }
 
 interface RewardsTooltipContentProps extends RewardsTooltipContentOwnProps, PropsFromRedux, ChakraProps {}

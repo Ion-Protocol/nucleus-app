@@ -1,14 +1,14 @@
 import { balanceOf } from '@/api/contracts/erc20/balanceOf'
-import { ChainKey } from '@/types/ChainKey'
-import { tokensConfig } from '@/config/token'
-import { TokenKey } from '@/types/TokenKey'
+import { tokensConfig } from '@/config/tokens'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
 import { setErrorMessage } from '../status'
-import { sei } from 'viem/chains'
+import { chainsConfig } from '@/config/chains'
 
 type Balances = Record<TokenKey, Record<ChainKey, string | null>>
 export interface fetchAllTokenBalancesResult {
@@ -56,18 +56,18 @@ export const fetchAllTokenBalances = createAsyncThunk<
 
     // Iterate over each token in the tokensConfig and create token balance param items
     for (const tokenKey in tokensConfig) {
-      const tokenConfig = tokensConfig[tokenKey as TokenKey]
-      const chainKeys = Object.keys(tokenConfig.chains)
+      const token = tokensConfig[tokenKey as TokenKey]
+      const chainKeys = Object.keys(token.addresses)
       for (const chainKey of chainKeys) {
-        const chainConfig = tokenConfig.chains[chainKey as keyof typeof tokenConfig.chains]
-        if (chainConfig?.chainId && chainConfig?.address && chainConfig?.address !== '0x') {
-          tokenBalanceParamItems.push({
-            chainKey: chainKey as ChainKey,
-            chainId: chainConfig?.chainId,
-            tokenKey: tokenKey as TokenKey,
-            tokenAddress: chainConfig?.address,
-          })
-        }
+        const chain = chainsConfig[chainKey as ChainKey]
+        const tokenAddress = token.addresses[chainKey as ChainKey]
+        if (!chain.id || !tokenAddress || tokenAddress === '0x') continue
+        tokenBalanceParamItems.push({
+          chainKey: chainKey as ChainKey,
+          chainId: chain.id,
+          tokenKey: tokenKey as TokenKey,
+          tokenAddress,
+        })
       }
     }
 

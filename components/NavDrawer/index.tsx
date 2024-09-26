@@ -1,10 +1,10 @@
 import { discordUrl, docsUrl } from '@/config/constants'
 import { Divider, Flex } from '@chakra-ui/react'
 import { TokenIcon } from '../config/tokenIcons'
-import { BridgeNavIcon } from '../shared/icons/Bridge'
 import { DashboardIcon } from '../shared/icons/Dashboard'
 import { DiscordIcon } from '../shared/icons/Discord'
 import { DocsIcon } from '../shared/icons/Docs'
+import { NetworkAssetNavIcon } from '../shared/icons/NetworkAsset'
 import { PortfolioIcon } from '../shared/icons/Portfolio'
 import { TermsIcon } from '../shared/icons/Terms'
 import { FooterLink } from './FooterLink'
@@ -12,9 +12,8 @@ import { Logo } from './Logo'
 import NavCollapse from './NavCollapse'
 import { NavItem } from './NavItem'
 import { NavDrawerConnector } from './connector'
-import { tokensConfig } from '@/config/token'
 
-function NavDrawer({ chains, openTermsModal }: NavDrawerConnector.Props) {
+function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) {
   return (
     <Flex
       direction="column"
@@ -30,15 +29,15 @@ function NavDrawer({ chains, openTermsModal }: NavDrawerConnector.Props) {
         <Logo />
         <Flex direction="column" mt={6} gap={1}>
           <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
-          <NavCollapse title="Mint" leftIcon={<BridgeNavIcon />}>
-            {chains.map((chain) => (
+          <NavCollapse title="Mint" leftIcon={<NetworkAssetNavIcon />}>
+            {networkAssets.map((networkAsset) => (
               <NavItem
-                key={chain.key}
-                title={tokensConfig[chain.yieldAsset].name}
-                href={`/tokens/${chain.yieldAsset}`}
-                disabled={chain.comingSoon}
-                comingSoon={chain.comingSoon}
-                leftIcon={<TokenIcon tokenKey={chain.yieldAsset} />}
+                key={networkAsset.key}
+                title={networkAsset.token.name}
+                href={`/tokens/${networkAsset.token.name.toLowerCase()}`}
+                disabled={networkAsset.comingSoon}
+                comingSoon={networkAsset.comingSoon}
+                leftIcon={<TokenIcon tokenKey={networkAsset.token.key} />}
               />
             ))}
           </NavCollapse>

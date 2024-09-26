@@ -1,24 +1,24 @@
 import { RootState } from '@/store'
-import { selectIncentiveChainKeysForBridge, selectPointSystemKeysForBridge } from '@/store/slices/bridges'
-import { ChainKey } from '@/types/ChainKey'
+import { selectApyTokenKeys, selectPointSystemKeysForNetworkAsset } from '@/store/slices/networkAssets'
+import { TokenKey } from '@/types/TokenKey'
 import { ChakraProps } from '@chakra-ui/react'
-import { ConnectedProps, connect } from 'react-redux'
+import { connect, ConnectedProps } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: RewardsIconRowOwnProps) => {
-  const { chainKey } = ownProps
+  const { tokenKey: networkAssetKey } = ownProps
 
-  if (chainKey === null) {
+  if (networkAssetKey === null) {
     return {
-      incentiveChainKeys: [],
+      apyTokenKeys: [],
       pointSystemKeys: [],
     }
   }
 
-  const incentiveChainKeys = selectIncentiveChainKeysForBridge(chainKey)(state)
-  const pointSystemKeys = selectPointSystemKeysForBridge(chainKey)(state)
+  const apyTokenKeys = selectApyTokenKeys(state, networkAssetKey)
+  const pointSystemKeys = selectPointSystemKeysForNetworkAsset(state, networkAssetKey)
 
   return {
-    incentiveChainKeys,
+    apyTokenKeys,
     pointSystemKeys,
   }
 }
@@ -30,7 +30,7 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 interface RewardsIconRowOwnProps {
-  chainKey: ChainKey | null
+  tokenKey: TokenKey | null
 }
 
 interface RewardsIconRowProps extends RewardsIconRowOwnProps, PropsFromRedux, ChakraProps {}

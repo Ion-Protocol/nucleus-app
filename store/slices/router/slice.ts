@@ -5,19 +5,19 @@ import { TokenKey } from '@/types/TokenKey'
 
 // Add fields to RouterQuery as needed
 export interface RouterQuery {
-  chain?: ChainKey | null
+  token?: TokenKey | null
 }
 
 interface RouterState {
   path: string | null
   query: RouterQuery | null
-  loading: boolean
+  ready: boolean
 }
 
 const initialState: RouterState = {
   path: null,
   query: null,
-  loading: false,
+  ready: false,
 }
 
 const routerSlice = createSlice({
@@ -33,20 +33,25 @@ const routerSlice = createSlice({
     setQuery(state, action: PayloadAction<RouterQuery>) {
       state.query = action.payload
     },
+    setRouterReady(state, action: PayloadAction<boolean>) {
+      state.ready = action.payload
+    },
   },
 })
 
-export const { setPath, clearPath, setQuery } = routerSlice.actions
+export const { setPath, clearPath, setQuery, setRouterReady } = routerSlice.actions
 export const selectRouterPath = (state: RootState) => state.router.path
+export const selectRouterReady = (state: RootState) => state.router.ready
 
 export const selectRouterQuery = (state: RootState) => {
   return state.router.query
 }
 
-export const selectChainKeyFromRoute = createSelector([selectRouterQuery], (routerQuery): ChainKey | null => {
-  const chainKey = routerQuery?.chain
-  if (!chainKey) return null
-  return chainKey
-})
+export const selectNetworkAssetFromRoute = (state: RootState): TokenKey | null => {
+  const routerQuery = selectRouterQuery(state)
+  const tokenKey = routerQuery?.token || localStorage.getItem('networkAsset')
+  if (!tokenKey) return null
+  return tokenKey as TokenKey
+}
 
 export const routerReducer = routerSlice.reducer

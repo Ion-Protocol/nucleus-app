@@ -1,13 +1,13 @@
-import { tokensConfig } from '@/config/token'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
-import { selectChainsAsArray } from '@/store/slices/bridges'
+import { selectNetworkAssetsAsArray } from '@/store/slices/networkAssets'
 import { openTermsModal } from '@/store/slices/ui'
 import { ChakraProps } from '@chakra-ui/react'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: NavDrawerOwnProps) => {
-  const chains = selectChainsAsArray(state)
-  return { chains }
+  const networkAssets = selectNetworkAssetsAsArray(state)
+  return { networkAssets }
 }
 
 const mapDispatch = { openTermsModal }

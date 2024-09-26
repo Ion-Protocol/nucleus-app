@@ -26,7 +26,7 @@ export function RewardsTooltipContent({
 
       {/* Default Yield */}
       <Flex direction="column">
-        <Text variant="smallParagraph" color="tooltipLabel">
+        <Text variant="smallParagraph" color="textSecondary">
           Default Yield
         </Text>
         <Flex align="center" justify="space-between" mt={1}>
@@ -42,68 +42,72 @@ export function RewardsTooltipContent({
         </Flex>
       </Flex>
 
-      <Divider />
-
       {/* Token Incentives */}
-      <Flex direction="column">
-        <Flex align="center" gap={2}>
-          <Text variant="smallParagraph" color="tooltipLabel">
-            Token Incentives
-          </Text>
-          <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
-            <InfoOutlineIcon fontSize="12px" color="infoIcon" />
-          </IonTooltip>
-        </Flex>
-        {tokenIncentives.map((tokenIncentive) => (
-          <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
-            <Flex gap={2}>
-              <TokenIcon tokenKey={tokenIncentive.tokenKey} fontSize="20px" />
-              {tokenIncentive.etherscanUrl ? (
-                <Link
-                  href={tokenIncentive.etherscanUrl}
-                  isExternal
-                  style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
-                >
-                  <Text variant="smallParagraph" color="text">
-                    {tokenIncentive.name}
-                  </Text>
-                </Link>
-              ) : (
-                <Text variant="smallParagraph" color="text">
-                  {tokenIncentive.name}
-                </Text>
-              )}
-            </Flex>
-            <Text variant="smallParagraph" color="text">
-              {tokenIncentive.formattedApy}
-            </Text>
-          </Flex>
-        ))}
-      </Flex>
+      {tokenIncentives.length > 0 && (
+        <>
+          <Divider borderColor="borderLight" />
 
-      <Divider />
+          <Flex direction="column">
+            <Flex align="center" gap={2}>
+              <Text variant="smallParagraph" color="textSecondary">
+                Token Incentives
+              </Text>
+              <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
+                <InfoOutlineIcon fontSize="12px" color="infoIcon" />
+              </IonTooltip>
+            </Flex>
+            {tokenIncentives.map((tokenIncentive) => (
+              <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
+                <Flex gap={2}>
+                  <TokenIcon tokenKey={tokenIncentive.tokenKey} fontSize="20px" />
+                  {tokenIncentive.etherscanUrl ? (
+                    <Link
+                      href={tokenIncentive.etherscanUrl}
+                      isExternal
+                      style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
+                    >
+                      <Text variant="smallParagraph" color="text">
+                        {tokenIncentive.name}
+                      </Text>
+                    </Link>
+                  ) : (
+                    <Text variant="smallParagraph" color="text">
+                      {tokenIncentive.name}
+                    </Text>
+                  )}
+                </Flex>
+                <Text variant="smallParagraph" color="text">
+                  {tokenIncentive.formattedApy}
+                </Text>
+              </Flex>
+            ))}
+          </Flex>
+        </>
+      )}
+
+      <Divider borderColor="borderLight" />
 
       {/* Rewards */}
       <Flex direction="column">
-        <Text variant="smallParagraph" color="tooltipLabel">
+        <Text variant="smallParagraph" color="textSecondary">
           Rewards
         </Text>
         {rewards.map((reward) => (
-          <Flex key={reward.pointSystemKey} align="center" justify="space-between" mt={1}>
+          <Flex key={reward.key} align="center" justify="space-between" mt={1}>
             <Flex gap={2}>
-              <PointSystemIcon pointSystemKey={reward.pointSystemKey} fontSize="20px" />
+              <PointSystemIcon pointSystemKey={reward.key} fontSize="20px" />
               <Text variant="smallParagraph" color="text">
                 {reward.name}
               </Text>
             </Flex>
             <Text variant="smallParagraph" color="text">
-              {reward.multiplier}X
+              {reward.pointsMultiplier}X
             </Text>
           </Flex>
         ))}
       </Flex>
 
-      <Divider />
+      <Divider borderColor="borderLight" />
 
       {/* Net Apy */}
       <IonTooltip

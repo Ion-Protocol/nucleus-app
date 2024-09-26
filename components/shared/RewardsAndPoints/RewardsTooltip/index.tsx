@@ -2,12 +2,13 @@ import { ChainKey } from '@/types/ChainKey'
 import { ChakraProps, Popover, PopoverContent, PopoverTrigger, Portal } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
 import RewardsTooltipContent from '../RewardsTooltipContent'
+import { TokenKey } from '@/types/TokenKey'
 
 interface RewardsTooltipProps extends PropsWithChildren, ChakraProps {
-  chainKey: ChainKey | null
+  tokenKey: TokenKey | null
 }
 
-function RewardsTooltip({ chainKey, children, ...chakraProps }: RewardsTooltipProps) {
+function RewardsTooltip({ tokenKey, children, ...chakraProps }: RewardsTooltipProps) {
   return (
     <Popover trigger="hover" placement="bottom" offset={[0, -12]} {...chakraProps}>
       <PopoverTrigger>
@@ -18,14 +19,14 @@ function RewardsTooltip({ chainKey, children, ...chakraProps }: RewardsTooltipPr
           onClick={(e) => e.stopPropagation()} // Prevent event bubbling
           w="260px"
           p={0}
-          bg="backgroundAlternate"
+          bg="iconBackground"
           borderRadius="10px"
           boxShadow="none"
           border="1px solid"
           borderColor="border"
           pointerEvents="auto"
         >
-          <RewardsTooltipContent chainKey={chainKey} />
+          <RewardsTooltipContent tokenKey={tokenKey} />
         </PopoverContent>
       </Portal>
     </Popover>

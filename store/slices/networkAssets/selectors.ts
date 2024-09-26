@@ -1,0 +1,530 @@
+import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
+import { Chain, chainsConfig } from '@/config/chains'
+import { hardcodedApy } from '@/config/constants'
+import { networksConfig } from '@/config/networks'
+import { tokensConfig } from '@/config/tokens'
+import { RootState } from '@/store'
+import { NetworkAsset } from '@/types/Chain'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
+import { currencySwitch } from '@/utils/currency'
+import { abbreviateNumber, convertToDecimals, numberToPercent } from '@/utils/number'
+import { createSelector } from 'reselect'
+import { Address } from 'viem'
+import { selectAddress } from '../account'
+import { selectBalances } from '../balance'
+import { selectNetworkKey } from '../chain'
+import { selectPriceLoading, selectUsdPerEthRate } from '../price'
+import { selectNetworkAssetFromRoute } from '../router'
+import { calculateApy } from './calculateApy'
+
+const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
+
+// Following Redux standards for memoization ensures efficient state management
+// by avoiding unnecessary recalculations.
+// https://redux.js.org/usage/deriving-data-selectors#balance-selector-usage
+
+/////////////////////////////////////////////////////////////////////
+// Principal Selectors: Influences the result of many other selectors
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Simple state access; should be a plain function.
+export const selectBridgesState = (state: RootState) => state.networkAssets
+
+// DO NOT memoize: Direct lookup; returns a value from state.
+export const selectSourceChainKey = (state: RootState) => selectBridgesState(state).sourceChain
+
+/////////////////////////////////////////////////////////////////////
+// Config Selectors
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectNetworkConfig = (state: RootState) => {
+  const networkKey = selectNetworkKey(state)
+  if (!networkKey) return null
+  return networksConfig[networkKey]
+}
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectNetworkAssetConfig = (state: RootState): NetworkAsset | null => {
+  const networkConfig = selectNetworkConfig(state)
+  const networkAsset = selectNetworkAssetFromRoute(state)
+  if (!networkAsset || !networkConfig) return null
+  return networkConfig.assets[networkAsset] as NetworkAsset
+}
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectNetworkAssetConfigByKey = (state: RootState, networkAssetKey: TokenKey): NetworkAsset | null => {
+  const networkConfig = selectNetworkConfig(state)
+  if (!networkConfig) return null
+  const networkAsset = networkConfig.assets[networkAssetKey as TokenKey] as NetworkAsset
+  return networkAsset
+}
+
+// SHOULD memoize: Returns a new array; memoization avoids unnecessary recalculations.
+export const selectAllNetworkAssetKeys = createSelector([selectNetworkConfig], (networkConfig): TokenKey[] => {
+  if (!networkConfig) return []
+  return Object.keys(networkConfig.assets) as TokenKey[]
+})
+
+// SHOULD memoize: Returns a new array after filtering; memoization avoids unnecessary recalculations.
+export const selectAvailableNetworkAssetKeys = createSelector(
+  [selectAllNetworkAssetKeys, selectNetworkConfig],
+  (networkAssetKeys, networkConfig): TokenKey[] => {
+    if (!networkConfig) return []
+    return networkAssetKeys.filter((key) => networkConfig.assets[key]?.comingSoon !== true)
+  }
+)
+
+// DO NOT memoize: Direct lookup; should be a plain function.
+export const selectContractAddressByName = (state: RootState, name: string) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.contracts[name as keyof typeof networkAssetConfig.contracts]
+}
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectLayerZeroChainSelector = (state: RootState): number => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.layerZeroChainSelector || 0
+}
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectReceiveOnChain = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) return null
+  return networkAssetConfig.receiveOn
+}
+
+/////////////////////////////////////////////////////////////////////
+// Nav Drawer
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a new array of objects; memoization avoids unnecessary recalculations.
+export const selectNetworkAssetsAsArray = createSelector(
+  [selectNetworkConfig],
+  (networkConfig): (NetworkAsset & { key: TokenKey })[] => {
+    if (!networkConfig) return []
+    return Object.keys(networkConfig.assets).map((key) => ({
+      key: key as TokenKey,
+      ...(networkConfig.assets[key as TokenKey] as NetworkAsset),
+    }))
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
+// TVL
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Simple state access; should be a plain function.
+export const selectTvlLoading = (state: RootState) => state.networkAssets.tvl.loading
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectNetworkAssetTvlByKey = (state: RootState, networkAssetKey: TokenKey) => {
+  const bridgesState = selectBridgesState(state)
+  const tvl = bridgesState.tvl.data[networkAssetKey]
+  if (!tvl) return BigInt(0)
+  return BigInt(tvl.toString())
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectActiveChainTvl = (state: RootState) => {
+  const bridgesState = selectBridgesState(state)
+  const tokenKey = selectNetworkAssetFromRoute(state)
+  if (tokenKey === null) return null
+  const tvl = bridgesState.tvl.data[tokenKey] || null
+  if (tvl === null) return null
+  return BigInt(tvl.toString())
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectFormattedNetworkAssetTvlByKey = (state: RootState, tokenKey: TokenKey) => {
+  const tvl = selectNetworkAssetTvlByKey(state, tokenKey)
+  const price = selectUsdPerEthRate(state)
+  if (tvl === null) return '-'
+  const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+  const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+  return abbreviateNumber(tvlInUsdAsNumber)
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
+  const tvl = selectActiveChainTvl(state)
+  const price = selectUsdPerEthRate(state)
+  if (tvl === null) return '-'
+  const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+  const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+  return abbreviateNumber(tvlInUsdAsNumber)
+}
+
+/////////////////////////////////////////////////////////////////////
+// APY
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a new array; memoization avoids unnecessary recalculations.
+export const selectApyTokenKeys = createSelector([selectNetworkAssetConfigByKey], (networkAssetConfig) => {
+  if (!networkAssetConfig) return []
+  return Object.keys(networkAssetConfig.apys) as TokenKey[]
+})
+
+// SHOULD memoize: Performs calculations; memoization avoids unnecessary recalculations.
+export const selectNetworkAssetApy = createSelector(
+  [
+    (_state, _networkAssetKey: TokenKey, apyTokenKey: TokenKey) => apyTokenKey,
+    selectNetworkAssetConfigByKey,
+    selectNetworkAssetTvlByKey,
+    selectUsdPerEthRate,
+  ],
+  (apyTokenKey, networkAssetConfig, tvlInEth, usdPerEthRate) => {
+    const networkAssetApyData = networkAssetConfig?.apys[apyTokenKey]
+    if (!networkAssetApyData) return null
+    const apy = calculateApy(networkAssetApyData, tvlInEth, usdPerEthRate)
+    return apy
+  }
+)
+
+// SHOULD memoize: Performs calculations; memoization avoids unnecessary recalculations.
+export const selectNetApy = createSelector(
+  [
+    (_state, networkAssetKey: TokenKey) => networkAssetKey,
+    selectNetworkConfig,
+    selectNetworkAssetTvlByKey,
+    selectUsdPerEthRate,
+  ],
+  (networkAssetKey, networkConfig, tvlInEth, usdPerEthRate) => {
+    const networkAssetConfig = networkConfig?.assets[networkAssetKey]
+    if (!networkAssetConfig) return null
+    const networkApy = networkAssetConfig.apys
+
+    const tokenIncentiveSum = Object.keys(networkApy).reduce((sum, tokenKey) => {
+      const apyData = networkApy[tokenKey as TokenKey] || []
+      const apy = calculateApy(apyData, tvlInEth, usdPerEthRate)
+      return sum + apy
+    }, 0)
+
+    return tokenIncentiveSum + hardcodedApy
+  }
+)
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectFormattedNetApy = (state: RootState, networkAssetKey: TokenKey) => {
+  const netApy = selectNetApy(state, networkAssetKey)
+  if (!netApy) return '0.0%'
+  if (netApy >= 250) {
+    return '>250%'
+  }
+  return numberToPercent(netApy)
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectShouldShowMessageForLargeNetApy = (state: RootState, networkAssetKey: TokenKey) => {
+  const netApy = selectNetApy(state, networkAssetKey)
+  if (!netApy) return false
+  if (netApy >= 250) {
+    return true
+  }
+  return false
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectNetApyLoading = (state: RootState) => {
+  const tvlLoading = selectTvlLoading(state)
+  const priceLoading = selectPriceLoading(state)
+  return tvlLoading || priceLoading
+}
+
+/////////////////////////////////////////////////////////////////////
+// Rewards & Points
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a new array if undefined; memoization avoids returning new references.
+export const selectPointsSystemForNetworkAsset = createSelector(
+  [(_state, networkAssetKey: TokenKey) => networkAssetKey, selectNetworkConfig],
+  (networkAssetKey, networkConfig) => {
+    const networkAssetConfig = networkConfig?.assets[networkAssetKey]
+    return networkAssetConfig?.points || []
+  }
+)
+
+// SHOULD memoize: Returns a new array; memoization avoids unnecessary recalculations.
+export const selectPointSystemKeysForNetworkAsset = createSelector(
+  [(_state, networkAssetKey: TokenKey) => networkAssetKey, selectPointsSystemForNetworkAsset],
+  (_networkAssetKey, pointSystems) => {
+    return pointSystems.map((pointSystem) => pointSystem.key)
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
+// Chain dropdown menu
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a new array of objects; memoization avoids unnecessary recalculations.
+export const selectSourceChains = createSelector(
+  [selectNetworkAssetConfig],
+  (networkAssetConfig): (Chain & { key: ChainKey })[] => {
+    if (!networkAssetConfig) return []
+    return networkAssetConfig.sourceChains.map((chainKey) => {
+      const chain = chainsConfig[chainKey as ChainKey]
+      return { key: chainKey as ChainKey, ...chain }
+    })
+  }
+)
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectSourceChainId = (state: RootState): number | null => {
+  const sourceChainKey = selectSourceChainKey(state)
+  const chain = chainsConfig[sourceChainKey as ChainKey]
+  return chain.id || null
+}
+
+// SHOULD memoize: Returns a new array; memoization avoids returning new references.
+export const selectSourceTokens = createSelector(
+  [selectNetworkAssetConfig, selectSourceChainKey],
+  (chainConfig, sourceChain): TokenKey[] => {
+    return chainConfig?.sourceTokens[sourceChain as ChainKey] || []
+  }
+)
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectSourceTokenKey = (state: RootState): TokenKey | null => {
+  const bridgesState = selectBridgesState(state)
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  if (!networkAssetConfig) return null
+  return bridgesState.selectedSourceToken || networkAssetConfig?.sourceTokens[sourceChainKey as ChainKey]?.[0] || null
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectDepositAssetAddress = (state: RootState) => {
+  const depositAssetTokenKey = selectSourceTokenKey(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  if (!depositAssetTokenKey || !sourceChainKey) return null
+  return tokensConfig[depositAssetTokenKey]?.addresses[sourceChainKey as ChainKey]
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKey) => {
+  const sourceChainKey = selectSourceChainKey(state)
+  return tokensConfig[tokenKey]?.addresses[sourceChainKey as ChainKey]
+}
+
+/////////////////////////////////////////////////////////////////////
+// Deposit amount input
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectDepositAmount = (state: RootState): string => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.depositAmount
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectDepositAmountAsBigInt = (state: RootState): bigint => {
+  const depositAmountAsString = selectDepositAmount(state)
+  if (!depositAmountAsString || depositAmountAsString.trim() === '') return BigInt(0)
+  return BigInt(convertToDecimals(depositAmountAsString, 18))
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectShouldIgnoreBalance = (state: RootState) => {
+  const sourceChainKey = selectSourceChainKey(state)
+  return sourceChainKey === ChainKey.ETHEREUM
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectInputError = (state: RootState) => {
+  const inputValue = selectDepositAmount(state)
+  const chainKeyFromChainSelector = selectSourceChainKey(state)
+  const selectedTokenKey = selectSourceTokenKey(state)
+  const balances = selectBalances(state)
+  const shouldIgnoreBalance = selectShouldIgnoreBalance(state)
+
+  if (shouldIgnoreBalance) return null
+  if (!selectedTokenKey) return null
+  const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
+  if (!tokenBalance) return null
+  const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
+  if (tokenBalanceAsNumber === null) return null
+
+  if (parseFloat(inputValue) > tokenBalanceAsNumber) {
+    return 'Insufficient balance'
+  } else {
+    return null
+  }
+}
+
+/////////////////////////////////////////////////////////////////////
+// Bridge Rate
+// Used to calculate the destination amount based on the deposit amount
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Returns a value directly from state.
+export const selectTokenRateInQuote = (state: RootState) => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.tokenRate.data
+}
+
+// DO NOT memoize: Returns a value directly from state.
+export const selectTokenRateInQuoteLoading = (state: RootState) => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.tokenRate.loading
+}
+
+/////////////////////////////////////////////////////////////////////
+// Balance
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Returns a value directly from state.
+export const selectSelectedTokenBalance = (state: RootState) => {
+  const sourceChainKey = selectSourceChainKey(state)
+  const sourceTokenKey = selectSourceTokenKey(state)
+  const balances = selectBalances(state)
+  if (!sourceChainKey || !sourceTokenKey) return null
+  return balances[sourceTokenKey]?.[sourceChainKey] || null
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWalletHasEnoughBalance = (state: RootState) => {
+  const selectedTokenBalance = selectSelectedTokenBalance(state)
+  const depositAmountAsBigInt = selectDepositAmountAsBigInt(state)
+  if (selectedTokenBalance === null) return false
+  return BigInt(selectedTokenBalance) >= depositAmountAsBigInt
+}
+
+/////////////////////////////////////////////////////////////////////
+// Preview Fee
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Simple state access; should be a plain function.
+export const selectPreviewFee = (state: RootState): string | null => state.networkAssets.previewFee.data
+
+// DO NOT memoize: Simple state access; should be a plain function.
+export const selectPreviewFeeLoading = (state: RootState) => state.networkAssets.previewFee.loading
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectPreviewFeeAsBigInt = (state: RootState): bigint => {
+  const previewFee = selectPreviewFee(state)
+  return previewFee ? BigInt(previewFee) : BigInt(0)
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectFormattedPreviewFee = (state: RootState): string => {
+  const previewFee = selectPreviewFeeAsBigInt(state)
+  let price = selectUsdPerEthRate(state)
+  if (!previewFee) {
+    price = BigInt(0)
+  }
+  const formattedPreviewFee = currencySwitch(previewFee, price, {
+    usdDigits: 2,
+    ethDigits: 7,
+  })
+  return formattedPreviewFee
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const inputAmount = selectDepositAmount(state)
+  const error = selectInputError(state)
+  const layerZeroChainSelector = selectLayerZeroChainSelector(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  const address = selectAddress(state)
+
+  const isConnected = !!address
+  // Will use the bridge if the source is Ethereum and the network is not deployed on Ethereum
+  const willUseBridge = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
+  const hasLayerZeroChainSelector = layerZeroChainSelector !== null
+  const isNotEmpty = inputAmount.trim().length > 0
+  const isGreaterThanZero = parseFloat(inputAmount) > 0
+  const hasNoError = !error
+
+  return isConnected && willUseBridge && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
+}
+
+/////////////////////////////////////////////////////////////////////
+// Deposit Selectors
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Returns a value directly from state.
+export const selectDepositPending = (state: RootState) => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.deposit.pending
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectDepositDisabled = (state: RootState): boolean => {
+  const from = selectDepositAmount(state)
+  const error = selectInputError(state)
+  const pending = selectDepositPending(state)
+  const previewFee = selectPreviewFee(state)
+
+  const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
+  const isEmpty = from.trim().length === 0
+  const isLessThanOrEqualToZero = parseFloat(from) <= 0
+  const isError = !!error
+  const isPending = !!pending
+  const isPreviewFeeApplicableButNotReady = shouldTriggerPreviewFee && previewFee === null
+
+  return isEmpty || isLessThanOrEqualToZero || isError || isPending || isPreviewFeeApplicableButNotReady
+}
+
+// SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
+export const selectDepositBridgeData = createSelector(
+  [selectLayerZeroChainSelector, selectAddress],
+  (layerZeroChainSelector, userAddress): CrossChainTellerBase.BridgeData | null => {
+    if (!userAddress) return null
+    return {
+      chainSelector: layerZeroChainSelector,
+      destinationChainReceiver: userAddress,
+      bridgeFeeToken: tokensConfig[TokenKey.ETH].addresses[ChainKey.ETHEREUM] as Address,
+      messageGas: 100000,
+      data: '',
+    }
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
+// Fun Selectors
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectShouldUseFunCheckout = (state: RootState) => {
+  const walletHasEnoughBalance = selectWalletHasEnoughBalance(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  const isFunkitEnabled = USE_FUNKIT
+  const networkShouldUseFun = sourceChainKey === ChainKey.ETHEREUM
+  return isFunkitEnabled && !walletHasEnoughBalance && networkShouldUseFun
+}
+
+// SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
+export const selectDepositAndBridgeCheckoutParams = createSelector(
+  [selectSourceTokenKey, selectDepositAssetAddress, selectAddress, selectDepositAmount],
+  (depositAssetTokenKey, depositAssetAddress, userAddress, fromAmount) => {
+    // Constants
+    const VERB = 'Buy'
+
+    // Values
+    const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
+
+    // Null checks
+    if (!userAddress || !depositAssetAddress) {
+      return null
+    }
+
+    // Build the checkout params
+    return {
+      modalTitle: `${VERB} ${fromTokenInfo?.name}`,
+      iconSrc: `/assets/svgs/token-${fromTokenInfo?.key}.svg`,
+      actionsParams: [],
+      targetChain: '1',
+      targetAsset: depositAssetAddress,
+      targetAssetAmount: parseFloat(fromAmount),
+      targetAssetTicker: fromTokenInfo?.name,
+      checkoutItemTitle: `${VERB} ${fromTokenInfo?.name}`,
+      checkoutItemDescription: `${VERB} ${fromTokenInfo?.name}`,
+      checkoutItemAmount: parseFloat(fromAmount),
+      expirationTimestampMs: 3600000,
+      disableEditing: false,
+    }
+  }
+)
