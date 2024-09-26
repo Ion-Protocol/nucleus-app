@@ -17,6 +17,18 @@ export interface NetworkConfig {
   assets: NetworkAssets
 }
 
+const defaultEthVaultAssets = [
+  TokenKey.WETH,
+  TokenKey.EZETH,
+  TokenKey.WSTETH,
+  TokenKey.APXETH,
+  TokenKey.PUFETH,
+  TokenKey.RSWETH,
+  TokenKey.RSETH,
+  TokenKey.WEETH,
+  TokenKey.SFRXETH,
+]
+
 const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.SSETH]: {
     token: tokensConfig[TokenKey.SSETH],
@@ -26,17 +38,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     deployedOn: ChainKey.SEI,
     sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [
-        TokenKey.WETH,
-        TokenKey.EZETH,
-        TokenKey.WSTETH,
-        TokenKey.APXETH,
-        TokenKey.PUFETH,
-        TokenKey.RSWETH,
-        TokenKey.RSETH,
-        TokenKey.WEETH,
-        TokenKey.SFRXETH,
-      ],
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     contracts: {
@@ -72,6 +74,31 @@ const mainnetNetworkAssets: NetworkAssets = {
       ],
     },
   },
+  [TokenKey.TETH]: {
+    token: tokensConfig[TokenKey.TETH],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Eclipse Default Asset to earn while you explore the Eclipse ecosystem',
+    chain: ChainKey.ECLIPSE,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: [ChainKey.ETHEREUM],
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    contracts: {
+      teller: '0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf',
+      accountant: '0x8c1902A5996978F2628558DD93d309F7e3926dfD',
+      boringVault: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+    },
+    receiveOn: ChainKey.ECLIPSE,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
+    apys: {},
+  },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
@@ -81,7 +108,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: [ChainKey.ETHEREUM],
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH],
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
     contracts: {
       teller: '0x685aDb4797fb38D4Fc4a69750aa048B398160429',
@@ -101,23 +128,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 3,
       },
     ],
-    apys: {},
-  },
-  [TokenKey.TETH]: {
-    token: tokensConfig[TokenKey.TETH],
-    comingSoon: true,
-    description: '',
-    chain: ChainKey.ECLIPSE,
-    deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [],
-    sourceTokens: {},
-    contracts: {
-      teller: '0x',
-      accountant: '0x',
-      boringVault: '0x',
-    },
-    receiveOn: ChainKey.ETHEREUM,
-    points: [],
     apys: {},
   },
 }

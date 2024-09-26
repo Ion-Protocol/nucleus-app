@@ -58,22 +58,24 @@ function TokenInput({
       </Flex>
 
       {/* Bottom Row */}
-      <Flex align="center" gap={3} mt={3}>
+      <Flex align="center" gap={3} mt={3} justify="space-between">
         {/* Input Box */}
-        <Input
-          value={inputValue}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          variant="unstyled"
-          size="lg"
-          fontFamily="var(--font-ppformula)"
-          fontSize="18px"
-          letterSpacing="0.05em"
-          placeholder="0"
-          color={error ? 'error.main' : 'text'}
-        />
-        {error && <Text color="error.main">{error}</Text>}
+        <Flex direction="column">
+          <Input
+            value={inputValue}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            variant="unstyled"
+            size="lg"
+            fontFamily="var(--font-ppformula)"
+            fontSize="18px"
+            letterSpacing="0.05em"
+            placeholder="0"
+            color={error ? 'error.main' : 'text'}
+          />
+          {error && <Text color="error.main">{error}</Text>}
+        </Flex>
         <Flex gap={3} align="center">
           {/* Max Button */}
           <Flex gap={3}>

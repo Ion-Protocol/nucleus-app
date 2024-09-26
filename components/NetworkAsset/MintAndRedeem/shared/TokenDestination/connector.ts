@@ -51,7 +51,7 @@ const mapState = (state: RootState, ownProps: TokenToOwnProps): MapStateProps =>
 
   const tokenRateInQuoteLoading = selectTokenRateInQuoteLoading(state)
 
-  const tokenBalance = selectFormattedTokenBalance(state, networkAssetConfig?.deployedOn, networkAssetFromRoute)
+  const tokenBalance = selectFormattedTokenBalance(state, networkAssetConfig?.receiveOn, networkAssetFromRoute)
 
   return {
     value: destinationAmountFormatted,

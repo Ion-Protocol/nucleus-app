@@ -30,7 +30,7 @@ export async function transferRemote(
     tokenRouterAddress,
     bridgeAsset,
   }: { userAddress: `0x${string}`; tokenRouterAddress: `0x${string}`; bridgeAsset: `0x${string}` }
-) {
+): Promise<`0x${string}`> {
   ////////////////////////////////
   // Check Allowance
   ////////////////////////////////
@@ -65,11 +65,8 @@ export async function transferRemote(
       args: [destination, recipient, amount],
     })
   } catch (error) {
-    console.log('simulateContract error!!!')
     console.error(error)
   }
-
-  console.log('simulate passed!')
 
   ////////////////////////////////
   // Write
@@ -92,4 +89,6 @@ export async function transferRemote(
     retryCount: 5,
     retryDelay: 5_000,
   })
+
+  return txHash
 }

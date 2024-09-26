@@ -13,10 +13,10 @@ export interface TokenApyDataItem {
 
 export interface NetworkAsset {
   token: Token
-  comingSoon?: boolean
   description: string
   chain: ChainKey
   deployedOn: ChainKey
+  comingSoon?: boolean
   sourceChains: ChainKey[]
   contracts: Contracts
   layerZeroChainSelector?: number

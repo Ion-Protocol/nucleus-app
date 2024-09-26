@@ -14,6 +14,12 @@ class RateForSseth implements RateFetchingStrategy {
   }
 }
 
+class RateForTeth implements RateFetchingStrategy {
+  async getRate(accountantAddress: Address): Promise<bigint> {
+    return getRate(accountantAddress)
+  }
+}
+
 class RateForEarnETH implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     const wbtcPerShareExchangeRate = await getRate(accountantAddress) // 1e9
@@ -26,7 +32,7 @@ class RateForEarnETH implements RateFetchingStrategy {
 
 class NotImplementedStrategy implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
-    throw new Error('Exchange rate for this chain is not yet implemented')
+    throw new Error('Exchange rate for this network asset is not yet implemented')
   }
 }
 
@@ -43,6 +49,7 @@ class NotImplementedStrategy implements RateFetchingStrategy {
 export async function getTokenPerShareRate(networkAssetKey: TokenKey, accountantAddress: Address): Promise<bigint> {
   const rateStrategies: Partial<Record<TokenKey, RateFetchingStrategy>> = {
     [TokenKey.SSETH]: new RateForSseth(),
+    [TokenKey.TETH]: new RateForTeth(),
     [TokenKey.EARNETH]: new RateForEarnETH(),
   }
 

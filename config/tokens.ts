@@ -131,9 +131,11 @@ export const tokensConfig: Record<TokenKey, Token> = {
   [TokenKey.TETH]: {
     key: TokenKey.TETH,
     name: 'tETH',
+    fullName: 'Turbo ETH',
     symbol: 'TETH',
     addresses: {
-      [ChainKey.ETHEREUM]: '0x',
+      [ChainKey.ETHEREUM]: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+      [ChainKey.ECLIPSE]: 'GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn', // SPL token format on Solana
     },
   },
   [TokenKey.APXETH]: {
