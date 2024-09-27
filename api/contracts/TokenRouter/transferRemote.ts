@@ -29,7 +29,8 @@ export async function transferRemote(
     userAddress,
     tokenRouterAddress,
     bridgeAsset,
-  }: { userAddress: `0x${string}`; tokenRouterAddress: `0x${string}`; bridgeAsset: `0x${string}` }
+    bridgeGasFee,
+  }: { userAddress: `0x${string}`; tokenRouterAddress: `0x${string}`; bridgeAsset: `0x${string}`; bridgeGasFee: bigint }
 ): Promise<`0x${string}`> {
   ////////////////////////////////
   // Check Allowance
@@ -63,6 +64,7 @@ export async function transferRemote(
       address: tokenRouterAddress,
       functionName: 'transferRemote',
       args: [destination, recipient, amount],
+      value: bridgeGasFee,
     })
   } catch (error) {
     console.error(error)

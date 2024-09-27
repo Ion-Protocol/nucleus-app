@@ -464,6 +464,7 @@ export const selectFormattedPreviewFee = (state: RootState): string => {
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
+  const networkAssetKey = selectNetworkAssetFromRoute(state)
   const inputAmount = selectDepositAmount(state)
   const error = selectInputError(state)
   const layerZeroChainSelector = selectLayerZeroChainSelector(state)
@@ -472,13 +473,21 @@ export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
 
   const isConnected = !!address
   // Will use the bridge if the source is Ethereum and the network is not deployed on Ethereum
-  const willUseBridge = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
+  const bridgingToL2 = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
+  const isTeth = networkAssetKey === TokenKey.TETH
   const hasLayerZeroChainSelector = layerZeroChainSelector !== null
   const isNotEmpty = inputAmount.trim().length > 0
   const isGreaterThanZero = parseFloat(inputAmount) > 0
   const hasNoError = !error
 
-  return isConnected && willUseBridge && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
+  return (
+    isConnected &&
+    (bridgingToL2 || isTeth) &&
+    hasLayerZeroChainSelector &&
+    isNotEmpty &&
+    isGreaterThanZero &&
+    hasNoError
+  )
 }
 
 /////////////////////////////////////////////////////////////////////

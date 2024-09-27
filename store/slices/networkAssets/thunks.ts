@@ -42,6 +42,7 @@ import {
 } from './selectors'
 import { clearDepositAmount, setDepositAmount } from './slice'
 import { truncateToSignificantDigits } from '@/utils/number'
+import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
 
 export interface FetchNetworkAssetTvlResult {
   tokenKey: TokenKey
@@ -304,6 +305,10 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         // This is necessary because bridging is done separately using hyperlane for just the tETH asset.
         // This may be updated as more network assets are added.
         if (networkAssetKey === TokenKey.TETH) {
+          const bridgeGasFee = await quoteGasPayment(
+            { destinationDomain: hyperlaneIdForEclipse },
+            { contractAddress: contractAddresses.hyperlaneWarpRoute }
+          )
           transferRemoteTxHash = await transferRemote(
             {
               destination: hyperlaneIdForEclipse,
@@ -312,8 +317,9 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
             },
             {
               userAddress,
-              tokenRouterAddress: contractAddresses.hyperlaneTokenRouter,
+              tokenRouterAddress: contractAddresses.hyperlaneWarpRoute,
               bridgeAsset: tokensConfig[TokenKey.TETH].addresses[ChainKey.ETHEREUM] as Address,
+              bridgeGasFee,
             }
           )
         }
@@ -370,11 +376,11 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
 
       return { txHash: depositTxHash }
     } catch (e) {
+      console.error(e)
       const error = e as Error
       // const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
       const errorMessage = `Deposit failed`
       const fullErrorMessage = `${errorMessage}\n${error.message}`
-      console.error(fullErrorMessage)
       dispatch(setErrorTitle('Deposit Not Verified'))
       dispatch(setErrorMessage(fullErrorMessage))
       return rejectWithValue(errorMessage)
@@ -399,6 +405,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
   async (_, { getState, rejectWithValue, dispatch }) => {
     try {
       const state = getState()
+      const networkAssetKey = selectNetworkAssetFromRoute(state)
       const chainConfig = selectNetworkAssetConfig(state)
       const depositAmount = selectDepositAmountAsBigInt(state)
       const chainKeyFromSelector = selectSourceChainKey(state)
@@ -414,13 +421,12 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
       const tellerContractAddress = chainConfig?.contracts.teller
       const accountantContractAddress = chainConfig?.contracts.accountant
-      const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
+      const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
 
       if (
         tellerContractAddress &&
         accountantContractAddress &&
         depositAmount &&
-        layerZeroChainSelector &&
         chainId &&
         userAddress &&
         depositAssetAddress
@@ -440,10 +446,23 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
-        const fee = await previewFee(
-          { shareAmount, bridgeData: previewFeeBridgeData },
-          { contractAddress: tellerContractAddress }
-        )
+        // Get the fee based on the network asset
+        let fee = BigInt(0)
+
+        // If the network asset is tETH, get the gas payment
+        if (networkAssetKey === TokenKey.TETH) {
+          fee = await quoteGasPayment(
+            { destinationDomain: hyperlaneIdForEclipse },
+            { contractAddress: contractAddresses.hyperlaneWarpRoute }
+          )
+        } else {
+          // Otherwise, get the preview fee
+          fee = await previewFee(
+            { shareAmount, bridgeData: previewFeeBridgeData },
+            { contractAddress: tellerContractAddress }
+          )
+        }
+
         return { fee: fee.toString() }
       } else {
         return rejectWithValue('Missing contract address or layer zero chain selector')
