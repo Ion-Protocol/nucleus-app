@@ -1,15 +1,17 @@
-import { getRateInQuote } from '@/api/contracts/Accountant/getRateInQuote'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
-import { calculateMinimumMint } from '@/api/utils/calculateMinimumMint'
+import { transferRemote } from '@/api/contracts/TokenRouter/transferRemote'
+import { chainsConfig } from '@/config/chains'
 import {
+  hyperlaneIdForEclipse,
   nativeAddress,
   pollBalanceAfterTransactionAttempts,
   pollBalanceAfterTransactionInterval,
 } from '@/config/constants'
+import { contractAddresses } from '@/config/contracts'
 import { tokensConfig } from '@/config/tokens'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
@@ -17,29 +19,30 @@ import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+import { Address } from 'viem'
 import { switchChain } from 'wagmi/actions'
+import { getTokenPerShareRate } from '../../../services/getTokenPerShareRate'
 import { selectAddress } from '../account/slice'
 import { fetchAllTokenBalances, selectTokenBalance } from '../balance'
 import { selectNetworkId } from '../chain'
 import { selectNetworkAssetFromRoute } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
-import { getTokenPerShareRate } from './getTokenPerShareRate'
 import {
   selectContractAddressByName,
   selectDepositAmount,
   selectDepositAmountAsBigInt,
-  selectDepositAndBridgeCheckoutParams,
   selectDepositBridgeData,
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
-  selectShouldUseFunCheckout,
+  selectSolanaAddressBytes32,
   selectSourceChainId,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount } from './slice'
-import { chainsConfig } from '@/config/chains'
+import { truncateToSignificantDigits } from '@/utils/number'
+import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
 
 export interface FetchNetworkAssetTvlResult {
   tokenKey: TokenKey
@@ -124,12 +127,18 @@ export const setDepositAmountMax = createAsyncThunk<void, void, { state: RootSta
   'bridges/setDepositAmountMax',
   async (_, { getState, rejectWithValue, dispatch }) => {
     const state = getState() as RootState
+    const networkAssetKey = selectNetworkAssetFromRoute(state)
     const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
     const tokenKey = selectSourceTokenKey(state)
     const tokenBalance = selectTokenBalance(state, chainKeyFromSourceChain, tokenKey)
-    const tokenBalanceAsNumber = tokenBalance
+
+    let tokenBalanceAsNumber = tokenBalance
       ? bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 })
       : '0'
+
+    if (networkAssetKey === TokenKey.TETH) {
+      tokenBalanceAsNumber = truncateToSignificantDigits(tokenBalanceAsNumber, 9)
+    }
 
     // Using dispatch within the thunk to trigger the setInputValue action so
     // that the the previewFee side effect will also trigger
@@ -155,7 +164,7 @@ export const fetchTokenRateInQuote = createAsyncThunk<
     if (!despositAssetAddress || !accountantAddress || !chainId) return { result: { rate: null } }
 
     const rateAsBigInt = await getRateInQuoteSafe(
-      { quote: despositAssetAddress },
+      { quote: despositAssetAddress as `0x${string}` },
       { contractAddress: accountantAddress, chainId }
     )
     return { result: { rate: rateAsBigInt.toString() } }
@@ -182,120 +191,157 @@ export interface PerformDepositResult {
  * @param dispatch - A function to dispatch actions.
  * @returns A promise that resolves to the transaction hash of the deposit.
  */
-export const performDeposit = createAsyncThunk<
-  PerformDepositResult,
-  (inputConfig?: any) => Promise<void>,
-  { rejectValue: string; state: RootState }
->('bridges/performDeposit', async (beginCheckout, { getState, rejectWithValue, dispatch }) => {
-  try {
-    const state = getState()
+export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rejectValue: string; state: RootState }>(
+  'bridges/performDeposit',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
 
-    const userAddress = selectAddress(state)
-    const depositAmount = selectDepositAmountAsBigInt(state)
-    const fromAmount = selectDepositAmount(state)
-    const chainId = selectNetworkId(state)
-    const chainKeyFromRoute = selectNetworkAssetFromRoute(state)
-    const chainKeyFromSelector = selectSourceChainKey(state)
-    const networkAssetConfig = selectNetworkAssetConfig(state)
-    const sourceChainId = selectSourceChainId(state)
-    const tellerAddress = selectContractAddressByName(state, 'teller')
+      const userAddress = selectAddress(state)
+      const depositAmount = selectDepositAmountAsBigInt(state)
+      const fromAmount = selectDepositAmount(state)
+      const chainId = selectNetworkId(state)
+      const chainKeyFromRoute = selectNetworkAssetFromRoute(state)
+      const sourceChain = selectSourceChainKey(state)
+      const networkAssetKey = selectNetworkAssetFromRoute(state)
+      const networkAssetConfig = selectNetworkAssetConfig(state)
+      const sourceChainId = selectSourceChainId(state)
+      const tellerAddress = selectContractAddressByName(state, 'teller')
+      const solanaAddressBytes32 = selectSolanaAddressBytes32(state)
 
-    const layerZeroChainSelector = networkAssetConfig?.layerZeroChainSelector
-    const tellerContractAddress = networkAssetConfig?.contracts.teller
-    const boringVaultAddress = networkAssetConfig?.contracts.boringVault
-    const accountantAddress = networkAssetConfig?.contracts.accountant
-    const depositAssetTokenKey = selectSourceTokenKey(state)
-    const depositAsset =
-      depositAssetTokenKey && chainKeyFromSelector
-        ? tokensConfig[depositAssetTokenKey]?.addresses[chainKeyFromSelector as ChainKey]
-        : null
-    const deployedOn = networkAssetConfig?.deployedOn
+      const layerZeroChainSelector = networkAssetConfig?.layerZeroChainSelector
+      const tellerContractAddress = networkAssetConfig?.contracts.teller
+      const boringVaultAddress = networkAssetConfig?.contracts.boringVault
+      const accountantAddress = networkAssetConfig?.contracts.accountant
+      const depositAssetTokenKey = selectSourceTokenKey(state)
+      const depositAsset =
+        depositAssetTokenKey && sourceChain
+          ? tokensConfig[depositAssetTokenKey]?.addresses[sourceChain as ChainKey]
+          : null
 
-    if (
-      !accountantAddress ||
-      !boringVaultAddress ||
-      !chainKeyFromRoute ||
-      !depositAsset ||
-      !chainKeyFromSelector ||
-      !sourceChainId ||
-      !tellerContractAddress ||
-      !tellerAddress ||
-      !userAddress ||
-      !deployedOn
-    ) {
-      dispatch(setErrorTitle('Missing required values'))
-      dispatch(setErrorMessage('Missing required values'))
-      throw new Error('Missing required values')
-    }
+      // This is the functional destination chain, not the receiveOn chain which
+      // is more of a user facing property
+      const destinationChain = networkAssetConfig?.deployedOn
 
-    // if chain needs to switch, switch it
-    if (chainId !== sourceChainId) {
-      await switchChain(wagmiConfig, { chainId: sourceChainId })
-    }
-
-    let txHash: `0x${string}` | null = null
-
-    const depositingToSameChain = chainKeyFromSelector === deployedOn
-    if (depositingToSameChain) {
-      ///////////////////////////////////////////////////////////////
-      // Depositing on same chain without bridging
-      // Deposit only
-      ///////////////////////////////////////////////////////////////
-
-      // For example, both are Sei,
-      // Deposit without bridging.
-      const deployedOnChainId = chainsConfig[deployedOn].id
-      if (!deployedOnChainId) {
-        throw new Error(`Chain ${deployedOn} does not exist in the chain config`)
+      if (
+        !accountantAddress ||
+        !boringVaultAddress ||
+        !chainKeyFromRoute ||
+        !depositAsset ||
+        !networkAssetKey ||
+        !sourceChain ||
+        !sourceChainId ||
+        !tellerContractAddress ||
+        !tellerAddress ||
+        !userAddress ||
+        !destinationChain
+      ) {
+        dispatch(setErrorTitle('Missing required values'))
+        dispatch(setErrorMessage('Missing required values'))
+        throw new Error('Missing required values')
       }
-      txHash = await deposit(
-        { depositAsset, depositAmount },
-        {
-          userAddress,
-          tellerContractAddress,
-          boringVaultAddress,
-          accountantAddress,
-          chainId: deployedOnChainId,
+
+      ///////////////////////////////////////////////////////////////
+      // Deposit Steps
+      ///////////////////////////////////////////////////////////////
+
+      let depositTxHash: `0x${string}` | null = null
+      let transferRemoteTxHash: `0x${string}` | null = null
+
+      //////////////////////////////////////////////////////////////////////////
+      // 1. Switch chains if needed
+      //     If the chain the wallet is connected to does not match the source
+      //     chain that the user selected, switch it to the source chain.
+      //////////////////////////////////////////////////////////////////////////
+      if (chainId !== sourceChainId) {
+        await switchChain(wagmiConfig, { chainId: sourceChainId })
+      }
+
+      //////////////////////////////////////////////////////////////////////////
+      // 2. Perform the deposit
+      //      If source chain chosen by the user is the same as the destination chain determined by the config
+      //        Call deposit function
+      //        If network asset is tETH
+      //          Also call transferRemote function to complete the bridge
+      //      Else
+      //        Get preview fee
+      //        Call depositAndBridge function
+      //
+      // Notes:
+      //   - The destination chain is not the same as the receiveOn chain
+      //   - The destination chain represents the desitnation of the deposit or
+      //     depositAndBridge function
+      //   - So in the case of tETH, although the ultimate destination from the
+      //     user's perspective is Eclipse (receiveOn), the destination for the
+      //     function call is mainnet Ethereum, meaning the source chain is equal
+      //     to the destination chain functionally.
+      //////////////////////////////////////////////////////////////////////////
+
+      if (sourceChain === destinationChain) {
+        // If source chain chosen by the user is the same as the destination chain determined by the config
+        // Get the chain id that the deposit function is being called on
+        const deployedOnChainId = chainsConfig[destinationChain].id
+        if (!deployedOnChainId) {
+          throw new Error(`Chain ${destinationChain} does not exist in the chain config`)
         }
-      )
 
-      dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
-      dispatch(setTransactionTxHash(txHash))
-    } else {
-      ///////////////////////////////////////////////////////////////
-      // Source chain is Ethereum
-      // Deposit & Bridge
-      ///////////////////////////////////////////////////////////////
-      let previewFeeAsBigInt: bigint = BigInt(0)
-      const depositBridgeData = selectDepositBridgeData(state)
-
-      ///////////////////////////////////////////////////////////////
-      // 1. Load up-to-date preview fee into the store
-      ///////////////////////////////////////////////////////////////
-      if (layerZeroChainSelector && depositBridgeData) {
-        previewFeeAsBigInt = await previewFee(
-          { shareAmount: depositAmount, bridgeData: depositBridgeData },
-          { contractAddress: tellerContractAddress }
+        // Call deposit function
+        depositTxHash = await deposit(
+          { depositAsset: depositAsset as `0x${string}`, depositAmount },
+          {
+            userAddress,
+            tellerContractAddress,
+            boringVaultAddress,
+            accountantAddress,
+            chainId: deployedOnChainId,
+          }
         )
-      }
 
-      ///////////////////////////////////////////////////////////////
-      // 3. Deposit and bridge
-      ///////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        // For tETH only
+        //////////////////////////////////////////////////////////////////////////
 
-      // Check if user has enough balance
-      const shouldUseFunCheckout = selectShouldUseFunCheckout(state)
-
-      if (shouldUseFunCheckout) {
-        const params = selectDepositAndBridgeCheckoutParams(state)
-        if (params === null) {
-          throw new Error('Missing checkout params')
+        // If network asset is tETH, also call transferRemote function to complete the bridge
+        // This is necessary because bridging is done separately using hyperlane for just the tETH asset.
+        // This may be updated as more network assets are added.
+        if (networkAssetKey === TokenKey.TETH) {
+          const bridgeGasFee = await quoteGasPayment(
+            { destinationDomain: hyperlaneIdForEclipse },
+            { contractAddress: contractAddresses.hyperlaneWarpRoute }
+          )
+          transferRemoteTxHash = await transferRemote(
+            {
+              destination: hyperlaneIdForEclipse,
+              recipient: solanaAddressBytes32,
+              amount: depositAmount,
+            },
+            {
+              userAddress,
+              tokenRouterAddress: contractAddresses.hyperlaneWarpRoute,
+              bridgeAsset: tokensConfig[TokenKey.TETH].addresses[ChainKey.ETHEREUM] as Address,
+              bridgeGasFee,
+            }
+          )
         }
-        await beginCheckout(params)
       } else {
+        // Else if source chain chosen by the user is NOT the same as the destination chain determined by the config
+
+        // Get the preview fee for bridging the asset
+        let previewFeeAsBigInt: bigint = BigInt(0)
+        const depositBridgeData = selectDepositBridgeData(state)
         if (!depositBridgeData) throw new Error('Missing deposit bridge data')
-        txHash = await depositAndBridge(
-          { depositAsset, depositAmount, bridgeData: depositBridgeData },
+
+        // Get most up-to-date preview fee
+        if (layerZeroChainSelector && depositBridgeData) {
+          previewFeeAsBigInt = await previewFee(
+            { shareAmount: depositAmount, bridgeData: depositBridgeData },
+            { contractAddress: tellerContractAddress }
+          )
+        }
+
+        // Call depositAndBridge function
+        depositTxHash = await depositAndBridge(
+          { depositAsset: depositAsset as `0x${string}`, depositAmount, bridgeData: depositBridgeData },
           {
             userAddress,
             tellerContractAddress,
@@ -304,31 +350,43 @@ export const performDeposit = createAsyncThunk<
             fee: previewFeeAsBigInt,
           }
         )
-        dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
-        dispatch(setTransactionTxHash(txHash))
-        dispatch(fetchAllTokenBalances())
-        dispatch(clearDepositAmount())
       }
-    }
 
-    // Poll balance after transaction every 10 seconds for 2 minutes
-    for (let i = 0; i < pollBalanceAfterTransactionAttempts; i++) {
-      setTimeout(() => {
-        dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
-      }, i * pollBalanceAfterTransactionInterval)
-    }
+      // Show success modal
+      dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
+      dispatch(setTransactionTxHash(depositTxHash))
 
-    return { txHash }
-  } catch (e) {
-    const error = e as Error
-    const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
-    const fullErrorMessage = `${errorMessage}\n${error.message}`
-    console.error(fullErrorMessage)
-    dispatch(setErrorTitle('Deposit Not Verified'))
-    dispatch(setErrorMessage(fullErrorMessage))
-    return rejectWithValue(errorMessage)
+      // Side effects
+      dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+      dispatch(clearDepositAmount())
+
+      //////////////////////////////////////////////////////////////////////////
+      // 3. Get updated balance
+      //      It's necessary to poll the balance after the transaction because
+      //      the balance is not updated immediately after the transaction is
+      //      submitted.
+      //////////////////////////////////////////////////////////////////////////
+
+      // Poll balance after transaction every 10 seconds for 2 minutes
+      for (let i = 0; i < pollBalanceAfterTransactionAttempts; i++) {
+        setTimeout(() => {
+          dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+        }, i * pollBalanceAfterTransactionInterval)
+      }
+
+      return { txHash: depositTxHash }
+    } catch (e) {
+      console.error(e)
+      const error = e as Error
+      // const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
+      const errorMessage = `Deposit failed`
+      const fullErrorMessage = `${errorMessage}\n${error.message}`
+      dispatch(setErrorTitle('Deposit Not Verified'))
+      dispatch(setErrorMessage(fullErrorMessage))
+      return rejectWithValue(errorMessage)
+    }
   }
-})
+)
 
 export interface FetchPreviewFeeResult {
   fee: string
@@ -347,6 +405,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
   async (_, { getState, rejectWithValue, dispatch }) => {
     try {
       const state = getState()
+      const networkAssetKey = selectNetworkAssetFromRoute(state)
       const chainConfig = selectNetworkAssetConfig(state)
       const depositAmount = selectDepositAmountAsBigInt(state)
       const chainKeyFromSelector = selectSourceChainKey(state)
@@ -362,13 +421,12 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
 
       const tellerContractAddress = chainConfig?.contracts.teller
       const accountantContractAddress = chainConfig?.contracts.accountant
-      const layerZeroChainSelector = chainConfig?.layerZeroChainSelector
+      const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
 
       if (
         tellerContractAddress &&
         accountantContractAddress &&
         depositAmount &&
-        layerZeroChainSelector &&
         chainId &&
         userAddress &&
         depositAssetAddress
@@ -382,16 +440,29 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
         }
 
         const exchangeRate = await getRateInQuoteSafe(
-          { quote: depositAssetAddress },
+          { quote: depositAssetAddress as `0x${string}` },
           { contractAddress: accountantContractAddress, chainId }
         )
 
         const shareAmount = (depositAmount * WAD.bigint) / exchangeRate
 
-        const fee = await previewFee(
-          { shareAmount, bridgeData: previewFeeBridgeData },
-          { contractAddress: tellerContractAddress }
-        )
+        // Get the fee based on the network asset
+        let fee = BigInt(0)
+
+        // If the network asset is tETH, get the gas payment
+        if (networkAssetKey === TokenKey.TETH) {
+          fee = await quoteGasPayment(
+            { destinationDomain: hyperlaneIdForEclipse },
+            { contractAddress: contractAddresses.hyperlaneWarpRoute }
+          )
+        } else {
+          // Otherwise, get the preview fee
+          fee = await previewFee(
+            { shareAmount, bridgeData: previewFeeBridgeData },
+            { contractAddress: tellerContractAddress }
+          )
+        }
+
         return { fee: fee.toString() }
       } else {
         return rejectWithValue('Missing contract address or layer zero chain selector')

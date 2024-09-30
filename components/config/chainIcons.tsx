@@ -6,6 +6,8 @@ import { DineroIcon } from '../shared/icons/Dinero'
 import { EclipseIcon } from '../shared/icons/Eclipse'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { SwellChainIcon } from '../shared/icons/SwellChain'
+import { TokenFethIcon } from '../shared/icons/TokenFeth'
+import { FormIcon } from '../shared/icons/Form'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
@@ -13,6 +15,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.
   [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
   [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
+  [ChainKey.FORM]: (props) => <FormIcon {...props} />,
 }
 
 interface ChainIconMapProps extends ChakraProps {

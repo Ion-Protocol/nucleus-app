@@ -1,12 +1,15 @@
 import { AppDispatch } from '@/store'
 import { setAddress } from '@/store/slices/account'
+import { fetchAllTokenBalances } from '@/store/slices/balance'
 import {
   clearDepositAmount,
   clearPreviewFee,
   clearSelectedSourceToken,
   resetSourceChain,
   selectNetworkAssetConfig,
+  selectSolanaAddressError,
   setSelectedSourceToken,
+  setSolanaAddress,
   setSourceChain,
 } from '@/store/slices/networkAssets'
 import { fetchPreviewFee, fetchTokenRateInQuote } from '@/store/slices/networkAssets/thunks'
@@ -58,9 +61,24 @@ export const sideEffectMiddleware: Middleware =
       }
     }
 
+    // Side effects for source token change. This triggers when the user changes the source token
+    // in the source token selector menu.
     if (setSelectedSourceToken.match(action)) {
       const sourceTokenKey = action.payload.tokenKey
       dispatch(fetchTokenRateInQuote(sourceTokenKey))
+    }
+
+    // Side effects for solana address change. Updates all token balances when
+    // the user changes their solana address in the solana address input field
+    // for tETH.
+    if (setSolanaAddress.match(action)) {
+      const solanaAddress = action.payload
+      const solanaAddressError = selectSolanaAddressError(state)
+      const isEmpty = solanaAddress.trim() === ''
+      const shouldFetchBalance = !solanaAddressError && !isEmpty
+      if (shouldFetchBalance) {
+        dispatch(fetchAllTokenBalances({ solanaAddressFromAction: solanaAddress, ignoreLoading: true }))
+      }
     }
 
     return next(action)

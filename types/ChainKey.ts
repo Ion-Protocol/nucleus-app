@@ -4,4 +4,5 @@ export enum ChainKey {
   SWELL = 'swell',
   ECLIPSE = 'eclipse',
   DINERO = 'dinero',
+  FORM = 'form',
 }

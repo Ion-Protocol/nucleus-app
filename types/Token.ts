@@ -7,5 +7,5 @@ export interface Token {
   name: string
   fullName?: string
   symbol: string
-  addresses: Partial<Record<ChainKey, Address>>
+  addresses: Partial<Record<ChainKey, string>>
 }

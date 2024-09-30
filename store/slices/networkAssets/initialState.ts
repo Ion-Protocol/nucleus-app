@@ -68,6 +68,12 @@ export type NetworkAssetsState = {
   // 1. The value is used in multiple components
   selectedSourceToken: TokenKey | null
 
+  // The solana address that is input manually by the user when bridging to a Solana chain (like Eclipse).
+  // ---
+  // Justification for storing in global state:
+  // 1. The value is used in multiple components
+  solanaAddress: string
+
   // The deposit object is used to track the status of the deposit transaction
   // ---
   // Justification for storing in global state:
@@ -111,6 +117,9 @@ export const initialState: NetworkAssetsState = {
 
   // Selected source token
   selectedSourceToken: null,
+
+  // Solana address
+  solanaAddress: '',
 
   // Deposit
   deposit: {
