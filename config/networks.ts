@@ -135,6 +135,25 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
   },
+  [TokenKey.TETH]: {
+    token: tokensConfig[TokenKey.TETH],
+    description: '',
+    comingSoon: true,
+    chain: ChainKey.ECLIPSE,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: [ChainKey.ETHEREUM],
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    contracts: {
+      teller: '0x0',
+      accountant: '0x0',
+      boringVault: '0x0',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [],
+    apys: {},
+  },
 }
 
 export const networksConfig: Record<NetworkKey, NetworkConfig> = {
