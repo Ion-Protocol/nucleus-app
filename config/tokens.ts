@@ -178,4 +178,13 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0x6DF0E641FC9847c0c6Fde39bE6253045440c14d3',
     },
   },
+  [TokenKey.FETH]: {
+    key: TokenKey.FETH,
+    name: 'fETH',
+    fullName: 'Form ETH',
+    symbol: 'FETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+    },
+  },
 }

@@ -1,7 +1,5 @@
-import { etherscanBaseUrl, layerZeroBaseUrl } from '@/config/constants'
 import { Link, Tag, TagProps, Text } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
-import { ClipIcon } from '../icons/ClipIcon'
 import { OpenNewTabIcon } from '../icons/OpenNewTab'
 
 interface TxHashTagProps extends TagProps, PropsWithChildren {

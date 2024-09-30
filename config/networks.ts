@@ -74,27 +74,32 @@ const mainnetNetworkAssets: NetworkAssets = {
       ],
     },
   },
-  [TokenKey.TETH]: {
-    token: tokensConfig[TokenKey.TETH],
+  [TokenKey.FETH]: {
+    token: tokensConfig[TokenKey.FETH],
     description:
-      'Connect your wallet, select your deposit asset, and mint the Eclipse Default Asset to earn while you explore the Eclipse ecosystem',
-    chain: ChainKey.ECLIPSE,
+      'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
+    chain: ChainKey.FORM,
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: [ChainKey.ETHEREUM],
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
     contracts: {
-      teller: '0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf',
-      accountant: '0x8c1902A5996978F2628558DD93d309F7e3926dfD',
-      boringVault: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+      teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',
+      accountant: '0x8ca1d13De3039142186aA57656Adbe0fD2620D2B',
+      boringVault: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
     },
-    receiveOn: ChainKey.ECLIPSE,
+    receiveOn: ChainKey.ETHEREUM,
     points: [
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.FORM,
+        name: 'Form',
+        pointsMultiplier: 3,
       },
     ],
     apys: {},

@@ -8,7 +8,7 @@ interface RateFetchingStrategy {
   getRate(accountantAddress: Address): Promise<bigint>
 }
 
-class RateForSseth implements RateFetchingStrategy {
+class DefaultRateFetchingStrategy implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     return getRate(accountantAddress)
   }
@@ -48,11 +48,12 @@ class NotImplementedStrategy implements RateFetchingStrategy {
  */
 export async function getTokenPerShareRate(networkAssetKey: TokenKey, accountantAddress: Address): Promise<bigint> {
   const rateStrategies: Partial<Record<TokenKey, RateFetchingStrategy>> = {
-    [TokenKey.SSETH]: new RateForSseth(),
-    [TokenKey.TETH]: new RateForTeth(),
+    [TokenKey.SSETH]: new DefaultRateFetchingStrategy(),
+    [TokenKey.TETH]: new DefaultRateFetchingStrategy(),
     [TokenKey.EARNETH]: new RateForEarnETH(),
+    [TokenKey.FETH]: new DefaultRateFetchingStrategy(),
   }
 
-  const rateStrategy = rateStrategies[networkAssetKey] || new NotImplementedStrategy()
+  const rateStrategy = rateStrategies[networkAssetKey] || new DefaultRateFetchingStrategy()
   return rateStrategy.getRate(accountantAddress)
 }
