@@ -9,9 +9,11 @@ import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { currencySwitch } from '@/utils/currency'
-import { abbreviateNumber, convertToDecimals, numberToPercent } from '@/utils/number'
+import { isValidSolanaAddress } from '@/utils/misc'
+import { abbreviateNumber, convertToDecimals, hasMoreThanNSignificantDigits, numberToPercent } from '@/utils/number'
+import bs58 from 'bs58'
 import { createSelector } from 'reselect'
-import { Address } from 'viem'
+import { Address, toHex } from 'viem'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
 import { selectNetworkKey } from '../chain'
@@ -313,6 +315,29 @@ export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKe
 /////////////////////////////////////////////////////////////////////
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectSolanaAddress = (state: RootState) => {
+  return state.networkAssets.solanaAddress.trim()
+}
+
+// SHOULD memoize: Returns a new array; memoization avoids unnecessary recalculations.
+export const selectSolanaAddressBytes32 = createSelector([selectSolanaAddress], (solanaAddress) => {
+  const decodedAddress = bs58.decode(solanaAddress)
+  const recipientBytes32 = toHex(decodedAddress, { size: 32 })
+  return recipientBytes32
+})
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectSolanaAddressError = (state: RootState): string | null => {
+  const solanaAddress = selectSolanaAddress(state)
+  const isEmpty = solanaAddress.trim().length === 0
+  const isValid = isValidSolanaAddress(solanaAddress)
+  if (!isEmpty && !isValid) {
+    return 'Invalid Solana Address'
+  }
+  return null
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectDepositAmount = (state: RootState): string => {
   const bridgesState = selectBridgesState(state)
   return bridgesState.depositAmount
@@ -331,27 +356,42 @@ export const selectShouldIgnoreBalance = (state: RootState) => {
   return sourceChainKey === ChainKey.ETHEREUM
 }
 
-// DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectInputError = (state: RootState) => {
-  const inputValue = selectDepositAmount(state)
-  const chainKeyFromChainSelector = selectSourceChainKey(state)
-  const selectedTokenKey = selectSourceTokenKey(state)
-  const balances = selectBalances(state)
-  const shouldIgnoreBalance = selectShouldIgnoreBalance(state)
+// SHOULD memoize: Memoization avoids unnecessary recalculations from hasMoreThanNSignificantDigits function.
+export const selectInputError = createSelector(
+  [
+    selectNetworkAssetFromRoute,
+    selectDepositAmount,
+    selectSourceChainKey,
+    selectSourceTokenKey,
+    selectBalances,
+    selectShouldIgnoreBalance,
+  ],
+  (networkAssetKey, inputValue, chainKeyFromChainSelector, selectedTokenKey, balances, shouldIgnoreBalance) => {
+    // Special case just for tETH.
+    // The tETH token on solana is limited to 9 decimals so the user input will
+    // also be limited to 9 decimals.
+    // NOTE: If in the future other tokens also require this check, come up
+    // with a more dynamic solution.
+    if (networkAssetKey === TokenKey.TETH) {
+      if (hasMoreThanNSignificantDigits(inputValue, 9)) {
+        return 'tETH only supports 9 significant digits'
+      }
+    }
 
-  if (shouldIgnoreBalance) return null
-  if (!selectedTokenKey) return null
-  const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
-  if (!tokenBalance) return null
-  const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
-  if (tokenBalanceAsNumber === null) return null
+    if (shouldIgnoreBalance) return null
+    if (!selectedTokenKey) return null
+    const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
+    if (!tokenBalance) return null
+    const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
+    if (tokenBalanceAsNumber === null) return null
 
-  if (parseFloat(inputValue) > tokenBalanceAsNumber) {
-    return 'Insufficient balance'
-  } else {
-    return null
+    if (parseFloat(inputValue) > tokenBalanceAsNumber) {
+      return 'Insufficient balance'
+    } else {
+      return null
+    }
   }
-}
+)
 
 /////////////////////////////////////////////////////////////////////
 // Bridge Rate
@@ -424,6 +464,7 @@ export const selectFormattedPreviewFee = (state: RootState): string => {
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
+  const networkAssetKey = selectNetworkAssetFromRoute(state)
   const inputAmount = selectDepositAmount(state)
   const error = selectInputError(state)
   const layerZeroChainSelector = selectLayerZeroChainSelector(state)
@@ -432,13 +473,21 @@ export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
 
   const isConnected = !!address
   // Will use the bridge if the source is Ethereum and the network is not deployed on Ethereum
-  const willUseBridge = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
+  const bridgingToL2 = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
+  const isTeth = networkAssetKey === TokenKey.TETH
   const hasLayerZeroChainSelector = layerZeroChainSelector !== null
   const isNotEmpty = inputAmount.trim().length > 0
   const isGreaterThanZero = parseFloat(inputAmount) > 0
   const hasNoError = !error
 
-  return isConnected && willUseBridge && hasLayerZeroChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
+  return (
+    isConnected &&
+    (bridgingToL2 || isTeth) &&
+    hasLayerZeroChainSelector &&
+    isNotEmpty &&
+    isGreaterThanZero &&
+    hasNoError
+  )
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -457,6 +506,9 @@ export const selectDepositDisabled = (state: RootState): boolean => {
   const error = selectInputError(state)
   const pending = selectDepositPending(state)
   const previewFee = selectPreviewFee(state)
+  const networkAssetKey = selectNetworkAssetFromRoute(state)
+  const solanaAddress = selectSolanaAddress(state)
+  const solanaAddressError = selectSolanaAddressError(state)
 
   const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
   const isEmpty = from.trim().length === 0
@@ -464,8 +516,18 @@ export const selectDepositDisabled = (state: RootState): boolean => {
   const isError = !!error
   const isPending = !!pending
   const isPreviewFeeApplicableButNotReady = shouldTriggerPreviewFee && previewFee === null
+  const isOnTethAndAddressEmpty = networkAssetKey === TokenKey.TETH && solanaAddress.trim() === ''
+  const isOnTethAndAddressError = networkAssetKey === TokenKey.TETH && solanaAddressError !== null
 
-  return isEmpty || isLessThanOrEqualToZero || isError || isPending || isPreviewFeeApplicableButNotReady
+  return (
+    isEmpty ||
+    isLessThanOrEqualToZero ||
+    isError ||
+    isPending ||
+    isPreviewFeeApplicableButNotReady ||
+    isOnTethAndAddressEmpty ||
+    isOnTethAndAddressError
+  )
 }
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
@@ -498,8 +560,8 @@ export const selectShouldUseFunCheckout = (state: RootState) => {
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectDepositAndBridgeCheckoutParams = createSelector(
-  [selectSourceTokenKey, selectDepositAssetAddress, selectAddress, selectDepositAmount],
-  (depositAssetTokenKey, depositAssetAddress, userAddress, fromAmount) => {
+  [selectSourceTokenKey, selectDepositAssetAddress, selectDepositAmount],
+  (depositAssetTokenKey, depositAssetAddress, fromAmount) => {
     // Constants
     const VERB = 'Buy'
 
@@ -507,7 +569,7 @@ export const selectDepositAndBridgeCheckoutParams = createSelector(
     const fromTokenInfo = depositAssetTokenKey ? tokensConfig[depositAssetTokenKey] : null
 
     // Null checks
-    if (!userAddress || !depositAssetAddress) {
+    if (!depositAssetAddress) {
       return null
     }
 
@@ -517,7 +579,7 @@ export const selectDepositAndBridgeCheckoutParams = createSelector(
       iconSrc: `/assets/svgs/token-${fromTokenInfo?.key}.svg`,
       actionsParams: [],
       targetChain: '1',
-      targetAsset: depositAssetAddress,
+      targetAsset: depositAssetAddress as `0x${string}`,
       targetAssetAmount: parseFloat(fromAmount),
       targetAssetTicker: fromTokenInfo?.name,
       checkoutItemTitle: `${VERB} ${fromTokenInfo?.name}`,

@@ -53,3 +53,70 @@ export function convertToDecimals(input: string, decimals: number = 18): string 
   // Return the whole number part concatenated with the decimal part
   return whole + decimalPadded
 }
+
+export function hasMoreThanNSignificantDigits(value: string, digits: number): boolean {
+  // Check if the value is a valid number
+  const num = Number(value)
+  if (isNaN(num)) {
+    return false
+  }
+
+  // If the number is 0, it does not have significant digits beyond 1
+  if (num === 0) {
+    return false
+  }
+
+  // Remove leading and trailing zeros and the decimal point
+  const significantPart = value.replace(/^0+|\.|0+$/g, '')
+
+  // Count significant digits (ignoring the leading and trailing zeros)
+  let significantDigitsCount = 0
+  let seenNonZero = false
+
+  for (const char of significantPart) {
+    if (char !== '0') {
+      seenNonZero = true
+    }
+    if (seenNonZero) {
+      significantDigitsCount++
+    }
+  }
+
+  // Return true if significant digits exceed the given threshold
+  return significantDigitsCount > digits
+}
+
+// This function does not work with large numbers greater than 10^9, which is
+// far more than the entire ETH supply anyway
+export function truncateToSignificantDigits(numStr: string, significantDigits: number): string {
+  let num = parseFloat(numStr) // Convert the input string to a number
+
+  if (isNaN(num)) {
+    throw new Error('Invalid input: not a valid number')
+  }
+
+  // Handle case where the number is 0
+  if (num === 0) {
+    return num.toFixed(significantDigits - 1) // Return zero with the specified number of digits
+  }
+
+  // Determine how many digits the number has before the decimal
+  const magnitude = Math.floor(Math.log10(Math.abs(num))) + 1
+
+  // Calculate the factor to truncate the number to the desired significant digits
+  const factor = Math.pow(10, significantDigits - magnitude)
+
+  // Truncate the number without rounding up
+  const truncatedNum = Math.floor(num * factor) / factor
+
+  // Convert back to a string without scientific notation and remove extra decimals
+  let truncatedStr = truncatedNum.toLocaleString('fullwide', { useGrouping: false, maximumFractionDigits: 20 })
+
+  // Handle cases where unnecessary decimals appear (like ".000" at the end)
+  if (truncatedStr.includes('.')) {
+    // Remove trailing zeros after decimal point
+    truncatedStr = truncatedStr.replace(/\.?0+$/, '')
+  }
+
+  return truncatedStr
+}

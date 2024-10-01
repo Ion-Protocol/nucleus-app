@@ -131,9 +131,11 @@ export const tokensConfig: Record<TokenKey, Token> = {
   [TokenKey.TETH]: {
     key: TokenKey.TETH,
     name: 'tETH',
+    fullName: 'Turbo ETH',
     symbol: 'TETH',
     addresses: {
-      [ChainKey.ETHEREUM]: '0x',
+      [ChainKey.ETHEREUM]: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+      [ChainKey.ECLIPSE]: 'GU7NS9xCwgNPiAdJ69iusFrRfawjDDPjeMBovhV1d4kn', // SPL token format on Solana
     },
   },
   [TokenKey.APXETH]: {
@@ -174,6 +176,23 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'DINERO',
     addresses: {
       [ChainKey.ETHEREUM]: '0x6DF0E641FC9847c0c6Fde39bE6253045440c14d3',
+    },
+  },
+  [TokenKey.FETH]: {
+    key: TokenKey.FETH,
+    name: 'FETH',
+    fullName: 'Form ETH',
+    symbol: 'FETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+    },
+  },
+  [TokenKey.PZETH]: {
+    key: TokenKey.PZETH,
+    name: 'pzETH',
+    symbol: 'PZETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811',
     },
   },
 }

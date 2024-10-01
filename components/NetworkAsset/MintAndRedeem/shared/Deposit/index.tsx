@@ -3,14 +3,18 @@ import { Text } from '@chakra-ui/react'
 import { FunkitPaymentsIconLine, useConnectModal, useFunkitCheckout } from '@funkit/connect'
 import { SubmitConnector } from './connector'
 
-function Deposit({ onSubmit, loading, disabled, shouldUseFunCheckout }: SubmitConnector.Props) {
+function Deposit({ onSubmit, loading, disabled, shouldUseFunCheckout, funkitCheckoutParams }: SubmitConnector.Props) {
   const { openConnectModal } = useConnectModal()
   const { beginCheckout } = useFunkitCheckout({
     onLoginRequired: openConnectModal,
   })
 
   function handleClickSubmit() {
-    onSubmit(beginCheckout)
+    if (shouldUseFunCheckout && funkitCheckoutParams) {
+      beginCheckout(funkitCheckoutParams)
+    } else {
+      onSubmit()
+    }
   }
 
   return (

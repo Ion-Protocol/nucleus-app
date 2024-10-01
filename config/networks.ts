@@ -17,6 +17,19 @@ export interface NetworkConfig {
   assets: NetworkAssets
 }
 
+const defaultEthVaultAssets = [
+  TokenKey.WETH,
+  TokenKey.EZETH,
+  TokenKey.WSTETH,
+  TokenKey.APXETH,
+  TokenKey.PUFETH,
+  TokenKey.RSWETH,
+  TokenKey.RSETH,
+  TokenKey.WEETH,
+  TokenKey.SFRXETH,
+  TokenKey.PZETH,
+]
+
 const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.SSETH]: {
     token: tokensConfig[TokenKey.SSETH],
@@ -26,17 +39,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     deployedOn: ChainKey.SEI,
     sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [
-        TokenKey.WETH,
-        TokenKey.EZETH,
-        TokenKey.WSTETH,
-        TokenKey.APXETH,
-        TokenKey.PUFETH,
-        TokenKey.RSWETH,
-        TokenKey.RSETH,
-        TokenKey.WEETH,
-        TokenKey.SFRXETH,
-      ],
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     contracts: {
@@ -72,6 +75,36 @@ const mainnetNetworkAssets: NetworkAssets = {
       ],
     },
   },
+  [TokenKey.FETH]: {
+    token: tokensConfig[TokenKey.FETH],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
+    chain: ChainKey.FORM,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: [ChainKey.ETHEREUM],
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
+    },
+    contracts: {
+      teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',
+      accountant: '0x8ca1d13De3039142186aA57656Adbe0fD2620D2B',
+      boringVault: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.FORM,
+        name: 'Form',
+        pointsMultiplier: 3,
+      },
+    ],
+    apys: {},
+  },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
@@ -81,7 +114,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: [ChainKey.ETHEREUM],
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH],
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
     contracts: {
       teller: '0x685aDb4797fb38D4Fc4a69750aa048B398160429',
@@ -105,16 +138,18 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.TETH]: {
     token: tokensConfig[TokenKey.TETH],
-    comingSoon: true,
     description: '',
+    comingSoon: true,
     chain: ChainKey.ECLIPSE,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [],
-    sourceTokens: {},
+    sourceChains: [ChainKey.ETHEREUM],
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
     contracts: {
-      teller: '0x',
-      accountant: '0x',
-      boringVault: '0x',
+      teller: '0x0',
+      accountant: '0x0',
+      boringVault: '0x0',
     },
     receiveOn: ChainKey.ETHEREUM,
     points: [],

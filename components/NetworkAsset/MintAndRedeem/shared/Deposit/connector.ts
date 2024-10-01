@@ -1,5 +1,10 @@
 import { RootState } from '@/store'
-import { selectDepositDisabled, selectDepositPending, selectShouldUseFunCheckout } from '@/store/slices/networkAssets'
+import {
+  selectDepositAndBridgeCheckoutParams,
+  selectDepositDisabled,
+  selectDepositPending,
+  selectShouldUseFunCheckout,
+} from '@/store/slices/networkAssets'
 import { performDeposit } from '@/store/slices/networkAssets/thunks'
 import { ConnectedProps, connect } from 'react-redux'
 
@@ -7,16 +12,18 @@ const mapState = (state: RootState, ownProps: SubmitOwnProps) => {
   const loading = selectDepositPending(state)
   const disabled = selectDepositDisabled(state)
   const shouldUseFunCheckout = selectShouldUseFunCheckout(state)
+  const funkitCheckoutParams = selectDepositAndBridgeCheckoutParams(state)
 
   return {
     loading,
     disabled,
     shouldUseFunCheckout: shouldUseFunCheckout && !disabled,
+    funkitCheckoutParams,
   }
 }
 
 const mapDispatch = {
-  onSubmit: (beginCheckout: any) => performDeposit(beginCheckout),
+  onSubmit: performDeposit,
 }
 
 const connector = connect(mapState, mapDispatch)

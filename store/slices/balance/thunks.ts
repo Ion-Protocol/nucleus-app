@@ -9,6 +9,8 @@ import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
 import { setErrorMessage } from '../status'
 import { chainsConfig } from '@/config/chains'
+import { selectSolanaAddress } from '../networkAssets'
+import { getSolanaBalance } from '@/api/utils/getSolanaBalance'
 
 type Balances = Record<TokenKey, Record<ChainKey, string | null>>
 export interface fetchAllTokenBalancesResult {
@@ -30,7 +32,7 @@ export interface fetchAllTokenBalancesResult {
  */
 export const fetchAllTokenBalances = createAsyncThunk<
   fetchAllTokenBalancesResult,
-  { ignoreLoading?: boolean } | undefined,
+  { solanaAddressFromAction?: string; ignoreLoading?: boolean } | undefined,
   { rejectValue: string; state: RootState }
 >(
   'balances/fetchAllTokenBalances',
@@ -38,6 +40,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
     const state = getState()
 
     const address = selectAddress(state)
+    const solanaAddress = options?.solanaAddressFromAction || selectSolanaAddress(state)
 
     const balances: Balances = {} as Balances
 
@@ -49,9 +52,9 @@ export const fetchAllTokenBalances = createAsyncThunk<
     // Each object in this array is used as params for the balanceOf function
     let tokenBalanceParamItems: {
       chainKey: ChainKey
-      chainId: number
+      chainId: number | null
       tokenKey: TokenKey
-      tokenAddress: `0x${string}`
+      tokenAddress: string
     }[] = []
 
     // Iterate over each token in the tokensConfig and create token balance param items
@@ -61,10 +64,10 @@ export const fetchAllTokenBalances = createAsyncThunk<
       for (const chainKey of chainKeys) {
         const chain = chainsConfig[chainKey as ChainKey]
         const tokenAddress = token.addresses[chainKey as ChainKey]
-        if (!chain.id || !tokenAddress || tokenAddress === '0x') continue
+        if (!tokenAddress || tokenAddress === '0x') continue
         tokenBalanceParamItems.push({
           chainKey: chainKey as ChainKey,
-          chainId: chain.id,
+          chainId: chain.id || null,
           tokenKey: tokenKey as TokenKey,
           tokenAddress,
         })
@@ -72,14 +75,23 @@ export const fetchAllTokenBalances = createAsyncThunk<
     }
 
     // Fetch the balances for each token using the token balance param items
+    // Just some advice: If this becomes any more complex, implement the strategy pattern
+    // where there is a strategy for each token
     try {
       const balancePromises = tokenBalanceParamItems.map(async (tokenBalanceParamItem) => {
         const { chainKey, chainId, tokenKey, tokenAddress } = tokenBalanceParamItem
 
         if (tokenKey === TokenKey.ETH) {
           return { tokenKey: tokenKey as TokenKey, chainKey, balance: '0' }
+        } else if (chainKey === ChainKey.ECLIPSE && solanaAddress) {
+          const balance = await getSolanaBalance(solanaAddress, tokenAddress)
+          return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
         } else if (tokenAddress && chainId) {
-          const balance = await balanceOf({ balanceAddress: address, tokenAddress, chainId })
+          const balance = await balanceOf({
+            balanceAddress: address,
+            tokenAddress: tokenAddress as `0x${string}`,
+            chainId,
+          })
           return { tokenKey: tokenKey as TokenKey, chainKey, balance: balance.toString() }
         }
       })
@@ -97,13 +109,9 @@ export const fetchAllTokenBalances = createAsyncThunk<
 
       return { balances }
     } catch (e) {
-      const error = e as Error
-      const errorMessage = `Failed to fetch token balance for address ${address}.`
-      const fullErrorMessage = `${errorMessage}\n${error.message}`
-      console.error(fullErrorMessage)
-      dispatch(setErrorMessage(fullErrorMessage))
-      return rejectWithValue(errorMessage)
+      // Do nothing to process errors since we are constantly fetching balances.
     }
+    return rejectWithValue('Error fetching token balances.')
   },
 
   // Setup a method to fetch token balanace without loading state.

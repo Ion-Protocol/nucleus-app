@@ -37,6 +37,9 @@ const networkAssetsSlice = createSlice({
       state.depositAmount = ''
     },
     setDepositAmountDebounceComplete: () => {}, // only used as an action to trigger a side effect
+    setSolanaAddress: (state, action) => {
+      state.solanaAddress = action.payload
+    },
   },
   extraReducers,
 })
@@ -51,5 +54,6 @@ export const {
   setDepositAmountDebounceComplete,
   setSelectedSourceToken,
   setSourceChain,
+  setSolanaAddress,
 } = networkAssetsSlice.actions
 export const networkAssetsReducer = networkAssetsSlice.reducer
