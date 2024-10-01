@@ -4,6 +4,7 @@ import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
 import { tokensConfig } from './tokens'
+import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from './constants'
 
 export enum NetworkKey {
   MAINNET = 'mainnet',
@@ -37,7 +38,16 @@ const mainnetNetworkAssets: NetworkAssets = {
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     chain: ChainKey.SEI,
     deployedOn: ChainKey.SEI,
-    sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
@@ -81,7 +91,12 @@ const mainnetNetworkAssets: NetworkAssets = {
       'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
     chain: ChainKey.FORM,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
@@ -112,7 +127,12 @@ const mainnetNetworkAssets: NetworkAssets = {
     comingSoon: true,
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -142,7 +162,12 @@ const mainnetNetworkAssets: NetworkAssets = {
     comingSoon: true,
     chain: ChainKey.ECLIPSE,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },

@@ -17,7 +17,7 @@ export interface NetworkAsset {
   chain: ChainKey
   deployedOn: ChainKey
   comingSoon?: boolean
-  sourceChains: ChainKey[]
+  sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   contracts: Contracts
   layerZeroChainSelector?: number
   sourceTokens: Partial<{

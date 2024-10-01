@@ -36,7 +36,7 @@ function TransactionSuccessModal({
               <Text variant="bigParagraph">Transaction Complete</Text>
               <Text variant="smallParagraph">{message}</Text>
               {shouldShowLayerZeroLink && <Text>View the status of your transaction here.</Text>}
-              <TxHashTag txHash={txHash} baseUrl={txBaseUrl} gap={1} />
+              {<TxHashTag txHash={txHash} baseUrl={txBaseUrl} gap={1} />}
             </Flex>
           </ModalBody>
           <ModalFooter>
