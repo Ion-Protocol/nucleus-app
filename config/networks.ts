@@ -27,6 +27,7 @@ const defaultEthVaultAssets = [
   TokenKey.RSETH,
   TokenKey.WEETH,
   TokenKey.SFRXETH,
+  TokenKey.PZETH,
 ]
 
 const mainnetNetworkAssets: NetworkAssets = {
@@ -82,7 +83,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: [ChainKey.ETHEREUM],
     sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
     contracts: {
       teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',

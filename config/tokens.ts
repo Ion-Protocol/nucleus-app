@@ -180,11 +180,19 @@ export const tokensConfig: Record<TokenKey, Token> = {
   },
   [TokenKey.FETH]: {
     key: TokenKey.FETH,
-    name: 'fETH',
+    name: 'FETH',
     fullName: 'Form ETH',
     symbol: 'FETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+    },
+  },
+  [TokenKey.PZETH]: {
+    key: TokenKey.PZETH,
+    name: 'pzETH',
+    symbol: 'PZETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811',
     },
   },
 }
