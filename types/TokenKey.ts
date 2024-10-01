@@ -8,6 +8,7 @@ export enum TokenKey {
   FETH = 'feth',
   OP = 'op',
   PUFETH = 'pufeth',
+  PZETH = 'pzeth',
   RSETH = 'rseth',
   RSWBTC = 'rswbtc',
   RSWETH = 'rsweth',
