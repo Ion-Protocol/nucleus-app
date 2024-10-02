@@ -1,6 +1,5 @@
-import { chainsConfig } from '@/config/chains'
 import { RootState } from '@/store'
-import { selectSourceChainKey } from '@/store/slices/networkAssets'
+import { selectExplorerBaseUrl, selectSourceChainKey } from '@/store/slices/networkAssets'
 import {
   clearTransactionSuccess,
   selectTransactionSuccessHash,
@@ -13,7 +12,7 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState) => {
   const sourceChainKey = selectSourceChainKey(state)
   const shouldShowLayerZeroLink = sourceChainKey === ChainKey.ETHEREUM
-  const txBaseUrl = chainsConfig[sourceChainKey].explorerBaseUrl
+  const txBaseUrl = selectExplorerBaseUrl(state)
 
   return {
     message: selectTransactionSuccessMessage(state),

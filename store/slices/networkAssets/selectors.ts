@@ -265,12 +265,19 @@ export const selectSourceChains = createSelector(
   [selectNetworkAssetConfig],
   (networkAssetConfig): (Chain & { key: ChainKey })[] => {
     if (!networkAssetConfig) return []
-    return networkAssetConfig.sourceChains.map((chainKey) => {
-      const chain = chainsConfig[chainKey as ChainKey]
-      return { key: chainKey as ChainKey, ...chain }
+    return Object.values(networkAssetConfig.sourceChains).map((sourceChainConfig) => {
+      const chainConfig = chainsConfig[sourceChainConfig.chain as ChainKey]
+      return { key: sourceChainConfig.chain as ChainKey, ...chainConfig }
     })
   }
 )
+
+export const selectExplorerBaseUrl = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  const sourceChainKeyConfig = networkAssetConfig?.sourceChains[sourceChainKey as ChainKey]
+  return sourceChainKeyConfig?.explorerBaseUrl || null
+}
 
 // DO NOT memoize: Direct lookup; returns a value from configuration.
 export const selectSourceChainId = (state: RootState): number | null => {
