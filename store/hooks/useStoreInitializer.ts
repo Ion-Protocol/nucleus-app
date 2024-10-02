@@ -7,6 +7,7 @@ import { selectNetworkKey } from '../slices/chain'
 import { selectAvailableNetworkAssetKeys } from '../slices/networkAssets'
 import { fetchNetworkAssetTvl } from '../slices/networkAssets/thunks'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
+import { userProofApiSlice } from '../slices/userProofSlice/apiSlice'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -16,7 +17,12 @@ export function useStoreInitializer() {
   const networkAssetKeys = useAppSelector(selectAvailableNetworkAssetKeys)
 
   useEffect(() => {
-    if (address) dispatch(setAddress(address))
+    if (address) {
+      dispatch(setAddress(address))
+
+      // Load the user merkle proof data for claiming rewards
+      dispatch(userProofApiSlice.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1 }))
+    }
   }, [address, dispatch])
 
   useEffect(() => {
