@@ -124,7 +124,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       {
         key: PointSystemKey.EIGENLAYER,
-        name: 'Eigenlayer Points',
+        name: 'EigenLayer Points',
         pointsMultiplier: 0.5,
       },
       {
