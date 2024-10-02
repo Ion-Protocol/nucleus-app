@@ -92,6 +92,14 @@ export const semanticTokens = {
       default: 'primary.500',
       _dark: 'primary.300',
     },
+    smallTag: {
+      default: 'neutral.600',
+      _dark: 'darkMode.200',
+    },
+    smallTagText: {
+      default: 'neutral.900',
+      _dark: 'darkMode.400',
+    },
     success: {
       main: {
         default: 'green.main',

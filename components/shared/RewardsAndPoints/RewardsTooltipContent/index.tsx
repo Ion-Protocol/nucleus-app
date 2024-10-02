@@ -88,7 +88,7 @@ export function RewardsTooltipContent({
       <Divider borderColor="borderLight" />
 
       {/* Rewards */}
-      <Flex direction="column">
+      <Flex direction="column" gap={1}>
         <Text variant="smallParagraph" color="textSecondary">
           Rewards
         </Text>

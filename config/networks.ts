@@ -108,14 +108,34 @@ const mainnetNetworkAssets: NetworkAssets = {
     receiveOn: ChainKey.ETHEREUM,
     points: [
       {
-        key: PointSystemKey.NUCLEUS,
-        name: 'Nucleus',
+        key: PointSystemKey.FORM,
+        name: 'Form Points',
         pointsMultiplier: 3,
       },
       {
-        key: PointSystemKey.FORM,
-        name: 'Form',
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus Points',
         pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.RENZO,
+        name: 'ezPoints',
+        pointsMultiplier: 2,
+      },
+      {
+        key: PointSystemKey.EIGENLAYER,
+        name: 'Eigenlayer Points',
+        pointsMultiplier: 0.5,
+      },
+      {
+        key: PointSystemKey.SYMBIOTIC,
+        name: 'Symbiotic Points',
+        pointsMultiplier: 0.5,
+      },
+      {
+        key: PointSystemKey.MELLOW,
+        name: 'Mellow Points',
+        pointsMultiplier: 1,
       },
     ],
     apys: {},

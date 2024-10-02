@@ -43,6 +43,11 @@ export const textStyles = {
     fontWeight: 'normal',
     fontFamily: 'var(--font-recklessNeue)',
   },
+  smallTag: {
+    fontSize: '10px',
+    fontWeight: 'bold',
+    fontFamily: 'var(--font-ppformula)',
+  },
   button: {
     fontSize: '14px',
     fontWeight: 'normal',
