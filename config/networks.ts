@@ -6,6 +6,8 @@ import { sei } from 'wagmi/chains'
 import { tokensConfig } from './tokens'
 import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from './constants'
 
+const PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
+
 export enum NetworkKey {
   MAINNET = 'mainnet',
   TENDERLY_MAINNET = 'tenderly_mainnet',
@@ -37,6 +39,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     chain: ChainKey.SEI,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.SSETH),
     deployedOn: ChainKey.SEI,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
@@ -90,6 +93,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     description:
       'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
     chain: ChainKey.FORM,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
@@ -145,6 +149,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     description:
       'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
     comingSoon: true,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.EARNETH),
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: {
@@ -180,6 +185,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     token: tokensConfig[TokenKey.TETH],
     description: '',
     comingSoon: true,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.TETH),
     chain: ChainKey.ECLIPSE,
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: {

@@ -75,7 +75,11 @@ export const selectAvailableNetworkAssetKeys = createSelector(
   [selectAllNetworkAssetKeys, selectNetworkConfig],
   (networkAssetKeys, networkConfig): TokenKey[] => {
     if (!networkConfig) return []
-    return networkAssetKeys.filter((key) => networkConfig.assets[key]?.comingSoon !== true)
+    const availabilityFilter = (key: TokenKey) => {
+      const networkAsset = networkConfig.assets[key]
+      return networkAsset?.comingSoon !== true && networkAsset?.paused !== true
+    }
+    return networkAssetKeys.filter(availabilityFilter)
   }
 )
 
