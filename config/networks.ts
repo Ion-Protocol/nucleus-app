@@ -4,6 +4,9 @@ import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
 import { tokensConfig } from './tokens'
+import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from './constants'
+
+const PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
 
 export enum NetworkKey {
   MAINNET = 'mainnet',
@@ -36,8 +39,18 @@ const mainnetNetworkAssets: NetworkAssets = {
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     chain: ChainKey.SEI,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.SSETH),
     deployedOn: ChainKey.SEI,
-    sourceChains: [ChainKey.ETHEREUM, ChainKey.SEI],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
@@ -80,8 +93,14 @@ const mainnetNetworkAssets: NetworkAssets = {
     description:
       'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
     chain: ChainKey.FORM,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
@@ -93,14 +112,34 @@ const mainnetNetworkAssets: NetworkAssets = {
     receiveOn: ChainKey.ETHEREUM,
     points: [
       {
-        key: PointSystemKey.NUCLEUS,
-        name: 'Nucleus',
+        key: PointSystemKey.FORM,
+        name: 'Form Points',
         pointsMultiplier: 3,
       },
       {
-        key: PointSystemKey.FORM,
-        name: 'Form',
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus Points',
         pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.RENZO,
+        name: 'ezPoints',
+        pointsMultiplier: 2,
+      },
+      {
+        key: PointSystemKey.EIGENLAYER,
+        name: 'EigenLayer Points',
+        pointsMultiplier: 0.5,
+      },
+      {
+        key: PointSystemKey.SYMBIOTIC,
+        name: 'Symbiotic Points',
+        pointsMultiplier: 0.5,
+      },
+      {
+        key: PointSystemKey.MELLOW,
+        name: 'Mellow Points',
+        pointsMultiplier: 1,
       },
     ],
     apys: {},
@@ -110,9 +149,15 @@ const mainnetNetworkAssets: NetworkAssets = {
     description:
       'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
     comingSoon: true,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.EARNETH),
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -140,9 +185,15 @@ const mainnetNetworkAssets: NetworkAssets = {
     token: tokensConfig[TokenKey.TETH],
     description: '',
     comingSoon: true,
+    paused: PAUSED_NETWORK_ASSETS.includes(TokenKey.TETH),
     chain: ChainKey.ECLIPSE,
     deployedOn: ChainKey.ETHEREUM,
-    sourceChains: [ChainKey.ETHEREUM],
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },

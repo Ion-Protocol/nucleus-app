@@ -49,7 +49,10 @@ export const selectRouterQuery = (state: RootState) => {
 
 export const selectNetworkAssetFromRoute = (state: RootState): TokenKey | null => {
   const routerQuery = selectRouterQuery(state)
-  const tokenKey = routerQuery?.token || localStorage.getItem('networkAsset')
+
+  // Check if localStorage is available
+  const tokenKey = routerQuery?.token || (typeof window !== 'undefined' && localStorage.getItem('networkAsset'))
+
   if (!tokenKey) return null
   return tokenKey as TokenKey
 }

@@ -7,7 +7,7 @@ interface TxHashTagProps extends TagProps, PropsWithChildren {
     raw: string | null
     formatted: string | null
   }
-  baseUrl: string
+  baseUrl: string | null
 }
 
 export function TxHashTag({ children, txHash, baseUrl, ...props }: TxHashTagProps) {
