@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectNetworkKey } from '../slices/chain'
 import { selectAvailableNetworkAssetKeys } from '../slices/networkAssets'
-import { fetchNetworkAssetTvl } from '../slices/networkAssets/thunks'
+import { fetchNetworkAssetTvl, fetchPaused } from '../slices/networkAssets/thunks'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 
 export function useStoreInitializer() {
@@ -23,7 +23,7 @@ export function useStoreInitializer() {
     deferExecution(() => {
       dispatch(fetchUsdPerEthRate())
       dispatch(fetchUsdPerBtcRate())
-
+      dispatch(fetchPaused())
       networkAssetKeys.forEach((key) => {
         dispatch(fetchNetworkAssetTvl(key))
       })

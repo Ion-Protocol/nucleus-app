@@ -77,7 +77,7 @@ export const selectAvailableNetworkAssetKeys = createSelector(
     if (!networkConfig) return []
     const availabilityFilter = (key: TokenKey) => {
       const networkAsset = networkConfig.assets[key]
-      return networkAsset?.comingSoon !== true && networkAsset?.paused !== true
+      return networkAsset?.comingSoon !== true && networkAsset?.manuallyPaused !== true
     }
     return networkAssetKeys.filter(availabilityFilter)
   }
@@ -117,6 +117,20 @@ export const selectNetworkAssetsAsArray = createSelector(
     }))
   }
 )
+
+/////////////////////////////////////////////////////////////////////
+// Automatic Pausing
+/////////////////////////////////////////////////////////////////////
+
+export const selectAutomaticallyPausedNetworkAssets = (state: RootState) => {
+  return state.networkAssets.automaticallyPaused.data
+}
+
+export const selectNetworkAssetPaused = (state: RootState): boolean => {
+  const networkAssetKeyFromRoute = selectNetworkAssetFromRoute(state)
+  if (!networkAssetKeyFromRoute) return false
+  return state.networkAssets.automaticallyPaused.data[networkAssetKeyFromRoute] || false
+}
 
 /////////////////////////////////////////////////////////////////////
 // TVL

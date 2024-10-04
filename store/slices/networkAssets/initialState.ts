@@ -21,6 +21,7 @@ type AsyncMetric<T> = {
 // Feel free to add to the ruleset above if your justification is not included.
 
 export type NetworkAssetsState = {
+  automaticallyPaused: AsyncMetric<Partial<Record<TokenKey, boolean>>>
   // TVL represents Total Value Locked for the token asset.
   // The TVL is stored as a mapping of chain keys to tvl values since TVL's for
   // every asset need to be diplayed on the dashboard simultaneously.
@@ -85,6 +86,12 @@ export type NetworkAssetsState = {
 }
 
 export const initialState: NetworkAssetsState = {
+  // Automatically paused
+  automaticallyPaused: {
+    data: {},
+    loading: false,
+  },
+
   // TVL
   tvl: {
     data: Object.values(TokenKey).reduce(

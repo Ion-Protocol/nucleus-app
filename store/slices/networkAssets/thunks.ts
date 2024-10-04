@@ -1,5 +1,7 @@
+import { Accountant } from '@/api/contracts/Accountant'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
+import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
@@ -18,6 +20,7 @@ import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
+import { truncateToSignificantDigits } from '@/utils/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Address } from 'viem'
 import { switchChain } from 'wagmi/actions'
@@ -28,12 +31,14 @@ import { selectNetworkId } from '../chain'
 import { selectNetworkAssetFromRoute } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import {
+  selectAvailableNetworkAssetKeys,
   selectContractAddressByName,
   selectDepositAmount,
   selectDepositAmountAsBigInt,
   selectDepositBridgeData,
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
+  selectNetworkConfig,
   selectSolanaAddressBytes32,
   selectSourceChainId,
   selectSourceChainKey,
@@ -41,8 +46,45 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount } from './slice'
-import { truncateToSignificantDigits } from '@/utils/number'
-import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+
+export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
+
+export const fetchPaused = createAsyncThunk<FetchPausedResult, void, { rejectValue: string; state: RootState }>(
+  'balances/fetchPaused',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
+      const networkConfig = selectNetworkConfig(state)
+
+      if (!networkConfig) {
+        return {}
+      }
+
+      const availableNetworkAssetKeys = selectAvailableNetworkAssetKeys(state)
+      const pausedNetworksArray = await Promise.all(
+        availableNetworkAssetKeys.map(async (networkAssetKey) => {
+          const accountantAddress = networkConfig.assets[networkAssetKey]?.contracts.accountant
+          if (!accountantAddress) return { key: networkAssetKey, isPaused: false }
+          const accountantState = await Accountant.accountantState(accountantAddress)
+          return { key: networkAssetKey, isPaused: accountantState.isPaused }
+        })
+      )
+
+      const pausedNetworks = pausedNetworksArray.reduce((acc, { key, isPaused }) => {
+        acc[key] = isPaused
+        return acc
+      }, {} as FetchPausedResult)
+
+      return pausedNetworks
+    } catch (e) {
+      const error = e as Error
+      const errorMessage = `Failed to fetch paused state.\n${error.message}`
+      console.error(`${errorMessage}\n${error.stack}`)
+      dispatch(setErrorMessage(errorMessage))
+      return rejectWithValue(errorMessage)
+    }
+  }
+)
 
 export interface FetchNetworkAssetTvlResult {
   tokenKey: TokenKey

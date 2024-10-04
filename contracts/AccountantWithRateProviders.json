@@ -10,9 +10,8 @@
         { "name": "_base", "type": "address", "internalType": "address" },
         { "name": "allowedExchangeRateChangeUpper", "type": "uint16", "internalType": "uint16" },
         { "name": "allowedExchangeRateChangeLower", "type": "uint16", "internalType": "uint16" },
-        { "name": "minimumUpdateDelayInSeconds", "type": "uint24", "internalType": "uint24" },
-        { "name": "managementFee", "type": "uint16", "internalType": "uint16" },
-        { "name": "performanceFee", "type": "uint16", "internalType": "uint16" }
+        { "name": "minimumUpdateDelayInSeconds", "type": "uint32", "internalType": "uint32" },
+        { "name": "managementFee", "type": "uint16", "internalType": "uint16" }
       ],
       "stateMutability": "nonpayable"
     },
@@ -22,7 +21,6 @@
       "inputs": [],
       "outputs": [
         { "name": "payoutAddress", "type": "address", "internalType": "address" },
-        { "name": "highwaterMark", "type": "uint96", "internalType": "uint96" },
         { "name": "feesOwedInBase", "type": "uint128", "internalType": "uint128" },
         { "name": "totalSharesLastUpdate", "type": "uint128", "internalType": "uint128" },
         { "name": "exchangeRate", "type": "uint96", "internalType": "uint96" },
@@ -30,9 +28,8 @@
         { "name": "allowedExchangeRateChangeLower", "type": "uint16", "internalType": "uint16" },
         { "name": "lastUpdateTimestamp", "type": "uint64", "internalType": "uint64" },
         { "name": "isPaused", "type": "bool", "internalType": "bool" },
-        { "name": "minimumUpdateDelayInSeconds", "type": "uint24", "internalType": "uint24" },
-        { "name": "managementFee", "type": "uint16", "internalType": "uint16" },
-        { "name": "performanceFee", "type": "uint16", "internalType": "uint16" }
+        { "name": "minimumUpdateDelayInSeconds", "type": "uint32", "internalType": "uint32" },
+        { "name": "managementFee", "type": "uint16", "internalType": "uint16" }
       ],
       "stateMutability": "view"
     },
@@ -110,7 +107,6 @@
       ],
       "stateMutability": "view"
     },
-    { "type": "function", "name": "resetHighwaterMark", "inputs": [], "outputs": [], "stateMutability": "nonpayable" },
     {
       "type": "function",
       "name": "setAuthority",
@@ -140,7 +136,7 @@
     {
       "type": "function",
       "name": "updateDelay",
-      "inputs": [{ "name": "minimumUpdateDelayInSeconds", "type": "uint24", "internalType": "uint24" }],
+      "inputs": [{ "name": "minimumUpdateDelayInSeconds", "type": "uint32", "internalType": "uint32" }],
       "outputs": [],
       "stateMutability": "nonpayable"
     },
@@ -174,13 +170,6 @@
     },
     {
       "type": "function",
-      "name": "updatePerformanceFee",
-      "inputs": [{ "name": "performanceFee", "type": "uint16", "internalType": "uint16" }],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-    },
-    {
-      "type": "function",
       "name": "updateUpper",
       "inputs": [{ "name": "allowedExchangeRateChangeUpper", "type": "uint16", "internalType": "uint16" }],
       "outputs": [],
@@ -206,8 +195,8 @@
       "type": "event",
       "name": "DelayInSecondsUpdated",
       "inputs": [
-        { "name": "oldDelay", "type": "uint24", "indexed": false, "internalType": "uint24" },
-        { "name": "newDelay", "type": "uint24", "indexed": false, "internalType": "uint24" }
+        { "name": "oldDelay", "type": "uint32", "indexed": false, "internalType": "uint32" },
+        { "name": "newDelay", "type": "uint32", "indexed": false, "internalType": "uint32" }
       ],
       "anonymous": false
     },
@@ -230,7 +219,6 @@
       ],
       "anonymous": false
     },
-    { "type": "event", "name": "HighwaterMarkReset", "inputs": [], "anonymous": false },
     {
       "type": "event",
       "name": "LowerBoundUpdated",
@@ -270,15 +258,6 @@
     },
     {
       "type": "event",
-      "name": "PerformanceFeeUpdated",
-      "inputs": [
-        { "name": "oldFee", "type": "uint16", "indexed": false, "internalType": "uint16" },
-        { "name": "newFee", "type": "uint16", "indexed": false, "internalType": "uint16" }
-      ],
-      "anonymous": false
-    },
-    {
-      "type": "event",
       "name": "RateProviderUpdated",
       "inputs": [
         { "name": "asset", "type": "address", "indexed": false, "internalType": "address" },
@@ -297,12 +276,10 @@
       ],
       "anonymous": false
     },
-    { "type": "error", "name": "AccountantWithRateProviders__ExchangeRateAboveHighwaterMark", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__LowerBoundTooLarge", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__ManagementFeeTooLarge", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__OnlyCallableByBoringVault", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__Paused", "inputs": [] },
-    { "type": "error", "name": "AccountantWithRateProviders__PerformanceFeeTooLarge", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__UpdateDelayTooLarge", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__UpperBoundTooSmall", "inputs": [] },
     { "type": "error", "name": "AccountantWithRateProviders__ZeroFeesOwed", "inputs": [] }

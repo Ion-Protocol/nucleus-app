@@ -17,7 +17,7 @@ export interface NetworkAsset {
   chain: ChainKey
   deployedOn: ChainKey
   comingSoon?: boolean
-  paused?: boolean
+  manuallyPaused?: boolean
   sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   contracts: Contracts
   layerZeroChainSelector?: number

@@ -2,9 +2,8 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 const GEOBLOCKING_ENABLED = process.env.NEXT_PUBLIC_GEOBLOCKING === 'true'
-const PAUSED_NETWORK_ASSETS =
+const MANUALLY_PAUSED_NETWORK_ASSETS =
   process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',').map((token) => token.trim()) || []
-console.log('🚀 ~ PAUSED_NETWORK_ASSETS:', PAUSED_NETWORK_ASSETS)
 
 // US, Panama, Cuba, Iran, North Korea, Russia, Syria
 const BLOCKED_COUNTRIES = ['US', 'PA', 'CU', 'IR', 'KP', 'RU', 'SY']
@@ -13,7 +12,7 @@ const PUBLIC_FILE = /\.(.*)$/
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const token = PAUSED_NETWORK_ASSETS.find((token) => pathname.includes(token))
+  const token = MANUALLY_PAUSED_NETWORK_ASSETS.find((token) => pathname.includes(token))
   const isPausedPage = pathname.startsWith('/tokens/') && !!token
 
   if (isPausedPage) {
