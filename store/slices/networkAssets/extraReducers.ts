@@ -4,8 +4,10 @@ import { NetworkAssetsState } from './initialState'
 import {
   FetchChainRateResult,
   FetchNetworkAssetTvlResult,
+  FetchPausedResult,
   FetchPreviewFeeResult,
   fetchNetworkAssetTvl,
+  fetchPaused,
   fetchPreviewFee,
   fetchTokenRateInQuote,
   performDeposit,
@@ -19,6 +21,20 @@ import {
  */
 export function extraReducers(builder: ActionReducerMapBuilder<NetworkAssetsState>) {
   builder
+
+    ///////////////////////////////
+    // Paused
+    ///////////////////////////////
+    .addCase(fetchPaused.pending, (state, action) => {
+      state.automaticallyPaused.loading = true
+    })
+    .addCase(fetchPaused.fulfilled, (state, action: PayloadAction<FetchPausedResult>) => {
+      state.automaticallyPaused.loading = false
+      state.automaticallyPaused.data = action.payload
+    })
+    .addCase(fetchPaused.rejected, (state: NetworkAssetsState, action) => {
+      state.automaticallyPaused.loading = false
+    })
 
     ///////////////////////////////
     // TVL
