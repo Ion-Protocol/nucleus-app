@@ -1,4 +1,5 @@
 import { Chain } from '@funkit/connect'
+import { custom } from 'viem'
 import { sei as seiWagmi } from 'wagmi/chains'
 
 const TENDERLY_STAGING_RPC_URL = 'https://virtual.mainnet.rpc.tenderly.co/2c860eb1-24d0-4817-86f4-dd17c2629d18'
@@ -39,3 +40,15 @@ export const sei = {
   ...seiWagmi,
   iconUrl: '/assets/svgs/sei.svg',
 }
+
+const SEI_RPC_URL = process.env.NEXT_PUBLIC_SEI_RPC_URL || ''
+
+export const customSeiTransport = custom({
+  url: SEI_RPC_URL,
+  request: async (request) => {
+    if (request.method === 'eth_getTransactionReceipt') {
+      request.method = 'sei_getTransactionReceipt'
+    }
+    return request
+  },
+})
