@@ -72,4 +72,17 @@ export const colors = {
     light: '#0000000D',
     dark: '#00000040',
   },
+  deepTeal: {
+    main: '#003D2A',
+  },
+  goldenSand: {
+    main: '#EDD377',
+  },
+  iceberg: {
+    main: '#CDEFE5',
+    50: '#CDEFE580',
+  },
+  bermuda: {
+    main: '#86DCC2',
+  },
 }

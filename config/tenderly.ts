@@ -1,8 +1,8 @@
 import { Chain } from '@funkit/connect'
 import { sei as seiWagmi } from 'wagmi/chains'
 
-const TENDERLY_STAGING_RPC_URL = 'https://virtual.mainnet.rpc.tenderly.co/2c860eb1-24d0-4817-86f4-dd17c2629d18'
-const TENDERLY_STAGING_CHAIN_ID = 99099127
+const TENDERLY_RPC_URL = process.env.NEXT_PUBLIC_TENDERLY_RPC_URL || ''
+const TENDERLY_STAGING_CHAIN_ID = 308712
 
 export const tenderlyStaging: Chain = {
   id: TENDERLY_STAGING_CHAIN_ID,
@@ -15,16 +15,16 @@ export const tenderlyStaging: Chain = {
   },
   rpcUrls: {
     default: {
-      http: [TENDERLY_STAGING_RPC_URL],
+      http: [TENDERLY_RPC_URL],
     },
     public: {
-      http: [TENDERLY_STAGING_RPC_URL],
+      http: [TENDERLY_RPC_URL],
     },
   },
   blockExplorers: {
     default: {
       name: 'Ion Protocol Staging Explorer',
-      url: `https://dashboard.tenderly.co/ion-protocol/money-market-v1/testnet/71701faf-e853-4997-979e-51d7c3968d54`,
+      url: `https://dashboard.tenderly.co/ion-protocol/money-market-v1/testnet/7afc9000-8550-47bc-92dc-28eb37aab81b`,
     },
   },
   contracts: {

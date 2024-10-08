@@ -7,6 +7,8 @@ import { selectNetworkKey } from '../slices/chain'
 import { selectAvailableNetworkAssetKeys } from '../slices/networkAssets'
 import { fetchNetworkAssetTvl, fetchPaused } from '../slices/networkAssets/thunks'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
+import { userProofApi } from '../slices/userProofSlice/apiSlice'
+import { redstoneApi } from '../slices/redstoneSlice/apiSlice'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -16,7 +18,15 @@ export function useStoreInitializer() {
   const networkAssetKeys = useAppSelector(selectAvailableNetworkAssetKeys)
 
   useEffect(() => {
-    if (address) dispatch(setAddress(address))
+    if (address) {
+      dispatch(setAddress(address))
+
+      // Load the user merkle proof data for claiming rewards
+      dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1 }))
+
+      // Load the token/usd rate for the token on the network
+      dispatch(redstoneApi.endpoints.getExchangeRate.initiate('SEI'))
+    }
   }, [address, dispatch])
 
   useEffect(() => {

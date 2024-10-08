@@ -8,7 +8,7 @@ import { NetworkAsset } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
-import { currencySwitch } from '@/utils/currency'
+import { convertToUsd } from '@/utils/currency'
 import { isValidSolanaAddress } from '@/utils/misc'
 import { abbreviateNumber, convertToDecimals, hasMoreThanNSignificantDigits, numberToPercent } from '@/utils/number'
 import bs58 from 'bs58'
@@ -20,6 +20,8 @@ import { selectNetworkKey } from '../chain'
 import { selectPriceLoading, selectUsdPerEthRate } from '../price'
 import { selectNetworkAssetFromRoute } from '../router'
 import { calculateApy } from './calculateApy'
+import { selectTotalClaimables } from '../userProofSlice/selectors'
+import { RewardsTableData } from '@/types/RewardsTableData'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -130,6 +132,87 @@ export const selectNetworkAssetPaused = (state: RootState): boolean => {
   const networkAssetKeyFromRoute = selectNetworkAssetFromRoute(state)
   if (!networkAssetKeyFromRoute) return false
   return state.networkAssets.automaticallyPaused.data[networkAssetKeyFromRoute] || false
+}
+
+/////////////////////////////////////////////////////////////////////
+// Rewards
+/////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Simple state access; memoization not necessary.
+export const selectClaimedAmountsOfAssets = (state: RootState) => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.claimed.data
+}
+
+export const selectRewardsTableData = createSelector(
+  [selectTotalClaimables, selectClaimedAmountsOfAssets],
+  (totalClaimables, claimedAmounts): RewardsTableData[] => {
+    const tableData: RewardsTableData[] = totalClaimables.map((totalClaimable) => {
+      // What's been claimed is read from the contracts.
+      // Total claimable is read from the backend api.
+      // Available claimable is what has been claimed subtracted from the total claimable.
+
+      const tokenSymbol = tokensConfig[totalClaimable.tokenKey].symbol
+
+      const claimedAmountAsString = claimedAmounts[totalClaimable.tokenKey]
+      const claimedAmountAsBigInt = BigInt(claimedAmountAsString || '0')
+      const claimedAmountAsFloat = convertToDecimals(claimedAmountAsBigInt.toString(), 18)
+
+      let formattedClaimedAmount = ''
+      if (parseFloat(claimedAmountAsFloat) > 0) {
+        formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
+      } else {
+        formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
+        // formattedClaimedAmount = '-'
+      }
+
+      const totalClaimableAmountAsBigInt = BigInt(totalClaimable.amount)
+      const claimableAmountAsBigInt = totalClaimableAmountAsBigInt - claimedAmountAsBigInt
+      const claimableAmountAsFloat = bigIntToNumberAsString(claimableAmountAsBigInt, { decimals: 18 })
+
+      let formattedClaimableAmount = ''
+      if (parseFloat(claimableAmountAsFloat) > 0) {
+        formattedClaimableAmount = `${claimableAmountAsFloat} ${tokenSymbol}`
+      } else {
+        formattedClaimableAmount = 'Nothing to claim'
+      }
+
+      return {
+        tokenKey: totalClaimable.tokenKey,
+        tokenSymbol,
+        claimedTokenAmount: formattedClaimedAmount,
+        claimedInUsd: '',
+        claimableTokenAmount: formattedClaimableAmount,
+        claimableInUsd: '',
+      }
+    })
+
+    return tableData
+  }
+)
+
+export const selectClaimables = createSelector(
+  [selectTotalClaimables, selectClaimedAmountsOfAssets],
+  (totalClaimables, claimedAmounts) => {
+    const claimables = totalClaimables.map((totalClaimable) => {
+      const claimedAmountAsString = claimedAmounts[totalClaimable.tokenKey]
+      const claimedAmountAsBigInt = BigInt(claimedAmountAsString || '0')
+      const totalClaimableAmountAsBigInt = BigInt(totalClaimable.amount)
+      const claimableAmountAsBigInt = totalClaimableAmountAsBigInt - claimedAmountAsBigInt
+      return {
+        tokenKey: totalClaimable.tokenKey,
+        chainKey: totalClaimable.chainKey,
+        amount: claimableAmountAsBigInt,
+      }
+    })
+
+    return claimables
+  }
+)
+
+export const selectShouldShowRewardAndHistory = (state: RootState): boolean => {
+  const claimables = selectClaimables(state)
+  return claimables.some((claimable) => claimable.amount > BigInt(0))
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -479,9 +562,8 @@ export const selectFormattedPreviewFee = (state: RootState): string => {
   if (!previewFee) {
     price = BigInt(0)
   }
-  const formattedPreviewFee = currencySwitch(previewFee, price, {
+  const formattedPreviewFee = convertToUsd(previewFee, price, {
     usdDigits: 2,
-    ethDigits: 7,
   })
   return formattedPreviewFee
 }

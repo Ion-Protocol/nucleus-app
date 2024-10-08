@@ -2,6 +2,7 @@ import { Accountant } from '@/api/contracts/Accountant'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+import { getUserClaimedAmountOfAsset } from '@/api/contracts/MerkleClaim/usersClaimedAmountOfAsset'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
@@ -30,6 +31,7 @@ import { fetchAllTokenBalances, selectTokenBalance } from '../balance'
 import { selectNetworkId } from '../chain'
 import { selectNetworkAssetFromRoute } from '../router'
 import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
+import { selectClaimableTokenAddresses, selectTotalClaimables, selectUserProof } from '../userProofSlice/selectors'
 import {
   selectAvailableNetworkAssetKeys,
   selectContractAddressByName,
@@ -46,6 +48,7 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount } from './slice'
+import { claim } from '@/api/contracts/MerkleClaim/claim'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
 
@@ -81,6 +84,88 @@ export const fetchPaused = createAsyncThunk<FetchPausedResult, void, { rejectVal
       const errorMessage = `Failed to fetch paused state.\n${error.message}`
       console.error(`${errorMessage}\n${error.stack}`)
       dispatch(setErrorMessage(errorMessage))
+      return rejectWithValue(errorMessage)
+    }
+  }
+)
+export interface FetchClaimedAmountsOfAssetsResult {
+  claimed: Partial<Record<TokenKey, string>>
+}
+
+export const fetchClaimedAmountsOfAssets = createAsyncThunk<
+  FetchClaimedAmountsOfAssetsResult,
+  void,
+  { rejectValue: string; state: RootState }
+>('balances/fetchClaimedAmountsOfAssets', async (_, { getState, rejectWithValue, dispatch }) => {
+  const state = getState()
+  const userAddress = selectAddress(state)
+  const claims = selectTotalClaimables(state)
+
+  if (!userAddress || claims.length === 0) return { claimed: {} }
+
+  try {
+    const claimedAmountsAsArray = await Promise.all(
+      claims.map((claim) => {
+        const assetAddress = tokensConfig[claim.tokenKey]?.addresses[claim.chainKey] as `0x${string}`
+        return getUserClaimedAmountOfAsset(
+          { userAddress, assetAddress },
+          { merkleClaimAddress: contractAddresses.merkleClaim, chainId: 308712 }
+        )
+      })
+    )
+
+    // Convert the array of claimed amounts to an object
+    const claimed = claims.reduce(
+      (acc, claim, index) => {
+        acc[claim.tokenKey] = claimedAmountsAsArray[index].toString()
+        return acc
+      },
+      {} as Partial<Record<TokenKey, string>>
+    )
+    return { claimed }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to fetch claimed amount of asset.\n${error.message}`
+    console.error(`${errorMessage}\n${error.stack}`)
+    dispatch(setErrorMessage(errorMessage))
+    return rejectWithValue(errorMessage)
+  }
+})
+
+interface ClaimRewardsResult {
+  txHash: `0x${string}` | null
+}
+
+export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectValue: string; state: RootState }>(
+  'bridges/claimRewards',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
+      const proof = selectUserProof(state)
+      const userAddress = selectAddress(state)
+      const claimables = selectTotalClaimables(state)
+      const claimableTokenAddresses = selectClaimableTokenAddresses(state)
+
+      const claimableAmounts = claimables.map((claimable) => BigInt(claimable.amount))
+
+      if (!userAddress) {
+        return { txHash: null }
+      }
+
+      const txHash = await claim(
+        { proof, user: userAddress, assets: claimableTokenAddresses, totalClaimableForAsset: claimableAmounts },
+        { merkleClaimContractAddress: contractAddresses.merkelClaim }
+      )
+
+      return { txHash: '0x0' }
+    } catch (e) {
+      console.error(e)
+      const error = e as Error
+      // const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
+      const errorMessage = `Deposit failed`
+      const fullErrorMessage = `${errorMessage}\n${error.message}`
+      dispatch(setErrorTitle('Deposit Not Verified'))
+      dispatch(setErrorMessage(fullErrorMessage))
       return rejectWithValue(errorMessage)
     }
   }

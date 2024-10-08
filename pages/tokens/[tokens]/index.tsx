@@ -4,12 +4,14 @@ import Apy from '@/components/NetworkAsset/NetworkAssetTitle/Apy'
 import RewardsAndPoints from '@/components/NetworkAsset/NetworkAssetTitle/RewardsAndPoints'
 import Tvl from '@/components/NetworkAsset/NetworkAssetTitle/Tvl'
 import { useAppSelector } from '@/store/hooks'
-import { selectNetworkAssetPaused } from '@/store/slices/networkAssets'
+import { selectNetworkAssetPaused, selectShouldShowRewardAndHistory } from '@/store/slices/networkAssets'
 import { Flex } from '@chakra-ui/react'
 import Paused from './paused'
+import RewardsAndHistory from '@/components/NetworkAsset/RewardsAndHistory'
 
 export default function Token() {
   const isNetworkAssetPaused = useAppSelector(selectNetworkAssetPaused)
+  const shouldShowRewardsAndHistory = useAppSelector(selectShouldShowRewardAndHistory)
 
   if (isNetworkAssetPaused) {
     return <Paused />
@@ -29,6 +31,14 @@ export default function Token() {
           <Apy />
           <RewardsAndPoints />
         </Flex>
+
+        {/* Rewards and History */}
+        {shouldShowRewardsAndHistory && (
+          <>
+            <Flex h={8} />
+            <RewardsAndHistory />
+          </>
+        )}
 
         {/* Spacer */}
         <Flex h={8} />

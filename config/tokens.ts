@@ -175,7 +175,8 @@ export const tokensConfig: Record<TokenKey, Token> = {
     name: 'Dinero',
     symbol: 'DINERO',
     addresses: {
-      [ChainKey.ETHEREUM]: '0x6DF0E641FC9847c0c6Fde39bE6253045440c14d3',
+      [ChainKey.ETHEREUM]: '0x09D9420332bff75522a45FcFf4855F82a0a3ff50',
+      [ChainKey.SEI]: '0x09D9420332bff75522a45FcFf4855F82a0a3ff50', // https://seitrace.com/address/0x09D9420332bff75522a45FcFf4855F82a0a3ff50?chain=pacific-1
     },
   },
   [TokenKey.FETH]: {
@@ -193,6 +194,21 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'PZETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811',
+    },
+  },
+  [TokenKey.ISEI]: {
+    key: TokenKey.ISEI,
+    name: 'iSEI',
+    symbol: 'iSEI',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423',
+      [ChainKey.SEI]: '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423', // https://seitrace.com/token/0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423?chain=pacific-1
+    },
+    rateOracles: {
+      // For getting the iSEI/USD rate on SEI
+      // https://seitrace.com/address/0xC49F0Dd98F38C525A7ce15E73E60675456F3a161?chain=pacific-1&contract=read_proxy&slug=&tab=contract
+      // https://docs.redstone.finance/docs/get-started/price-feeds
+      [ChainKey.SEI]: '0xC49F0Dd98F38C525A7ce15E73E60675456F3a161',
     },
   },
 }

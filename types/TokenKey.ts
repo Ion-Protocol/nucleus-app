@@ -6,6 +6,7 @@ export enum TokenKey {
   ETH = 'eth',
   EZETH = 'ezeth',
   FETH = 'feth',
+  ISEI = 'isei',
   OP = 'op',
   PUFETH = 'pufeth',
   PZETH = 'pzeth',
