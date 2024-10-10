@@ -40,6 +40,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     chain: ChainKey.SEI,
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SSETH),
+    showRewardsAndHistory: true,
     deployedOn: ChainKey.SEI,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
@@ -215,8 +216,8 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
     assets: mainnetNetworkAssets,
   },
   [NetworkKey.TENDERLY_MAINNET]: {
-    id: 99099127,
-    name: 'Ion Testnet',
+    id: 1330,
+    name: 'Sei Staging',
     assets: mainnetNetworkAssets,
   },
   [NetworkKey.SEI]: {

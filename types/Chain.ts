@@ -27,6 +27,7 @@ export interface NetworkAsset {
   receiveOn: ChainKey
   points: PointSystem[]
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
+  showRewardsAndHistory?: boolean
 }
 
 export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

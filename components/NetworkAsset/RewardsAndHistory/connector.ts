@@ -12,7 +12,16 @@ const mapState = (state: RootState, ownProps: RewardsAndHistoryOwnProps) => {
   const networkAssetName = networkAsset?.name || null
   const claimables = selectTotalClaimables(state)
   const claimableTokenKeys = claimables.map((claimable) => claimable.tokenKey)
-  return { networkAssetKey: networkAssetKeyFromRoute, networkAsset, networkAssetName, claimableTokenKeys }
+  const shouldShowRewardsAndHistoryTable = claimables.length > 0
+  const shouldDisableClaim = claimables.every((claimable) => claimable.amount === '0')
+  return {
+    networkAssetKey: networkAssetKeyFromRoute,
+    networkAsset,
+    networkAssetName,
+    claimableTokenKeys,
+    shouldShowRewardsAndHistoryTable,
+    shouldDisableClaim,
+  }
 }
 
 const mapDispatch = {

@@ -24,12 +24,21 @@ export const userProofApi = createApi({
   reducerPath: 'userProofApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${baseUrl}/staging`,
+    prepareHeaders: (headers) => {
+      // Add any necessary headers here
+      return headers
+    },
   }),
   endpoints: (builder) => ({
     getUserProofByWallet: builder.query({
       query: ({ walletAddress, chainId }) => `userProof?walletAddress=${walletAddress}&chainId=${chainId}`,
       keepUnusedDataFor: 300, // 5 minutes (quantified as seconds)
-      transformResponse: (response: RawUserProofResponse) => {
+      transformResponse: (response: RawUserProofResponse, meta) => {
+        if (meta?.response?.status === 404) {
+          // Return an empty RawUserProofResponse if 404 is encountered
+          return { proof: [], incentiveClaims: { userAddress: '0x', tokenAmounts: [] } } as TransformedUserProofResponse
+        }
+
         // Transform raw incentive claims to transformed incentive claims
         const transformedClaims = {
           userAddress: response.values[0] as `0x${string}`,

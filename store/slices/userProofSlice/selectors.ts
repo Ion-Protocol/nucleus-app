@@ -7,18 +7,20 @@ import { ChainKey } from '@/types/ChainKey'
 
 export const selectUserProofData = (state: RootState) => {
   const walletAddress = selectAddress(state)
-  const chainId = 1
+  const chainId = 1330
   return getUserProofByWallet.select({ walletAddress, chainId })(state)?.data
 }
 
 export const selectUserProofLoading = (state: RootState) => {
   const walletAddress = selectAddress(state)
-  const chainId = 1
+  const chainId = 1330
   return getUserProofByWallet.select({ walletAddress, chainId })(state)?.isLoading
 }
 
-// Memoized selector for user proof
-export const selectUserProof = createSelector(selectUserProofData, (data) => data?.proof || [])
+// Memoized selector for user proof because it returns a new array
+export const selectUserProof = createSelector([selectUserProofData], (userProofData) => {
+  return userProofData?.proof || []
+})
 
 // Memoized selector for user claims
 export const selectTotalClaimables = createSelector(

@@ -2,12 +2,12 @@ import { Chain } from '@funkit/connect'
 import { sei as seiWagmi } from 'wagmi/chains'
 
 const TENDERLY_RPC_URL = process.env.NEXT_PUBLIC_TENDERLY_RPC_URL || ''
-const TENDERLY_STAGING_CHAIN_ID = 308712
+const TENDERLY_STAGING_CHAIN_ID = 1330
 
 export const tenderlyStaging: Chain = {
   id: TENDERLY_STAGING_CHAIN_ID,
-  iconUrl: '/assets/svgs/ethereum.svg',
-  name: 'Ion Protocol Staging',
+  iconUrl: '/assets/svgs/sei.svg',
+  name: 'Sei Staging',
   nativeCurrency: {
     name: 'Ether',
     symbol: 'ETH',

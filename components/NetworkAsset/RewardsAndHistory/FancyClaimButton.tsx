@@ -1,15 +1,21 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { TokenKey } from '@/types/TokenKey'
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Button, ButtonProps, Flex, Text } from '@chakra-ui/react'
 
-interface FancyClaimButtonProps {
+interface FancyClaimButtonProps extends ButtonProps {
   networkAssetKey: TokenKey | null
   networkAssetName: string | null
   onClick: () => void
   isLoading?: boolean
 }
 
-export function FancyClaimButton({ networkAssetKey, networkAssetName, onClick, isLoading }: FancyClaimButtonProps) {
+export function FancyClaimButton({
+  networkAssetKey,
+  networkAssetName,
+  onClick,
+  isLoading,
+  ...buttonProps
+}: FancyClaimButtonProps) {
   return (
     <Button
       sx={{
@@ -26,6 +32,7 @@ export function FancyClaimButton({ networkAssetKey, networkAssetName, onClick, i
       }}
       onClick={onClick}
       isLoading={isLoading}
+      {...buttonProps}
     >
       <Flex align="center" gap={2}>
         <TokenIcon tokenKey={networkAssetKey} fontSize="24px" />

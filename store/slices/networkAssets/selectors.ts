@@ -157,25 +157,12 @@ export const selectRewardsTableData = createSelector(
       const claimedAmountAsString = claimedAmounts[totalClaimable.tokenKey]
       const claimedAmountAsBigInt = BigInt(claimedAmountAsString || '0')
       const claimedAmountAsFloat = convertToDecimals(claimedAmountAsBigInt.toString(), 18)
-
-      let formattedClaimedAmount = ''
-      if (parseFloat(claimedAmountAsFloat) > 0) {
-        formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
-      } else {
-        formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
-        // formattedClaimedAmount = '-'
-      }
+      const formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
 
       const totalClaimableAmountAsBigInt = BigInt(totalClaimable.amount)
       const claimableAmountAsBigInt = totalClaimableAmountAsBigInt - claimedAmountAsBigInt
       const claimableAmountAsFloat = bigIntToNumberAsString(claimableAmountAsBigInt, { decimals: 18 })
-
-      let formattedClaimableAmount = ''
-      if (parseFloat(claimableAmountAsFloat) > 0) {
-        formattedClaimableAmount = `${claimableAmountAsFloat} ${tokenSymbol}`
-      } else {
-        formattedClaimableAmount = 'Nothing to claim'
-      }
+      const formattedClaimableAmount = `${claimableAmountAsFloat} ${tokenSymbol}`
 
       return {
         tokenKey: totalClaimable.tokenKey,
@@ -209,11 +196,6 @@ export const selectClaimables = createSelector(
     return claimables
   }
 )
-
-export const selectShouldShowRewardAndHistory = (state: RootState): boolean => {
-  const claimables = selectClaimables(state)
-  return claimables.some((claimable) => claimable.amount > BigInt(0))
-}
 
 /////////////////////////////////////////////////////////////////////
 // TVL

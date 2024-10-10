@@ -20,29 +20,34 @@ export async function claim(
     address: merkleClaimContractAddress,
     functionName: 'claim',
     args: [proof, user, assets, totalClaimableForAsset],
+    chainId: 1330,
   })
 
-  ////////////////////////////////
-  // Write
-  ////////////////////////////////
-  const txHash = await writeContract(wagmiConfig, {
-    abi: MerkleClaimAbi.abi as Abi,
-    address: merkleClaimContractAddress,
-    functionName: 'claim',
-    args: [proof, user, assets, totalClaimableForAsset],
-  })
+  console.log('simulate passed')
 
-  ////////////////////////////////
-  // Wait for Transaction Receipt
-  ////////////////////////////////
-  await waitForTransactionReceipt(wagmiConfig, {
-    hash: txHash,
-    timeout: 60_000,
-    confirmations: 1,
-    pollingInterval: 10_000,
-    retryCount: 5,
-    retryDelay: 5_000,
-  })
+  // ////////////////////////////////
+  // // Write
+  // ////////////////////////////////
+  // const txHash = await writeContract(wagmiConfig, {
+  //   abi: MerkleClaimAbi.abi as Abi,
+  //   address: merkleClaimContractAddress,
+  //   functionName: 'claim',
+  //   args: [proof, user, assets, totalClaimableForAsset],
+  //   chainId: 1330,
+  // })
 
-  return txHash
+  // ////////////////////////////////
+  // // Wait for Transaction Receipt
+  // ////////////////////////////////
+  // await waitForTransactionReceipt(wagmiConfig, {
+  //   hash: txHash,
+  //   timeout: 60_000,
+  //   confirmations: 1,
+  //   pollingInterval: 10_000,
+  //   retryCount: 5,
+  //   retryDelay: 5_000,
+  // })
+
+  // return txHash
+  return '0x0' as `0x${string}`
 }

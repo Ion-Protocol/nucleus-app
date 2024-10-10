@@ -145,26 +145,35 @@ export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectV
       const userAddress = selectAddress(state)
       const claimables = selectTotalClaimables(state)
       const claimableTokenAddresses = selectClaimableTokenAddresses(state)
-
-      const claimableAmounts = claimables.map((claimable) => BigInt(claimable.amount))
+      const chainId = selectNetworkId(state)
 
       if (!userAddress) {
         return { txHash: null }
       }
 
+      const claimableAmounts = claimables.map((claimable) => BigInt(claimable.amount))
+
+      //////////////////////////////////////////////////////////////////////////
+      // Switch chains if needed
+      //   If the chain the wallet is connected to does not match the source
+      //   chain that the user selected, switch it to the source chain.
+      //////////////////////////////////////////////////////////////////////////
+      if (chainId !== 1330) {
+        await switchChain(wagmiConfig, { chainId: 1330 })
+      }
+
       const txHash = await claim(
         { proof, user: userAddress, assets: claimableTokenAddresses, totalClaimableForAsset: claimableAmounts },
-        { merkleClaimContractAddress: contractAddresses.merkelClaim }
+        { merkleClaimContractAddress: contractAddresses.merkleClaim }
       )
 
-      return { txHash: '0x0' }
+      return { txHash }
     } catch (e) {
       console.error(e)
       const error = e as Error
-      // const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
-      const errorMessage = `Deposit failed`
+      const errorMessage = `Claim failed`
       const fullErrorMessage = `${errorMessage}\n${error.message}`
-      dispatch(setErrorTitle('Deposit Not Verified'))
+      dispatch(setErrorTitle('Claim Not Verified'))
       dispatch(setErrorMessage(fullErrorMessage))
       return rejectWithValue(errorMessage)
     }

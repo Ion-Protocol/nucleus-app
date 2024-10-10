@@ -12,13 +12,15 @@ function RewardsAndHistory({
   networkAssetKey,
   networkAssetName,
   claimableTokenKeys,
+  shouldShowRewardsAndHistoryTable,
+  shouldDisableClaim,
   claimRewards,
 }: RewardsAndHistoryConnector.Props) {
   const [isCollapseOpen, setIsCollapseOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState(0)
 
   function toggleCollapse() {
-    setIsCollapseOpen(!isCollapseOpen)
+    setIsCollapseOpen((prev) => !prev)
   }
 
   return (
@@ -43,47 +45,52 @@ function RewardsAndHistory({
         <Flex align="center" gap={2}>
           {/* Big Fancy Claim Button */}
           <FancyClaimButton
+            isDisabled={shouldDisableClaim}
+            pointerEvents={shouldShowRewardsAndHistoryTable ? 'auto' : 'none'}
             networkAssetKey={networkAssetKey}
             networkAssetName={networkAssetName}
             onClick={claimRewards}
           />
-
           {/* Collapse Button */}
-          <Flex cursor="pointer" onClick={toggleCollapse}>
-            {!isCollapseOpen && <ChevronUpIcon />}
-            {isCollapseOpen && <ChevronDownIcon />}
-          </Flex>
+          {shouldShowRewardsAndHistoryTable && (
+            <Flex cursor="pointer" onClick={toggleCollapse}>
+              {isCollapseOpen && <ChevronUpIcon />}
+              {!isCollapseOpen && <ChevronDownIcon />}
+            </Flex>
+          )}
         </Flex>
       </Flex>
-      <Collapse in={isCollapseOpen} animateOpacity unmountOnExit>
-        <Tabs w="100%" borderColor="border" index={selectedTab} onChange={setSelectedTab}>
-          {/* Tab Buttons */}
-          <TabList>
-            <Tab px={0} _selected={{ borderBottom: '2px solid', borderColor: 'text' }}>
-              <Text variant="paragraphBold" color={selectedTab === 0 ? 'text' : 'secondaryText'} fontWeight="bold">
-                Rewards
-              </Text>
-            </Tab>
-            <IonTooltip label="Coming soon" aria-label="history">
-              <Tab isDisabled _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-                <Text variant="paragraphBold" color={selectedTab === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
-                  History
+      {shouldShowRewardsAndHistoryTable && (
+        <Collapse in={isCollapseOpen} animateOpacity unmountOnExit>
+          <Tabs w="100%" borderColor="border" index={selectedTab} onChange={setSelectedTab}>
+            {/* Tab Buttons */}
+            <TabList>
+              <Tab px={0} _selected={{ borderBottom: '2px solid', borderColor: 'text' }}>
+                <Text variant="paragraphBold" color={selectedTab === 0 ? 'text' : 'secondaryText'} fontWeight="bold">
+                  Rewards
                 </Text>
               </Tab>
-            </IonTooltip>
-          </TabList>
+              <IonTooltip label="Coming soon" aria-label="history">
+                <Tab isDisabled _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
+                  <Text variant="paragraphBold" color={selectedTab === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+                    History
+                  </Text>
+                </Tab>
+              </IonTooltip>
+            </TabList>
 
-          {/* Tabs Content, Mint and Redeem */}
-          <TabPanels py={3}>
-            <TabPanel p={0}>
-              <RewardsTable />
-            </TabPanel>
-            <TabPanel p={0}>
-              <Text>WIP</Text>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Collapse>
+            {/* Tabs Content, Mint and Redeem */}
+            <TabPanels py={3}>
+              <TabPanel p={0}>
+                <RewardsTable />
+              </TabPanel>
+              <TabPanel p={0}>
+                <Text>WIP</Text>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Collapse>
+      )}
     </Flex>
   )
 }

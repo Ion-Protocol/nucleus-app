@@ -22,10 +22,7 @@ export function useStoreInitializer() {
       dispatch(setAddress(address))
 
       // Load the user merkle proof data for claiming rewards
-      dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1 }))
-
-      // Load the token/usd rate for the token on the network
-      dispatch(redstoneApi.endpoints.getExchangeRate.initiate('SEI'))
+      dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1330 }))
     }
   }, [address, dispatch])
 

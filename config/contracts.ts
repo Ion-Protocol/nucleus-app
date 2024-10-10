@@ -3,5 +3,5 @@ export const contractAddresses: Record<string, `0x${string}`> = {
   chainlinkBtcPerWbtc: '0xfdFD9C85aD200c506Cf9e21F1FD8dd01932FBB23',
   chainlinkUsdPerBtc: '0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c',
   hyperlaneWarpRoute: '0xc2495f3183F043627CAECD56dAaa726e3B2D9c09',
-  merkleClaim: '0x5338Bb21e6d623a0328B26ab5DD3938d646DF2Ba',
+  merkleClaim: '0xa89e0b81cCF4d7d44cdf1aDd9BcfaCf651d97499',
 }
