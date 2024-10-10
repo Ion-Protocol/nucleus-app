@@ -44,6 +44,10 @@ export function abbreviateNumber(num: number): string {
 }
 
 export function convertToDecimals(input: string, decimals: number = 18): string {
+  if (BigInt(input) === BigInt(0)) {
+    return '0'
+  }
+
   // Split the input into the whole number and decimal parts
   const [whole, decimal = ''] = input.split('.')
 

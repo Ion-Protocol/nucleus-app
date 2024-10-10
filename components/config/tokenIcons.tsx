@@ -53,6 +53,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.WETH]: (props) => <TokenWethIcon {...props} />,
   [TokenKey.WSTETH]: (props) => <WstethIcon {...props} />,
   [TokenKey.PZETH]: (props) => <TokenPzethIcon {...props} />,
+  [TokenKey.ISEI]: (props) => <SeiIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

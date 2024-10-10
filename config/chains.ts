@@ -5,6 +5,9 @@ import { etherscanBaseUrl } from './constants'
 export interface Chain {
   name: string
   id?: number | null
+  contracts?: {
+    merkelClaim?: `0x${string}`
+  }
 }
 
 export const chainsConfig: Record<ChainKey, Chain> = {
@@ -15,6 +18,9 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.SEI]: {
     name: 'Sei',
     id: sei.id,
+    contracts: {
+      merkelClaim: '0xa89e0b81cCF4d7d44cdf1aDd9BcfaCf651d97499',
+    },
   },
   [ChainKey.SWELL]: {
     name: 'Swell',

@@ -8,6 +8,7 @@ const MAINNET_CHAINSTACK_URL = process.env.NEXT_PUBLIC_MAINNET_CHAINSTACK_URL ||
 const SEI_RPC_URL = process.env.NEXT_PUBLIC_SEI_RPC_URL || ''
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 const SHOW_TENDERLY = process.env.NEXT_PUBLIC_SHOW_TENDERLY === 'true'
+const TENDERLY_RPC_URL = process.env.NEXT_PUBLIC_TENDERLY_RPC_URL || ''
 
 const chains = [] as any
 
@@ -33,7 +34,7 @@ export const wagmiConfig = createFunkitWagmiConfig({
   transports: {
     ...getDefaultTransports(),
     [mainnet.id]: fallback([http(MAINNET_CHAINSTACK_URL)]),
-    [tenderlyStaging.id]: http(),
+    [tenderlyStaging.id]: http(TENDERLY_RPC_URL),
     [sei.id]: fallback([http(SEI_RPC_URL)]),
   },
   ssr: true,

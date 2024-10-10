@@ -11,9 +11,12 @@ import { priceReducer } from './slices/price'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
+import { userProofApi } from './slices/userProofSlice/apiSlice'
+import { redstoneApi } from './slices/redstoneSlice/apiSlice'
 
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
+const apiMiddlewares = [userProofApi.middleware, redstoneApi.middleware]
 
 // Configure the store and inject the LibraryContext as an extra argument for thunks
 export const store = configureStore({
@@ -26,8 +29,13 @@ export const store = configureStore({
     router: routerReducer,
     status: statusReducer,
     ui: UIReducer,
+
+    // Api slices
+    [userProofApi.reducerPath]: userProofApi.reducer,
+    [redstoneApi.reducerPath]: redstoneApi.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(regularMiddlewares).concat(sideEffectMiddlewares),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(...regularMiddlewares, ...sideEffectMiddlewares, ...apiMiddlewares),
 })
 
 export type RootState = ReturnType<typeof store.getState>

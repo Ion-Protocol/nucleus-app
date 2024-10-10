@@ -22,6 +22,21 @@ type AsyncMetric<T> = {
 
 export type NetworkAssetsState = {
   automaticallyPaused: AsyncMetric<Partial<Record<TokenKey, boolean>>>
+
+  // Claimed represents the amount of tokens that a user has claimed for each token.
+  // The mapping of tokenKey to string seems to follow the same pattern as the
+  // other state values, but it is actually different. Where the other state
+  // values that map tokenKey to string is actually referring to the token key
+  // as network asset, the claimed state is referring to the actual token that
+  // has been claimed and is not tied to a network asset. Therefore, there will
+  // be a different claimed state for each network asset page depending on which
+  // assets have been claimed by the user for that network asset.
+  // ---
+  // Justification for storing in global state:
+  // 1. The value is read asynchronously from the contracts
+  // 2. The value is used in a thunk
+  claimed: AsyncMetric<Partial<Record<TokenKey, string>>>
+
   // TVL represents Total Value Locked for the token asset.
   // The TVL is stored as a mapping of chain keys to tvl values since TVL's for
   // every asset need to be diplayed on the dashboard simultaneously.
@@ -89,6 +104,12 @@ export const initialState: NetworkAssetsState = {
   // Automatically paused
   automaticallyPaused: {
     data: {},
+    loading: false,
+  },
+
+  // Claimed
+  claimed: {
+    data: {} as { [tokenKey in TokenKey]: string },
     loading: false,
   },
 
