@@ -22,7 +22,7 @@ export function useStoreInitializer() {
       dispatch(setAddress(address))
 
       // Load the user merkle proof data for claiming rewards
-      dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1330 }))
+      dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1329 }))
     }
   }, [address, dispatch])
 

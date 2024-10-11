@@ -158,8 +158,8 @@ export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectV
       //   If the chain the wallet is connected to does not match the source
       //   chain that the user selected, switch it to the source chain.
       //////////////////////////////////////////////////////////////////////////
-      if (chainId !== 1330) {
-        await switchChain(wagmiConfig, { chainId: 1330 })
+      if (chainId !== 1329) {
+        await switchChain(wagmiConfig, { chainId: 1329 })
       }
 
       const txHash = await claim(
