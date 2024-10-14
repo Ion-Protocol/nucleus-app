@@ -20,7 +20,7 @@ export async function claim(
     address: merkleClaimContractAddress,
     functionName: 'claim',
     args: [proof, user, assets, totalClaimableForAsset],
-    chainId: 1330,
+    chainId: 1329,
   })
 
   ////////////////////////////////
@@ -31,7 +31,7 @@ export async function claim(
     address: merkleClaimContractAddress,
     functionName: 'claim',
     args: [proof, user, assets, totalClaimableForAsset],
-    chainId: 1330,
+    chainId: 1329,
   })
 
   ////////////////////////////////

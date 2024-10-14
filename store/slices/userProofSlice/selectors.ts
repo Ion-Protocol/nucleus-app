@@ -7,13 +7,13 @@ import { ChainKey } from '@/types/ChainKey'
 
 export const selectUserProofData = (state: RootState) => {
   const walletAddress = selectAddress(state)
-  const chainId = 1330
+  const chainId = 1329
   return getUserProofByWallet.select({ walletAddress, chainId })(state)?.data
 }
 
 export const selectUserProofLoading = (state: RootState) => {
   const walletAddress = selectAddress(state)
-  const chainId = 1330
+  const chainId = 1329
   return getUserProofByWallet.select({ walletAddress, chainId })(state)?.isLoading
 }
 
