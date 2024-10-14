@@ -6,6 +6,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export interface RawUserProofResponse {
   proofs: `0x${string}`[]
   values: [`0x${string}`, `0x${string}`[], string[]]
+  root: `0x${string}`
+  tokenDecimals: { [key: string]: number }
 }
 
 export interface TransformedUserProofResponse {
@@ -15,7 +17,7 @@ export interface TransformedUserProofResponse {
 
 export interface TransformedIncentiveClaims {
   userAddress: `0x${string}`
-  tokenAmounts: { tokenKey: TokenKey; chainKey: ChainKey; amount: string }[]
+  tokenAmounts: { tokenKey: TokenKey; chainKey: ChainKey; amount: string; decimals: number }[]
 }
 
 const baseUrl = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT
@@ -23,7 +25,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT
 export const userProofApi = createApi({
   reducerPath: 'userProofApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${baseUrl}/staging`,
+    baseUrl: `${baseUrl}/prod`,
     prepareHeaders: (headers) => {
       // Add any necessary headers here
       return headers
@@ -55,8 +57,9 @@ export const userProofApi = createApi({
 
             return {
               tokenKey,
-              chainKey, // Include the chainKey in the returned object
+              chainKey,
               amount: response.values[2][index],
+              decimals: response.tokenDecimals[tokenAddress],
             }
           }),
         } as TransformedIncentiveClaims
