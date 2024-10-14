@@ -22,6 +22,7 @@ import { selectNetworkAssetFromRoute } from '../router'
 import { calculateApy } from './calculateApy'
 import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { RewardsTableData } from '@/types/RewardsTableData'
+import { selectTransactionExplorerUrl } from '../status'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -160,7 +161,6 @@ export const selectRewardsTableData = createSelector(
         decimals: totalClaimable.decimals,
       })
       const formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
-      console.log(claimedAmountAsString, claimedAmountAsBigInt, claimedAmountAsFloat, formattedClaimedAmount)
 
       const totalClaimableAmountAsBigInt = BigInt(totalClaimable.amount)
       const claimableAmountAsBigInt = totalClaimableAmountAsBigInt - claimedAmountAsBigInt
@@ -363,8 +363,18 @@ export const selectSourceChains = createSelector(
 export const selectExplorerBaseUrl = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const sourceChainKey = selectSourceChainKey(state)
-  const sourceChainKeyConfig = networkAssetConfig?.sourceChains[sourceChainKey as ChainKey]
-  return sourceChainKeyConfig?.explorerBaseUrl || null
+  const explorerBaseUrl = selectTransactionExplorerUrl(state)
+
+  // There are two ways to get the explorer base url currently:
+  // 1. From the transaction explorer url
+  // 2. From the network asset config
+  // Eventually we will make it to where this comes from only one place.
+  if (!explorerBaseUrl) {
+    const sourceChainKeyConfig = networkAssetConfig?.sourceChains[sourceChainKey as ChainKey]
+    return sourceChainKeyConfig?.explorerBaseUrl || null
+  } else {
+    return explorerBaseUrl
+  }
 }
 
 // DO NOT memoize: Direct lookup; returns a value from configuration.
