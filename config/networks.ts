@@ -128,11 +128,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
       {
-        key: PointSystemKey.EIGENLAYER,
-        name: 'EigenLayer Points',
-        pointsMultiplier: 0.5,
-      },
-      {
         key: PointSystemKey.SYMBIOTIC,
         name: 'Symbiotic Points',
         pointsMultiplier: 0.5,
