@@ -156,8 +156,11 @@ export const selectRewardsTableData = createSelector(
 
       const claimedAmountAsString = claimedAmounts[totalClaimable.tokenKey]
       const claimedAmountAsBigInt = BigInt(claimedAmountAsString || '0')
-      const claimedAmountAsFloat = convertToDecimals(claimedAmountAsBigInt.toString(), totalClaimable.decimals)
+      const claimedAmountAsFloat = bigIntToNumberAsString(claimedAmountAsBigInt, {
+        decimals: totalClaimable.decimals,
+      })
       const formattedClaimedAmount = `${claimedAmountAsFloat} ${tokenSymbol}`
+      console.log(claimedAmountAsString, claimedAmountAsBigInt, claimedAmountAsFloat, formattedClaimedAmount)
 
       const totalClaimableAmountAsBigInt = BigInt(totalClaimable.amount)
       const claimableAmountAsBigInt = totalClaimableAmountAsBigInt - claimedAmountAsBigInt

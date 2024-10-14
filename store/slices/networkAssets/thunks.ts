@@ -109,7 +109,7 @@ export const fetchClaimedAmountsOfAssets = createAsyncThunk<
         const assetAddress = tokensConfig[claim.tokenKey]?.addresses[claim.chainKey] as `0x${string}`
         return getUserClaimedAmountOfAsset(
           { userAddress, assetAddress },
-          { merkleClaimAddress: contractAddresses.merkleClaim, chainId: 308712 }
+          { merkleClaimAddress: contractAddresses.merkleClaim, chainId: 1329 }
         )
       })
     )
