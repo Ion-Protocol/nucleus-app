@@ -100,6 +100,22 @@ export const semanticTokens = {
       default: 'neutral.900',
       _dark: 'darkMode.400',
     },
+    claimButtonText: {
+      default: 'deepTeal.main',
+      _dark: 'deepTeal.main',
+    },
+    claimButtonBorder: {
+      default: 'goldenSand.main',
+      _dark: 'goldenSand.main',
+    },
+    claimableButtonBg: {
+      default: 'iceberg.50',
+      _dark: 'iceberg.50',
+    },
+    claimableButtonBorder: {
+      default: 'bermuda.main',
+      _dark: 'bermuda.main',
+    },
     success: {
       main: {
         default: 'green.main',

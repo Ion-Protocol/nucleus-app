@@ -3,15 +3,18 @@ import { ActionReducerMapBuilder, PayloadAction } from '@reduxjs/toolkit'
 import { NetworkAssetsState } from './initialState'
 import {
   FetchChainRateResult,
+  FetchClaimedAmountsOfAssetsResult,
   FetchNetworkAssetTvlResult,
   FetchPausedResult,
   FetchPreviewFeeResult,
+  fetchClaimedAmountsOfAssets,
   fetchNetworkAssetTvl,
   fetchPaused,
   fetchPreviewFee,
   fetchTokenRateInQuote,
   performDeposit,
 } from './thunks'
+import { RootState } from '@/store'
 
 /**
  * Defines the extra reducers for the bridges slice.
@@ -37,17 +40,37 @@ export function extraReducers(builder: ActionReducerMapBuilder<NetworkAssetsStat
     })
 
     ///////////////////////////////
+    // Incentive Claims
+    ///////////////////////////////
+    .addCase(fetchClaimedAmountsOfAssets.pending, (state: NetworkAssetsState) => {
+      state.claimed.loading = true
+    })
+    .addCase(
+      fetchClaimedAmountsOfAssets.fulfilled,
+      (state: NetworkAssetsState, action: PayloadAction<FetchClaimedAmountsOfAssetsResult>) => {
+        state.claimed.loading = false
+        state.claimed.data = action.payload.claimed
+      }
+    )
+    .addCase(fetchClaimedAmountsOfAssets.rejected, (state: NetworkAssetsState) => {
+      state.claimed.loading = false
+    })
+
+    ///////////////////////////////
     // TVL
     ///////////////////////////////
-    .addCase(fetchNetworkAssetTvl.pending, (state, action) => {
+    .addCase(fetchNetworkAssetTvl.pending, (state: NetworkAssetsState) => {
       state.tvl.loading = true
     })
-    .addCase(fetchNetworkAssetTvl.fulfilled, (state, action: PayloadAction<FetchNetworkAssetTvlResult>) => {
-      state.tvl.loading = false
-      const tokenKey = action.payload.tokenKey
-      state.tvl.data[tokenKey] = action.payload.tvl
-    })
-    .addCase(fetchNetworkAssetTvl.rejected, (state: NetworkAssetsState, action) => {
+    .addCase(
+      fetchNetworkAssetTvl.fulfilled,
+      (state: NetworkAssetsState, action: PayloadAction<FetchNetworkAssetTvlResult>) => {
+        state.tvl.loading = false
+        const tokenKey = action.payload.tokenKey
+        state.tvl.data[tokenKey] = action.payload.tvl
+      }
+    )
+    .addCase(fetchNetworkAssetTvl.rejected, (state: NetworkAssetsState) => {
       state.tvl.loading = false
     })
 

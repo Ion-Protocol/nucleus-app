@@ -1,20 +1,12 @@
-import { Currency } from '@/types/Currency'
-import { bigIntToToken, bigIntToUsd } from './bigint'
-import { numberToToken, numberToUsd } from './number'
+import { bigIntToUsd } from './bigint'
+import { convertToDecimals, numberToUsd } from './number'
 
-/**
- * Converts a value to a formatted currency string based on the given currency code.
- * @param value - The value to be converted.
- * @param price - The price in USD for the conversion.
- * @param opts - Optional configuration object.
- * @returns The formatted currency string.
- */
-export function currencySwitch(
-  value: bigint | number | null,
+export function convertToUsd(
+  value: bigint | number | string | null,
   price: bigint,
-  opts?: { usdDigits?: number; ethDigits?: number }
+  opts?: { usdDigits?: number }
 ): string {
-  const { usdDigits = 0, ethDigits = 0 } = opts || {}
+  const { usdDigits = 0 } = opts || {}
   if (value === null) {
     value = BigInt(0)
   }
@@ -22,6 +14,9 @@ export function currencySwitch(
   if (typeof value === 'bigint') {
     const usdValue = (value * price) / BigInt(1e8)
     return bigIntToUsd(usdValue, { digits: usdDigits })
+  } else if (typeof value === 'string') {
+    const valueAsNumber = parseFloat(convertToDecimals(value))
+    return numberToUsd(valueAsNumber, price, { digits: usdDigits })
   } else {
     return numberToUsd(value, price, { digits: usdDigits })
   }
