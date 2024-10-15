@@ -24,6 +24,7 @@ import { TokenSeiyanethIcon } from '../shared/icons/TokenSeiyaneth'
 import { TokenEarnethIcon } from '../shared/icons/TokenEarneth'
 import { TokenFethIcon } from '../shared/icons/TokenFeth'
 import { TokenPzethIcon } from '../shared/icons/TokenPzeth'
+import { TokenIseiIcon } from '../shared/icons/TokenIsei'
 
 function DefaultIcon() {
   return <></>
@@ -53,7 +54,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.WETH]: (props) => <TokenWethIcon {...props} />,
   [TokenKey.WSTETH]: (props) => <WstethIcon {...props} />,
   [TokenKey.PZETH]: (props) => <TokenPzethIcon {...props} />,
-  [TokenKey.ISEI]: (props) => <SeiIcon {...props} />,
+  [TokenKey.ISEI]: (props) => <TokenIseiIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {
