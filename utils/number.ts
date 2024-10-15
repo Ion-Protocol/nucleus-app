@@ -44,7 +44,7 @@ export function abbreviateNumber(num: number): string {
 }
 
 export function convertToDecimals(input: string, decimals: number = 18): string {
-  if (BigInt(input) === BigInt(0)) {
+  if (parseFloat(input) === 0) {
     return '0'
   }
 
