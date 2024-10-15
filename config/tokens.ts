@@ -175,7 +175,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     name: 'Dinero',
     symbol: 'DINERO',
     addresses: {
-      [ChainKey.ETHEREUM]: '0x09D9420332bff75522a45FcFf4855F82a0a3ff50',
+      // [ChainKey.ETHEREUM]: '0x09D9420332bff75522a45FcFf4855F82a0a3ff50',
       [ChainKey.SEI]: '0x09D9420332bff75522a45FcFf4855F82a0a3ff50', // https://seitrace.com/address/0x09D9420332bff75522a45FcFf4855F82a0a3ff50?chain=pacific-1
     },
   },
@@ -201,7 +201,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     name: 'iSEI',
     symbol: 'iSEI',
     addresses: {
-      [ChainKey.ETHEREUM]: '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423',
+      // [ChainKey.ETHEREUM]: '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423',
       [ChainKey.SEI]: '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423', // https://seitrace.com/token/0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423?chain=pacific-1
     },
     rateOracles: {

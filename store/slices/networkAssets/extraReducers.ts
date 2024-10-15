@@ -7,6 +7,7 @@ import {
   FetchNetworkAssetTvlResult,
   FetchPausedResult,
   FetchPreviewFeeResult,
+  claimRewards,
   fetchClaimedAmountsOfAssets,
   fetchNetworkAssetTvl,
   fetchPaused,
@@ -54,6 +55,16 @@ export function extraReducers(builder: ActionReducerMapBuilder<NetworkAssetsStat
     )
     .addCase(fetchClaimedAmountsOfAssets.rejected, (state: NetworkAssetsState) => {
       state.claimed.loading = false
+    })
+
+    .addCase(claimRewards.pending, (state: NetworkAssetsState) => {
+      state.claim.pending = true
+    })
+    .addCase(claimRewards.fulfilled, (state: NetworkAssetsState) => {
+      state.claim.pending = false
+    })
+    .addCase(claimRewards.rejected, (state: NetworkAssetsState) => {
+      state.claim.pending = false
     })
 
     ///////////////////////////////

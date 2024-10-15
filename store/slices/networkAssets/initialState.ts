@@ -98,6 +98,11 @@ export type NetworkAssetsState = {
     pending: boolean
     error: string | null
   }
+
+  claim: {
+    pending: boolean
+    error: string | null
+  }
 }
 
 export const initialState: NetworkAssetsState = {
@@ -151,6 +156,12 @@ export const initialState: NetworkAssetsState = {
 
   // Deposit
   deposit: {
+    pending: false,
+    error: null,
+  },
+
+  // Claim
+  claim: {
     pending: false,
     error: null,
   },

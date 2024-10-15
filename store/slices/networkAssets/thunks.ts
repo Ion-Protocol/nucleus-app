@@ -13,6 +13,7 @@ import {
   nativeAddress,
   pollBalanceAfterTransactionAttempts,
   pollBalanceAfterTransactionInterval,
+  seiExplorerBaseUrl,
 } from '@/config/constants'
 import { contractAddresses } from '@/config/contracts'
 import { tokensConfig } from '@/config/tokens'
@@ -30,7 +31,13 @@ import { selectAddress } from '../account/slice'
 import { fetchAllTokenBalances, selectTokenBalance } from '../balance'
 import { selectNetworkId } from '../chain'
 import { selectNetworkAssetFromRoute } from '../router'
-import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
+import {
+  setErrorMessage,
+  setErrorTitle,
+  setTransactionExplorerUrl,
+  setTransactionSuccessMessage,
+  setTransactionTxHash,
+} from '../status'
 import { selectClaimableTokenAddresses, selectTotalClaimables, selectUserProof } from '../userProofSlice/selectors'
 import {
   selectAvailableNetworkAssetKeys,
@@ -109,7 +116,7 @@ export const fetchClaimedAmountsOfAssets = createAsyncThunk<
         const assetAddress = tokensConfig[claim.tokenKey]?.addresses[claim.chainKey] as `0x${string}`
         return getUserClaimedAmountOfAsset(
           { userAddress, assetAddress },
-          { merkleClaimAddress: contractAddresses.merkleClaim, chainId: 308712 }
+          { merkleClaimAddress: contractAddresses.merkleClaim, chainId: 1329 }
         )
       })
     )
@@ -167,6 +174,9 @@ export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectV
         { merkleClaimContractAddress: contractAddresses.merkleClaim }
       )
 
+      dispatch(setTransactionSuccessMessage(`Claim Successful`))
+      dispatch(setTransactionTxHash(txHash))
+      dispatch(setTransactionExplorerUrl(seiExplorerBaseUrl))
       return { txHash }
     } catch (e) {
       console.error(e)
@@ -487,6 +497,10 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           }
         )
       }
+
+      // We do this so that it will automatically get the explorer url from the config.
+      // This is just a bandaid for now.
+      dispatch(setTransactionExplorerUrl(null))
 
       // Show success modal
       dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))
