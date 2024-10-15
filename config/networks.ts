@@ -71,9 +71,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     apys: {
-      [TokenKey.SEI]: [
+      [TokenKey.ISEI]: [
         {
-          tokenKey: TokenKey.SEI,
+          tokenKey: TokenKey.ISEI,
           startDate: 1726199999000, // 9/12/24 11:59:59pm EST
           endDate: 1734065999000, // 12/12/24 11:59:59pm EST
           distribution: 62_500, // $62,500
