@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectNetworkKey } from '../slices/chain'
 import { selectAvailableNetworkAssetKeys } from '../slices/networkAssets'
-import { fetchNetworkAssetTvl, fetchPaused } from '../slices/networkAssets/thunks'
+import { fetchClaimedAmountsOfAssets, fetchNetworkAssetTvl, fetchPaused } from '../slices/networkAssets/thunks'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 import { userProofApi } from '../slices/userProofSlice/apiSlice'
 import { redstoneApi } from '../slices/redstoneSlice/apiSlice'
@@ -20,6 +20,7 @@ export function useStoreInitializer() {
   useEffect(() => {
     if (address) {
       dispatch(setAddress(address))
+      dispatch(fetchClaimedAmountsOfAssets())
 
       // Load the user merkle proof data for claiming rewards
       dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1329 }))

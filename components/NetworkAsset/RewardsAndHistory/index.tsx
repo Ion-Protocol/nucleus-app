@@ -15,6 +15,7 @@ function RewardsAndHistory({
   shouldShowRewardsAndHistoryTable,
   shouldDisableClaim,
   claimRewards,
+  isClaimPending,
 }: RewardsAndHistoryConnector.Props) {
   const [isCollapseOpen, setIsCollapseOpen] = useState(false)
   const [selectedTab, setSelectedTab] = useState(0)
@@ -45,6 +46,7 @@ function RewardsAndHistory({
         <Flex align="center" gap={2}>
           {/* Big Fancy Claim Button */}
           <FancyClaimButton
+            isLoading={isClaimPending}
             isDisabled={shouldDisableClaim}
             pointerEvents={shouldShowRewardsAndHistoryTable ? 'auto' : 'none'}
             networkAssetKey={networkAssetKey}
