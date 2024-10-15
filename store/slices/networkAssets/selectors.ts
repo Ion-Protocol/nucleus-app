@@ -204,7 +204,7 @@ export const selectClaimables = createSelector(
 
 export const selectClaimPending = (state: RootState) => {
   const bridgesState = selectBridgesState(state)
-  return bridgesState.claim.pending
+  return bridgesState.claim.pending || bridgesState.claimed.loading
 }
 
 /////////////////////////////////////////////////////////////////////
