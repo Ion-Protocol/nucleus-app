@@ -58,6 +58,27 @@ export function convertToDecimals(input: string, decimals: number = 18): string 
   return whole + decimalPadded
 }
 
+export function convertFromDecimals(input: string, decimals: number = 18): string {
+  if (parseFloat(input) === 0) {
+    return '0'
+  }
+
+  // Ensure the input is long enough to handle the decimals
+  const inputPadded = input.padStart(decimals + 1, '0')
+
+  // Split the string into whole and decimal parts
+  const whole = inputPadded.slice(0, -decimals)
+  const decimal = inputPadded.slice(-decimals).replace(/0+$/, '') // Remove trailing zeroes
+
+  // If there's no decimal part, just return the whole number
+  if (!decimal) {
+    return whole
+  }
+
+  // Concatenate the whole number and decimal part with a period
+  return whole + '.' + decimal
+}
+
 export function hasMoreThanNSignificantDigits(value: string, digits: number): boolean {
   // Check if the value is a valid number
   const num = Number(value)
