@@ -9,6 +9,7 @@ import { fetchClaimedAmountsOfAssets, fetchNetworkAssetTvl, fetchPaused } from '
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 import { userProofApi } from '../slices/userProofSlice/apiSlice'
 import { redstoneApi } from '../slices/redstoneSlice/apiSlice'
+import { selectTotalClaimables } from '../slices/userProofSlice/selectors'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -16,16 +17,22 @@ export function useStoreInitializer() {
 
   const networkKey = useAppSelector(selectNetworkKey)
   const networkAssetKeys = useAppSelector(selectAvailableNetworkAssetKeys)
+  const claimables = useAppSelector(selectTotalClaimables)
 
   useEffect(() => {
     if (address) {
       dispatch(setAddress(address))
-      dispatch(fetchClaimedAmountsOfAssets())
 
       // Load the user merkle proof data for claiming rewards
       dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1329 }))
     }
   }, [address, dispatch])
+
+  useEffect(() => {
+    if (address && claimables) {
+      dispatch(fetchClaimedAmountsOfAssets())
+    }
+  }, [claimables, address, dispatch])
 
   useEffect(() => {
     deferExecution(() => {
