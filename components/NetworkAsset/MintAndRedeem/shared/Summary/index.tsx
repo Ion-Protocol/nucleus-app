@@ -4,7 +4,10 @@ import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Text } from '@chakra-ui/react'
 import { SummaryConnector } from './connector'
 
-function Summary({ fees, loading }: SummaryConnector.Props) {
+function Summary({ fees, loading, isSameChain }: SummaryConnector.Props) {
+  const tooltipLabel = isSameChain
+    ? 'No fees are charged when depositing and minting on the same chain'
+    : 'Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane'
   return (
     <Flex direction="column" gap={3}>
       <Flex align="center" justify="space-between">
@@ -12,7 +15,7 @@ function Summary({ fees, loading }: SummaryConnector.Props) {
           <Text variant="paragraph" color="disabledText">
             Fees
           </Text>
-          <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane">
+          <IonTooltip label={tooltipLabel}>
             <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
           </IonTooltip>
         </Flex>

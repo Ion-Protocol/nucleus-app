@@ -1,9 +1,19 @@
 import { RootState } from '@/store'
-import { selectFormattedPreviewFee, selectPreviewFeeLoading } from '@/store/slices/networkAssets'
+import {
+  selectFormattedPreviewFee,
+  selectNetworkAssetConfig,
+  selectPreviewFeeLoading,
+  selectSourceChainKey,
+} from '@/store/slices/networkAssets'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: SummaryOwnProps) => {
-  return { fees: selectFormattedPreviewFee(state), loading: selectPreviewFeeLoading(state) }
+  let selectedChainKey = selectSourceChainKey(state)
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const receiveOn = networkAssetConfig?.receiveOn
+  const isSameChain = selectedChainKey === receiveOn
+
+  return { fees: selectFormattedPreviewFee(state), loading: selectPreviewFeeLoading(state), isSameChain }
 }
 
 const mapDispatch = {}
