@@ -8,4 +8,5 @@ export interface Token {
   fullName?: string
   symbol: string
   addresses: Partial<Record<ChainKey, string>>
+  rateOracles?: Partial<Record<ChainKey, string>> // For getting the token/usd rate for that token on that chain
 }

@@ -1,5 +1,8 @@
+import { Accountant } from '@/api/contracts/Accountant'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
+import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+import { getUserClaimedAmountOfAsset } from '@/api/contracts/MerkleClaim/usersClaimedAmountOfAsset'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
 import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/previewFee'
@@ -10,6 +13,7 @@ import {
   nativeAddress,
   pollBalanceAfterTransactionAttempts,
   pollBalanceAfterTransactionInterval,
+  seiExplorerBaseUrl,
 } from '@/config/constants'
 import { contractAddresses } from '@/config/contracts'
 import { tokensConfig } from '@/config/tokens'
@@ -18,6 +22,7 @@ import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
+import { truncateToSignificantDigits } from '@/utils/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Address } from 'viem'
 import { switchChain } from 'wagmi/actions'
@@ -26,14 +31,23 @@ import { selectAddress } from '../account/slice'
 import { fetchAllTokenBalances, selectTokenBalance } from '../balance'
 import { selectNetworkId } from '../chain'
 import { selectNetworkAssetFromRoute } from '../router'
-import { setErrorMessage, setErrorTitle, setTransactionSuccessMessage, setTransactionTxHash } from '../status'
 import {
+  setErrorMessage,
+  setErrorTitle,
+  setTransactionExplorerUrl,
+  setTransactionSuccessMessage,
+  setTransactionTxHash,
+} from '../status'
+import { selectClaimableTokenAddresses, selectTotalClaimables, selectUserProof } from '../userProofSlice/selectors'
+import {
+  selectAvailableNetworkAssetKeys,
   selectContractAddressByName,
   selectDepositAmount,
   selectDepositAmountAsBigInt,
   selectDepositBridgeData,
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
+  selectNetworkConfig,
   selectSolanaAddressBytes32,
   selectSourceChainId,
   selectSourceChainKey,
@@ -41,8 +55,140 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount } from './slice'
-import { truncateToSignificantDigits } from '@/utils/number'
-import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+import { claim } from '@/api/contracts/MerkleClaim/claim'
+
+export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
+
+export const fetchPaused = createAsyncThunk<FetchPausedResult, void, { rejectValue: string; state: RootState }>(
+  'balances/fetchPaused',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
+      const networkConfig = selectNetworkConfig(state)
+
+      if (!networkConfig) {
+        return {}
+      }
+
+      const availableNetworkAssetKeys = selectAvailableNetworkAssetKeys(state)
+      const pausedNetworksArray = await Promise.all(
+        availableNetworkAssetKeys.map(async (networkAssetKey) => {
+          const accountantAddress = networkConfig.assets[networkAssetKey]?.contracts.accountant
+          if (!accountantAddress) return { key: networkAssetKey, isPaused: false }
+          const accountantState = await Accountant.accountantState(accountantAddress)
+          return { key: networkAssetKey, isPaused: accountantState.isPaused }
+        })
+      )
+
+      const pausedNetworks = pausedNetworksArray.reduce((acc, { key, isPaused }) => {
+        acc[key] = isPaused
+        return acc
+      }, {} as FetchPausedResult)
+
+      return pausedNetworks
+    } catch (e) {
+      const error = e as Error
+      const errorMessage = `Failed to fetch paused state.\n${error.message}`
+      console.error(`${errorMessage}\n${error.stack}`)
+      dispatch(setErrorMessage(errorMessage))
+      return rejectWithValue(errorMessage)
+    }
+  }
+)
+export interface FetchClaimedAmountsOfAssetsResult {
+  claimed: Partial<Record<TokenKey, string>>
+}
+
+export const fetchClaimedAmountsOfAssets = createAsyncThunk<
+  FetchClaimedAmountsOfAssetsResult,
+  void,
+  { rejectValue: string; state: RootState }
+>('balances/fetchClaimedAmountsOfAssets', async (_, { getState, rejectWithValue, dispatch }) => {
+  const state = getState()
+  const userAddress = selectAddress(state)
+  const claims = selectTotalClaimables(state)
+
+  if (!userAddress || claims.length === 0) return { claimed: {} }
+
+  try {
+    const claimedAmountsAsArray = await Promise.all(
+      claims.map((claim) => {
+        const assetAddress = tokensConfig[claim.tokenKey]?.addresses[claim.chainKey] as `0x${string}`
+        return getUserClaimedAmountOfAsset(
+          { userAddress, assetAddress },
+          { merkleClaimAddress: contractAddresses.merkleClaim, chainId: 1329 }
+        )
+      })
+    )
+
+    // Convert the array of claimed amounts to an object
+    const claimed = claims.reduce(
+      (acc, claim, index) => {
+        acc[claim.tokenKey] = claimedAmountsAsArray[index].toString()
+        return acc
+      },
+      {} as Partial<Record<TokenKey, string>>
+    )
+    return { claimed }
+  } catch (e) {
+    const error = e as Error
+    const errorMessage = `Failed to fetch claimed amount of asset.\n${error.message}`
+    console.error(`${errorMessage}\n${error.stack}`)
+    dispatch(setErrorMessage(errorMessage))
+    return rejectWithValue(errorMessage)
+  }
+})
+
+interface ClaimRewardsResult {
+  txHash: `0x${string}` | null
+}
+
+export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectValue: string; state: RootState }>(
+  'bridges/claimRewards',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    try {
+      const state = getState()
+      const proof = selectUserProof(state)
+      const userAddress = selectAddress(state)
+      const claimables = selectTotalClaimables(state)
+      const claimableTokenAddresses = selectClaimableTokenAddresses(state)
+      const chainId = selectNetworkId(state)
+
+      if (!userAddress) {
+        return { txHash: null }
+      }
+
+      const claimableAmounts = claimables.map((claimable) => BigInt(claimable.amount))
+
+      //////////////////////////////////////////////////////////////////////////
+      // Switch chains if needed
+      //   If the chain the wallet is connected to does not match the source
+      //   chain that the user selected, switch it to the source chain.
+      //////////////////////////////////////////////////////////////////////////
+      if (chainId !== 1329) {
+        await switchChain(wagmiConfig, { chainId: 1329 })
+      }
+
+      const txHash = await claim(
+        { proof, user: userAddress, assets: claimableTokenAddresses, totalClaimableForAsset: claimableAmounts },
+        { merkleClaimContractAddress: contractAddresses.merkleClaim }
+      )
+
+      dispatch(setTransactionSuccessMessage(`Claim Successful`))
+      dispatch(setTransactionTxHash(txHash))
+      dispatch(setTransactionExplorerUrl(seiExplorerBaseUrl))
+      return { txHash }
+    } catch (e) {
+      console.error(e)
+      const error = e as Error
+      const errorMessage = `Claim failed`
+      const fullErrorMessage = `${errorMessage}\n${error.message}`
+      dispatch(setErrorTitle('Claim Not Verified'))
+      dispatch(setErrorMessage(fullErrorMessage))
+      return rejectWithValue(errorMessage)
+    }
+  }
+)
 
 export interface FetchNetworkAssetTvlResult {
   tokenKey: TokenKey
@@ -351,6 +497,10 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           }
         )
       }
+
+      // We do this so that it will automatically get the explorer url from the config.
+      // This is just a bandaid for now.
+      dispatch(setTransactionExplorerUrl(null))
 
       // Show success modal
       dispatch(setTransactionSuccessMessage(`Deposited ${fromAmount} ${depositAssetTokenKey}`))

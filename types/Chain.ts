@@ -17,7 +17,7 @@ export interface NetworkAsset {
   chain: ChainKey
   deployedOn: ChainKey
   comingSoon?: boolean
-  paused?: boolean
+  manuallyPaused?: boolean
   sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   contracts: Contracts
   layerZeroChainSelector?: number
@@ -27,6 +27,7 @@ export interface NetworkAsset {
   receiveOn: ChainKey
   points: PointSystem[]
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
+  showRewardsAndHistory?: boolean
 }
 
 export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

@@ -5,8 +5,11 @@ import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectNetworkKey } from '../slices/chain'
 import { selectAvailableNetworkAssetKeys } from '../slices/networkAssets'
-import { fetchNetworkAssetTvl } from '../slices/networkAssets/thunks'
+import { fetchClaimedAmountsOfAssets, fetchNetworkAssetTvl, fetchPaused } from '../slices/networkAssets/thunks'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
+import { userProofApi } from '../slices/userProofSlice/apiSlice'
+import { redstoneApi } from '../slices/redstoneSlice/apiSlice'
+import { selectTotalClaimables } from '../slices/userProofSlice/selectors'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -14,16 +17,28 @@ export function useStoreInitializer() {
 
   const networkKey = useAppSelector(selectNetworkKey)
   const networkAssetKeys = useAppSelector(selectAvailableNetworkAssetKeys)
+  const claimables = useAppSelector(selectTotalClaimables)
 
   useEffect(() => {
-    if (address) dispatch(setAddress(address))
+    if (address) {
+      dispatch(setAddress(address))
+
+      // Load the user merkle proof data for claiming rewards
+      dispatch(userProofApi.endpoints.getUserProofByWallet.initiate({ walletAddress: address, chainId: 1329 }))
+    }
   }, [address, dispatch])
+
+  useEffect(() => {
+    if (address && claimables) {
+      dispatch(fetchClaimedAmountsOfAssets())
+    }
+  }, [claimables, address, dispatch])
 
   useEffect(() => {
     deferExecution(() => {
       dispatch(fetchUsdPerEthRate())
       dispatch(fetchUsdPerBtcRate())
-
+      dispatch(fetchPaused())
       networkAssetKeys.forEach((key) => {
         dispatch(fetchNetworkAssetTvl(key))
       })
