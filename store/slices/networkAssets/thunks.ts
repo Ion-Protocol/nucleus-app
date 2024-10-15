@@ -22,7 +22,7 @@ import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
-import { truncateToSignificantDigits } from '@/utils/number'
+import { convertFromDecimals, convertToDecimals, truncateToSignificantDigits } from '@/utils/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Address } from 'viem'
 import { switchChain } from 'wagmi/actions'
@@ -278,9 +278,7 @@ export const setDepositAmountMax = createAsyncThunk<void, void, { state: RootSta
     const tokenKey = selectSourceTokenKey(state)
     const tokenBalance = selectTokenBalance(state, chainKeyFromSourceChain, tokenKey)
 
-    let tokenBalanceAsNumber = tokenBalance
-      ? bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 })
-      : '0'
+    let tokenBalanceAsNumber = tokenBalance ? convertFromDecimals(tokenBalance) : '0'
 
     if (networkAssetKey === TokenKey.TETH) {
       tokenBalanceAsNumber = truncateToSignificantDigits(tokenBalanceAsNumber, 9)
