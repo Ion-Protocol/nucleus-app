@@ -32,7 +32,7 @@ export const selectTotalClaimables = createSelector(
 export const selectClaimableTokenAddresses = createSelector([selectUserProofData], (data) => {
   return (
     data?.incentiveClaims.tokenAmounts.map((tokenAmount) => {
-      return tokensConfig[tokenAmount.tokenKey].addresses[ChainKey.ETHEREUM] as `0x${string}`
+      return tokensConfig[tokenAmount.tokenKey].addresses[ChainKey.SEI] as `0x${string}`
     }) || []
   )
 })
