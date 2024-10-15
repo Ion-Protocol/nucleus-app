@@ -1,5 +1,6 @@
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
+import { selectClaimPending } from '@/store/slices/networkAssets'
 import { claimRewards } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { selectTotalClaimables } from '@/store/slices/userProofSlice/selectors'
@@ -14,6 +15,7 @@ const mapState = (state: RootState, ownProps: RewardsAndHistoryOwnProps) => {
   const claimableTokenKeys = claimables.map((claimable) => claimable.tokenKey)
   const shouldShowRewardsAndHistoryTable = claimables.length > 0
   const shouldDisableClaim = claimables.every((claimable) => claimable.amount === '0')
+  const isClaimPending = selectClaimPending(state)
   return {
     networkAssetKey: networkAssetKeyFromRoute,
     networkAsset,
@@ -21,6 +23,7 @@ const mapState = (state: RootState, ownProps: RewardsAndHistoryOwnProps) => {
     claimableTokenKeys,
     shouldShowRewardsAndHistoryTable,
     shouldDisableClaim,
+    isClaimPending,
   }
 }
 
