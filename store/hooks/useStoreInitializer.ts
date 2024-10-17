@@ -4,12 +4,13 @@ import { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { selectNetworkKey } from '../slices/chain'
-import { selectAvailableNetworkAssetKeys } from '../slices/networkAssets'
+import { selectAvailableNetworkAssetKeys, selectSourceTokenKey } from '../slices/networkAssets'
 import { fetchClaimedAmountsOfAssets, fetchNetworkAssetTvl, fetchPaused } from '../slices/networkAssets/thunks'
 import { fetchUsdPerBtcRate, fetchUsdPerEthRate } from '../slices/price'
 import { userProofApi } from '../slices/userProofSlice/apiSlice'
 import { redstoneApi } from '../slices/redstoneSlice/apiSlice'
 import { selectTotalClaimables } from '../slices/userProofSlice/selectors'
+import { fetchTokenRateInQuote } from '../slices/networkAssets/thunks'
 
 export function useStoreInitializer() {
   const { address } = useAccount()
@@ -17,7 +18,13 @@ export function useStoreInitializer() {
 
   const networkKey = useAppSelector(selectNetworkKey)
   const networkAssetKeys = useAppSelector(selectAvailableNetworkAssetKeys)
+  const sourceTokenKey = useAppSelector(selectSourceTokenKey)
   const claimables = useAppSelector(selectTotalClaimables)
+
+  useEffect(() => {
+    if (!sourceTokenKey) return
+    dispatch(fetchTokenRateInQuote(sourceTokenKey))
+  }, [sourceTokenKey, dispatch])
 
   useEffect(() => {
     if (address) {
