@@ -1,3 +1,16 @@
+import { mainnet, type Chain } from 'wagmi/chains'
+import { tenderlyStaging, sei, ethereumStagingL1, ethereumStagingL2 } from './tenderly'
+
+export const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT as 'development' | 'staging' | 'production'
+
+const testNetChains = [tenderlyStaging, ethereumStagingL1, ethereumStagingL2] as const
+
+const prodChains = [mainnet, sei] as const
+
+const allChains = [...prodChains, ...testNetChains] as const
+
+export const SUPPORTED_CHAINS = (ENVIRONMENT === 'production' ? prodChains : allChains) as readonly [Chain, ...Chain[]]
+
 export const docsUrl = 'https://docs.nucleusearn.io/'
 export const discordUrl = 'https://discord.com/invite/CjQqUgPA6Y'
 export const nativeAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'

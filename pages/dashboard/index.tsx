@@ -26,6 +26,13 @@ export default function Dashboard() {
       <Text variant="heading2">Select a Network Asset</Text>
       <Flex h={8} />
       <NetworkAssetList />
+
+      {/* Staging network asset list */}
+      <Text marginTop={20} variant="heading2">
+        Staging Network Assets
+      </Text>
+      <Flex h={8} />
+      <NetworkAssetList />
     </Flex>
   )
 }

@@ -12,6 +12,7 @@ function ChainSelect({
   isActive,
   role,
 }: ChainSelectConnector.Props) {
+  console.log('chains in ChainSelect', chains)
   return (
     <Menu matchWidth>
       <MenuButton

@@ -1,22 +1,17 @@
+import { fallback, http } from 'wagmi'
+import { mainnet, type Chain } from 'wagmi/chains'
 import { createFunkitWagmiConfig, getDefaultTransports, getDefaultWallets } from '@funkit/connect'
 import { bitgetWallet, ledgerWallet } from '@funkit/connect/wallets'
-import { fallback, http } from 'wagmi'
-import { mainnet } from 'wagmi/chains'
-import { sei, tenderlyStaging } from './tenderly'
+
+import { sei, tenderlyStaging } from '@/config/tenderly'
+import { SUPPORTED_CHAINS } from '@/config/constants'
 
 const MAINNET_CHAINSTACK_URL = process.env.NEXT_PUBLIC_MAINNET_CHAINSTACK_URL || ''
 const SEI_RPC_URL = process.env.NEXT_PUBLIC_SEI_RPC_URL || ''
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
-const SHOW_TENDERLY = process.env.NEXT_PUBLIC_SHOW_TENDERLY === 'true'
 const TENDERLY_RPC_URL = process.env.NEXT_PUBLIC_TENDERLY_RPC_URL || ''
 
-const chains = [] as any
-
-chains.push(mainnet)
-if (SHOW_TENDERLY) {
-  chains.push(tenderlyStaging)
-}
-chains.push(sei)
+const supportedChains = SUPPORTED_CHAINS as [Chain, ...Chain[]]
 
 const { wallets } = getDefaultWallets()
 
@@ -30,7 +25,7 @@ export const wagmiConfig = createFunkitWagmiConfig({
       wallets: [bitgetWallet, ledgerWallet],
     },
   ],
-  chains,
+  chains: supportedChains,
   transports: {
     ...getDefaultTransports(),
     [mainnet.id]: fallback([http(MAINNET_CHAINSTACK_URL)]),
