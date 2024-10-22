@@ -13,6 +13,7 @@ import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 import { redstoneApi } from './slices/redstoneSlice/apiSlice'
+import { dialogReducer } from './slices/stepDialog/slice'
 
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
@@ -22,6 +23,7 @@ const apiMiddlewares = [userProofApi.middleware, redstoneApi.middleware]
 export const store = configureStore({
   reducer: {
     account: accountReducer,
+    dialog: dialogReducer,
     balances: balancesReducer,
     networkAssets: networkAssetsReducer,
     network: networkReducer,

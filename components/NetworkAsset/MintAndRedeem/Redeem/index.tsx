@@ -1,3 +1,5 @@
+import { useDispatch, useSelector } from 'react-redux'
+import { setOpen, setSteps, setTitle } from '@/store/slices/stepDialog/slice'
 import { IonCard } from '@/components/shared/IonCard'
 import {
   Button,
@@ -19,8 +21,11 @@ import TokenSelect from '../shared/TokenSelect'
 import { Token } from '@/types/Token'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
+import StepProcessDialog from '@/components/global/StepProcessDialog'
 
 export function Redeem() {
+  const dispatch = useDispatch()
+  const dialogState = useSelector((state: any) => state.dialog)
   const tokens = [
     {
       addresses: {
@@ -44,6 +49,24 @@ export function Redeem() {
       symbol: 'WSTETH',
     },
   ]
+
+  // ... existing code ...
+
+  const handleRedeemClick = () => {
+    console.log('Redeem button clicked')
+    dispatch(setTitle('Redeem Process'))
+    dispatch(
+      setSteps([
+        { id: '1', description: 'Approve token', state: 'completed' },
+        { id: '2', description: 'Redeem ssETH', state: 'active' },
+        { id: '3', description: 'Receive ETH', state: 'idle' },
+      ])
+    )
+    dispatch(setOpen(true))
+
+    // Debug: Log the updated state
+    console.log('Updated dialog state:', dialogState)
+  }
 
   return (
     <Flex direction="column" gap={6}>
@@ -84,7 +107,7 @@ export function Redeem() {
           </Flex>
 
           <Flex gap={2} align="center">
-            <TokenIcon fontSize="28px" tokenKey={TokenKey.SEIYANETH} />
+            <TokenIcon fontSize="28px" tokenKey={TokenKey.SSETH} />
             <Text variant="paragraph">ssETH</Text>
           </Flex>
         </Flex>
@@ -274,7 +297,7 @@ export function Redeem() {
           </Text>
         </IonSkeleton>
       </Flex>
-      <Button>Redeem</Button>
+      <Button onClick={handleRedeemClick}>Redeem</Button>
     </Flex>
   )
 }

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Mint } from './Mint'
 import { Redeem } from './Redeem'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import StepProcessDialog from '@/components/global/StepProcessDialog'
 
 export function MintAndRedeem() {
   const [selectedIndex, setSelectedIndex] = useState(0)
