@@ -5,7 +5,7 @@ import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { tokensConfig } from '@/config/tokens'
-import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
+import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl, tenderlyStagingBaseUrl } from '@/config/constants'
 
 const MANUALLY_PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
 
@@ -219,14 +219,14 @@ const tenderlyStagingNetworkAssets: NetworkAssets = {
     deployedOn: ChainKey.TENDERLY_L2,
     sourceChains: {
       [ChainKey.TENDERLY_L1]: {
-        chain: ChainKey.ETHEREUM,
+        chain: ChainKey.TENDERLY_L1,
         // ! Should this be updated to tenderly explorer L1?
-        explorerBaseUrl: layerZeroBaseUrl,
+        explorerBaseUrl: `${tenderlyStagingBaseUrl}${process.env.NEXT_PUBLIC_ETHEREUM_STAGING_L1_EXPLORER_ID}`,
       },
       [ChainKey.TENDERLY_L2]: {
         chain: ChainKey.TENDERLY_L2,
         // ! Should this be updated to tenderly explorer L2?
-        explorerBaseUrl: seiExplorerBaseUrl,
+        explorerBaseUrl: `${tenderlyStagingBaseUrl}${process.env.NEXT_PUBLIC_ETHEREUM_STAGING_L1_EXPLORER_ID}`,
       },
     },
     sourceTokens: {

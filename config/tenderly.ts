@@ -38,7 +38,7 @@ export const tenderlyStaging: Chain = {
   testnet: true,
 }
 
-export const ethereumStagingL1: Chain = {
+export const tenderlyStagingL1: Chain = {
   id: 308712,
   iconUrl: '/assets/svgs/token-weth.svg',
   name: 'Ethereum Staging L1',
@@ -70,7 +70,7 @@ export const ethereumStagingL1: Chain = {
   testnet: true,
 }
 
-export const ethereumStagingL2: Chain = {
+export const tenderlyStagingL2: Chain = {
   id: 2,
   iconUrl: '/assets/svgs/token-weth.svg',
   name: 'Ethereum Staging L2',
