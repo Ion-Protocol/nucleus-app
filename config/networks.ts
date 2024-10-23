@@ -208,28 +208,30 @@ const mainnetNetworkAssets: NetworkAssets = {
 }
 
 // TODO: Is this needed? Used for configuring vaults on tenderly networks
-const stagingNetworkAssets: NetworkAssets = {
+const tenderlyStagingNetworkAssets: NetworkAssets = {
   [TokenKey.SSETH]: {
     token: tokensConfig[TokenKey.SSETH],
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
-    chain: ChainKey.SEI,
+    chain: ChainKey.TENDERLY_L2,
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SSETH),
     showRewardsAndHistory: true,
-    deployedOn: ChainKey.SEI,
+    deployedOn: ChainKey.TENDERLY_L2,
     sourceChains: {
-      [ChainKey.ETHEREUM]: {
+      [ChainKey.TENDERLY_L1]: {
         chain: ChainKey.ETHEREUM,
+        // ! Should this be updated to tenderly explorer L1?
         explorerBaseUrl: layerZeroBaseUrl,
       },
-      [ChainKey.SEI]: {
-        chain: ChainKey.SEI,
+      [ChainKey.TENDERLY_L2]: {
+        chain: ChainKey.TENDERLY_L2,
+        // ! Should this be updated to tenderly explorer L2?
         explorerBaseUrl: seiExplorerBaseUrl,
       },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-      [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
+      [ChainKey.TENDERLY_L1]: defaultEthVaultAssets,
+      [ChainKey.TENDERLY_L2]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     contracts: {
       teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
@@ -237,7 +239,7 @@ const stagingNetworkAssets: NetworkAssets = {
       boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
     },
     layerZeroChainSelector: 30280,
-    receiveOn: ChainKey.SEI,
+    receiveOn: ChainKey.TENDERLY_L1,
     points: [
       {
         key: PointSystemKey.NUCLEUS,
@@ -285,11 +287,11 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.STAGING_L1]: {
     id: 308712,
     name: 'Eth Staging L1',
-    assets: mainnetNetworkAssets,
+    assets: tenderlyStagingNetworkAssets,
   },
   [NetworkKey.STAGING_L2]: {
     id: 2,
     name: 'Eth Staging L2',
-    assets: mainnetNetworkAssets,
+    assets: tenderlyStagingNetworkAssets,
   },
 }

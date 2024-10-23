@@ -5,4 +5,6 @@ export enum ChainKey {
   ECLIPSE = 'eclipse',
   DINERO = 'dinero',
   FORM = 'form',
+  TENDERLY_L1 = 'ethereum',
+  TENDERLY_L2 = 'sei',
 }
