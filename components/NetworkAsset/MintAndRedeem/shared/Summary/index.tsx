@@ -13,6 +13,21 @@ function Summary({ fees, loading, isSameChain }: SummaryConnector.Props) {
       <Flex align="center" justify="space-between">
         <Flex color="secondaryText" gap={2} align="center">
           <Text variant="paragraph" color="disabledText">
+            Exchange Rate
+          </Text>
+          <IonTooltip label={tooltipLabel}>
+            <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+          </IonTooltip>
+        </Flex>
+        <IonSkeleton minW="75px" isLoaded={!loading}>
+          <Text textAlign="right" variant="paragraph">
+            {fees}
+          </Text>
+        </IonSkeleton>
+      </Flex>
+      <Flex align="center" justify="space-between">
+        <Flex color="secondaryText" gap={2} align="center">
+          <Text variant="paragraph" color="disabledText">
             Fees
           </Text>
           <IonTooltip label={tooltipLabel}>

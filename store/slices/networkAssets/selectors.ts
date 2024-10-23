@@ -520,6 +520,13 @@ export const selectTokenRateInQuoteLoading = (state: RootState) => {
   return bridgesState.tokenRate.loading
 }
 
+export const selectFormattedTokenRateInQuote = (state: RootState): string => {
+  const tokenRateInQuote = selectTokenRateInQuote(state)
+  if (!tokenRateInQuote) return '0.00'
+  const formattedTokenRateInQuote = bigIntToNumberAsString(BigInt(tokenRateInQuote))
+  return formattedTokenRateInQuote
+}
+
 /////////////////////////////////////////////////////////////////////
 // Balance
 /////////////////////////////////////////////////////////////////////

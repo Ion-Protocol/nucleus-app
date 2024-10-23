@@ -1,6 +1,7 @@
 import { RootState } from '@/store'
 import {
   selectFormattedPreviewFee,
+  selectFormattedTokenRateInQuote,
   selectNetworkAssetConfig,
   selectPreviewFeeLoading,
   selectSourceChainKey,
@@ -13,7 +14,12 @@ const mapState = (state: RootState, ownProps: SummaryOwnProps) => {
   const receiveOn = networkAssetConfig?.receiveOn
   const isSameChain = selectedChainKey === receiveOn
 
-  return { fees: selectFormattedPreviewFee(state), loading: selectPreviewFeeLoading(state), isSameChain }
+  return {
+    fees: selectFormattedPreviewFee(state),
+    loading: selectPreviewFeeLoading(state),
+    exchangeRate: selectFormattedTokenRateInQuote(state),
+    isSameChain,
+  }
 }
 
 const mapDispatch = {}
