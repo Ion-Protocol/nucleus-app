@@ -92,6 +92,12 @@ export type NetworkAssetsState = {
   // 1. The value is used in multiple components
   selectedSourceToken: TokenKey | null
 
+  // The selected want token is the token that the user has selected in the token drop down on the redeem page
+  // ---
+  // Justification for storing in global state:
+  // 1. The value is used in multiple components
+  selectedWantToken: TokenKey | null
+
   // The solana address that is input manually by the user when bridging to a Solana chain (like Eclipse).
   // ---
   // Justification for storing in global state:
@@ -161,6 +167,9 @@ export const initialState: NetworkAssetsState = {
 
   // Selected source token
   selectedSourceToken: null,
+
+  // Selected want token
+  selectedWantToken: null,
 
   // Solana address
   solanaAddress: '',

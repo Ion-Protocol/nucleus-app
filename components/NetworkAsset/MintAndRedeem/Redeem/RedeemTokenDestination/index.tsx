@@ -1,21 +1,18 @@
-import { useState } from 'react'
-import { Flex, Input, Text } from '@chakra-ui/react'
-
-import { RedeemInputConnector } from './connector'
-
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonCard } from '@/components/shared/IonCard'
-import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { TokenKey } from '@/types/TokenKey'
+import { Flex, Input, Skeleton, Text } from '@chakra-ui/react'
 
-const RedeemInput = ({
-  networkAssetName,
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { TokenFromConnector } from './connector'
+
+function TokenDestination({
+  value,
   networkAssetKey,
+  networkAssetName,
   tokenBalance,
-  error,
-  inputValue,
-  onChange,
-}: RedeemInputConnector.Props) => {
+  loadingTokenBalance,
+  loadingTokenRate,
+}: TokenFromConnector.Props) {
   return (
     <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}
@@ -23,7 +20,7 @@ const RedeemInput = ({
         <Text>Redeem</Text>
         <Flex color="secondaryText" gap={1}>
           <Text variant="smallParagraph">Balance: </Text>
-          <IonSkeleton isLoaded={true} minW="25px">
+          <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
             <Text variant="smallParagraph">{tokenBalance}</Text>
           </IonSkeleton>
         </Flex>
@@ -33,21 +30,23 @@ const RedeemInput = ({
       <Flex align="center" gap={3} mt={3}>
         {/* Input Box */}
         <Flex w="full">
-          <IonSkeleton isLoaded={true} minW="250px" w="60%">
+          <IonSkeleton isLoaded={!loadingTokenRate} minW="250px" w="60%">
             <Input
-              value={inputValue}
-              onChange={(e) => onChange(e.target.value)}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              disabled
+              _disabled={{
+                cursor: 'text',
+                color: 'disabled',
+              }}
+              color="textSecondary"
+              cursor="pointer"
+              value={value}
               variant="unstyled"
               size="lg"
+              placeholder="Amount"
               fontFamily="var(--font-ppformula)"
               fontSize="18px"
               letterSpacing="0.05em"
-              placeholder="0"
-              color={error ? 'error.main' : 'text'}
             />
-            {error && <Text color="error.main">{error}</Text>}
           </IonSkeleton>
         </Flex>
 
@@ -60,4 +59,4 @@ const RedeemInput = ({
   )
 }
 
-export default RedeemInputConnector.Connector(RedeemInput)
+export default TokenFromConnector.Connector(TokenDestination)

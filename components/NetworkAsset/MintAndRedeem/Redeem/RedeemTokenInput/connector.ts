@@ -18,34 +18,31 @@ import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
 
-const mapState = (state: RootState, ownProps: RedeemOwnProps) => {
-  const selectedChainKey = selectSourceChainKey(state)
-  const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
-  const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
-  console.log('selectedChainKey', selectedChainKey)
-  console.log('networkAssetFromRoute', networkAssetFromRoute)
-  // const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, networkAssetFromRoute)
-  // console.log('formattedTokenBalance', formattedTokenBalance)
-  const inputValue = selectWithdrawAmount(state)
-
+const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
   const currentPageChainKey = selectNetworkAssetFromRoute(state)
+  const selectedChainKey = selectSourceChainKey(state)
+  const inputValue = selectWithdrawAmount(state)
   const tokenKeys = selectSourceTokens(state)
   const tokens = tokenKeys.map((key) => tokensConfig[key])
   const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
-  const shouldIgnoreBalance = selectShouldIgnoreBalance(state)
+  const selectedToken = tokensConfig[selectedTokenKey]
+  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
 
   return {
-    networkAssetKey: networkAssetFromRoute,
-    networkAssetName,
     inputValue,
-    tokenBalance: 10,
+    tokenBalance: formattedTokenBalance,
     loadingTokenBalance: selectBalancesLoading(state),
     error: selectInputError(state),
+    tokens,
+    selectedToken,
+    currentPageChainKey,
+    shouldIgnoreBalance: false,
   }
 }
 
 const mapDispatch = {
   onChange: setWithdrawAmount,
+  onChangeToken: (token: TokenKey) => setSelectedSourceToken({ tokenKey: token }),
   onMax: () => setDepositAmountMax(),
 }
 
@@ -53,11 +50,11 @@ const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface RedeemOwnProps {}
+interface RedeemTokenInputOwnProps {}
 
-interface RedeemProps extends RedeemOwnProps, PropsFromRedux {}
+interface RedeemTokenInputProps extends RedeemTokenInputOwnProps, PropsFromRedux {}
 
-export namespace RedeemConnector {
+export namespace RedeemTokenInputConnector {
   export const Connector = connector
-  export type Props = RedeemProps
+  export type Props = RedeemTokenInputProps
 }
