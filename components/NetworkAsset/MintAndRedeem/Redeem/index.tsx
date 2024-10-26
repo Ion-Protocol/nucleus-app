@@ -21,9 +21,12 @@ import TokenSelect from '../shared/TokenSelect'
 import { Token } from '@/types/Token'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
-import StepProcessDialog from '@/components/global/StepProcessDialog'
+import RedeemInput from './RedeemInput'
+import { RedeemConnector } from './connector'
+import { useState } from 'react'
 
-export function Redeem() {
+function Redeem({ inputValue, onChange, error }: RedeemConnector.Props) {
+  const [isFocused, setIsFocused] = useState(false)
   const dispatch = useDispatch()
   const dialogState = useSelector((state: any) => state.dialog)
   const tokens = [
@@ -70,7 +73,8 @@ export function Redeem() {
 
   return (
     <Flex direction="column" gap={6}>
-      <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
+      {/* Redeem Input */}
+      <IonCard variant="outline" bg="backgroundSecondary" border="1px solid" borderColor="borderLight">
         {/* Top Row */}
         <Flex justify="space-between">
           <Text>Redeem</Text>
@@ -88,21 +92,19 @@ export function Redeem() {
           <Flex w="full">
             <IonSkeleton isLoaded={true} minW="250px" w="60%">
               <Input
-                disabled
-                _disabled={{
-                  cursor: 'text',
-                  color: 'disabled',
-                }}
-                color="textSecondary"
-                cursor="pointer"
-                value={10}
+                value={inputValue}
+                onChange={(e) => onChange(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
                 variant="unstyled"
                 size="lg"
-                placeholder="Amount"
                 fontFamily="var(--font-ppformula)"
                 fontSize="18px"
                 letterSpacing="0.05em"
+                placeholder="0"
+                color={error ? 'error.main' : 'text'}
               />
+              {error && <Text color="error.main">{error}</Text>}
             </IonSkeleton>
           </Flex>
 
@@ -113,7 +115,8 @@ export function Redeem() {
         </Flex>
       </IonCard>
 
-      <IonCard variant="outline" bg={false ? 'backgroundSecondary' : 'none'} pt={false ? 3 : 5}>
+      {/* Redeem Summary */}
+      <IonCard variant="outline" bg="formBackground" pt={false ? 3 : 5}>
         {/* Top Row */}
         <Flex justify="space-between" align="center">
           {false ? (
@@ -149,9 +152,6 @@ export function Redeem() {
           <Flex direction="column">
             <Input
               value={25}
-              // onChange={(e) => onChange(e.target.value)}
-              // onFocus={() => setIsFocused(true)}
-              // onBlur={() => setIsFocused(false)}
               variant="unstyled"
               size="lg"
               fontFamily="var(--font-ppformula)"
@@ -301,3 +301,5 @@ export function Redeem() {
     </Flex>
   )
 }
+
+export default RedeemConnector.Connector(Redeem)

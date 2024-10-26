@@ -504,6 +504,15 @@ export const selectInputError = createSelector(
 )
 
 /////////////////////////////////////////////////////////////////////
+// Withdraw amount input
+/////////////////////////////////////////////////////////////////////
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWithdrawAmount = (state: RootState): string => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.withdrawAmount
+}
+
+/////////////////////////////////////////////////////////////////////
 // Bridge Rate
 // Used to calculate the destination amount based on the deposit amount
 /////////////////////////////////////////////////////////////////////
