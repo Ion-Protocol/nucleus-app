@@ -41,7 +41,6 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps): MapStateProps 
   const withdrawAmount = selectWithdrawAmount(state)
   const rate = selectTokenRateInQuote(state)
   const withdrawAmountAsBigInt = BigInt(convertToDecimals(withdrawAmount, 18))
-  console.log('withdrawAmountAsBigInt', withdrawAmountAsBigInt)
   const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
   const destinationAmountAsBigInt =
     rateAsBigInt > 0 ? (withdrawAmountAsBigInt * WAD.bigint) / rateAsBigInt : withdrawAmountAsBigInt
