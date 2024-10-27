@@ -40,7 +40,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   return {
     bridgeFee: selectFormattedPreviewFee(state),
     bridgeFeeLoading: selectPreviewFeeLoading(state),
-    wantToken: 'ETH',
+    wantToken: wantToken?.name,
     exchangeRate,
     truncatedExchangeRate,
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),

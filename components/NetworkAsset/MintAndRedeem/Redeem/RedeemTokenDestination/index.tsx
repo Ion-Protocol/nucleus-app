@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonCard } from '@/components/shared/IonCard'
 import { Flex, Input, Skeleton, Text } from '@chakra-ui/react'
@@ -6,13 +7,15 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { TokenFromConnector } from './connector'
 
 function TokenDestination({
-  value,
+  onChange,
+  inputValue,
   networkAssetKey,
   networkAssetName,
   tokenBalance,
   loadingTokenBalance,
   loadingTokenRate,
 }: TokenFromConnector.Props) {
+  const [isFocused, setIsFocused] = useState(false)
   return (
     <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}
@@ -32,20 +35,17 @@ function TokenDestination({
         <Flex w="full">
           <IonSkeleton isLoaded={!loadingTokenRate} minW="250px" w="60%">
             <Input
-              disabled
-              _disabled={{
-                cursor: 'text',
-                color: 'disabled',
-              }}
               color="textSecondary"
-              cursor="pointer"
-              value={value}
-              variant="unstyled"
-              size="lg"
-              placeholder="Amount"
               fontFamily="var(--font-ppformula)"
               fontSize="18px"
               letterSpacing="0.05em"
+              placeholder="0"
+              size="lg"
+              value={inputValue}
+              variant="unstyled"
+              onBlur={() => setIsFocused(false)}
+              onChange={(e) => onChange(e.target.value)}
+              onFocus={() => setIsFocused(true)}
             />
           </IonSkeleton>
         </Flex>

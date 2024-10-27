@@ -10,7 +10,6 @@ import TokenSelect from '../../shared/TokenSelect'
 function RedeemTokenInput({
   error,
   inputValue,
-  onChange,
   onChangeToken,
   onMax,
   selectedToken,
@@ -19,10 +18,8 @@ function RedeemTokenInput({
   tokens,
   shouldIgnoreBalance,
 }: RedeemTokenInputConnector.Props) {
-  const [isFocused, setIsFocused] = useState(false)
-
   return (
-    <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'} pt={shouldIgnoreBalance ? 3 : 5}>
+    <IonCard variant="outline" bg={'backgroundSecondary'} pt={shouldIgnoreBalance ? 3 : 5}>
       {/* Top Row */}
       <Flex justify="space-between" align="center">
         {shouldIgnoreBalance ? (
@@ -62,17 +59,20 @@ function RedeemTokenInput({
         {/* Input Box */}
         <Flex direction="column">
           <Input
-            value={inputValue}
-            onChange={(e) => onChange(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            variant="unstyled"
-            size="lg"
+            color="textSecondary"
+            cursor="pointer"
+            disabled
+            _disabled={{
+              cursor: 'text',
+              color: 'disabled',
+            }}
             fontFamily="var(--font-ppformula)"
             fontSize="18px"
             letterSpacing="0.05em"
             placeholder="0"
-            color={error ? 'error.main' : 'text'}
+            size="lg"
+            value={inputValue}
+            variant="unstyled"
           />
           {error && <Text color="error.main">{error}</Text>}
         </Flex>

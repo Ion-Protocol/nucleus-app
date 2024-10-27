@@ -8,6 +8,7 @@ import {
   selectSourceChainKey,
   selectSourceTokenKey,
   selectSourceTokens,
+  selectTokenRateInQuote,
   selectWithdrawAmount,
   setDepositAmount,
   setSelectedSourceToken,
@@ -16,20 +17,39 @@ import {
 import { setDepositAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
+import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
+import { convertToDecimals } from '@/utils/number'
 import { ConnectedProps, connect } from 'react-redux'
+import { formatUnits } from 'viem'
 
 const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
   const currentPageChainKey = selectNetworkAssetFromRoute(state)
   const selectedChainKey = selectSourceChainKey(state)
-  const inputValue = selectWithdrawAmount(state)
   const tokenKeys = selectSourceTokens(state)
+
+  const rate = selectTokenRateInQuote(state)
+  const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
+
+  const withdrawAmount = selectWithdrawAmount(state)
+  const withdrawAmountAsBigInt = BigInt(convertToDecimals(withdrawAmount, 18))
+  const destinationAmountAsBigInt =
+    rateAsBigInt > 0 ? (withdrawAmountAsBigInt * rateAsBigInt) / WAD.bigint : withdrawAmountAsBigInt
+
+  const numberValue = parseFloat(formatUnits(destinationAmountAsBigInt, 18))
+  const destinationAmountFormatted = bigIntToNumberAsString(destinationAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: numberValue < 1 ? 18 : 8,
+  })
+
   const tokens = tokenKeys.map((key) => tokensConfig[key])
+
   const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
+
   const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
 
   return {
-    inputValue,
+    inputValue: destinationAmountFormatted,
     tokenBalance: formattedTokenBalance,
     loadingTokenBalance: selectBalancesLoading(state),
     error: selectInputError(state),
@@ -41,7 +61,6 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
 }
 
 const mapDispatch = {
-  onChange: setWithdrawAmount,
   onChangeToken: (token: TokenKey) => setSelectedSourceToken({ tokenKey: token }),
   onMax: () => setDepositAmountMax(),
 }
