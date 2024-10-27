@@ -560,7 +560,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const depositAssetTokenKey = selectSourceTokenKey(state)
       const chainId = selectSourceChainId(state)
       const userAddress = selectAddress(state)
-
+      console.log('fetchPreviewFee', { depositAssetTokenKey, chainKeyFromSelector })
       if (!depositAssetTokenKey || !chainKeyFromSelector) {
         return rejectWithValue('Missing deposit asset token key')
       }

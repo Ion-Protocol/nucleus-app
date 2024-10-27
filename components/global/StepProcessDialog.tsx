@@ -11,6 +11,8 @@ import {
   Box,
   Icon,
   Spinner,
+  ModalFooter,
+  Flex,
 } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
@@ -33,13 +35,14 @@ const StepProcessDialog = () => {
   return (
     <Modal isOpen={open} onClose={() => dispatch(setOpen(false))} isCentered>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
+      <ModalContent bg="neutral.200">
+        <ModalHeader fontWeight={500}>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          {extraContent && <Box mt={4}>{extraContent}</Box>}
           <VStack align="stretch" spacing={4}>
             {steps.map((step) => (
-              <Box key={step.id} borderLeft="2px solid gray" pl={4}>
+              <Box key={step.id}>
                 <Box display="flex" alignItems="center">
                   <Icon as={StepIcons[step.state]} boxSize={6} mr={2} />
                   <Text>{step.description}</Text>
@@ -52,8 +55,16 @@ const StepProcessDialog = () => {
               </Box>
             ))}
           </VStack>
-          {extraContent && <Box mt={4}>{extraContent}</Box>}
         </ModalBody>
+        <ModalFooter flex={1} justifyContent="center" alignItems="center">
+          {isLastStepCompleted ? (
+            <Button>Close</Button>
+          ) : (
+            <Text fontSize="md" fontWeight={400}>
+              Please proceed in your wallet
+            </Text>
+          )}
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )

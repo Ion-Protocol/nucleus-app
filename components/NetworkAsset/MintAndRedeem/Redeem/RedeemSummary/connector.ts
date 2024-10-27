@@ -38,9 +38,9 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const isSameChain = selectedChainKey === receiveOn
 
   return {
-    fees: selectFormattedPreviewFee(state),
-    loading: selectPreviewFeeLoading(state),
-    wantToken: wantToken.name,
+    bridgeFee: selectFormattedPreviewFee(state),
+    bridgeFeeLoading: selectPreviewFeeLoading(state),
+    wantToken: 'ETH',
     exchangeRate,
     truncatedExchangeRate,
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),

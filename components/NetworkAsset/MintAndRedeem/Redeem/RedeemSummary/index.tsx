@@ -6,8 +6,8 @@ import React from 'react'
 import { RedeemSummaryConnector } from './connector'
 
 function RedeemSummary({
-  fees,
-  loading,
+  bridgeFee,
+  bridgeFeeLoading,
   exchangeRate,
   truncatedExchangeRate,
   wantToken,
@@ -42,21 +42,23 @@ function RedeemSummary({
           <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3}>
             <Flex direction="column" gap={3}>
               {/* Bridge Fee */}
-              <Flex align="center" justify="space-between">
-                <Flex color="secondaryText" gap={2} align="center">
-                  <Text variant="paragraph" color="disabledText">
-                    Bridge Fee
-                  </Text>
-                  <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane">
-                    <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-                  </IonTooltip>
+              {bridgeFee && (
+                <Flex align="center" justify="space-between">
+                  <Flex color="secondaryText" gap={2} align="center">
+                    <Text variant="paragraph" color="disabledText">
+                      Bridge Fee
+                    </Text>
+                    <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane">
+                      <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+                    </IonTooltip>
+                  </Flex>
+                  <IonSkeleton minW="75px" isLoaded={bridgeFeeLoading}>
+                    <Text textAlign="right" variant="paragraph">
+                      {bridgeFee}
+                    </Text>
+                  </IonSkeleton>
                 </Flex>
-                <IonSkeleton minW="75px" isLoaded={true}>
-                  <Text textAlign="right" variant="paragraph">
-                    1.05 ETH
-                  </Text>
-                </IonSkeleton>
-              </Flex>
+              )}
               {/* Withdrawal Fee */}
               <Flex align="center" justify="space-between">
                 <Flex color="secondaryText" gap={2} align="center">
