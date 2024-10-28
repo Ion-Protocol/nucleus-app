@@ -56,6 +56,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+    },
     contracts: {
       teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
       accountant: '0x6035832F65b0cf20064681505b73A6dE307a04cB',
@@ -104,6 +107,9 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',

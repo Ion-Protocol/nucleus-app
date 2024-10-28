@@ -20,6 +20,12 @@ chains.push(sei)
 
 const { wallets } = getDefaultWallets()
 
+declare module 'wagmi' {
+  interface Register {
+    wagmiConfig: typeof wagmiConfig
+  }
+}
+
 export const wagmiConfig = createFunkitWagmiConfig({
   appName: 'Nucleus',
   projectId: WALLET_CONNECT_PROJECT_ID as string,

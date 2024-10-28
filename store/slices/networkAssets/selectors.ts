@@ -512,6 +512,13 @@ export const selectWithdrawAmount = (state: RootState): string => {
   return bridgesState.withdrawAmount
 }
 
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWithdrawAmountAsBigInt = (state: RootState): bigint => {
+  const withdrawAmountAsString = selectWithdrawAmount(state)
+  if (!withdrawAmountAsString || withdrawAmountAsString.trim() === '') return BigInt(0)
+  return BigInt(convertToDecimals(withdrawAmountAsString, 18))
+}
+
 /////////////////////////////////////////////////////////////////////
 // Bridge Rate
 // Used to calculate the destination amount based on the deposit amount
@@ -553,6 +560,12 @@ export const selectWalletHasEnoughBalance = (state: RootState) => {
 /////////////////////////////////////////////////////////////////////
 // Preview Fee
 /////////////////////////////////////////////////////////////////////
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectIsWithdrawal = (state: RootState): boolean => {
+  const withdrawAmount = selectWithdrawAmount(state)
+  return withdrawAmount.trim().length > 0
+}
 
 // DO NOT memoize: Simple state access; should be a plain function.
 export const selectPreviewFee = (state: RootState): string | null => state.networkAssets.previewFee.data
@@ -708,3 +721,20 @@ export const selectDepositAndBridgeCheckoutParams = createSelector(
     }
   }
 )
+// TODO: Move this to a better place
+// SHOULD memoize: Returns a new array; memoization avoids returning new references.
+export const selectWantTokens = createSelector(
+  [selectNetworkAssetConfig, selectSourceChainKey],
+  (chainConfig, sourceChain): TokenKey[] => {
+    return chainConfig?.wantTokens[sourceChain as ChainKey] || []
+  }
+)
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWantTokenKey = (state: RootState): TokenKey | null => {
+  const bridgesState = selectBridgesState(state)
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  if (!networkAssetConfig) return null
+  return bridgesState.selectedWantToken || networkAssetConfig?.wantTokens[sourceChainKey as ChainKey]?.[0] || null
+}

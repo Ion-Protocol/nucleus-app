@@ -1,5 +1,6 @@
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
+import { useGetPreviewFeeQuery } from '@/store/api/Teller/previewFeeApi'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
   selectDepositAmount,
@@ -13,8 +14,11 @@ import {
   setDepositAmount,
   setSelectedSourceToken,
   setWithdrawAmount,
+  selectWantTokens,
+  selectWantTokenKey,
+  setSelectedWantToken,
 } from '@/store/slices/networkAssets'
-import { setDepositAmountMax } from '@/store/slices/networkAssets/thunks'
+import { setDepositAmountMax, setWithdrawalAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
@@ -25,7 +29,7 @@ import { formatUnits } from 'viem'
 const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
   const currentPageChainKey = selectNetworkAssetFromRoute(state)
   const selectedChainKey = selectSourceChainKey(state)
-  const tokenKeys = selectSourceTokens(state)
+  const tokenKeys = selectWantTokens(state)
 
   const rate = selectTokenRateInQuote(state)
   const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
@@ -43,7 +47,7 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
 
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
-  const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
+  const selectedTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
 
   const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
@@ -61,8 +65,8 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
 }
 
 const mapDispatch = {
-  onChangeToken: (token: TokenKey) => setSelectedSourceToken({ tokenKey: token }),
-  onMax: () => setDepositAmountMax(),
+  onChangeToken: (token: TokenKey) => setSelectedWantToken({ tokenKey: token }),
+  onMax: () => setWithdrawalAmountMax(),
 }
 
 const connector = connect(mapState, mapDispatch)

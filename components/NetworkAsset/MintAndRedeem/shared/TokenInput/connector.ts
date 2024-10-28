@@ -20,7 +20,6 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const currentPageChainKey = selectNetworkAssetFromRoute(state)
   const selectedChainKey = selectSourceChainKey(state)
   const inputValue = selectDepositAmount(state)
-  console.log('inputValue', inputValue)
   const tokenKeys = selectSourceTokens(state)
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 

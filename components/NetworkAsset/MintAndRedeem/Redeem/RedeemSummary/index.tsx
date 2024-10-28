@@ -1,8 +1,9 @@
-import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { IonTooltip } from '@/components/shared/IonTooltip'
+import React from 'react'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Accordion, AccordionItem, Flex, AccordionButton, AccordionIcon, AccordionPanel, Text } from '@chakra-ui/react'
-import React from 'react'
+
+import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
 
 function RedeemSummary({
