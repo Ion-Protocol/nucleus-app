@@ -17,6 +17,9 @@ import {
   selectWantTokens,
   selectWantTokenKey,
   setSelectedWantToken,
+  selectContractAddressByName,
+  selectTokenAddressByTokenKey,
+  selectSourceChainId,
 } from '@/store/slices/networkAssets'
 import { setDepositAmountMax, setWithdrawalAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
@@ -48,7 +51,7 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
   const selectedTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
-  const selectedToken = tokensConfig[selectedTokenKey]
+  const selectedToken = tokensConfig[selectedTokenKey as keyof typeof tokensConfig]
 
   const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
 

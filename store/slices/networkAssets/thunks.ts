@@ -45,6 +45,7 @@ import {
   selectDepositAmount,
   selectDepositAmountAsBigInt,
   selectDepositBridgeData,
+  selectIsWithdrawal,
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
   selectNetworkConfig,
@@ -290,6 +291,26 @@ export const setDepositAmountMax = createAsyncThunk<void, void, { state: RootSta
   }
 )
 
+/**
+ * Sets the withdrawal amount to the maximum token balance.
+ *
+ * @param _ - The payload (not used).
+ * @param getState - A function to get the current state.
+ * @returns A promise that resolves to the maximum token balance.
+ */
+export const setWithdrawalAmountMax = createAsyncThunk(
+  'networkAssets/setWithdrawalAmountMax',
+  async (_, { getState }) => {
+    const state = getState() as RootState
+    const { selectedWantToken } = state.networkAssets
+    if (!selectedWantToken) return
+
+    // Get the claimed balance for the selected token
+    const claimedBalance = state.networkAssets.claimed.data[selectedWantToken] || '0'
+    return claimedBalance
+  }
+)
+
 export interface FetchChainRateResult {
   rate: string | null
 }
@@ -306,7 +327,6 @@ export const fetchTokenRateInQuote = createAsyncThunk<
     const chainId = selectSourceChainId(state)
 
     if (!despositAssetAddress || !accountantAddress || !chainId) return { result: { rate: null } }
-
     const rateAsBigInt = await getRateInQuoteSafe(
       { quote: despositAssetAddress as `0x${string}` },
       { contractAddress: accountantAddress, chainId }
@@ -560,7 +580,6 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const depositAssetTokenKey = selectSourceTokenKey(state)
       const chainId = selectSourceChainId(state)
       const userAddress = selectAddress(state)
-      console.log('fetchPreviewFee', { depositAssetTokenKey, chainKeyFromSelector })
       if (!depositAssetTokenKey || !chainKeyFromSelector) {
         return rejectWithValue('Missing deposit asset token key')
       }

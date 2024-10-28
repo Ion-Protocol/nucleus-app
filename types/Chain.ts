@@ -24,6 +24,9 @@ export interface NetworkAsset {
   sourceTokens: Partial<{
     [chain in ChainKey]: TokenKey[]
   }>
+  wantTokens: Partial<{
+    [chain in ChainKey]: TokenKey[]
+  }>
   receiveOn: ChainKey
   points: PointSystem[]
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>

@@ -5,6 +5,7 @@ import { Accordion, AccordionItem, Flex, AccordionButton, AccordionIcon, Accordi
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
 
 function RedeemSummary({
   bridgeFee,
@@ -14,7 +15,15 @@ function RedeemSummary({
   wantToken,
   networkAssetName,
   isSameChain,
+  accountantAddress,
+  wantAssetAddress,
+  chainId,
 }: RedeemSummaryConnector.Props) {
+  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
+    quote: wantAssetAddress,
+    contractAddress: accountantAddress,
+    chainId: chainId,
+  })
   return (
     <>
       <Accordion allowToggle>
@@ -29,10 +38,10 @@ function RedeemSummary({
                   <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                 </IonTooltip>
               </Flex>
-              <IonSkeleton minW="75px" isLoaded={true}>
+              <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
                 <Flex align="center">
                   <Text textAlign="right" variant="paragraph">
-                    {`${truncatedExchangeRate} ${wantToken} / seiyanETH`}
+                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${wantToken} / seiyanETH`}
                   </Text>
                   <AccordionIcon />
                 </Flex>
@@ -43,7 +52,7 @@ function RedeemSummary({
           <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3}>
             <Flex direction="column" gap={3}>
               {/* Bridge Fee */}
-              {bridgeFee && (
+              {!isSameChain && (
                 <Flex align="center" justify="space-between">
                   <Flex color="secondaryText" gap={2} align="center">
                     <Text variant="paragraph" color="disabledText">

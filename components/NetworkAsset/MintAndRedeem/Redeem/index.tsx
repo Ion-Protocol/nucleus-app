@@ -25,7 +25,6 @@ export function Redeem({ ...props }: RedeemProps) {
   const dialogState = useSelector((state: any) => state.dialog)
 
   const handleRedeemClick = () => {
-    console.log('Redeem button clicked')
     dispatch(setTitle('Redeem Process'))
     dispatch(
       setSteps([

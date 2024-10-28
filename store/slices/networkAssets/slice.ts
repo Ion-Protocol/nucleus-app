@@ -40,7 +40,7 @@ const networkAssetsSlice = createSlice({
       state.withdrawAmount = sanitizeDepositInput(action.payload, state.withdrawAmount)
     },
     setSelectedWantToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
-      state.selectedSourceToken = action.payload.tokenKey
+      state.selectedWantToken = action.payload.tokenKey
     },
     setDepositAmountDebounceComplete: () => {}, // only used as an action to trigger a side effect
     setSolanaAddress: (state, action) => {
@@ -59,6 +59,7 @@ export const {
   setDepositAmountBypassDebounce,
   setDepositAmountDebounceComplete,
   setSelectedSourceToken,
+  setSelectedWantToken,
   setWithdrawAmount,
   setSourceChain,
   setSolanaAddress,

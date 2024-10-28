@@ -13,6 +13,10 @@ import {
   selectSourceChainKey,
   selectSourceTokenKey,
   selectSourceTokens,
+  selectWantTokenKey,
+  selectContractAddressByName,
+  selectTokenAddressByTokenKey,
+  selectSourceChainId,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 
@@ -22,8 +26,12 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const tokenRateInQuote = selectTokenRateInQuote(state)
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const tokenKeys = selectSourceTokens(state)
-  const wantTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
+  const wantTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
   const wantToken = tokensConfig[wantTokenKey as keyof typeof tokensConfig]
+  // used for useGetRateInQuoteSafeQuery hook
+  const accountantAddress = selectContractAddressByName(state, 'accountant')
+  const wantAssetAddress = selectTokenAddressByTokenKey(state, wantTokenKey)
+  const chainId = selectSourceChainId(state)
 
   const networkAssetName = networkAssetFromRoute
     ? tokensConfig[networkAssetFromRoute as keyof typeof tokensConfig].name
@@ -38,6 +46,9 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const isSameChain = selectedChainKey === receiveOn
 
   return {
+    accountantAddress,
+    wantAssetAddress,
+    chainId,
     bridgeFee: selectFormattedPreviewFee(state),
     bridgeFeeLoading: selectPreviewFeeLoading(state),
     wantToken: wantToken?.name,
