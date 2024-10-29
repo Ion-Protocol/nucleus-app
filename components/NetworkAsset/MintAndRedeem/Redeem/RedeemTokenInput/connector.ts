@@ -47,23 +47,29 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: numberValue < 1 ? 18 : 8,
   })
+  const wantTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
+  const wantToken = tokensConfig[wantTokenKey as keyof typeof tokensConfig]
+  const accountantAddress = selectContractAddressByName(state, 'accountant')
+  const wantAssetAddress = selectTokenAddressByTokenKey(state, wantTokenKey)
+  const chainId = selectSourceChainId(state)
 
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
-  const selectedTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
-  const selectedToken = tokensConfig[selectedTokenKey as keyof typeof tokensConfig]
-
-  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
+  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, wantTokenKey)
 
   return {
+    wantToken,
+    wantAssetAddress,
+    chainId,
+    accountantAddress,
     inputValue: destinationAmountFormatted,
     tokenBalance: formattedTokenBalance,
     loadingTokenBalance: selectBalancesLoading(state),
     error: selectInputError(state),
     tokens,
-    selectedToken,
     currentPageChainKey,
     shouldIgnoreBalance: false,
+    withdrawAmountAsBigInt,
   }
 }
 

@@ -18,12 +18,18 @@ type GetRateInQuoteSafeQueryArgs = {
   chainId: number
 }
 
+type GetRateInQuoteSafeQueryResponse = {
+  rateInQuoteSafeAsString: string
+  truncatedRateInQuoteSafeAsString: string
+  rateInQuoteSafe: bigint
+}
+
 export const rateInQuoteSafeApi = createApi({
   reducerPath: 'rateInQuoteSafeApi',
   baseQuery: fakeBaseQuery(),
   tagTypes: ['RateInQuoteSafe'],
   endpoints: (builder) => ({
-    getRateInQuoteSafe: builder.query({
+    getRateInQuoteSafe: builder.query<GetRateInQuoteSafeQueryResponse, GetRateInQuoteSafeQueryArgs>({
       queryFn: async ({ quote, contractAddress, chainId }) => {
         try {
           const data = await readContract(wagmiConfig, {
@@ -35,9 +41,9 @@ export const rateInQuoteSafeApi = createApi({
           })
           return {
             data: {
-              rateInQuoteSafeAsString: bigIntToNumberAsString(data),
+              rateInQuoteSafeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 18 }),
               truncatedRateInQuoteSafeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 4 }),
-              tokenRateInQuote: data,
+              rateInQuoteSafe: data,
             },
           }
         } catch (error) {

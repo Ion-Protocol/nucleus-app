@@ -31,7 +31,7 @@ function Summary({
         <IonSkeleton minW="35px" isLoaded={!exchangeRateLoading}>
           <IonTooltip label={exchangeRate}>
             <Text textAlign="right" variant="paragraph">
-              {`WETH / ${networkAssetName} ${truncatedExchangeRate}`}
+              {`${truncatedExchangeRate} WETH / ${networkAssetName}`}
             </Text>
           </IonTooltip>
         </IonSkeleton>

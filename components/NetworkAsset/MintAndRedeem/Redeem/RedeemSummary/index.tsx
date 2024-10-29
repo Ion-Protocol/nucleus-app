@@ -6,6 +6,7 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
+import { Address } from 'viem'
 
 function RedeemSummary({
   bridgeFee,
@@ -20,9 +21,9 @@ function RedeemSummary({
   chainId,
 }: RedeemSummaryConnector.Props) {
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
-    quote: wantAssetAddress,
-    contractAddress: accountantAddress,
-    chainId: chainId,
+    quote: wantAssetAddress! as Address,
+    contractAddress: accountantAddress!,
+    chainId: chainId!,
   })
   return (
     <>
@@ -40,9 +41,11 @@ function RedeemSummary({
               </Flex>
               <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
                 <Flex align="center">
-                  <Text textAlign="right" variant="paragraph">
-                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${wantToken} / seiyanETH`}
-                  </Text>
+                  <IonTooltip label={tokenRateInQuote?.rateInQuoteSafeAsString}>
+                    <Text textAlign="right" variant="paragraph">
+                      {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${wantToken} / ${networkAssetName}`}
+                    </Text>
+                  </IonTooltip>
                   <AccordionIcon />
                 </Flex>
               </IonSkeleton>
@@ -101,23 +104,6 @@ function RedeemSummary({
                   </Text>
                 </IonSkeleton>
               </Flex>
-              {/* TODO: Delete this once everything is confirmed */}
-              {/* According to ticket This means we don't need a receive at least field because Receive is the exact amount that the users will get. */}
-              {/* <Flex align="center" justify="space-between">
-                <Flex color="secondaryText" gap={2} align="center">
-                  <Text variant="paragraph" color="disabledText">
-                    Received at least
-                  </Text>
-                  <IonTooltip label={'Testing Label'}>
-                    <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-                  </IonTooltip>
-                </Flex>
-                <IonSkeleton minW="75px" isLoaded={true}>
-                  <Text textAlign="right" variant="paragraph">
-                    1.05 ETH
-                  </Text>
-                </IonSkeleton>
-              </Flex> */}
             </Flex>
           </AccordionPanel>
         </AccordionItem>

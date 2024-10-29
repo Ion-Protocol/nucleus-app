@@ -20,7 +20,7 @@ function TokenDestination({
     <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}
       <Flex justify="space-between">
-        <Text>Redeem</Text>
+        <Text>Redeem *</Text>
         <Flex color="secondaryText" gap={1}>
           <Text variant="smallParagraph">Balance: </Text>
           <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">

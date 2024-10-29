@@ -6,18 +6,48 @@ import { useState } from 'react'
 import { RedeemTokenInputConnector } from './connector'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import TokenSelect from '../../shared/TokenSelect'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
+import { Address, formatUnits } from 'viem'
+import { convertToDecimals } from '@/utils/number'
+import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 
 function RedeemTokenInput({
   error,
   inputValue,
   onChangeToken,
   onMax,
-  selectedToken,
   tokenBalance,
   loadingTokenBalance,
   tokens,
   shouldIgnoreBalance,
+  wantToken,
+  wantAssetAddress,
+  accountantAddress,
+  withdrawAmountAsBigInt,
+  chainId,
 }: RedeemTokenInputConnector.Props) {
+  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
+    quote: wantAssetAddress! as Address,
+    contractAddress: accountantAddress!,
+    chainId: chainId!,
+  })
+
+  // Calculate rate with 0.5% fee
+  const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
+    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
+    : BigInt(0)
+
+  // Calculate destination amount using rate
+  const destinationAmountAsBigInt =
+    rateInQuoteWithFee > 0 ? (withdrawAmountAsBigInt * rateInQuoteWithFee) / WAD.bigint : withdrawAmountAsBigInt
+
+  // Format the amount for display
+  const numberValue = parseFloat(formatUnits(destinationAmountAsBigInt, 18))
+  const destinationAmountFormatted = bigIntToNumberAsString(destinationAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: numberValue < 1 ? 18 : 8,
+  })
+
   return (
     <IonCard variant="outline" bg={'backgroundSecondary'} pt={shouldIgnoreBalance ? 3 : 5}>
       {/* Top Row */}
@@ -71,7 +101,7 @@ function RedeemTokenInput({
             letterSpacing="0.05em"
             placeholder="0"
             size="lg"
-            value={inputValue}
+            value={tokenRateInQuoteSuccess ? destinationAmountFormatted : '0'}
             variant="unstyled"
           />
           {error && <Text color="error.main">{error}</Text>}
@@ -88,7 +118,7 @@ function RedeemTokenInput({
           </Flex>
 
           {/* Token Select */}
-          <TokenSelect tokens={tokens} selected={selectedToken} onChange={onChangeToken} />
+          <TokenSelect tokens={tokens} selected={wantToken} onChange={onChangeToken} />
         </Flex>
       </Flex>
     </IonCard>
