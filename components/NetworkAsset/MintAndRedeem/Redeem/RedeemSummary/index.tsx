@@ -10,19 +10,12 @@ import { RedeemSummaryConnector } from './connector'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
 import { useSelector } from 'react-redux'
 import { selectAddress } from '@/store/slices/account/'
-import {
-  selectNetworkAssetConfig,
-  selectReceiveAmount,
-  selectRedeemAmount,
-  selectRedeemAmountAsBigInt,
-} from '@/store/slices/networkAssets/selectors'
+import { selectNetworkAssetConfig, selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
 import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/Teller/previewFeeApi'
 
 function RedeemSummary({
   accountantAddress,
   tellerAddress,
-  bridgeFee,
-  bridgeFeeLoading,
   wantToken,
   networkAssetName,
   isSameChain,
@@ -42,8 +35,7 @@ function RedeemSummary({
     destinationChainReceiver: userAddress!,
     bridgeFeeToken: nativeAddress,
     messageGas: BigInt(100000),
-    // @ts-ignore
-    data: '',
+    data: '0x',
   }
 
   const {
@@ -150,7 +142,8 @@ function RedeemSummary({
           </AccordionPanel>
         </AccordionItem>
       </Accordion>
-      <Flex align="center" justify="space-between">
+      {/* ! I don't think this is needed. Delete after review */}
+      {/* <Flex align="center" justify="space-between">
         <Flex color="secondaryText" gap={2} align="center">
           <Text variant="paragraph" color="disabledText">
             Total
@@ -164,7 +157,7 @@ function RedeemSummary({
             $23.43
           </Text>
         </IonSkeleton>
-      </Flex>
+      </Flex> */}
     </>
   )
 }

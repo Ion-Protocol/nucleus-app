@@ -44,8 +44,6 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
     tellerAddress,
     wantAssetAddress,
     chainId,
-    bridgeFee: selectFormattedPreviewFee(state),
-    bridgeFeeLoading: selectPreviewFeeLoading(state),
     wantToken: wantToken?.name,
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),
     networkAssetName,
