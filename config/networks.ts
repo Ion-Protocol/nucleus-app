@@ -239,7 +239,7 @@ const tenderlyStagingNetworkAssets: NetworkAssets = {
       boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
     },
     layerZeroChainSelector: 30280,
-    receiveOn: ChainKey.TENDERLY_L1,
+    receiveOn: ChainKey.TENDERLY_L2,
     points: [
       {
         key: PointSystemKey.NUCLEUS,
@@ -265,6 +265,57 @@ const tenderlyStagingNetworkAssets: NetworkAssets = {
         },
       ],
     },
+  },
+  [TokenKey.FETH]: {
+    token: tokensConfig[TokenKey.FETH],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
+    chain: ChainKey.FORM,
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
+    },
+    contracts: {
+      teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',
+      accountant: '0x8ca1d13De3039142186aA57656Adbe0fD2620D2B',
+      boringVault: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.FORM,
+        name: 'Form Points',
+        pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus Points',
+        pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.RENZO,
+        name: 'ezPoints',
+        pointsMultiplier: 2,
+      },
+      {
+        key: PointSystemKey.SYMBIOTIC,
+        name: 'Symbiotic Points',
+        pointsMultiplier: 0.5,
+      },
+      {
+        key: PointSystemKey.MELLOW,
+        name: 'Mellow Points',
+        pointsMultiplier: 1,
+      },
+    ],
+    apys: {},
   },
 }
 

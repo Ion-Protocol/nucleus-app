@@ -16,6 +16,9 @@ export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.
   [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
   [ChainKey.FORM]: (props) => <FormIcon {...props} />,
+  // Add .env check to include these icons only in dev
+  [ChainKey.TENDERLY_L1]: (props) => <EthereumIcon {...props} />,
+  [ChainKey.TENDERLY_L2]: (props) => <EthereumIcon {...props} />,
 }
 
 interface ChainIconMapProps extends ChakraProps {
