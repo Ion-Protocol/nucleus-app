@@ -18,6 +18,7 @@ import {
 import RedeemSummary from './RedeemSummary'
 import RedeemTokenDestination from './RedeemTokenDestination'
 import RedeemTokenInput from './RedeemTokenInput'
+import { selectSourceChainKey } from '@/store/slices/networkAssets'
 interface RedeemProps extends ChakraProps {}
 
 export function Redeem({ ...props }: RedeemProps) {

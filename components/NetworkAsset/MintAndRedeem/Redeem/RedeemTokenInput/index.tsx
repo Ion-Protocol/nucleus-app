@@ -2,7 +2,7 @@ import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { RedeemTokenInputConnector } from './connector'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import TokenSelect from '../../shared/TokenSelect'
@@ -10,10 +10,11 @@ import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSa
 import { Address, formatUnits } from 'viem'
 import { convertToDecimals } from '@/utils/number'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
+import { setReceiveAmount } from '@/store/slices/networkAssets'
+import { useDispatch } from 'react-redux'
 
 function RedeemTokenInput({
   error,
-  inputValue,
   onChangeToken,
   onMax,
   tokenBalance,
@@ -23,7 +24,7 @@ function RedeemTokenInput({
   wantToken,
   wantAssetAddress,
   accountantAddress,
-  withdrawAmountAsBigInt,
+  redeemAmountAsBigInt,
   chainId,
 }: RedeemTokenInputConnector.Props) {
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
@@ -37,13 +38,13 @@ function RedeemTokenInput({
     ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
     : BigInt(0)
 
-  // Calculate destination amount using rate
-  const destinationAmountAsBigInt =
-    rateInQuoteWithFee > 0 ? (withdrawAmountAsBigInt * rateInQuoteWithFee) / WAD.bigint : withdrawAmountAsBigInt
+  // Calculate redeem amount using rate
+  const receiveAmountAsBigInt =
+    rateInQuoteWithFee > 0 ? (redeemAmountAsBigInt * rateInQuoteWithFee) / WAD.bigint : redeemAmountAsBigInt
 
   // Format the amount for display
-  const numberValue = parseFloat(formatUnits(destinationAmountAsBigInt, 18))
-  const destinationAmountFormatted = bigIntToNumberAsString(destinationAmountAsBigInt, {
+  const numberValue = parseFloat(formatUnits(receiveAmountAsBigInt, 18))
+  const receiveAmountFormatted = bigIntToNumberAsString(receiveAmountAsBigInt, {
     minimumFractionDigits: 0,
     maximumFractionDigits: numberValue < 1 ? 18 : 8,
   })
@@ -101,7 +102,7 @@ function RedeemTokenInput({
             letterSpacing="0.05em"
             placeholder="0"
             size="lg"
-            value={tokenRateInQuoteSuccess ? destinationAmountFormatted : '0'}
+            value={tokenRateInQuoteSuccess ? receiveAmountFormatted : '0'}
             variant="unstyled"
           />
           {error && <Text color="error.main">{error}</Text>}

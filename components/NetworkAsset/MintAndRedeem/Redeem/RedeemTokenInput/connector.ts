@@ -10,43 +10,29 @@ import {
   selectSourceTokenKey,
   selectSourceTokens,
   selectTokenRateInQuote,
-  selectWithdrawAmount,
+  selectRedeemAmount,
   setDepositAmount,
   setSelectedSourceToken,
-  setWithdrawAmount,
+  setRedeemAmount,
   selectWantTokens,
   selectWantTokenKey,
   setSelectedWantToken,
   selectContractAddressByName,
   selectTokenAddressByTokenKey,
   selectSourceChainId,
+  selectRedeemAmountAsBigInt,
 } from '@/store/slices/networkAssets'
-import { setDepositAmountMax, setWithdrawalAmountMax } from '@/store/slices/networkAssets/thunks'
+import { setWithdrawalAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
-import { convertToDecimals } from '@/utils/number'
 import { ConnectedProps, connect } from 'react-redux'
-import { formatUnits } from 'viem'
 
 const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
   const currentPageChainKey = selectNetworkAssetFromRoute(state)
   const selectedChainKey = selectSourceChainKey(state)
   const tokenKeys = selectWantTokens(state)
+  const redeemAmountAsBigInt = selectRedeemAmountAsBigInt(state)
 
-  const rate = selectTokenRateInQuote(state)
-  const rateAsBigInt = rate ? BigInt(rate) : BigInt(0)
-
-  const withdrawAmount = selectWithdrawAmount(state)
-  const withdrawAmountAsBigInt = BigInt(convertToDecimals(withdrawAmount, 18))
-  const destinationAmountAsBigInt =
-    rateAsBigInt > 0 ? (withdrawAmountAsBigInt * rateAsBigInt) / WAD.bigint : withdrawAmountAsBigInt
-
-  const numberValue = parseFloat(formatUnits(destinationAmountAsBigInt, 18))
-  const destinationAmountFormatted = bigIntToNumberAsString(destinationAmountAsBigInt, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: numberValue < 1 ? 18 : 8,
-  })
   const wantTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
   const wantToken = tokensConfig[wantTokenKey as keyof typeof tokensConfig]
   const accountantAddress = selectContractAddressByName(state, 'accountant')
@@ -62,14 +48,13 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
     wantAssetAddress,
     chainId,
     accountantAddress,
-    inputValue: destinationAmountFormatted,
     tokenBalance: formattedTokenBalance,
     loadingTokenBalance: selectBalancesLoading(state),
     error: selectInputError(state),
     tokens,
     currentPageChainKey,
     shouldIgnoreBalance: false,
-    withdrawAmountAsBigInt,
+    redeemAmountAsBigInt,
   }
 }
 

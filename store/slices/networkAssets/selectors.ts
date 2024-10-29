@@ -420,6 +420,23 @@ export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKe
   return tokensConfig[tokenKey]?.addresses[sourceChainKey as ChainKey]
 }
 
+// SHOULD memoize: Returns a new array; memoization avoids returning new references.
+export const selectWantTokens = createSelector(
+  [selectNetworkAssetConfig, selectSourceChainKey],
+  (chainConfig, sourceChain): TokenKey[] => {
+    return chainConfig?.wantTokens[sourceChain as ChainKey] || []
+  }
+)
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWantTokenKey = (state: RootState): TokenKey | null => {
+  const bridgesState = selectBridgesState(state)
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const sourceChainKey = selectSourceChainKey(state)
+  if (!networkAssetConfig) return null
+  return bridgesState.selectedWantToken || networkAssetConfig?.wantTokens[sourceChainKey as ChainKey]?.[0] || null
+}
+
 /////////////////////////////////////////////////////////////////////
 // Deposit amount input
 /////////////////////////////////////////////////////////////////////
@@ -504,19 +521,32 @@ export const selectInputError = createSelector(
 )
 
 /////////////////////////////////////////////////////////////////////
-// Withdraw amount input
+// Redeem amount input
 /////////////////////////////////////////////////////////////////////
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectWithdrawAmount = (state: RootState): string => {
+export const selectRedeemAmount = (state: RootState): string => {
   const bridgesState = selectBridgesState(state)
-  return bridgesState.withdrawAmount
+  return bridgesState.redeemAmount
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectWithdrawAmountAsBigInt = (state: RootState): bigint => {
-  const withdrawAmountAsString = selectWithdrawAmount(state)
+export const selectRedeemAmountAsBigInt = (state: RootState): bigint => {
+  const withdrawAmountAsString = selectRedeemAmount(state)
   if (!withdrawAmountAsString || withdrawAmountAsString.trim() === '') return BigInt(0)
   return BigInt(convertToDecimals(withdrawAmountAsString, 18))
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectReceiveAmount = (state: RootState): string => {
+  const bridgesState = selectBridgesState(state)
+  return bridgesState.redeemAmount
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectReceiveAmountAsBigInt = (state: RootState): bigint => {
+  const receiveAmountAsString = selectReceiveAmount(state)
+  if (!receiveAmountAsString || receiveAmountAsString.trim() === '') return BigInt(0)
+  return BigInt(convertToDecimals(receiveAmountAsString, 18))
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -563,8 +593,8 @@ export const selectWalletHasEnoughBalance = (state: RootState) => {
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectIsWithdrawal = (state: RootState): boolean => {
-  const withdrawAmount = selectWithdrawAmount(state)
-  return withdrawAmount.trim().length > 0
+  const redeemAmount = selectRedeemAmount(state)
+  return redeemAmount.trim().length > 0
 }
 
 // DO NOT memoize: Simple state access; should be a plain function.
@@ -721,20 +751,3 @@ export const selectDepositAndBridgeCheckoutParams = createSelector(
     }
   }
 )
-// TODO: Move this to a better place
-// SHOULD memoize: Returns a new array; memoization avoids returning new references.
-export const selectWantTokens = createSelector(
-  [selectNetworkAssetConfig, selectSourceChainKey],
-  (chainConfig, sourceChain): TokenKey[] => {
-    return chainConfig?.wantTokens[sourceChain as ChainKey] || []
-  }
-)
-
-// DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectWantTokenKey = (state: RootState): TokenKey | null => {
-  const bridgesState = selectBridgesState(state)
-  const networkAssetConfig = selectNetworkAssetConfig(state)
-  const sourceChainKey = selectSourceChainKey(state)
-  if (!networkAssetConfig) return null
-  return bridgesState.selectedWantToken || networkAssetConfig?.wantTokens[sourceChainKey as ChainKey]?.[0] || null
-}

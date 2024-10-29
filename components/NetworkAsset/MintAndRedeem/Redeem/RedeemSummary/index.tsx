@@ -1,25 +1,67 @@
 import React from 'react'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { Address } from 'viem'
 import { Accordion, AccordionItem, Flex, AccordionButton, AccordionIcon, AccordionPanel, Text } from '@chakra-ui/react'
 
+import { nativeAddress } from '@/config/constants'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
-import { Address } from 'viem'
+import { useSelector } from 'react-redux'
+import { selectAddress } from '@/store/slices/account/'
+import {
+  selectNetworkAssetConfig,
+  selectReceiveAmount,
+  selectRedeemAmount,
+  selectRedeemAmountAsBigInt,
+} from '@/store/slices/networkAssets/selectors'
+import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/Teller/previewFeeApi'
 
 function RedeemSummary({
+  accountantAddress,
+  tellerAddress,
   bridgeFee,
   bridgeFeeLoading,
-  exchangeRate,
-  truncatedExchangeRate,
   wantToken,
   networkAssetName,
   isSameChain,
-  accountantAddress,
   wantAssetAddress,
   chainId,
 }: RedeemSummaryConnector.Props) {
+  const userAddress = useSelector(selectAddress)
+  const chainConfig = useSelector(selectNetworkAssetConfig)
+  const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
+  const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
+  if (!userAddress) {
+    console.log('userAddress is undefined')
+  }
+
+  const previewFeeBridgeData: BridgeData = {
+    chainSelector: layerZeroChainSelector,
+    destinationChainReceiver: userAddress!,
+    bridgeFeeToken: nativeAddress,
+    messageGas: BigInt(100000),
+    // @ts-ignore
+    data: '',
+  }
+
+  const {
+    data: previewFee,
+    isLoading: previewFeeLoading,
+    isFetching: previewFeeFetching,
+    isError: previewFeeError,
+  } = useGetPreviewFeeQuery(
+    {
+      shareAmount: redeemAmountAsBigInt,
+      bridgeData: previewFeeBridgeData,
+      contractAddress: tellerAddress!,
+      chainId: chainId!,
+    },
+    { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
+  )
+  console.log('previewFee', previewFee)
+  console.log('previewFee', previewFee)
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: wantAssetAddress! as Address,
     contractAddress: accountantAddress!,
@@ -65,9 +107,9 @@ function RedeemSummary({
                       <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                     </IonTooltip>
                   </Flex>
-                  <IonSkeleton minW="75px" isLoaded={bridgeFeeLoading}>
+                  <IonSkeleton minW="75px" isLoaded={!previewFeeLoading || !previewFeeFetching}>
                     <Text textAlign="right" variant="paragraph">
-                      {bridgeFee}
+                      {previewFee ? `${previewFee.feeAsString}` : '0'}
                     </Text>
                   </IonSkeleton>
                 </Flex>

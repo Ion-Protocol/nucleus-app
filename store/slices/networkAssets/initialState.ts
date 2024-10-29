@@ -78,13 +78,21 @@ export type NetworkAssetsState = {
   // 3. The value is used in a thunk
   depositAmount: string
 
-  // The withdraw amount is the number that is input by the user in the input field on the redeem page
+  // The redeem amount is the number that is input by the user in the input field on the redeem page
   // ---
   // Justification for storing in global state:
   // 1. The value is used in multiple components
   // 2. The value is set in multiple ways
   // 3. The value is used in a thunk
-  withdrawAmount: string
+  redeemAmount: string
+
+  // The receive amount is the number that the user will receive after redeeming
+  // ---
+  // Justification for storing in global state:
+  // 1. The value is used in multiple components
+  // 2. The value is set in multiple ways
+  // 3. The value is used in a thunk
+  receiveAmount: string
 
   // The selected source token is the token that the user has selected in the token drop down on the token page
   // ---
@@ -162,8 +170,11 @@ export const initialState: NetworkAssetsState = {
   // Deposit amount
   depositAmount: '',
 
-  // Withdraw amount
-  withdrawAmount: '',
+  // Redeem amount
+  redeemAmount: '',
+
+  // Receive amount
+  receiveAmount: '',
 
   // Selected source token
   selectedSourceToken: null,

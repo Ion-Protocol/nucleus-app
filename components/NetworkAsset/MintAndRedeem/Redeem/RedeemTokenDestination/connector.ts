@@ -4,8 +4,8 @@ import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slic
 import {
   selectNetworkAssetConfig,
   selectTokenRateInQuoteLoading,
-  selectWithdrawAmount,
-  setWithdrawAmount,
+  selectRedeemAmount,
+  setRedeemAmount,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
@@ -35,14 +35,14 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps): MapStateProps 
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
 
-  const withdrawAmount = selectWithdrawAmount(state)
+  const redeemAmount = selectRedeemAmount(state)
 
   const tokenRateInQuoteLoading = selectTokenRateInQuoteLoading(state)
 
   const tokenBalance = selectFormattedTokenBalance(state, networkAssetConfig?.receiveOn, networkAssetFromRoute)
 
   return {
-    inputValue: withdrawAmount,
+    inputValue: redeemAmount,
     loadingTokenRate: tokenRateInQuoteLoading,
     networkAssetKey: networkAssetFromRoute,
     networkAssetName,
@@ -52,7 +52,7 @@ const mapState = (state: RootState, ownProps: TokenFromOwnProps): MapStateProps 
 }
 
 const mapDispatch = {
-  onChange: setWithdrawAmount,
+  onChange: setRedeemAmount,
 }
 
 const connector = connect(mapState, mapDispatch)
