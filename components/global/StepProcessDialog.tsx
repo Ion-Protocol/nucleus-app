@@ -1,3 +1,4 @@
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Modal,
   ModalOverlay,
@@ -6,6 +7,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  Stack,
   VStack,
   Text,
   Box,
@@ -14,16 +16,16 @@ import {
   ModalFooter,
   Flex,
 } from '@chakra-ui/react'
-import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
-import { CheckIcon, WarningIcon, TimeIcon } from '@chakra-ui/icons'
+import { TimeIcon, CheckIcon, WarningIcon } from '@chakra-ui/icons'
+import { ChevronUp, Loader2, X, Check, Wallet } from 'lucide-react'
 
 const StepIcons = {
-  idle: TimeIcon,
-  active: Spinner,
-  completed: CheckIcon,
-  error: WarningIcon,
+  idle: ChevronUp,
+  active: Loader2,
+  completed: Check,
+  error: X,
 }
 
 const StepProcessDialog = () => {
@@ -40,21 +42,42 @@ const StepProcessDialog = () => {
         <ModalCloseButton />
         <ModalBody>
           {extraContent && <Box mt={4}>{extraContent}</Box>}
-          <VStack align="stretch" spacing={4}>
+          <Box display="flex" flexDirection="column">
             {steps.map((step) => (
-              <Box key={step.id}>
-                <Box display="flex" alignItems="center">
-                  <Icon as={StepIcons[step.state]} boxSize={6} mr={2} />
-                  <Text>{step.description}</Text>
+              <Box key={step.id} display="flex" alignItems="center" height={14} gap={4}>
+                <Box display="flex" flexDirection="column" alignItems="center" position="relative">
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    borderRadius="50%"
+                    bg={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}
+                    padding="4"
+                    boxSize={2}
+                  >
+                    <Icon as={StepIcons[step.state]} boxSize={5} color={step.state === 'idle' ? 'black' : 'white'} />
+                  </Box>
+                  {lastStep !== step && (
+                    <Box
+                      w={1}
+                      h={6}
+                      top={8}
+                      position="absolute"
+                      bg={step.state === 'completed' ? 'neutral.900' : 'neutral.600'}
+                    />
+                  )}
                 </Box>
-                {step.state === 'error' && step.errorMessage && (
-                  <Text color="red.500" fontSize="sm">
-                    {step.errorMessage}
-                  </Text>
-                )}
+                <Text fontSize="xl">{step.description}</Text>
+                <Box flex={1}>
+                  {step.state === 'error' && step.errorMessage && (
+                    <Text color="red.500" fontSize="sm">
+                      {step.errorMessage}
+                    </Text>
+                  )}
+                </Box>
               </Box>
             ))}
-          </VStack>
+          </Box>
         </ModalBody>
         <ModalFooter flex={1} justifyContent="center" alignItems="center">
           {isLastStepCompleted ? (

@@ -84,7 +84,7 @@ function RedeemSummary({
               <Text variant="paragraph" color="disabledText">
                 Price
               </Text>
-              <IonTooltip label={'Price Label'}>
+              <IonTooltip label={'Price consists of the current rate of the asset and fees'}>
                 <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
               </IonTooltip>
             </Flex>
@@ -143,7 +143,7 @@ function RedeemSummary({
                 <Text variant="paragraph" color="disabledText">
                   Deadline
                 </Text>
-                <IonTooltip label={'Testing Label'}>
+                <IonTooltip label={'If the deadline is reached, the transaction will be cancelled.'}>
                   <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                 </IonTooltip>
               </Flex>

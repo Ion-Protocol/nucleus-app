@@ -28,11 +28,11 @@ const dialogSlice = createSlice({
   name: 'dialog',
   initialState,
   reducers: {
-    setSteps: (state, action: PayloadAction<DialogStep[]>) => {
+    setSteps: (state: DialogState, action: PayloadAction<DialogStep[]>) => {
       state.steps = action.payload
     },
     setDialogStep: (
-      state,
+      state: DialogState,
       action: PayloadAction<{
         stepId: string
         newState?: StepState
@@ -55,13 +55,13 @@ const dialogSlice = createSlice({
         }
       }
     },
-    setOpen: (state, action: PayloadAction<boolean>) => {
+    setOpen: (state: DialogState, action: PayloadAction<boolean>) => {
       state.open = action.payload
     },
-    setTitle: (state, action: PayloadAction<string>) => {
+    setTitle: (state: DialogState, action: PayloadAction<string>) => {
       state.title = action.payload
     },
-    setExtraContent: (state, action: PayloadAction<React.ReactNode>) => {
+    setExtraContent: (state: DialogState, action: PayloadAction<React.ReactNode>) => {
       state.extraContent = action.payload
     },
   },
