@@ -18,14 +18,13 @@ import {
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
-import { TimeIcon, CheckIcon, WarningIcon } from '@chakra-ui/icons'
-import { ChevronUp, Loader2, X, Check, Wallet } from 'lucide-react'
+import { CheckIcon, WarningIcon, ErrorIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
 const StepIcons = {
-  idle: ChevronUp,
-  active: Loader2,
-  completed: Check,
-  error: X,
+  idle: ChevronUpIcon,
+  active: Spinner,
+  completed: CheckIcon,
+  error: ErrorIcon,
 }
 
 const StepProcessDialog = () => {
@@ -67,7 +66,9 @@ const StepProcessDialog = () => {
                     />
                   )}
                 </Box>
-                <Text fontSize="xl">{step.description}</Text>
+                <Text fontSize="xl" color={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}>
+                  {step.description}
+                </Text>
                 <Box flex={1}>
                   {step.state === 'error' && step.errorMessage && (
                     <Text color="red.500" fontSize="sm">

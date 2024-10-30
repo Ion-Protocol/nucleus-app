@@ -17,6 +17,6 @@
       "@funkit/connect/*": ["./node_modules/@funkit/connect/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/convertSvgToChakraIcon.js"],
+  "include": ["svgr.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx", "scripts/convertSvgToChakraIcon.js"],
   "exclude": ["node_modules"]
 }
