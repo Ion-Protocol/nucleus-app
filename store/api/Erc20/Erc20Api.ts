@@ -21,15 +21,34 @@ export const erc20Api = createApi({
   endpoints: (builder) => ({
     allowERC20: builder.query({
       queryFn: async ({ tokenAddress, spenderAddress, userAddress }) => {
-        const results = await readContract(wagmiConfig, {
-          abi: erc20Abi,
-          address: tokenAddress,
-          functionName: 'allowance',
-          args: [userAddress, spenderAddress],
-        })
-        return { data: results }
+        try {
+          const results = await readContract(wagmiConfig, {
+            abi: erc20Abi,
+            address: tokenAddress,
+            functionName: 'allowance',
+            args: [userAddress, spenderAddress],
+          })
+          return { data: results }
+        } catch (error) {
+          return { error: serialize(error) }
+        }
       },
       providesTags: ['allowErc20'],
+    }),
+    balanceOf: builder.query({
+      queryFn: async ({ tokenAddress, userAddress }) => {
+        try {
+          const results = await readContract(wagmiConfig, {
+            abi: erc20Abi,
+            address: tokenAddress,
+            functionName: 'balanceOf',
+            args: [userAddress],
+          })
+          return { data: results }
+        } catch (error) {
+          return { error: serialize(error) }
+        }
+      },
     }),
     approveERC20: builder.mutation({
       queryFn: async ({ tokenAddress, spenderAddress, amount }) => {
@@ -48,9 +67,8 @@ export const erc20Api = createApi({
           return { error: serialize(error) }
         }
       },
-      invalidatesTags: ['allowErc20', 'approveErc20'],
     }),
   }),
 })
 
-export const { useApproveERC20Mutation } = erc20Api
+export const { useAllowERC20Query, useBalanceOfQuery, useApproveERC20Mutation } = erc20Api

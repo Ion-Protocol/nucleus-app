@@ -1,4 +1,3 @@
-import { erc20Abi } from 'viem'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import {
   type WaitForTransactionReceiptErrorType,
@@ -16,11 +15,15 @@ export const TransactionReceiptApi = createApi({
   endpoints: (builder) => ({
     waitForTransactionReceipt: builder.query<WaitForTransactionReceiptReturnType, WaitForTransactionReceiptParameters>({
       queryFn: async ({ hash, ...rest }) => {
-        const results = await waitForTransactionReceipt(wagmiConfig, {
-          hash,
-          ...rest,
-        })
-        return { data: results }
+        try {
+          const results = await waitForTransactionReceipt(wagmiConfig, {
+            hash,
+            ...rest,
+          })
+          return { data: results }
+        } catch (error) {
+          return { error: serialize(error) }
+        }
       },
     }),
   }),
