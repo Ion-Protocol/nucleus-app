@@ -18,13 +18,13 @@ import {
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
-import { CheckIcon, WarningIcon, ErrorIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { CheckIcon, WarningIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
 const StepIcons = {
   idle: ChevronUpIcon,
   active: Spinner,
   completed: CheckIcon,
-  error: ErrorIcon,
+  error: WarningIcon,
 }
 
 const StepProcessDialog = () => {
@@ -40,7 +40,7 @@ const StepProcessDialog = () => {
         <ModalHeader fontWeight={500}>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {extraContent && <Box mt={4}>{extraContent}</Box>}
+          {extraContent && <Box paddingBottom={4}>{extraContent}</Box>}
           <Box display="flex" flexDirection="column">
             {steps.map((step) => (
               <Box key={step.id} display="flex" alignItems="center" height={14} gap={4}>

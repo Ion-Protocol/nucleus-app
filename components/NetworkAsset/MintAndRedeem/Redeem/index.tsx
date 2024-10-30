@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { setOpen, setSteps, setTitle } from '@/store/slices/stepDialog/slice'
+import { setOpen, setSteps, setTitle, setExtraContent } from '@/store/slices/stepDialog/slice'
 import { IonCard } from '@/components/shared/IonCard'
 import {
   Button,
@@ -16,6 +16,7 @@ import {
   ChakraProps,
 } from '@chakra-ui/react'
 import RedeemSummary from './RedeemSummary'
+import RedeemSummaryCard from './RedeemSummaryCard'
 import RedeemTokenDestination from './RedeemTokenDestination'
 import RedeemTokenInput from './RedeemTokenInput'
 import { selectSourceChainKey } from '@/store/slices/networkAssets'
@@ -34,6 +35,7 @@ export function Redeem({ ...props }: RedeemProps) {
         { id: '3', description: 'Receive ETH', state: 'idle' },
       ])
     )
+    dispatch(setExtraContent(<RedeemSummaryCard />))
     dispatch(setOpen(true))
 
     // Debug: Log the updated state
