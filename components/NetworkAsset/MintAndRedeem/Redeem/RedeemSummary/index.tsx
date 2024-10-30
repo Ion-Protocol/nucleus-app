@@ -1,17 +1,20 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Address } from 'viem'
 import { Accordion, AccordionItem, Flex, AccordionButton, AccordionIcon, AccordionPanel, Text } from '@chakra-ui/react'
 
 import { nativeAddress } from '@/config/constants'
+import { bigIntToNumberAsString } from '@/utils/bigint'
+import { convertToUsd } from '@/utils/currency'
+import { selectAddress } from '@/store/slices/account/'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
+import { selectNetworkAssetConfig, selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
+import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/Teller/previewFeeApi'
+import { selectUsdPerEthRate } from '@/store/slices/price/selectors'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/Accountant/rateInQuoteSafeApi'
-import { useSelector } from 'react-redux'
-import { selectAddress } from '@/store/slices/account/'
-import { selectNetworkAssetConfig, selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
-import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/Teller/previewFeeApi'
 
 function RedeemSummary({
   accountantAddress,
@@ -25,6 +28,7 @@ function RedeemSummary({
   const userAddress = useSelector(selectAddress)
   const chainConfig = useSelector(selectNetworkAssetConfig)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
+  const price = useSelector(selectUsdPerEthRate)
   const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
   if (!userAddress) {
     console.log('userAddress is undefined')
@@ -52,113 +56,107 @@ function RedeemSummary({
     },
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
   )
-  console.log('previewFee', previewFee)
-  console.log('previewFee', previewFee)
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: wantAssetAddress! as Address,
     contractAddress: accountantAddress!,
     chainId: chainId!,
   })
+
+  const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
+    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
+    : BigInt(0)
+
+  const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
+  const formattedPriceFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
+
+  const formattedPreviewFee = previewFee?.fee
+    ? convertToUsd(previewFee?.fee, price, {
+        usdDigits: 2,
+      })
+    : '0'
+
   return (
-    <>
-      <Accordion allowToggle>
-        <AccordionItem borderTop="none">
-          <AccordionButton _hover={{ bg: 'none' }} paddingX={0} paddingBottom={4}>
-            <Flex align="center" justify="space-between" flex="1">
+    <Accordion allowToggle>
+      <AccordionItem borderTop="none">
+        <AccordionButton _hover={{ bg: 'none' }} paddingX={0} paddingBottom={4}>
+          <Flex align="center" justify="space-between" flex="1">
+            <Flex color="secondaryText" gap={2} align="center">
+              <Text variant="paragraph" color="disabledText">
+                Price
+              </Text>
+              <IonTooltip label={'Price Label'}>
+                <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+              </IonTooltip>
+            </Flex>
+            <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
+              <Flex align="center">
+                <IonTooltip label={formattedPriceFull}>
+                  <Text textAlign="right" variant="paragraph">
+                    {`${formattedPrice} ${wantToken} / ${networkAssetName}`}
+                  </Text>
+                </IonTooltip>
+                <AccordionIcon />
+              </Flex>
+            </IonSkeleton>
+          </Flex>
+        </AccordionButton>
+
+        <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3}>
+          <Flex direction="column" gap={3}>
+            {/* Bridge Fee */}
+            {!isSameChain && (
+              <Flex align="center" justify="space-between">
+                <Flex color="secondaryText" gap={2} align="center">
+                  <Text variant="paragraph" color="disabledText">
+                    Bridge Fee
+                  </Text>
+                  <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane">
+                    <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+                  </IonTooltip>
+                </Flex>
+                <IonSkeleton minW="75px" isLoaded={!previewFeeLoading || !previewFeeFetching}>
+                  <Text textAlign="right" variant="paragraph">
+                    {formattedPreviewFee ? `${formattedPreviewFee}` : '0'}
+                  </Text>
+                </IonSkeleton>
+              </Flex>
+            )}
+            {/* Withdrawal Fee */}
+            <Flex align="center" justify="space-between">
               <Flex color="secondaryText" gap={2} align="center">
                 <Text variant="paragraph" color="disabledText">
-                  Price
+                  Withdraw Fee
                 </Text>
-                <IonTooltip label={'Price Label'}>
+                <IonTooltip label="Withdraw fees applied in order to incentivize solvers to process withdraw orders into arbitrary requested assets.">
                   <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                 </IonTooltip>
               </Flex>
-              <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
-                <Flex align="center">
-                  <IonTooltip label={tokenRateInQuote?.rateInQuoteSafeAsString}>
-                    <Text textAlign="right" variant="paragraph">
-                      {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${wantToken} / ${networkAssetName}`}
-                    </Text>
-                  </IonTooltip>
-                  <AccordionIcon />
-                </Flex>
+              <IonSkeleton minW="75px" isLoaded={true}>
+                <Text textAlign="right" variant="paragraph">
+                  0.5%
+                </Text>
               </IonSkeleton>
             </Flex>
-          </AccordionButton>
-
-          <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3}>
-            <Flex direction="column" gap={3}>
-              {/* Bridge Fee */}
-              {!isSameChain && (
-                <Flex align="center" justify="space-between">
-                  <Flex color="secondaryText" gap={2} align="center">
-                    <Text variant="paragraph" color="disabledText">
-                      Bridge Fee
-                    </Text>
-                    <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane">
-                      <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-                    </IonTooltip>
-                  </Flex>
-                  <IonSkeleton minW="75px" isLoaded={!previewFeeLoading || !previewFeeFetching}>
-                    <Text textAlign="right" variant="paragraph">
-                      {previewFee ? `${previewFee.feeAsString}` : '0'}
-                    </Text>
-                  </IonSkeleton>
-                </Flex>
-              )}
-              {/* Withdrawal Fee */}
-              <Flex align="center" justify="space-between">
-                <Flex color="secondaryText" gap={2} align="center">
-                  <Text variant="paragraph" color="disabledText">
-                    Withdraw Fee
-                  </Text>
-                  <IonTooltip label="Withdraw fees applied in order to incentivize solvers to process withdraw orders into arbitrary requested assets.">
-                    <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-                  </IonTooltip>
-                </Flex>
-                <IonSkeleton minW="75px" isLoaded={true}>
-                  <Text textAlign="right" variant="paragraph">
-                    0.5%
-                  </Text>
-                </IonSkeleton>
+            {/* Deadline */}
+            <Flex align="center" justify="space-between">
+              <Flex color="secondaryText" gap={2} align="center">
+                <Text variant="paragraph" color="disabledText">
+                  Deadline
+                </Text>
+                <IonTooltip label={'Testing Label'}>
+                  <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+                </IonTooltip>
               </Flex>
-              {/* Deadline */}
-              <Flex align="center" justify="space-between">
-                <Flex color="secondaryText" gap={2} align="center">
-                  <Text variant="paragraph" color="disabledText">
-                    Deadline
-                  </Text>
-                  <IonTooltip label={'Testing Label'}>
-                    <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-                  </IonTooltip>
-                </Flex>
-                <IonSkeleton minW="75px" isLoaded={true}>
-                  <Text textAlign="right" variant="paragraph">
-                    3 days
-                  </Text>
-                </IonSkeleton>
-              </Flex>
+              <IonSkeleton minW="75px" isLoaded={true}>
+                <Text textAlign="right" variant="paragraph">
+                  3 days
+                </Text>
+              </IonSkeleton>
             </Flex>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
-      {/* ! I don't think this is needed. Delete after review */}
-      {/* <Flex align="center" justify="space-between">
-        <Flex color="secondaryText" gap={2} align="center">
-          <Text variant="paragraph" color="disabledText">
-            Total
-          </Text>
-          <IonTooltip label={'Testing Label'}>
-            <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-          </IonTooltip>
-        </Flex>
-        <IonSkeleton minW="75px" isLoaded={true}>
-          <Text textAlign="right" variant="paragraph">
-            $23.43
-          </Text>
-        </IonSkeleton>
-      </Flex> */}
-    </>
+          </Flex>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
   )
 }
 
