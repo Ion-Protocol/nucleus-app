@@ -1,4 +1,4 @@
-import { erc20Abi } from 'viem'
+import { Address, erc20Abi } from 'viem'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import {
   writeContract,
@@ -17,10 +17,18 @@ import { serialize } from 'wagmi'
 export const erc20Api = createApi({
   reducerPath: 'erc20Api',
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['allowErc20', 'approveErc20'],
+  tagTypes: ['allowance', 'approve'],
   endpoints: (builder) => ({
-    allowERC20: builder.query({
-      queryFn: async ({ tokenAddress, spenderAddress, userAddress }) => {
+    allowance: builder.query({
+      queryFn: async ({
+        tokenAddress,
+        spenderAddress,
+        userAddress,
+      }: {
+        tokenAddress: Address
+        spenderAddress: Address
+        userAddress: Address
+      }) => {
         try {
           const results = await readContract(wagmiConfig, {
             abi: erc20Abi,
@@ -28,12 +36,13 @@ export const erc20Api = createApi({
             functionName: 'allowance',
             args: [userAddress, spenderAddress],
           })
+          console.log('results', results)
           return { data: results }
         } catch (error) {
           return { error: serialize(error) }
         }
       },
-      providesTags: ['allowErc20'],
+      providesTags: ['allowance'],
     }),
     balanceOf: builder.query({
       queryFn: async ({ tokenAddress, userAddress }) => {
@@ -50,7 +59,7 @@ export const erc20Api = createApi({
         }
       },
     }),
-    approveERC20: builder.mutation({
+    approve: builder.mutation({
       queryFn: async ({ tokenAddress, spenderAddress, amount }) => {
         try {
           const writeContractResult = await writeContract(wagmiConfig, {
@@ -59,10 +68,13 @@ export const erc20Api = createApi({
             functionName: 'approve',
             args: [spenderAddress, amount],
           })
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash: writeContractResult,
-          })
-          return { data: txReceipt }
+
+          // const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+          //   hash: writeContractResult,
+          // })
+          // console.log('txReceipt', txReceipt)
+          console.log('writeContractResult', writeContractResult)
+          return { data: writeContractResult }
         } catch (error) {
           return { error: serialize(error) }
         }
@@ -71,4 +83,4 @@ export const erc20Api = createApi({
   }),
 })
 
-export const { useAllowERC20Query, useBalanceOfQuery, useApproveERC20Mutation } = erc20Api
+export const { useAllowanceQuery, useBalanceOfQuery, useApproveMutation } = erc20Api

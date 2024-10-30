@@ -1,4 +1,5 @@
 import { configureStore, isPlainObject } from '@reduxjs/toolkit'
+import { serialize, deserialize } from 'wagmi'
 import { debounceMiddleware } from './middleware/debounceMiddleware'
 import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
 import { sideEffectMiddleware } from './middleware/effects/sideEffectMiddleware'
@@ -14,18 +15,18 @@ import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 import { redstoneApi } from './slices/redstoneSlice/apiSlice'
 import { dialogReducer } from './slices/stepDialog/slice'
-import { previewFeeApi } from './api/Teller/previewFeeApi'
-import { serialize } from 'wagmi'
-import { rateInQuoteSafeApi } from './api/Accountant/rateInQuoteSafeApi'
-import { deserialize } from 'wagmi'
+import { tellerApi, accountantApi, atomicQueueApi, erc20Api, transactionReceiptApi } from './api'
 
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
 const apiMiddlewares = [
   userProofApi.middleware,
   redstoneApi.middleware,
-  previewFeeApi.middleware,
-  rateInQuoteSafeApi.middleware,
+  tellerApi.middleware,
+  accountantApi.middleware,
+  atomicQueueApi.middleware,
+  erc20Api.middleware,
+  transactionReceiptApi.middleware,
 ]
 
 // Configure the store and inject the LibraryContext as an extra argument for thunks
@@ -44,8 +45,11 @@ export const store = configureStore({
     // Api slices
     [userProofApi.reducerPath]: userProofApi.reducer,
     [redstoneApi.reducerPath]: redstoneApi.reducer,
-    [previewFeeApi.reducerPath]: previewFeeApi.reducer,
-    [rateInQuoteSafeApi.reducerPath]: rateInQuoteSafeApi.reducer,
+    [tellerApi.reducerPath]: tellerApi.reducer,
+    [accountantApi.reducerPath]: accountantApi.reducer,
+    [atomicQueueApi.reducerPath]: atomicQueueApi.reducer,
+    [erc20Api.reducerPath]: erc20Api.reducer,
+    [transactionReceiptApi.reducerPath]: transactionReceiptApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

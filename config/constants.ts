@@ -1,6 +1,7 @@
 export const docsUrl = 'https://docs.nucleusearn.io/'
 export const discordUrl = 'https://discord.com/invite/CjQqUgPA6Y'
 export const nativeAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+export const atomicQueueContractAddress = '0xc7287780bfa0C5D2dD74e3e51E238B1cd9B221ee'
 export const etherscanBaseUrl = 'https://etherscan.io/address/'
 export const seiExplorerBaseUrl = 'https://seitrace.com/tx/'
 export const layerZeroBaseUrl = 'https://layerzeroscan.com/tx/'

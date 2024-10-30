@@ -31,8 +31,8 @@ export interface UpdateAtomicRequestOptions {
   chainId: number
 }
 
-export const atomicRequestApi = createApi({
-  reducerPath: 'atomicRequestApi',
+export const atomicQueueApi = createApi({
+  reducerPath: 'atomicQueueApi',
   baseQuery: fakeBaseQuery(),
   tagTypes: ['atomicRequest'],
   endpoints: (builder) => ({
@@ -59,4 +59,4 @@ export const atomicRequestApi = createApi({
   }),
 })
 
-export const { useUpdateAtomicRequestMutation } = atomicRequestApi
+export const { useUpdateAtomicRequestMutation } = atomicQueueApi

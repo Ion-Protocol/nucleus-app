@@ -34,7 +34,7 @@ export type PreviewFeeResponse = {
   feeAsString: string
   truncatedFeeAsString: string
 }
-export const previewFeeApi = createApi({
+export const tellerApi = createApi({
   reducerPath: 'previewFeeApi',
   baseQuery: fakeBaseQuery(),
   tagTypes: ['PreviewFee'],
@@ -64,4 +64,4 @@ export const previewFeeApi = createApi({
   }),
 })
 
-export const { useGetPreviewFeeQuery } = previewFeeApi
+export const { useGetPreviewFeeQuery } = tellerApi

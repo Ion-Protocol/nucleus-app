@@ -9,7 +9,7 @@ import {
 import { wagmiConfig } from '@/config/wagmi'
 import { serialize, useWaitForTransactionReceipt } from 'wagmi'
 
-export const TransactionReceiptApi = createApi({
+export const transactionReceiptApi = createApi({
   reducerPath: 'TransactionReceiptApi',
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
@@ -29,4 +29,4 @@ export const TransactionReceiptApi = createApi({
   }),
 })
 
-export const { useWaitForTransactionReceiptQuery } = TransactionReceiptApi
+export const { useWaitForTransactionReceiptQuery } = transactionReceiptApi

@@ -1,6 +1,6 @@
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
-import { useGetPreviewFeeQuery } from '@/store/api/Teller/previewFeeApi'
+import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
   selectDepositAmount,

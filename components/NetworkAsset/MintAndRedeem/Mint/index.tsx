@@ -16,9 +16,9 @@ export function Mint({ ...props }: MintProps) {
 
   return (
     <Flex direction="column" {...props} gap={6}>
-      <ChainSelect role="source" isActive={true} />
+      <ChainSelect role="source" txType="mint" isActive={true} />
       <TokenInput />
-      <ChainSelect role="destination" isActive={false} />
+      <ChainSelect role="destination" txType="mint" isActive={false} />
       {networkAssetKeyFromRoute === TokenKey.TETH && <SolanaAddressInput />}
       <TokenDestination />
       <Summary />

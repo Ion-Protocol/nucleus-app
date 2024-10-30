@@ -10,7 +10,7 @@ import {
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
-  const { role, isActive } = ownProps
+  const { role, txType, isActive } = ownProps
 
   let selectedChainKey = selectSourceChainKey(state)
 
@@ -20,8 +20,19 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const chainKeyOfNetworkAsset = networkAssetConfig?.receiveOn
   const chainNameOfNetworkAsset = chainKeyOfNetworkAsset ? chainsConfig[chainKeyOfNetworkAsset].name : ''
 
+  const textMap = {
+    mint: {
+      source: `Deposit from ${selectedChainName}`,
+      destination: `Receive on ${chainKeyOfNetworkAsset}`,
+    },
+    redeem: {
+      source: `Receive on ${selectedChainName}`,
+      destination: `Redeem from ${chainNameOfNetworkAsset}`,
+    },
+  }
+  const primaryText = textMap[txType][role]
+
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
-  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${chainNameOfNetworkAsset}`
 
   if (role === 'destination' && chainKeyOfNetworkAsset) {
     selectedChainKey = chainKeyOfNetworkAsset
@@ -46,7 +57,9 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 export type ChainSelectRole = 'source' | 'destination'
+export type ChainSelectType = 'mint' | 'redeem'
 interface ChainSelectOwnProps {
+  txType: ChainSelectType
   role: ChainSelectRole
   isActive: boolean
 }

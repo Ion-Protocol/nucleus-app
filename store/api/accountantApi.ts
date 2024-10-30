@@ -24,7 +24,7 @@ type GetRateInQuoteSafeQueryResponse = {
   rateInQuoteSafe: bigint
 }
 
-export const rateInQuoteSafeApi = createApi({
+export const accountantApi = createApi({
   reducerPath: 'rateInQuoteSafeApi',
   baseQuery: fakeBaseQuery(),
   tagTypes: ['RateInQuoteSafe'],
@@ -54,4 +54,4 @@ export const rateInQuoteSafeApi = createApi({
   }),
 })
 
-export const { useGetRateInQuoteSafeQuery } = rateInQuoteSafeApi
+export const { useGetRateInQuoteSafeQuery } = accountantApi

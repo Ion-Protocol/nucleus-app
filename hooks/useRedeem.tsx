@@ -1,5 +1,6 @@
-import { useDispatch } from 'react-redux'
-import { setOpen, setSteps, setTitle, setExtraContent } from '@/store/slices/stepDialog/slice'
+import { useDispatch, useSelector } from 'react-redux'
+import { setOpen, setSteps, setTitle, setExtraContent, setDialogStep } from '@/store/slices/stepDialog/slice'
+
 import RedeemSummaryCard, {
   type RedeemSummaryCardProps,
 } from '@/components/NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
@@ -9,13 +10,13 @@ export function useRedeem() {
 
   const handleRedeem = (summaryData: RedeemSummaryCardProps) => {
     // Set the dialog title
-    dispatch(setTitle('Redeem Process'))
+    dispatch(setTitle('Order Status'))
 
     // Set the steps for the redeem process
     dispatch(
       setSteps([
-        { id: '1', description: 'Approve token', state: 'completed' },
-        { id: '2', description: 'Redeem ssETH', state: 'active' },
+        { id: '1', description: 'Approve', state: 'idle' },
+        { id: '2', description: 'Request Withdraw', state: 'idle' },
         { id: '3', description: 'Receive ETH', state: 'idle' },
       ])
     )

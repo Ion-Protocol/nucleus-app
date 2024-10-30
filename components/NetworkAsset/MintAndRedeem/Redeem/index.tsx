@@ -19,6 +19,7 @@ import RedeemSummary from './RedeemSummary'
 import RedeemSummaryCard from './RedeemSummaryCard'
 import RedeemTokenDestination from './RedeemTokenDestination'
 import RedeemTokenInput from './RedeemTokenInput'
+import ChainSelect from '../shared/ChainSelect'
 interface RedeemProps extends ChakraProps {}
 
 const data = {
@@ -39,8 +40,10 @@ export function Redeem({ ...props }: RedeemProps) {
   return (
     <Flex direction="column" gap={6}>
       {/* Redeem Token Destination */}
+      <ChainSelect role="destination" txType="redeem" isActive={false} />
       <RedeemTokenDestination />
       {/* Redeem Input */}
+      <ChainSelect role="source" txType="redeem" isActive={true} />
       <RedeemTokenInput />
       {/* Redeem Summary */}
       <RedeemSummary />
