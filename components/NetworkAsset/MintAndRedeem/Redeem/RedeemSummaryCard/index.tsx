@@ -2,28 +2,24 @@ import React from 'react'
 import { Flex, Text, Box, Heading, VStack } from '@chakra-ui/react'
 
 export type RedeemSummaryCardProps = {
-  data: {
-    redeemAmount: string
-    receiveAmount: string
-    bridgeFee?: string
-    withdrawFee: string
-    deadline: string
-    total?: string
-    totalUsd?: string
-  }
+  redeemAmount: string
+  receiveAmount: string
+  bridgeFee?: string
+  withdrawFee: string
+  deadline: string
+  total?: string
+  totalUsd?: string
 }
 
-const RedeemSummaryCard = ({ data }: RedeemSummaryCardProps) => {
-  const {
-    redeemAmount = '4 ssETH',
-    receiveAmount = '2 ETH',
-    bridgeFee = '-0.05 ETH',
-    deadline = '3 days',
-    withdrawFee = '0.05 ETH',
-    total,
-    totalUsd,
-  } = data || {}
-
+const RedeemSummaryCard = ({
+  redeemAmount,
+  receiveAmount,
+  bridgeFee,
+  deadline,
+  withdrawFee,
+  total,
+  totalUsd,
+}: RedeemSummaryCardProps) => {
   return (
     <Box p={6} bg="white" borderRadius="lg" boxShadow="sm">
       <Heading as="h2" fontSize="xl" fontWeight={500} mb={4} pb={2} borderBottom="1px" borderColor="gray.200">

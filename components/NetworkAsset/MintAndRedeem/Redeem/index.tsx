@@ -1,5 +1,5 @@
+import { useRedeem } from '@/hooks/useRedeem'
 import { useDispatch, useSelector } from 'react-redux'
-import { setOpen, setSteps, setTitle, setExtraContent } from '@/store/slices/stepDialog/slice'
 import { IonCard } from '@/components/shared/IonCard'
 import {
   Button,
@@ -19,27 +19,21 @@ import RedeemSummary from './RedeemSummary'
 import RedeemSummaryCard from './RedeemSummaryCard'
 import RedeemTokenDestination from './RedeemTokenDestination'
 import RedeemTokenInput from './RedeemTokenInput'
-import { selectSourceChainKey } from '@/store/slices/networkAssets'
 interface RedeemProps extends ChakraProps {}
 
+const data = {
+  redeemAmount: '4 ssETH',
+  receiveAmount: '2 ETH',
+  bridgeFee: '-0.05 ETH',
+  deadline: '3 days',
+  withdrawFee: '0.05 ETH',
+}
+
 export function Redeem({ ...props }: RedeemProps) {
-  const dispatch = useDispatch()
-  const dialogState = useSelector((state: any) => state.dialog)
+  const { handleRedeem } = useRedeem()
 
   const handleRedeemClick = () => {
-    dispatch(setTitle('Redeem Process'))
-    dispatch(
-      setSteps([
-        { id: '1', description: 'Approve token', state: 'completed' },
-        { id: '2', description: 'Redeem ssETH', state: 'active' },
-        { id: '3', description: 'Receive ETH', state: 'idle' },
-      ])
-    )
-    dispatch(setExtraContent(<RedeemSummaryCard />))
-    dispatch(setOpen(true))
-
-    // Debug: Log the updated state
-    console.log('Updated dialog state:', dialogState)
+    handleRedeem(data)
   }
 
   return (

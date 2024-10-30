@@ -625,9 +625,6 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
             { contractAddress: contractAddresses.hyperlaneWarpRoute }
           )
         } else {
-          console.log('previewFeeBridgeData Thunk', previewFeeBridgeData)
-          console.log('tellerContractAddress Thunk', tellerContractAddress)
-          console.log('shareAmount Thunk', shareAmount)
           // Otherwise, get the preview fee
           fee = await previewFee(
             { shareAmount, bridgeData: previewFeeBridgeData },
