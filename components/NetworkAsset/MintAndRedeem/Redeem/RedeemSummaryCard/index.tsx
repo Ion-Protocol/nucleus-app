@@ -20,8 +20,8 @@ const RedeemSummaryCard = ({ data }: RedeemSummaryCardProps) => {
     bridgeFee = '-0.05 ETH',
     deadline = '3 days',
     withdrawFee = '0.05 ETH',
-    total = '1.07 ETH',
-    totalUsd = '1,000',
+    total,
+    totalUsd,
   } = data || {}
 
   return (
@@ -41,23 +41,33 @@ const RedeemSummaryCard = ({ data }: RedeemSummaryCardProps) => {
           <SummaryRow label="Deadline" value={deadline} />
         </Flex>
 
-        {/* <Box mt={4} bg="purple.50" borderRadius="lg" p={4}>
-          <SummaryRow
-            label="Total"
-            value={
-              <Text color="purple.600">
-                {total} ≈ ${totalUsd}
-              </Text>
-            }
-            dotted={false}
-          />
-        </Box> */}
+        {total && totalUsd && (
+          <Box mt={4} bg="purple.50" borderRadius="lg" p={4}>
+            <SummaryRow
+              label="Total"
+              value={
+                <Text color="purple.600">
+                  {total} ≈ ${totalUsd}
+                </Text>
+              }
+              dotted={false}
+            />
+          </Box>
+        )}
       </VStack>
     </Box>
   )
 }
 
-const SummaryRow = ({ label, value, dotted = true }) => (
+const SummaryRow = ({
+  label,
+  value,
+  dotted = true,
+}: {
+  label: string
+  value: string | React.ReactNode
+  dotted?: boolean
+}) => (
   <Flex align="center" justify="space-between">
     <Text color="gray.700" fontSize="lg">
       {label}
