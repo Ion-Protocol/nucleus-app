@@ -10,7 +10,9 @@ import {
   selectTokenRateInQuoteLoading,
   selectNetworkAssetConfig,
   selectPreviewFeeLoading,
+  selectSourceTokens,
   selectSourceChainKey,
+  selectSourceTokenKey,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 
@@ -18,8 +20,14 @@ const mapState = (state: RootState, ownProps: SummaryOwnProps) => {
   let selectedChainKey = selectSourceChainKey(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const tokenRateInQuote = selectTokenRateInQuote(state)
+  const tokenKeys = selectSourceTokens(state)
+  const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
+  const selectedToken = tokensConfig[selectedTokenKey as keyof typeof tokensConfig]
+
+  const sourceTokenName = selectedToken ? selectedToken.name : 'Loading...'
+
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
-  const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
+  const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : 'Loading...'
   const exchangeRate = tokenRateInQuote
     ? bigIntToNumberAsString(BigInt(tokenRateInQuote), { maximumFractionDigits: 18 })
     : '0.00'
@@ -30,6 +38,7 @@ const mapState = (state: RootState, ownProps: SummaryOwnProps) => {
   const isSameChain = selectedChainKey === receiveOn
 
   return {
+    sourceTokenName,
     fees: selectFormattedPreviewFee(state),
     loading: selectPreviewFeeLoading(state),
     exchangeRate,

@@ -5,6 +5,7 @@ import { Flex, Text } from '@chakra-ui/react'
 import { SummaryConnector } from './connector'
 
 function Summary({
+  sourceTokenName,
   fees,
   loading,
   isSameChain,
@@ -31,7 +32,7 @@ function Summary({
         <IonSkeleton minW="35px" isLoaded={!exchangeRateLoading}>
           <IonTooltip label={exchangeRate}>
             <Text textAlign="right" variant="paragraph">
-              {`WETH / ${networkAssetName} ${truncatedExchangeRate}`}
+              {`${truncatedExchangeRate} ${sourceTokenName} / ${networkAssetName}`}
             </Text>
           </IonTooltip>
         </IonSkeleton>
