@@ -1,65 +1,59 @@
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
-import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
-  selectDepositAmount,
-  selectInputError,
-  selectShouldIgnoreBalance,
-  selectSourceChainKey,
-  selectSourceTokenKey,
-  selectSourceTokens,
-  selectTokenRateInQuote,
+  selectNetworkAssetConfig,
+  selectTokenRateInQuoteLoading,
   selectRedeemAmount,
-  setDepositAmount,
-  setSelectedSourceToken,
   setRedeemAmount,
-  selectWantTokens,
-  selectWantTokenKey,
-  setSelectedWantToken,
-  selectContractAddressByName,
-  selectTokenAddressByTokenKey,
-  selectSourceChainId,
-  selectRedeemAmountAsBigInt,
 } from '@/store/slices/networkAssets'
 import { setWithdrawalAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
 
-const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps) => {
-  const currentPageChainKey = selectNetworkAssetFromRoute(state)
-  const selectedChainKey = selectSourceChainKey(state)
-  const tokenKeys = selectWantTokens(state)
-  const redeemAmountAsBigInt = selectRedeemAmountAsBigInt(state)
+interface MapStateProps {
+  inputValue: string
+  loadingTokenRate: boolean
+  networkAssetKey: TokenKey | null
+  networkAssetName: string
+  tokenBalance: string | null
+  loadingTokenBalance: boolean
+}
 
-  const wantTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
-  const wantToken = tokensConfig[wantTokenKey as keyof typeof tokensConfig]
-  const accountantAddress = selectContractAddressByName(state, 'accountant')
-  const wantAssetAddress = selectTokenAddressByTokenKey(state, wantTokenKey)
-  const chainId = selectSourceChainId(state)
+const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps): MapStateProps => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) {
+    return {
+      inputValue: '',
+      loadingTokenRate: false,
+      networkAssetKey: null,
+      networkAssetName: '',
+      tokenBalance: null,
+      loadingTokenBalance: false,
+    }
+  }
+  const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
+  const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
 
-  const tokens = tokenKeys.map((key) => tokensConfig[key])
+  const redeemAmount = selectRedeemAmount(state)
 
-  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, wantTokenKey)
+  const tokenRateInQuoteLoading = selectTokenRateInQuoteLoading(state)
+
+  const tokenBalance = selectFormattedTokenBalance(state, networkAssetConfig?.receiveOn, networkAssetFromRoute)
 
   return {
-    wantToken,
-    wantAssetAddress,
-    chainId,
-    accountantAddress,
-    tokenBalance: formattedTokenBalance,
+    inputValue: redeemAmount,
+    loadingTokenRate: tokenRateInQuoteLoading,
+    networkAssetKey: networkAssetFromRoute,
+    networkAssetName,
+    tokenBalance,
     loadingTokenBalance: selectBalancesLoading(state),
-    error: selectInputError(state),
-    tokens,
-    currentPageChainKey,
-    shouldIgnoreBalance: false,
-    redeemAmountAsBigInt,
   }
 }
 
 const mapDispatch = {
-  onChangeToken: (token: TokenKey) => setSelectedWantToken({ tokenKey: token }),
+  onChange: setRedeemAmount,
   onMax: () => setWithdrawalAmountMax(),
 }
 

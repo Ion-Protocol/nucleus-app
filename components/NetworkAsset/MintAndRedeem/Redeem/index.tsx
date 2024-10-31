@@ -16,10 +16,12 @@ import {
   ChakraProps,
 } from '@chakra-ui/react'
 import RedeemSummary from './RedeemSummary'
-import RedeemSummaryCard from './RedeemSummaryCard'
+
+import ChainSelect from '../shared/ChainSelect'
 import RedeemTokenDestination from './RedeemTokenDestination'
 import RedeemTokenInput from './RedeemTokenInput'
-import ChainSelect from '../shared/ChainSelect'
+import RedeemSummaryCard from './RedeemSummaryCard'
+
 interface RedeemProps extends ChakraProps {}
 
 const data = {
@@ -41,10 +43,10 @@ export function Redeem({ ...props }: RedeemProps) {
     <Flex direction="column" gap={6}>
       {/* Redeem Token Destination */}
       <ChainSelect role="destination" txType="redeem" isActive={false} />
-      <RedeemTokenDestination />
+      <RedeemTokenInput />
       {/* Redeem Input */}
       <ChainSelect role="source" txType="redeem" isActive={true} />
-      <RedeemTokenInput />
+      <RedeemTokenDestination />
       {/* Redeem Summary */}
       <RedeemSummary />
       <Button onClick={handleRedeemClick}>Redeem</Button>
