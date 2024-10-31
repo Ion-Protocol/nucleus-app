@@ -128,11 +128,13 @@ export function useRedeem() {
   const {
     data: txReceipt,
     isLoading: txReceiptLoading,
+    isSuccess: txReceiptSuccess,
     isError: txReceiptError,
   } = useWaitForTransactionReceiptQuery({ hash: atomicRequestResponse?.response! }, { skip: !atomicRequestResponse })
 
   console.log('txReceipt:', txReceipt)
   console.log('txReceiptLoading:', txReceiptLoading)
+  console.log('txReceiptSuccess:', txReceiptSuccess)
   console.log('txReceiptError:', txReceiptError)
 
   if (approveLoading) {
@@ -194,6 +196,24 @@ export function useRedeem() {
       })
     )
   }
+
+  if (txReceiptLoading) {
+    dispatch(
+      setDialogStep({
+        stepId: '3',
+        newState: 'active',
+      })
+    )
+  }
+
+  if (txReceiptSuccess) {
+    dispatch(
+      setDialogStep({
+        stepId: '3',
+        newState: 'completed',
+      })
+    )
+  }
   // 4. Request withdraw
 
   // 5. Receive ETH
@@ -226,13 +246,6 @@ export function useRedeem() {
         chainId: chainId!,
       })
     }
-
-    // if (txHash && !atomicRequestResponse) {
-    //   updateAtomicRequest({
-    //     atomicRequestArg: atomicRequestArgs,
-    //     atomicRequestOptions: atomicRequestOptions,
-    //   })
-    // }
   }
 
   return { handleRedeem }
