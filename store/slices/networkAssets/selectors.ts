@@ -421,7 +421,7 @@ export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKe
 }
 
 // SHOULD memoize: Returns a new array; memoization avoids returning new references.
-export const selectWantTokens = createSelector(
+export const selectReceiveTokens = createSelector(
   [selectNetworkAssetConfig, selectSourceChainKey],
   (chainConfig, sourceChain): TokenKey[] => {
     return chainConfig?.wantTokens[sourceChain as ChainKey] || []
@@ -429,12 +429,12 @@ export const selectWantTokens = createSelector(
 )
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectWantTokenKey = (state: RootState): TokenKey | null => {
+export const selectReceiveTokenKey = (state: RootState): TokenKey | null => {
   const bridgesState = selectBridgesState(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const sourceChainKey = selectSourceChainKey(state)
   if (!networkAssetConfig) return null
-  return bridgesState.selectedWantToken || networkAssetConfig?.wantTokens[sourceChainKey as ChainKey]?.[0] || null
+  return bridgesState.selectedReceiveToken || networkAssetConfig?.wantTokens[sourceChainKey as ChainKey]?.[0] || null
 }
 
 /////////////////////////////////////////////////////////////////////

@@ -70,6 +70,13 @@ export type NetworkAssetsState = {
   // 2. The value is used in a thunk
   sourceChain: ChainKey
 
+  // The receive destination chain is the chain that the user selects in the drop down menu on the redeem page
+  // ---
+  // Justification for storing in global state:
+  // 1. The value is used in multiple components
+  // 2. The value is used in a thunk
+  redeemChain: ChainKey
+
   // The deposit amount is the number that is input by the user in the input field on the token page
   // ---
   // Justification for storing in global state:
@@ -104,7 +111,7 @@ export type NetworkAssetsState = {
   // ---
   // Justification for storing in global state:
   // 1. The value is used in multiple components
-  selectedWantToken: TokenKey | null
+  selectedReceiveToken: TokenKey | null
 
   // The solana address that is input manually by the user when bridging to a Solana chain (like Eclipse).
   // ---
@@ -167,6 +174,9 @@ export const initialState: NetworkAssetsState = {
   // Source chain
   sourceChain: ChainKey.ETHEREUM,
 
+  // Redeem chain
+  redeemChain: ChainKey.ETHEREUM,
+
   // Deposit amount
   depositAmount: '',
 
@@ -180,7 +190,7 @@ export const initialState: NetworkAssetsState = {
   selectedSourceToken: null,
 
   // Selected want token
-  selectedWantToken: null,
+  selectedReceiveToken: null,
 
   // Solana address
   solanaAddress: '',

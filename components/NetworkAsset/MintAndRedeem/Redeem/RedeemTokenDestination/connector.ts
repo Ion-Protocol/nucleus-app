@@ -4,14 +4,15 @@ import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slic
 import {
   selectInputError,
   selectSourceChainKey,
-  selectWantTokens,
-  selectWantTokenKey,
-  setSelectedWantToken,
+  selectReceiveTokens,
+  selectReceiveTokenKey,
+  setSelectedReceiveToken,
   selectContractAddressByName,
   selectTokenAddressByTokenKey,
   selectSourceChainId,
   selectRedeemAmountAsBigInt,
 } from '@/store/slices/networkAssets'
+
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
@@ -19,22 +20,22 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: RedeemTokenDestinationOwnProps) => {
   const currentPageChainKey = selectNetworkAssetFromRoute(state)
   const selectedChainKey = selectSourceChainKey(state)
-  const tokenKeys = selectWantTokens(state)
+  const tokenKeys = selectReceiveTokens(state)
   const redeemAmountAsBigInt = selectRedeemAmountAsBigInt(state)
 
-  const wantTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
-  const wantToken = tokensConfig[wantTokenKey as keyof typeof tokensConfig]
+  const receiveTokenKey = selectReceiveTokenKey(state) || tokenKeys[0] || null
+  const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
   const accountantAddress = selectContractAddressByName(state, 'accountant')
-  const wantAssetAddress = selectTokenAddressByTokenKey(state, wantTokenKey)
+  const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)
   const chainId = selectSourceChainId(state)
 
   const tokens = tokenKeys.map((key) => tokensConfig[key])
 
-  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, wantTokenKey)
+  const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, receiveTokenKey)
 
   return {
-    wantToken,
-    wantAssetAddress,
+    receiveToken,
+    receiveAssetAddress,
     chainId,
     accountantAddress,
     tokenBalance: formattedTokenBalance,
@@ -48,7 +49,7 @@ const mapState = (state: RootState, ownProps: RedeemTokenDestinationOwnProps) =>
 }
 
 const mapDispatch = {
-  onChangeToken: (token: TokenKey) => setSelectedWantToken({ tokenKey: token }),
+  onChangeToken: (token: TokenKey) => setSelectedReceiveToken({ tokenKey: token }),
 }
 
 const connector = connect(mapState, mapDispatch)

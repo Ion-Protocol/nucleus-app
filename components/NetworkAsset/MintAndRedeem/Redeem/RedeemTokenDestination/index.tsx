@@ -16,14 +16,14 @@ function RedeemTokenDestination({
   loadingTokenBalance,
   tokens,
   shouldIgnoreBalance,
-  wantToken,
-  wantAssetAddress,
+  receiveToken,
+  receiveAssetAddress,
   accountantAddress,
   redeemAmountAsBigInt,
   chainId,
 }: RedeemTokenDestinationConnector.Props) {
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
-    quote: wantAssetAddress! as Address,
+    quote: receiveAssetAddress! as Address,
     contractAddress: accountantAddress!,
     chainId: chainId!,
   })
@@ -104,7 +104,7 @@ function RedeemTokenDestination({
         </Flex>
         <Flex gap={2} align="center">
           {/* Token Select */}
-          <TokenSelect tokens={tokens} selected={wantToken} onChange={onChangeToken} />
+          <TokenSelect tokens={tokens} selected={receiveToken} onChange={onChangeToken} />
         </Flex>
       </Flex>
     </IonCard>

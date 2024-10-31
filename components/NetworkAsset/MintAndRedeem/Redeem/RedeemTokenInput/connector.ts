@@ -7,7 +7,7 @@ import {
   selectRedeemAmount,
   setRedeemAmount,
 } from '@/store/slices/networkAssets'
-import { setWithdrawalAmountMax } from '@/store/slices/networkAssets/thunks'
+import { setRedeemAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
 import { ConnectedProps, connect } from 'react-redux'
@@ -54,7 +54,7 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps): MapStat
 
 const mapDispatch = {
   onChange: setRedeemAmount,
-  onMax: () => setWithdrawalAmountMax(),
+  onMax: () => setRedeemAmountMax(),
 }
 
 const connector = connect(mapState, mapDispatch)

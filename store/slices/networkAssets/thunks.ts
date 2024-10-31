@@ -45,7 +45,6 @@ import {
   selectDepositAmount,
   selectDepositAmountAsBigInt,
   selectDepositBridgeData,
-  selectIsWithdrawal,
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
   selectNetworkConfig,
@@ -55,7 +54,7 @@ import {
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { clearDepositAmount, setDepositAmount } from './slice'
+import { clearDepositAmount, setDepositAmount, setRedeemAmount } from './slice'
 import { claim } from '@/api/contracts/MerkleClaim/claim'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
@@ -291,23 +290,23 @@ export const setDepositAmountMax = createAsyncThunk<void, void, { state: RootSta
   }
 )
 
-/**
- * Sets the withdrawal amount to the maximum token balance.
- *
- * @param _ - The payload (not used).
- * @param getState - A function to get the current state.
- * @returns A promise that resolves to the maximum token balance.
- */
-export const setWithdrawalAmountMax = createAsyncThunk(
-  'networkAssets/setWithdrawalAmountMax',
-  async (_, { getState }) => {
+export const setRedeemAmountMax = createAsyncThunk<void, void, { state: RootState; rejectValue: string }>(
+  'bridges/setRedeemAmountMax',
+  async (_, { getState, rejectWithValue, dispatch }) => {
     const state = getState() as RootState
-    const { selectedWantToken } = state.networkAssets
-    if (!selectedWantToken) return
+    const networkAssetKey = selectNetworkAssetFromRoute(state)
+    const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
+    const tokenBalance = selectTokenBalance(state, chainKeyFromSourceChain, networkAssetKey)
 
-    // Get the claimed balance for the selected token
-    const claimedBalance = state.networkAssets.claimed.data[selectedWantToken] || '0'
-    return claimedBalance
+    let tokenBalanceAsNumber = tokenBalance ? convertFromDecimals(tokenBalance) : '0'
+
+    if (networkAssetKey === TokenKey.TETH) {
+      tokenBalanceAsNumber = truncateToSignificantDigits(tokenBalanceAsNumber, 9)
+    }
+
+    // Using dispatch within the thunk to trigger the setInputValue action so
+    // that the the previewFee side effect will also trigger
+    dispatch(setRedeemAmount(tokenBalanceAsNumber))
   }
 )
 

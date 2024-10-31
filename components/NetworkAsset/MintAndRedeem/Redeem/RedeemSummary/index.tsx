@@ -19,10 +19,10 @@ import { RedeemSummaryConnector } from './connector'
 function RedeemSummary({
   accountantAddress,
   tellerAddress,
-  wantToken,
+  receiveToken,
   networkAssetName,
   isSameChain,
-  wantAssetAddress,
+  receiveAssetAddress,
   chainId,
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
@@ -57,7 +57,7 @@ function RedeemSummary({
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
   )
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
-    quote: wantAssetAddress! as Address,
+    quote: receiveAssetAddress! as Address,
     contractAddress: accountantAddress!,
     chainId: chainId!,
   })
@@ -92,7 +92,7 @@ function RedeemSummary({
               <Flex align="center">
                 <IonTooltip label={formattedPriceFull}>
                   <Text textAlign="right" variant="paragraph">
-                    {`${formattedPrice} ${wantToken} / ${networkAssetName}`}
+                    {`${formattedPrice} ${receiveToken} / ${networkAssetName}`}
                   </Text>
                 </IonTooltip>
                 <AccordionIcon />

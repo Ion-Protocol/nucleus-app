@@ -56,6 +56,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
+    defaultRedeemChain: ChainKey.SEI,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
@@ -108,6 +109,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
+    defaultRedeemChain: ChainKey.ETHEREUM,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
@@ -163,6 +165,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
+    defaultRedeemChain: ChainKey.ETHEREUM,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
@@ -202,6 +205,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
+    defaultRedeemChain: ChainKey.ETHEREUM,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },

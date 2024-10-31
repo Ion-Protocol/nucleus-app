@@ -43,8 +43,8 @@ const networkAssetsSlice = createSlice({
       console.log('setReceiveAmount', action.payload)
       state.receiveAmount = action.payload
     },
-    setSelectedWantToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
-      state.selectedWantToken = action.payload.tokenKey
+    setSelectedReceiveToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
+      state.selectedReceiveToken = action.payload.tokenKey
     },
     setDepositAmountDebounceComplete: () => {}, // only used as an action to trigger a side effect
     setRedeemAmountDebounceComplete: () => {}, // only used as an action to trigger a side effect
@@ -65,7 +65,7 @@ export const {
   setDepositAmountDebounceComplete,
   setRedeemAmountDebounceComplete,
   setSelectedSourceToken,
-  setSelectedWantToken,
+  setSelectedReceiveToken,
   setRedeemAmount,
   setReceiveAmount,
   setSourceChain,

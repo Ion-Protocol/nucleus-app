@@ -2,7 +2,6 @@ import { chainsConfig } from '@/config/chains'
 import { RootState } from '@/store'
 import {
   selectNetworkAssetConfig,
-  selectReceiveOnChain,
   selectSourceChainKey,
   selectSourceChains,
   setSourceChain,

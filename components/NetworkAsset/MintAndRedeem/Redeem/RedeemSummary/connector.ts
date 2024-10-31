@@ -3,17 +3,12 @@ import { ConnectedProps, connect } from 'react-redux'
 import { RootState } from '@/store'
 import { tokensConfig } from '@/config/tokens'
 
-import { bigIntToNumberAsString } from '@/utils/bigint'
 import {
-  selectFormattedPreviewFee,
-  selectTokenRateInQuote,
   selectTokenRateInQuoteLoading,
   selectNetworkAssetConfig,
-  selectPreviewFeeLoading,
   selectSourceChainKey,
-  selectSourceTokenKey,
-  selectSourceTokens,
-  selectWantTokenKey,
+  selectReceiveTokens,
+  selectReceiveTokenKey,
   selectContractAddressByName,
   selectTokenAddressByTokenKey,
   selectSourceChainId,
@@ -24,13 +19,13 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   let selectedChainKey = selectSourceChainKey(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
-  const tokenKeys = selectSourceTokens(state)
-  const wantTokenKey = selectWantTokenKey(state) || tokenKeys[0] || null
-  const wantToken = tokensConfig[wantTokenKey as keyof typeof tokensConfig]
+  const tokenKeys = selectReceiveTokens(state)
+  const receiveTokenKey = selectReceiveTokenKey(state) || tokenKeys[0] || null
+  const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
   // used for useGetRateInQuoteSafeQuery hook
   const accountantAddress = selectContractAddressByName(state, 'accountant')
   const tellerAddress = selectContractAddressByName(state, 'teller')
-  const wantAssetAddress = selectTokenAddressByTokenKey(state, wantTokenKey)
+  const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)
   const chainId = selectSourceChainId(state)
 
   const networkAssetName = networkAssetFromRoute
@@ -42,9 +37,9 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   return {
     accountantAddress,
     tellerAddress,
-    wantAssetAddress,
+    receiveAssetAddress,
     chainId,
-    wantToken: wantToken?.name,
+    receiveToken: receiveToken?.name,
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),
     networkAssetName,
     isSameChain,

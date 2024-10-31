@@ -1,26 +1,11 @@
 import { useRedeem } from '@/hooks/useRedeem'
-import { useDispatch, useSelector } from 'react-redux'
-import { IonCard } from '@/components/shared/IonCard'
-import {
-  Button,
-  Divider,
-  Flex,
-  Input,
-  Text,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-  ChakraProps,
-} from '@chakra-ui/react'
+import { Button, Flex, ChakraProps } from '@chakra-ui/react'
 import RedeemSummary from './RedeemSummary'
 
 import ChainSelect from '../shared/ChainSelect'
 import RedeemTokenDestination from './RedeemTokenDestination'
 import RedeemTokenInput from './RedeemTokenInput'
-import RedeemSummaryCard from './RedeemSummaryCard'
+import { useSelector } from 'react-redux'
 
 interface RedeemProps extends ChakraProps {}
 
@@ -42,10 +27,8 @@ export function Redeem({ ...props }: RedeemProps) {
   return (
     <Flex direction="column" gap={6}>
       {/* Redeem Token Destination */}
-      <ChainSelect role="destination" txType="redeem" isActive={false} />
       <RedeemTokenInput />
       {/* Redeem Input */}
-      <ChainSelect role="source" txType="redeem" isActive={true} />
       <RedeemTokenDestination />
       {/* Redeem Summary */}
       <RedeemSummary />
