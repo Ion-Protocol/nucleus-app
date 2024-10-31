@@ -7,14 +7,11 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  Stack,
-  VStack,
   Text,
   Box,
   Icon,
   Spinner,
   ModalFooter,
-  Flex,
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'

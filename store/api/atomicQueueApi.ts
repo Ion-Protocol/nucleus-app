@@ -19,7 +19,7 @@ export interface AtomicRequest {
   inSolve: boolean
 }
 
-export interface UpdateAtomicRequestParams {
+export interface UpdateAtomicRequestArgs {
   offer: Address
   want: Address
   userRequest: AtomicRequest
@@ -27,7 +27,6 @@ export interface UpdateAtomicRequestParams {
 
 export interface UpdateAtomicRequestOptions {
   atomicQueueContractAddress: Address
-  userAddress: Address
   chainId: number
 }
 
@@ -36,14 +35,19 @@ export const atomicQueueApi = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ['atomicRequest'],
   endpoints: (builder) => ({
-    updateAtomicRequest: builder.mutation({
-      queryFn: async ({ atomicQueueContractAddress, offer, want, userRequest, chainId }) => {
+    updateAtomicRequest: builder.mutation<
+      { response: `0x${string}` },
+      { atomicRequestArg: UpdateAtomicRequestArgs; atomicRequestOptions: UpdateAtomicRequestOptions }
+    >({
+      queryFn: async ({ atomicRequestArg, atomicRequestOptions }) => {
+        const { offer, want, userRequest } = atomicRequestArg
+        const { atomicQueueContractAddress, chainId } = atomicRequestOptions
         try {
           const response = await writeContract(wagmiConfig, {
             abi: AtomicQueueAbi,
             address: atomicQueueContractAddress,
             functionName: 'updateAtomicRequest',
-            args: [offer, want, userRequest],
+            args: [offer, want, userRequest as never],
             chainId,
           })
           return {

@@ -14,7 +14,7 @@ type DialogState = {
   steps: DialogStep[]
   title: string
   open: boolean
-  extraContent: React.ReactNode | null
+  extraContent: string | null
 }
 
 const initialState: DialogState = {

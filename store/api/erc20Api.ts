@@ -36,7 +36,6 @@ export const erc20Api = createApi({
             functionName: 'allowance',
             args: [userAddress, spenderAddress],
           })
-          console.log('results', results)
           return { data: results }
         } catch (error) {
           return { error: serialize(error) }
@@ -60,21 +59,20 @@ export const erc20Api = createApi({
       },
     }),
     approve: builder.mutation({
-      queryFn: async ({ tokenAddress, spenderAddress, amount }) => {
+      queryFn: async ({ tokenAddress, spenderAddress, amount, chainId }) => {
         try {
           const writeContractResult = await writeContract(wagmiConfig, {
             abi: erc20Abi,
             address: tokenAddress,
             functionName: 'approve',
             args: [spenderAddress, amount],
+            chainId,
           })
 
-          // const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-          //   hash: writeContractResult,
-          // })
-          // console.log('txReceipt', txReceipt)
-          console.log('writeContractResult', writeContractResult)
-          return { data: writeContractResult }
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: writeContractResult,
+          })
+          return { data: txReceipt }
         } catch (error) {
           return { error: serialize(error) }
         }
