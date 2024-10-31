@@ -3,6 +3,7 @@ import { Address } from 'viem'
 import { ChainKey } from '@/types/ChainKey'
 import { tokensConfig } from '@/config/tokens'
 import { setOpen, setSteps, setTitle, setExtraContent, setDialogStep, StepState } from '@/store/slices/stepDialog/slice'
+import { useEffect } from 'react'
 
 import RedeemSummaryCard, {
   type RedeemSummaryCardProps,
@@ -160,12 +161,14 @@ export function useRedeem() {
     )
   }
 
-  if (approveSuccess && !txHash) {
-    updateAtomicRequest({
-      atomicRequestArg: atomicRequestArgs,
-      atomicRequestOptions: atomicRequestOptions,
-    })
-  }
+  useEffect(() => {
+    if (txHash && !atomicRequestResponse) {
+      updateAtomicRequest({
+        atomicRequestArg: atomicRequestArgs,
+        atomicRequestOptions: atomicRequestOptions,
+      })
+    }
+  }, [txHash, atomicRequestResponse])
 
   if (updateAtomicRequestLoading) {
     dispatch(
@@ -223,6 +226,13 @@ export function useRedeem() {
         chainId: chainId!,
       })
     }
+
+    // if (txHash && !atomicRequestResponse) {
+    //   updateAtomicRequest({
+    //     atomicRequestArg: atomicRequestArgs,
+    //     atomicRequestOptions: atomicRequestOptions,
+    //   })
+    // }
   }
 
   return { handleRedeem }
