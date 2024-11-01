@@ -16,13 +16,8 @@ const data = {
   deadline: '3 days',
   withdrawFee: '0.05 ETH',
 }
-
 export function Redeem({ ...props }: RedeemProps) {
-  const { handleRedeem } = useRedeem()
-
-  const handleRedeemClick = () => {
-    handleRedeem(data)
-  }
+  const handleRedeem = useRedeem()
 
   return (
     <Flex direction="column" gap={6}>
@@ -32,7 +27,7 @@ export function Redeem({ ...props }: RedeemProps) {
       <RedeemTokenDestination />
       {/* Redeem Summary */}
       <RedeemSummary />
-      <Button onClick={handleRedeemClick}>Redeem</Button>
+      <Button onClick={handleRedeem}>Redeem</Button>
     </Flex>
   )
 }

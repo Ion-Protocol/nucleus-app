@@ -13,6 +13,7 @@ import {
   selectSourceChainKey,
   selectContractAddressByName,
 } from '@/store/slices/networkAssets'
+import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectAddress } from '@/store/slices/account'
 import { selectNetworkId } from '@/store/slices/chain'
 import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
@@ -29,15 +30,14 @@ interface RedeemState {
   error: string | null
 }
 
-export function useRedeem() {
-  // ? Confirm value with Jun
+export const useRedeem = () => {
   const deadline = calculateDeadline() // default value in function is 3 days
   const dispatch = useDispatch()
-
   // Selectors
   const userAddress = useSelector(selectAddress)
   const chainId = useSelector(selectNetworkId)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
+  console.log('networkAssetConfig', networkAssetConfig)
   const destinationChainKey = useSelector(selectSourceChainKey)
   const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
   const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
@@ -46,13 +46,17 @@ export function useRedeem() {
 
   // Derive token configuration from selectors
   const sharesTokenAddress = networkAssetConfig?.token.addresses[destinationChainKey]
+  const sharesTokenKey = networkAssetConfig?.token.key
+  const tokenBalance = useSelector((state: RootState) =>
+    selectTokenBalance(state, destinationChainKey, sharesTokenKey!)
+  )
   const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
   const wantTokenAddress = effectiveWantTokenKey
     ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey]
     : null
 
   // Query hooks
-  const { data: allowance, isLoading: allowanceLoading } = useAllowanceQuery(
+  const { data: allowance } = useAllowanceQuery(
     {
       tokenAddress: sharesTokenAddress as `0x${string}`,
       spenderAddress: atomicQueueContractAddress,
@@ -70,43 +74,37 @@ export function useRedeem() {
   })
 
   // Mutation hooks
-  const [approve, { data: txHash, isLoading: approveLoading }] = useApproveMutation()
-  const [updateAtomicRequest, { data: atomicRequestResponse, isLoading: updateAtomicRequestLoading }] =
-    useUpdateAtomicRequestMutation()
+  const [
+    approveErc20,
+    {
+      data: approveErc20TxHash,
+      error: approveErc20Error,
+      isSuccess: isApproveErc20Success,
+      isLoading: isApproveErc20Loading,
+      isError: isApproveErc20Error,
+    },
+  ] = useApproveMutation()
+  const [
+    updateAtomicRequest,
+    {
+      data: atomicRequestResponse,
+      error: atomicRequestError,
+      isSuccess: isUpdateAtomicRequestSuccess,
+      isLoading: isUpdateAtomicRequestLoading,
+      isError: isUpdateAtomicRequestError,
+    },
+  ] = useUpdateAtomicRequestMutation()
 
   const { data: txReceipt, isLoading: txReceiptLoading } = useWaitForTransactionReceiptQuery(
     { hash: atomicRequestResponse?.response! },
     { skip: !atomicRequestResponse }
   )
 
-  // Handle transaction states
-  useEffect(() => {
-    const updateStepState = (stepId: string, state: StepState) => {
-      dispatch(setDialogStep({ stepId, newState: state }))
-    }
-
-    if (approveLoading) updateStepState('1', 'active')
-    if (txHash || (allowance && allowance >= redeemAmount)) updateStepState('1', 'completed')
-    if (updateAtomicRequestLoading) updateStepState('2', 'active')
-    if (atomicRequestResponse) updateStepState('2', 'completed')
-    if (txReceiptLoading) updateStepState('3', 'active')
-    if (txReceipt) updateStepState('3', 'completed')
-  }, [
-    approveLoading,
-    txHash,
-    updateAtomicRequestLoading,
-    atomicRequestResponse,
-    txReceiptLoading,
-    txReceipt,
-    dispatch,
-    allowance,
-    redeemAmount,
-  ])
-
-  // Submit atomic request after approval
-  useEffect(() => {
-    if (!allowance || allowance < redeemAmount || atomicRequestResponse) return
-
+  const handleRedeem = async () => {
+    // TODO: Check if redeem amount is greater than token balance and throw an error
+    // if (redeemAmount > allow) {
+    //   return
+    // }
     const userRequest = {
       deadline: BigInt(deadline),
       atomicPrice: tokenRateInQuote?.rateInQuoteSafe!,
@@ -114,65 +112,45 @@ export function useRedeem() {
       inSolve: false,
     }
 
-    updateAtomicRequest({
-      atomicRequestArg: {
-        offer: sharesTokenAddress! as Address,
-        want: wantTokenAddress! as Address,
-        userRequest,
-      },
-      atomicRequestOptions: {
-        atomicQueueContractAddress: atomicQueueContractAddress as Address,
-        chainId: chainId!,
-      },
-    })
-  }, [txHash, atomicRequestResponse, sharesTokenAddress, wantTokenAddress, redeemAmount, tokenRateInQuote, chainId])
+    const atomicRequestArgs = {
+      offer: sharesTokenAddress! as Address,
+      want: wantTokenAddress! as Address,
+      userRequest: userRequest,
+    }
 
-  const handleRedeem = useCallback(
-    ({ summaryData }: { summaryData: RedeemSummaryCardProps }) => {
-      dispatch(setTitle('Order Status'))
-      dispatch(
-        setSteps([
-          { id: '1', description: 'Approve', state: 'active' },
-          { id: '2', description: 'Request Withdraw', state: 'idle' },
-          { id: '3', description: 'Receive ETH', state: 'idle' },
-        ])
-      )
-      dispatch(setExtraContent('test mint'))
-      dispatch(setOpen(true))
+    const atomicRequestOptions = {
+      atomicQueueContractAddress: atomicQueueContractAddress as Address,
+      chainId: chainId!,
+    }
 
-      if (!allowance || allowance < redeemAmount) {
-        approve({
+    if (!allowance || allowance < redeemAmount) {
+      try {
+        await approveErc20({
           tokenAddress: sharesTokenAddress as `0x${string}`,
           spenderAddress: atomicQueueContractAddress,
           amount: redeemAmount,
           chainId: chainId!,
         })
+        await updateAtomicRequest({
+          atomicRequestArg: atomicRequestArgs,
+          atomicRequestOptions: atomicRequestOptions,
+        })
+      } catch (error) {
+        console.error('Error approving ERC20 token:', error)
       }
-    },
-    [dispatch, allowance, redeemAmount, sharesTokenAddress, chainId]
-  )
+    }
 
-  // Memoize return values for consistent reference
-  const returnValues = useMemo(
-    () => ({
-      handleRedeem,
-      isLoading: allowanceLoading || approveLoading || updateAtomicRequestLoading || txReceiptLoading,
-      isApproved: allowance && allowance >= redeemAmount,
-      txHash,
-      txReceipt,
-    }),
-    [
-      handleRedeem,
-      allowanceLoading,
-      approveLoading,
-      updateAtomicRequestLoading,
-      txReceiptLoading,
-      allowance,
-      redeemAmount,
-      txHash,
-      txReceipt,
-    ]
-  )
+    if (approveErc20TxHash || (allowance && allowance >= redeemAmount)) {
+      try {
+        await updateAtomicRequest({
+          atomicRequestArg: atomicRequestArgs,
+          atomicRequestOptions: atomicRequestOptions,
+        })
+      } catch (error) {
+        console.error('Error updating atomic request:', error)
+      }
+    }
+  }
 
-  return returnValues
+  return handleRedeem
 }
