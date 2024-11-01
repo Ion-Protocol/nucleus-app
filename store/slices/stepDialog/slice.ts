@@ -61,7 +61,10 @@ const dialogSlice = createSlice({
     setTitle: (state: DialogState, action: PayloadAction<string>) => {
       state.title = action.payload
     },
-    setHeaderContent: (state: DialogState, action: PayloadAction<React.ReactNode>) => {
+    setHeaderContent: (
+      state: DialogState,
+      action: PayloadAction<'redeemSummary' | 'redeemSuccess' | 'mintSummary' | 'mintSuccess' | 'Error' | string>
+    ) => {
       state.headerContent = action.payload
     },
   },
