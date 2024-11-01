@@ -11,15 +11,16 @@ export type RedeemSummaryCardProps = {
   totalUsd?: string
 }
 
-const RedeemSummaryCard = ({
-  redeemAmount,
-  receiveAmount,
-  bridgeFee,
-  deadline,
-  withdrawFee,
-  total,
-  totalUsd,
-}: RedeemSummaryCardProps) => {
+const RedeemSummaryCard = () => {
+  const data = {
+    redeemAmount: '4 ssETH',
+    receiveAmount: '2 ETH',
+    bridgeFee: '-0.05 ETH',
+    deadline: '3 days',
+    withdrawFee: '0.05 ETH',
+    total: '1.95 ETH',
+    totalUsd: '1000 USD',
+  }
   return (
     <Box p={6} bg="white" borderRadius="lg" boxShadow="sm">
       <Heading as="h2" fontSize="xl" fontWeight={500} mb={4} pb={2} borderBottom="1px" borderColor="gray.200">
@@ -28,22 +29,22 @@ const RedeemSummaryCard = ({
 
       <VStack spacing={3} align="stretch">
         <Flex flexDirection="column" gap={1}>
-          <SummaryRow label="Redeem" value={redeemAmount} />
-          <SummaryRow label="Receive" value={receiveAmount} />
+          <SummaryRow label="Redeem" value={data.redeemAmount} />
+          <SummaryRow label="Receive" value={data.receiveAmount} />
         </Flex>
         <Flex flexDirection="column" gap={1}>
-          <SummaryRow label="Bridge Fee" value={bridgeFee} />
-          <SummaryRow label="Withdraw Fee" value={withdrawFee} />
-          <SummaryRow label="Deadline" value={deadline} />
+          <SummaryRow label="Bridge Fee" value={data.bridgeFee} />
+          <SummaryRow label="Withdraw Fee" value={data.withdrawFee} />
+          <SummaryRow label="Deadline" value={data.deadline} />
         </Flex>
 
-        {total && totalUsd && (
+        {data.total && data.totalUsd && (
           <Box mt={4} bg="purple.50" borderRadius="lg" p={4}>
             <SummaryRow
               label="Total"
               value={
                 <Text color="purple.600">
-                  {total} ≈ ${totalUsd}
+                  {data.total} ≈ ${data.totalUsd}
                 </Text>
               }
               dotted={false}

@@ -16,6 +16,7 @@ import {
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
 import { CheckIcon, WarningIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
 
 const StepIcons = {
   idle: ChevronUpIcon,
@@ -37,7 +38,7 @@ const StepProcessDialog = () => {
         <ModalHeader fontWeight={500}>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {headerContent && <Box paddingBottom={4}>{headerContent}</Box>}
+          {headerContent && <Box paddingBottom={4}>{headerContent === 'redeemSummary' && <RedeemSummaryCard />}</Box>}
           <Box display="flex" flexDirection="column">
             {steps.map((step) => (
               <Box key={step.id} display="flex" alignItems="center" height={14} gap={4}>
@@ -79,7 +80,7 @@ const StepProcessDialog = () => {
         </ModalBody>
         <ModalFooter flex={1} justifyContent="center" alignItems="center">
           {isLastStepCompleted ? (
-            <Button>Close</Button>
+            <Button onClick={() => dispatch(setOpen(false))}>Close</Button>
           ) : (
             <Text fontSize="md" fontWeight={400}>
               Please proceed in your wallet

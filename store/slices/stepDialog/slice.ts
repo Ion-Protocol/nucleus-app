@@ -14,7 +14,7 @@ type DialogState = {
   steps: DialogStep[]
   title: string
   open: boolean
-  headerContent?: string | React.ReactNode
+  headerContent?: 'redeemSummary' | 'redeemSuccess' | 'mintSummary' | 'mintSuccess' | 'Error' | string
 }
 
 const initialState: DialogState = {
