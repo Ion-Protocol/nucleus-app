@@ -31,9 +31,7 @@ interface RedeemState {
 
 export function useRedeem() {
   // ? Confirm value with Jun
-  const DEADLINE = 3
-  const threeDaysInSeconds = 3 * 24 * 60 * 60
-  const deadline = calculateDeadline()
+  const deadline = calculateDeadline() // default value in function is 3 days
   const dispatch = useDispatch()
 
   // Selectors
@@ -100,7 +98,7 @@ export function useRedeem() {
     if (!txHash || atomicRequestResponse) return
 
     const userRequest = {
-      deadline: BigInt(DEADLINE),
+      deadline: BigInt(deadline),
       atomicPrice: tokenRateInQuote?.rateInQuoteSafe!,
       offerAmount: redeemAmount,
       inSolve: false,

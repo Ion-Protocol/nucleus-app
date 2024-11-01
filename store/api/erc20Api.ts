@@ -77,6 +77,7 @@ export const erc20Api = createApi({
           return { error: serialize(error) }
         }
       },
+      invalidatesTags: ['allowance'],
     }),
   }),
 })
