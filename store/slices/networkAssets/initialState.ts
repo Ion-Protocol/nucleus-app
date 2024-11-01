@@ -75,7 +75,7 @@ export type NetworkAssetsState = {
   // Justification for storing in global state:
   // 1. The value is used in multiple components
   // 2. The value is used in a thunk
-  redeemChain: ChainKey
+  redemptionChain: ChainKey
 
   // The deposit amount is the number that is input by the user in the input field on the token page
   // ---
@@ -174,8 +174,8 @@ export const initialState: NetworkAssetsState = {
   // Source chain
   sourceChain: ChainKey.ETHEREUM,
 
-  // Redeem chain
-  redeemChain: ChainKey.ETHEREUM,
+  // Redemption chain
+  redemptionChain: ChainKey.ETHEREUM,
 
   // Deposit amount
   depositAmount: '',

@@ -9,7 +9,8 @@ import {
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
-  const { role, txType, isActive } = ownProps
+  // ! put this back to original state
+  const { role, txType = 'mint', isActive } = ownProps
 
   let selectedChainKey = selectSourceChainKey(state)
 
@@ -17,19 +18,14 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const selectableChains = selectSourceChains(state)
   const selectedChainName = chainsConfig[selectedChainKey].name
   const chainKeyOfNetworkAsset = networkAssetConfig?.receiveOn
-  const chainNameOfNetworkAsset = chainKeyOfNetworkAsset ? chainsConfig[chainKeyOfNetworkAsset].name : ''
 
   const textMap = {
     mint: {
       source: `Deposit from ${selectedChainName}`,
       destination: `Receive on ${chainKeyOfNetworkAsset}`,
     },
-    redeem: {
-      source: `Receive on ${selectedChainName}`,
-      destination: `Redeem from ${chainNameOfNetworkAsset}`,
-    },
   }
-  const primaryText = textMap[txType][role]
+  const primaryText = role === 'source' ? textMap.mint.source : textMap.mint.destination
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
 

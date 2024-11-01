@@ -19,7 +19,8 @@ export interface NetworkAsset {
   comingSoon?: boolean
   manuallyPaused?: boolean
   sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-  defaultRedeemChain: ChainKey
+  sourceRedemptionChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
+  redemptionChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   contracts: Contracts
   layerZeroChainSelector?: number
   sourceTokens: Partial<{

@@ -12,6 +12,9 @@ const networkAssetsSlice = createSlice({
     setSourceChain: (state, action) => {
       state.sourceChain = action.payload
     },
+    setRedemptionChain: (state, action) => {
+      state.redemptionChain = action.payload
+    },
     resetSourceChain: (state) => {
       state.sourceChain = ChainKey.ETHEREUM
     },
@@ -67,6 +70,8 @@ export const {
   setSelectedSourceToken,
   setSelectedReceiveToken,
   setRedeemAmount,
+  setRedemptionChain,
+  resetRedemptionChain,
   setReceiveAmount,
   setSourceChain,
   setSolanaAddress,

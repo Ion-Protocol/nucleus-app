@@ -52,11 +52,26 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: seiExplorerBaseUrl,
       },
     },
+    sourceRedemptionChains: {
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
+      },
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
-    defaultRedeemChain: ChainKey.SEI,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
@@ -106,10 +121,21 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    sourceRedemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
-    defaultRedeemChain: ChainKey.ETHEREUM,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
@@ -162,10 +188,21 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    sourceRedemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
-    defaultRedeemChain: ChainKey.ETHEREUM,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
@@ -202,10 +239,21 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    sourceRedemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
-    defaultRedeemChain: ChainKey.ETHEREUM,
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },

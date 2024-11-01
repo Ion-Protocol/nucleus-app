@@ -40,6 +40,14 @@ export const selectBridgesState = (state: RootState) => state.networkAssets
 // DO NOT memoize: Direct lookup; returns a value from state.
 export const selectSourceChainKey = (state: RootState) => selectBridgesState(state).sourceChain
 
+// DO NOT memoize: Direct lookup; returns a value from state.
+export const selectRedemptionSourceChainKey = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) {
+    return selectBridgesState(state).redemptionChain
+  }
+  return networkAssetConfig.deployedOn
+}
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
 /////////////////////////////////////////////////////////////////////
@@ -365,6 +373,17 @@ export const selectSourceChains = createSelector(
   }
 )
 
+export const selectRedemptionChains = createSelector(
+  [selectNetworkAssetConfig],
+  (networkAssetConfig): (Chain & { key: ChainKey })[] => {
+    if (!networkAssetConfig) return []
+    return Object.values(networkAssetConfig.redemptionChains).map((redemptionChainConfig) => {
+      const chainConfig = chainsConfig[redemptionChainConfig.chain as ChainKey]
+      return { key: redemptionChainConfig.chain as ChainKey, ...chainConfig }
+    })
+  }
+)
+
 export const selectExplorerBaseUrl = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const sourceChainKey = selectSourceChainKey(state)
@@ -385,6 +404,13 @@ export const selectExplorerBaseUrl = (state: RootState) => {
 // DO NOT memoize: Direct lookup; returns a value from configuration.
 export const selectSourceChainId = (state: RootState): number | null => {
   const sourceChainKey = selectSourceChainKey(state)
+  const chain = chainsConfig[sourceChainKey as ChainKey]
+  return chain.id || null
+}
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectRedemptionSourceChainId = (state: RootState): number | null => {
+  const sourceChainKey = selectRedemptionSourceChainKey(state)
   const chain = chainsConfig[sourceChainKey as ChainKey]
   return chain.id || null
 }
@@ -707,6 +733,24 @@ export const selectDepositBridgeData = createSelector(
 )
 
 /////////////////////////////////////////////////////////////////////
+// Redeem Selectors
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
+export const selectRedeemBridgeData = createSelector(
+  [selectLayerZeroChainSelector, selectAddress],
+  (layerZeroChainSelector, userAddress): CrossChainTellerBase.BridgeData | null => {
+    if (!userAddress) return null
+    return {
+      chainSelector: layerZeroChainSelector,
+      destinationChainReceiver: userAddress,
+      bridgeFeeToken: tokensConfig[TokenKey.ETH].addresses[ChainKey.SEI] as Address,
+      messageGas: 100000,
+      data: '',
+    }
+  }
+)
+
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////
 
