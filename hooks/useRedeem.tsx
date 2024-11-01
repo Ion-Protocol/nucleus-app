@@ -86,16 +86,26 @@ export function useRedeem() {
     }
 
     if (approveLoading) updateStepState('1', 'active')
-    if (txHash) updateStepState('1', 'completed')
+    if (txHash || (allowance && allowance >= redeemAmount)) updateStepState('1', 'completed')
     if (updateAtomicRequestLoading) updateStepState('2', 'active')
     if (atomicRequestResponse) updateStepState('2', 'completed')
     if (txReceiptLoading) updateStepState('3', 'active')
     if (txReceipt) updateStepState('3', 'completed')
-  }, [approveLoading, txHash, updateAtomicRequestLoading, atomicRequestResponse, txReceiptLoading, txReceipt, dispatch])
+  }, [
+    approveLoading,
+    txHash,
+    updateAtomicRequestLoading,
+    atomicRequestResponse,
+    txReceiptLoading,
+    txReceipt,
+    dispatch,
+    allowance,
+    redeemAmount,
+  ])
 
   // Submit atomic request after approval
   useEffect(() => {
-    if (!txHash || atomicRequestResponse) return
+    if (!allowance || allowance < redeemAmount || atomicRequestResponse) return
 
     const userRequest = {
       deadline: BigInt(deadline),
