@@ -25,7 +25,7 @@ const StepIcons = {
 }
 
 const StepProcessDialog = () => {
-  const { steps, title, open, extraContent } = useSelector((state: RootState) => state.dialog)
+  const { steps, title, open, headerContent } = useSelector((state: RootState) => state.dialog)
   const dispatch = useDispatch()
   const lastStep = steps[steps.length - 1]
   const isLastStepCompleted = lastStep?.state === 'completed'
@@ -37,7 +37,7 @@ const StepProcessDialog = () => {
         <ModalHeader fontWeight={500}>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {extraContent && <Box paddingBottom={4}>{extraContent}</Box>}
+          {headerContent && <Box paddingBottom={4}>{headerContent}</Box>}
           <Box display="flex" flexDirection="column">
             {steps.map((step) => (
               <Box key={step.id} display="flex" alignItems="center" height={14} gap={4}>

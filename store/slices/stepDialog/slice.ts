@@ -14,14 +14,14 @@ type DialogState = {
   steps: DialogStep[]
   title: string
   open: boolean
-  extraContent: string | null
+  headerContent?: string | React.ReactNode
 }
 
 const initialState: DialogState = {
   steps: [],
   title: 'Transaction in progress...',
   open: false,
-  extraContent: null,
+  headerContent: undefined,
 }
 
 const dialogSlice = createSlice({
@@ -61,12 +61,12 @@ const dialogSlice = createSlice({
     setTitle: (state: DialogState, action: PayloadAction<string>) => {
       state.title = action.payload
     },
-    setExtraContent: (state: DialogState, action: PayloadAction<React.ReactNode>) => {
-      state.extraContent = action.payload
+    setHeaderContent: (state: DialogState, action: PayloadAction<React.ReactNode>) => {
+      state.headerContent = action.payload
     },
   },
 })
 
-export const { setSteps, setDialogStep, setOpen, setTitle, setExtraContent } = dialogSlice.actions
+export const { setSteps, setDialogStep, setOpen, setTitle, setHeaderContent } = dialogSlice.actions
 
 export const dialogReducer = dialogSlice.reducer

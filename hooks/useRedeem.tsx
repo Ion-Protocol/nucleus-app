@@ -105,6 +105,14 @@ export const useRedeem = () => {
     // if (redeemAmount > allow) {
     //   return
     // }
+    dispatch(setTitle('Redeem Status'))
+    dispatch(
+      setSteps([
+        { id: '1', description: 'Approve', state: 'idle' },
+        { id: '2', description: 'Request Withdraw', state: 'idle' },
+      ])
+    )
+    dispatch(setOpen(true))
     const userRequest = {
       deadline: BigInt(deadline),
       atomicPrice: tokenRateInQuote?.rateInQuoteSafe!,
@@ -124,6 +132,7 @@ export const useRedeem = () => {
     }
 
     if (!allowance || allowance < redeemAmount) {
+      dispatch(setDialogStep({ stepId: '1', newState: 'active' }))
       try {
         await approveErc20({
           tokenAddress: sharesTokenAddress as `0x${string}`,
