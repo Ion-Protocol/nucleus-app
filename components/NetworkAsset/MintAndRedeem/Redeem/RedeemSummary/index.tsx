@@ -9,7 +9,7 @@ import { bigIntToNumberAsString } from '@/utils/bigint'
 import { convertToUsd } from '@/utils/currency'
 import { selectAddress } from '@/store/slices/account/'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { selectNetworkAssetConfig, selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
+import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
 import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { selectUsdPerEthRate } from '@/store/slices/price/selectors'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
@@ -24,15 +24,11 @@ function RedeemSummary({
   isSameChain,
   receiveAssetAddress,
   chainId,
+  layerZeroChainSelector,
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
-  const chainConfig = useSelector(selectNetworkAssetConfig)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
   const price = useSelector(selectUsdPerEthRate)
-  const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
-  if (!userAddress) {
-    console.log('userAddress is undefined')
-  }
 
   const previewFeeBridgeData: BridgeData = {
     chainSelector: layerZeroChainSelector,

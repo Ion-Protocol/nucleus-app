@@ -12,7 +12,9 @@ import {
   selectContractAddressByName,
   selectTokenAddressByTokenKey,
   selectSourceChainId,
+  selectLayerZeroChainSelector,
 } from '@/store/slices/networkAssets'
+import { selectNetworkId } from '@/store/slices/chain'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 
 const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
@@ -22,7 +24,10 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const tokenKeys = selectReceiveTokens(state)
   const receiveTokenKey = selectReceiveTokenKey(state) || tokenKeys[0] || null
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
+
   // used for useGetRateInQuoteSafeQuery hook
+  const layerZeroChainSelector = selectLayerZeroChainSelector(state)
+  console.log('layerZeroChainSelector', layerZeroChainSelector)
   const accountantAddress = selectContractAddressByName(state, 'accountant')
   const tellerAddress = selectContractAddressByName(state, 'teller')
   const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)
@@ -43,6 +48,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),
     networkAssetName,
     isSameChain,
+    layerZeroChainSelector,
   }
 }
 
