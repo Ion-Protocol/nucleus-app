@@ -23,6 +23,7 @@ import { calculateApy } from './calculateApy'
 import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { RewardsTableData } from '@/types/RewardsTableData'
 import { selectTransactionExplorerUrl } from '../status'
+import { type BridgeData } from '@/store/api/tellerApi'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -739,14 +740,15 @@ export const selectDepositBridgeData = createSelector(
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectRedeemBridgeData = createSelector(
   [selectLayerZeroChainSelector, selectAddress],
-  (layerZeroChainSelector, userAddress): CrossChainTellerBase.BridgeData | null => {
+  (layerZeroChainSelector, userAddress): BridgeData | null => {
     if (!userAddress) return null
     return {
       chainSelector: layerZeroChainSelector,
       destinationChainReceiver: userAddress,
+      // TODO: Update to use const for bridgeFeeToken
       bridgeFeeToken: tokensConfig[TokenKey.ETH].addresses[ChainKey.SEI] as Address,
-      messageGas: 100000,
-      data: '',
+      messageGas: BigInt(100000),
+      data: '0x',
     }
   }
 )

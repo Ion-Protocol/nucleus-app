@@ -37,12 +37,17 @@ function RedeemSummary({
     messageGas: BigInt(100000),
     data: '0x',
   }
+  console.log('RedeemSummary redeemAmountAsBigInt:', redeemAmountAsBigInt)
+  console.log('RedeemSummary previewFeeBridgeData:', previewFeeBridgeData)
+  console.log('RedeemSummary tellerAddress:', tellerAddress)
+  console.log('RedeemSummary chainId:', chainId)
 
   const {
     data: previewFee,
-    isLoading: previewFeeLoading,
-    isFetching: previewFeeFetching,
-    isError: previewFeeError,
+    isLoading: isPreviewFeeLoading,
+    isFetching: isPreviewFeeFetching,
+    isError: isPreviewFeeError,
+    error: previewFeeError,
   } = useGetPreviewFeeQuery(
     {
       shareAmount: redeemAmountAsBigInt,
@@ -51,6 +56,18 @@ function RedeemSummary({
       chainId: chainId!,
     },
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
+  )
+  console.log(
+    'previewFee from RedeemSummary',
+    previewFee,
+    'isPreviewFeeLoading',
+    isPreviewFeeLoading,
+    'isPreviewFeeFetching',
+    isPreviewFeeFetching,
+    'isPreviewFeeError',
+    isPreviewFeeError,
+    'previewFeeError',
+    previewFeeError
   )
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: receiveAssetAddress! as Address,
@@ -110,7 +127,7 @@ function RedeemSummary({
                     <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                   </IonTooltip>
                 </Flex>
-                <IonSkeleton minW="75px" isLoaded={!previewFeeLoading || !previewFeeFetching}>
+                <IonSkeleton minW="75px" isLoaded={!isPreviewFeeLoading || !isPreviewFeeFetching}>
                   <Text textAlign="right" variant="paragraph">
                     {formattedPreviewFee ? `${formattedPreviewFee}` : '0'}
                   </Text>

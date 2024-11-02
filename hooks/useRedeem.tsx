@@ -14,6 +14,8 @@ import {
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
   selectRedeemBridgeData,
+  selectSourceChainId,
+  selectLayerZeroChainSelector,
 } from '@/store/slices/networkAssets'
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectAddress } from '@/store/slices/account'
@@ -22,20 +24,22 @@ import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
 import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
 import { useWaitForTransactionReceiptQuery } from '@/store/api/transactionReceiptApt'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
+import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { atomicQueueContractAddress } from '@/config/constants'
 import { calculateDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
-import { previewFee } from '@/api/contracts/Teller/previewFee'
-import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
+import { useChainId } from 'wagmi'
 
 export const useRedeem = () => {
   const deadline = calculateDeadline() // default value in function is 3 days
   const dispatch = useDispatch()
   // Selectors
   const userAddress = useSelector(selectAddress)
-  const chainId = useSelector(selectNetworkId)
-  console.log('chainId', chainId)
+  // const chainId = useSelector(selectSourceChainId)
+  // Used chainId from WAGMI to guarntee that the wallet is connected to the correct chain
+  const chainId = useChainId()
+  console.log('chainId!!!!!!:', chainId)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   console.log('redemptionSourceChainKey', redemptionSourceChainKey)
   const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId)
@@ -46,6 +50,8 @@ export const useRedeem = () => {
   console.log('destinationChainKey', destinationChainKey)
   const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
   const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
+  const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
+  const layerZeroChainSelector = useSelector((state: RootState) => selectLayerZeroChainSelector(state))
   const tokenKeys = useSelector(selectReceiveTokens)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
@@ -78,8 +84,47 @@ export const useRedeem = () => {
   const { data: tokenRateInQuote } = useGetRateInQuoteSafeQuery({
     quote: wantTokenAddress as Address,
     contractAddress: accountantAddress!,
-    chainId: chainId!,
+    chainId: redemptionSourceChainId!,
   })
+  console.log(
+    'useRedeem redeemAmount',
+    redeemAmount,
+    'useRedeem tellerContractAddress',
+    tellerContractAddress,
+    'useRedeem redemptionSourceChainId',
+    redemptionSourceChainId,
+    'useRedeem redeemBridgeData ',
+    redeemBridgeData
+  )
+  const {
+    data: previewFeeAsBigInt,
+    isLoading: isPreviewFeeLoading,
+    isFetching: isPreviewFeeFetching,
+    isError: isPreviewFeeError,
+    error: previewFeeError,
+  } = useGetPreviewFeeQuery(
+    {
+      shareAmount: redeemAmount,
+      bridgeData: redeemBridgeData!,
+      contractAddress: tellerContractAddress!,
+      chainId: redemptionSourceChainId!,
+    },
+    {
+      skip: !redeemBridgeData || !tellerContractAddress || !redemptionSourceChainId || !redeemAmount,
+    }
+  )
+  console.log(
+    'Preview Fee results',
+    previewFeeAsBigInt,
+    'isPreviewFeeLoading',
+    isPreviewFeeLoading,
+    'isPreviewFeeFetching',
+    isPreviewFeeFetching,
+    'isPreviewFeeError',
+    isPreviewFeeError,
+    'previewFeeError',
+    previewFeeError
+  )
 
   // Mutation hooks
   const [
@@ -104,12 +149,65 @@ export const useRedeem = () => {
     },
   ] = useUpdateAtomicRequestMutation()
 
+  console.log(
+    'atomicRequestResponse',
+    atomicRequestResponse,
+    'isUpdateAtomicRequestSuccess',
+    isUpdateAtomicRequestSuccess,
+    'isUpdateAtomicRequestLoading',
+    isUpdateAtomicRequestLoading,
+    'isUpdateAtomicRequestError',
+    isUpdateAtomicRequestError
+  )
+
+  // Wait for Transaction Receipt for Atomic Request
   const {
     data: txReceipt,
     isLoading: txReceiptLoading,
     isSuccess: isTxReceiptSuccess,
     isError: isTxReceiptError,
   } = useWaitForTransactionReceiptQuery({ hash: atomicRequestResponse?.response! }, { skip: !atomicRequestResponse })
+
+  const [
+    bridge,
+    {
+      data: bridgeTxHash,
+      error: bridgeError,
+      isSuccess: isBridgeSuccess,
+      isLoading: isBridgeLoading,
+      isError: isBridgeError,
+    },
+  ] = useBridgeMutation()
+  console.log(
+    'bridgeTxHash',
+    bridgeTxHash,
+    'bridgeError',
+    bridgeError,
+    'isBridgeSuccess',
+    isBridgeSuccess,
+    'isBridgeLoading',
+    isBridgeLoading,
+    'isBridgeError',
+    isBridgeError
+  )
+
+  // Wait for Transaction Receipt for Bridge
+  const {
+    data: bridgeTxReceipt,
+    isLoading: bridgeTxReceiptLoading,
+    isSuccess: isBridgeTxReceiptSuccess,
+    isError: isBridgeTxReceiptError,
+  } = useWaitForTransactionReceiptQuery({ hash: bridgeTxHash! }, { skip: !bridgeTxHash })
+  console.log(
+    'bridgeTxReceipt',
+    bridgeTxReceipt,
+    'bridgeTxReceiptLoading',
+    bridgeTxReceiptLoading,
+    'isBridgeTxReceiptSuccess',
+    isBridgeTxReceiptSuccess,
+    'isBridgeTxReceiptError',
+    isBridgeTxReceiptError
+  )
 
   // Watch approval status
   useEffect(() => {
@@ -161,88 +259,91 @@ export const useRedeem = () => {
       await switchChain(wagmiConfig, { chainId: redemptionSourceChainId })
     }
 
-    if (redemptionSourceChainKey === destinationChainKey) {
-      dispatch(setTitle('Redeem Status'))
-      dispatch(
-        setSteps([
-          { id: '1', description: 'Approve', state: 'active' },
-          { id: '2', description: 'Request Withdraw', state: 'idle' },
-          { id: '3', description: 'Confirming Transaction', state: 'idle' },
-        ])
-      )
-      dispatch(setHeaderContent('redeemSummary'))
-      dispatch(setOpen(true))
-      const userRequest = {
-        deadline: BigInt(deadline),
-        atomicPrice: tokenRateInQuote?.rateInQuoteSafe!,
-        offerAmount: redeemAmount,
-        inSolve: false,
-      }
-
-      const atomicRequestArgs = {
-        offer: sharesTokenAddress! as Address,
-        want: wantTokenAddress! as Address,
-        userRequest: userRequest,
-      }
-
-      const atomicRequestOptions = {
-        atomicQueueContractAddress: atomicQueueContractAddress as Address,
-        chainId: chainId!,
-      }
-
-      if (!allowance || allowance < redeemAmount) {
-        try {
-          await approveErc20({
-            tokenAddress: sharesTokenAddress as `0x${string}`,
-            spenderAddress: atomicQueueContractAddress,
-            amount: redeemAmount,
-            chainId: chainId!,
-          })
-          await updateAtomicRequest({
-            atomicRequestArg: atomicRequestArgs,
-            atomicRequestOptions: atomicRequestOptions,
-          })
-        } catch (error) {
-          console.error('Error approving ERC20 token:', error)
-        }
-      }
-
-      if (approveErc20TxHash || (allowance && allowance >= redeemAmount)) {
-        try {
-          await updateAtomicRequest({
-            atomicRequestArg: atomicRequestArgs,
-            atomicRequestOptions: atomicRequestOptions,
-          })
-        } catch (error) {
-          console.error('Error updating atomic request:', error)
-        }
-      }
-    } else {
-      let previewFeeAsBigInt: bigint = BigInt(0)
-      const layerZeroChainSelector = networkAssetConfig?.layerZeroChainSelector
-      const tellerContractAddress = networkAssetConfig?.contracts.teller
+    if (redemptionSourceChainKey !== destinationChainKey) {
+      // let previewFeeAsBigInt: bigint = BigInt(0)
+      console.log('networkAssetConfig', networkAssetConfig)
+      console.log('tellerContractAddress', tellerContractAddress)
       const boringVaultAddress = networkAssetConfig?.contracts.boringVault
       console.log('boringVaultAddress', boringVaultAddress)
 
-      if (!redeemBridgeData || !tellerContractAddress || !userAddress) throw new Error('Missing redeem bridge data')
+      if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt)
+        throw new Error('Missing redeem bridge data')
       console.log('redeemBridgeData', redeemBridgeData)
       if (layerZeroChainSelector && redeemBridgeData) {
-        previewFeeAsBigInt = await previewFee(
-          { shareAmount: redeemAmount, bridgeData: redeemBridgeData },
-          { contractAddress: tellerContractAddress }
-        )
+        // previewFeeAsBigInt = await previewFee(
+        //   { shareAmount: redeemAmount, bridgeData: redeemBridgeData },
+        //   { contractAddress: tellerContractAddress }
+        // )
         console.log('previewFeeAsBigInt', previewFeeAsBigInt)
-        // Call depositAndBridge function
-        // const depositTxHash = await depositAndBridge(
-        //     { depositAsset: sharesTokenAddress as `0x${string}`, depositAmount:redeemAmount, bridgeData: redeemBridgeData },
-        //     {
-        //       userAddress,
-        //       tellerContractAddress,
-        //       boringVaultAddress,
-        //       accountantAddress,
-        //       fee: previewFeeAsBigInt,
-        //     }
-        //   )
+        // Call Bridge function
+        try {
+          await bridge({
+            shareAmount: redeemAmount,
+            bridgeData: redeemBridgeData,
+            contractAddress: tellerContractAddress,
+            chainId: chainId!,
+            fee: previewFeeAsBigInt.fee,
+          })
+        } catch (error) {
+          console.error('Error bridging:', error)
+        }
+        return
+      }
+    }
+
+    dispatch(setTitle('Redeem Status'))
+    dispatch(
+      setSteps([
+        { id: '1', description: 'Approve', state: 'active' },
+        { id: '2', description: 'Request Withdraw', state: 'idle' },
+        { id: '3', description: 'Confirming Transaction', state: 'idle' },
+      ])
+    )
+    dispatch(setHeaderContent('redeemSummary'))
+    dispatch(setOpen(true))
+    const userRequest = {
+      deadline: BigInt(deadline),
+      atomicPrice: tokenRateInQuote?.rateInQuoteSafe!,
+      offerAmount: redeemAmount,
+      inSolve: false,
+    }
+
+    const atomicRequestArgs = {
+      offer: sharesTokenAddress! as Address,
+      want: wantTokenAddress! as Address,
+      userRequest: userRequest,
+    }
+
+    const atomicRequestOptions = {
+      atomicQueueContractAddress: atomicQueueContractAddress as Address,
+      chainId: chainId!,
+    }
+
+    if (!allowance || allowance < redeemAmount) {
+      try {
+        await approveErc20({
+          tokenAddress: sharesTokenAddress as `0x${string}`,
+          spenderAddress: atomicQueueContractAddress,
+          amount: redeemAmount,
+          chainId: chainId!,
+        })
+        await updateAtomicRequest({
+          atomicRequestArg: atomicRequestArgs,
+          atomicRequestOptions: atomicRequestOptions,
+        })
+      } catch (error) {
+        console.error('Error approving ERC20 token:', error)
+      }
+    }
+
+    if (approveErc20TxHash || (allowance && allowance >= redeemAmount)) {
+      try {
+        await updateAtomicRequest({
+          atomicRequestArg: atomicRequestArgs,
+          atomicRequestOptions: atomicRequestOptions,
+        })
+      } catch (error) {
+        console.error('Error updating atomic request:', error)
       }
     }
   }

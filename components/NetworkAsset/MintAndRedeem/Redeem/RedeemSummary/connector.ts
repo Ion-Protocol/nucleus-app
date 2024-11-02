@@ -14,7 +14,6 @@ import {
   selectSourceChainId,
   selectLayerZeroChainSelector,
 } from '@/store/slices/networkAssets'
-import { selectNetworkId } from '@/store/slices/chain'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 
 const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
@@ -27,7 +26,6 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
 
   // used for useGetRateInQuoteSafeQuery hook
   const layerZeroChainSelector = selectLayerZeroChainSelector(state)
-  console.log('layerZeroChainSelector', layerZeroChainSelector)
   const accountantAddress = selectContractAddressByName(state, 'accountant')
   const tellerAddress = selectContractAddressByName(state, 'teller')
   const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)

@@ -8,6 +8,7 @@ import {
   type ReadContractReturnType,
   type ReadContractErrorType,
   type ReadContractParameters,
+  writeContract,
 } from 'wagmi/actions'
 
 import { bigIntToNumberAsString } from '@/utils/bigint'
@@ -61,7 +62,25 @@ export const tellerApi = createApi({
         }
       },
     }),
+    // TODO: UPDATE TYPES
+    bridge: builder.mutation({
+      queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
+        try {
+          const results = await writeContract(wagmiConfig, {
+            abi: CrossChainTellerBaseAbi,
+            address: contractAddress,
+            functionName: 'bridge',
+            args: [shareAmount, bridgeData],
+            chainId: chainId,
+            value: fee,
+          })
+          return { data: results }
+        } catch (error) {
+          return { error: serialize(error) }
+        }
+      },
+    }),
   }),
 })
 
-export const { useGetPreviewFeeQuery } = tellerApi
+export const { useGetPreviewFeeQuery, useBridgeMutation } = tellerApi

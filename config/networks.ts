@@ -52,6 +52,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: seiExplorerBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.SEI,
     sourceRedemptionChains: {
       [ChainKey.SEI]: {
         chain: ChainKey.SEI,
@@ -121,6 +122,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.ETHEREUM,
     sourceRedemptionChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
@@ -188,6 +190,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.ETHEREUM,
     sourceRedemptionChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
@@ -239,6 +242,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.ETHEREUM,
     sourceRedemptionChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
