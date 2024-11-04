@@ -4,17 +4,19 @@ import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
 import { Divider, Flex, Link, Text } from '@chakra-ui/react'
 import { RewardsTooltipContentConnector } from './connector'
 import { IonTooltip } from '../../IonTooltip'
+import { useGetRewardsAPYQuery } from '@/store/api/nucleusBackendApi'
 
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
   defaultYieldAssetName,
-  defaultYieldAssetPercent,
+  boringVaultAddress,
   tokenIncentives,
   rewards,
   netApy,
   fullFormattedNetApy,
   shouldShowMessageForLargeNetApy,
 }: RewardsTooltipContentConnector.Props) {
+  const { data: boringVaultApy } = useGetRewardsAPYQuery({ tokenAddress: boringVaultAddress })
   return (
     <Flex direction="column" p={3} gap={3}>
       <Flex align="center" gap={2}>
@@ -35,9 +37,12 @@ export function RewardsTooltipContent({
             <Text variant="smallParagraph" color="text">
               {defaultYieldAssetName}
             </Text>
+            <IonTooltip label="Your rewards are calculated using a daily snapshot, and claims are made available each week until the end of the incentives campaign.">
+              <InfoOutlineIcon fontSize="12px" color="infoIcon" />
+            </IonTooltip>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {defaultYieldAssetPercent}
+            {boringVaultApy ? boringVaultApy.apy.toFixed(1) : '0.00'}%
           </Text>
         </Flex>
       </Flex>

@@ -6,6 +6,7 @@ export const seiExplorerBaseUrl = 'https://seitrace.com/tx/'
 export const layerZeroBaseUrl = 'https://layerzeroscan.com/tx/'
 export const eclipseRpcUrl = 'https://mainnetbeta-rpc.eclipse.xyz'
 export const redstoneBaseUrl = 'https://api.redstone.finance/'
+export const nucleusBackendBaseUrl = 'https://nucleus-backend-pi.vercel.app/'
 export const hardcodedApy = 4 // 4%
 export const msInOneYear = 31_556_952_000
 export const mintSlippage = 0.005 // 0.5%

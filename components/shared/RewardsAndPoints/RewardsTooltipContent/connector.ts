@@ -19,7 +19,7 @@ import { ConnectedProps, connect } from 'react-redux'
 interface MapStateToPropsType {
   defaultYieldAssetKey: TokenKey | null
   defaultYieldAssetName: string
-  defaultYieldAssetPercent: string
+  boringVaultAddress: string
   tokenIncentives: {
     tokenKey: TokenKey
     name: string
@@ -39,7 +39,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
     return {
       defaultYieldAssetKey: null,
       defaultYieldAssetName: '',
-      defaultYieldAssetPercent: '',
+      boringVaultAddress: '',
       tokenIncentives: [],
       rewards: [],
       netApy: '',
@@ -47,8 +47,8 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
       shouldShowMessageForLargeNetApy: false,
     }
   }
+  const boringVaultAddress = networkAssetConfig.contracts.boringVault
   const defaultYieldAssetName = tokensConfig[networkAssetKey as TokenKey].name
-  const defaultYieldAssetPercent = `${hardcodedApy.toFixed(1)}%`
 
   const tokenIncentives: {
     tokenKey: TokenKey
@@ -76,7 +76,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
   return {
     defaultYieldAssetKey: networkAssetKey,
     defaultYieldAssetName,
-    defaultYieldAssetPercent,
+    boringVaultAddress,
     tokenIncentives,
     rewards,
     netApy,
