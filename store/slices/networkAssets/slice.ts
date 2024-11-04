@@ -71,7 +71,6 @@ export const {
   setSelectedReceiveToken,
   setRedeemAmount,
   setRedemptionChain,
-  resetRedemptionChain,
   setReceiveAmount,
   setSourceChain,
   setSolanaAddress,

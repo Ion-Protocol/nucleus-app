@@ -12,7 +12,6 @@ function RedeemChainSelect({
   isActive,
   role,
 }: RedeemChainSelectConnector.Props) {
-  console.log('selectedChainKey', selectedChainKey)
   return (
     <Menu matchWidth>
       <MenuButton

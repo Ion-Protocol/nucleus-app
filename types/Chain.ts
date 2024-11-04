@@ -34,6 +34,15 @@ export interface NetworkAsset {
   points: PointSystem[]
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
   showRewardsAndHistory?: boolean
+  redeem: {
+    redemptionSourceChain: ChainKey
+    redemptionSourceAsset: TokenKey
+    redemptionDestinationChain: ChainKey
+    withdrawalChain: ChainKey
+    layerZeroChainSelector: number
+    wantTokens: Partial<Record<ChainKey, TokenKey[]>>
+    redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
+  }
 }
 
 export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

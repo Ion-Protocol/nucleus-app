@@ -1,3 +1,4 @@
+import { chainsConfig } from '@/config/chains'
 import { RootState } from '@/store'
 import {
   selectNetworkAssetConfig,
@@ -10,22 +11,11 @@ import { ConnectedProps, connect } from 'react-redux'
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const { role, isActive } = ownProps
 
-  const selectedChainKey = selectRedemptionSourceChainKey(state)
   const selectableChains = selectRedemptionChains(state)
-  let defaultRedemptionChain = selectableChains[0].key
+  const defaultRedemptionChain = selectableChains[0]?.key
+  const selectedChainName = chainsConfig[defaultRedemptionChain]?.name
 
-  const textMap = {
-    redeem: {
-      source: `Redeem from ${selectedChainKey}`,
-      destination: `Receive on ${defaultRedemptionChain}`,
-    },
-  }
-
-  if (role === 'source' && selectedChainKey) {
-    defaultRedemptionChain = selectedChainKey
-  }
-
-  const primaryText = role === 'source' ? textMap.redeem.source : textMap.redeem.destination
+  const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Redeem on ${defaultRedemptionChain}`
 
   const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
 

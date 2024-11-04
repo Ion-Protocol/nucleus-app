@@ -48,6 +48,7 @@ import {
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
   selectNetworkConfig,
+  selectRedemptionSourceChainKey,
   selectSolanaAddressBytes32,
   selectSourceChainId,
   selectSourceChainKey,
@@ -295,8 +296,8 @@ export const setRedeemAmountMax = createAsyncThunk<void, void, { state: RootStat
   async (_, { getState, rejectWithValue, dispatch }) => {
     const state = getState() as RootState
     const networkAssetKey = selectNetworkAssetFromRoute(state)
-    const chainKeyFromSourceChain = selectSourceChainKey(state) as ChainKey
-    const tokenBalance = selectTokenBalance(state, chainKeyFromSourceChain, networkAssetKey)
+    const chainKeyFromRedemptionSourceChain = selectRedemptionSourceChainKey(state)
+    const tokenBalance = selectTokenBalance(state, chainKeyFromRedemptionSourceChain, networkAssetKey)
 
     let tokenBalanceAsNumber = tokenBalance ? convertFromDecimals(tokenBalance) : '0'
 

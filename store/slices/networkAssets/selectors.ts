@@ -47,7 +47,7 @@ export const selectRedemptionSourceChainKey = (state: RootState) => {
   if (!networkAssetConfig) {
     return selectBridgesState(state).redemptionChain
   }
-  return networkAssetConfig.deployedOn
+  return networkAssetConfig.redeem.redemptionSourceChain
 }
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
@@ -107,11 +107,13 @@ export const selectLayerZeroChainSelector = (state: RootState): number => {
   return networkAssetConfig?.layerZeroChainSelector || 0
 }
 
+//
+
 // DO NOT memoize: Direct lookup; returns a value from configuration.
 export const selectReceiveOnChain = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   if (!networkAssetConfig) return null
-  return networkAssetConfig.receiveOn
+  return networkAssetConfig.redeem?.redemptionDestinationChain
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -378,7 +380,7 @@ export const selectRedemptionChains = createSelector(
   [selectNetworkAssetConfig],
   (networkAssetConfig): (Chain & { key: ChainKey })[] => {
     if (!networkAssetConfig) return []
-    return Object.values(networkAssetConfig.redemptionChains).map((redemptionChainConfig) => {
+    return Object.values(networkAssetConfig.redeem.redemptionDestinationChains || {}).map((redemptionChainConfig) => {
       const chainConfig = chainsConfig[redemptionChainConfig.chain as ChainKey]
       return { key: redemptionChainConfig.chain as ChainKey, ...chainConfig }
     })
@@ -451,6 +453,8 @@ export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKe
 export const selectReceiveTokens = createSelector(
   [selectNetworkAssetConfig, selectSourceChainKey],
   (chainConfig, sourceChain): TokenKey[] => {
+    console.log('sourceChain', sourceChain)
+    console.log('chainConfig', chainConfig)
     return chainConfig?.wantTokens[sourceChain as ChainKey] || []
   }
 )
