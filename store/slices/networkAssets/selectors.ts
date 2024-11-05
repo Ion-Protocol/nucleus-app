@@ -1,6 +1,6 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { Chain, chainsConfig } from '@/config/chains'
-import { hardcodedApy } from '@/config/constants'
+import { hardcodedApy, nativeAddress } from '@/config/constants'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
@@ -48,6 +48,14 @@ export const selectRedemptionSourceChainKey = (state: RootState) => {
     return selectBridgesState(state).redemptionChain
   }
   return networkAssetConfig.redeem.redemptionSourceChain
+}
+
+export const selectRedemptionDestinationChainKey = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) {
+    return null
+  }
+  return networkAssetConfig.redeem.redemptionDestinationChain
 }
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
@@ -107,7 +115,10 @@ export const selectLayerZeroChainSelector = (state: RootState): number => {
   return networkAssetConfig?.layerZeroChainSelector || 0
 }
 
-//
+export const selectRedeemLayerZeroChainSelector = (state: RootState): number => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.redeem.layerZeroChainSelector || 0
+}
 
 // DO NOT memoize: Direct lookup; returns a value from configuration.
 export const selectReceiveOnChain = (state: RootState) => {
@@ -416,6 +427,30 @@ export const selectRedemptionSourceChainId = (state: RootState): number | null =
   const sourceChainKey = selectRedemptionSourceChainKey(state)
   const chain = chainsConfig[sourceChainKey as ChainKey]
   return chain.id || null
+}
+
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectDestinationChainId = (state: RootState): number | null => {
+  const destinationChainKey = selectRedemptionDestinationChainKey(state)
+  // Return null if destinationChainKey is null/undefined
+  if (!destinationChainKey) {
+    return null
+  }
+  const chain = chainsConfig[destinationChainKey as ChainKey]
+  return chain?.id || null
+}
+
+export const selectIsBridgeRequired = (state: RootState): boolean => {
+  const sourceRedemptionChainKey = selectRedemptionSourceChainKey(state)
+  const destinationRedemptionChainKey = selectRedemptionDestinationChainKey(state)
+
+  // Return false if either chain key is null/undefined
+  if (!sourceRedemptionChainKey || !destinationRedemptionChainKey) {
+    return false
+  }
+
+  // Return true if chains are different, false if they're the same
+  return sourceRedemptionChainKey !== destinationRedemptionChainKey
 }
 
 // SHOULD memoize: Returns a new array; memoization avoids returning new references.
@@ -743,14 +778,14 @@ export const selectDepositBridgeData = createSelector(
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectRedeemBridgeData = createSelector(
-  [selectLayerZeroChainSelector, selectAddress],
-  (layerZeroChainSelector, userAddress): BridgeData | null => {
+  [selectRedeemLayerZeroChainSelector, selectAddress],
+  (selectRedeemLayerZeroChainSelector, userAddress): BridgeData | null => {
     if (!userAddress) return null
     return {
-      chainSelector: layerZeroChainSelector,
+      chainSelector: selectRedeemLayerZeroChainSelector,
       destinationChainReceiver: userAddress,
       // TODO: Update to use const for bridgeFeeToken
-      bridgeFeeToken: tokensConfig[TokenKey.ETH].addresses[ChainKey.SEI] as Address,
+      bridgeFeeToken: nativeAddress,
       messageGas: BigInt(100000),
       data: '0x',
     }

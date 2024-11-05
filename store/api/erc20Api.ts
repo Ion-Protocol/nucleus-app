@@ -24,10 +24,12 @@ export const erc20Api = createApi({
         tokenAddress,
         spenderAddress,
         userAddress,
+        chainId,
       }: {
         tokenAddress: Address
         spenderAddress: Address
         userAddress: Address
+        chainId: number
       }) => {
         try {
           const results = await readContract(wagmiConfig, {
@@ -35,6 +37,7 @@ export const erc20Api = createApi({
             address: tokenAddress,
             functionName: 'allowance',
             args: [userAddress, spenderAddress],
+            chainId,
           })
           return { data: results }
         } catch (error) {
@@ -44,13 +47,14 @@ export const erc20Api = createApi({
       providesTags: ['allowance'],
     }),
     balanceOf: builder.query({
-      queryFn: async ({ tokenAddress, userAddress }) => {
+      queryFn: async ({ tokenAddress, userAddress, chainId }) => {
         try {
           const results = await readContract(wagmiConfig, {
             abi: erc20Abi,
             address: tokenAddress,
             functionName: 'balanceOf',
             args: [userAddress],
+            chainId,
           })
           return { data: results }
         } catch (error) {

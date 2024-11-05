@@ -24,6 +24,7 @@ function RedeemSummary({
   isSameChain,
   receiveAssetAddress,
   chainId,
+  bridgeFromChainId,
   layerZeroChainSelector,
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
@@ -53,7 +54,7 @@ function RedeemSummary({
       shareAmount: redeemAmountAsBigInt,
       bridgeData: previewFeeBridgeData,
       contractAddress: tellerAddress!,
-      chainId: chainId!,
+      chainId: bridgeFromChainId!,
     },
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
   )

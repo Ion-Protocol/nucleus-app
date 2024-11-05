@@ -22,11 +22,16 @@ function RedeemTokenDestination({
   redeemAmountAsBigInt,
   chainId,
 }: RedeemTokenDestinationConnector.Props) {
-  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
-    quote: receiveAssetAddress! as Address,
-    contractAddress: accountantAddress!,
-    chainId: chainId!,
-  })
+  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery(
+    {
+      quote: receiveAssetAddress! as Address,
+      contractAddress: accountantAddress!,
+      chainId: chainId!,
+    },
+    {
+      skip: !receiveAssetAddress || !accountantAddress || !chainId,
+    }
+  )
 
   // Calculate rate with 0.5% fee
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe

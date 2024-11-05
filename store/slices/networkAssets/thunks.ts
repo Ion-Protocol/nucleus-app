@@ -493,7 +493,6 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         // Get the preview fee for bridging the asset
         let previewFeeAsBigInt: bigint = BigInt(0)
         const depositBridgeData = selectDepositBridgeData(state)
-        console.log('depositBridgeData 2', depositBridgeData)
         if (!depositBridgeData) throw new Error('Missing deposit bridge data')
 
         // Get most up-to-date preview fee
@@ -502,7 +501,6 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
             { shareAmount: depositAmount, bridgeData: depositBridgeData },
             { contractAddress: tellerContractAddress }
           )
-          console.log('previewFeeAsBigInt 2', previewFeeAsBigInt)
         }
 
         // Call depositAndBridge function
