@@ -20,6 +20,7 @@ import { setOpen } from '@/store/slices/stepDialog/slice'
 import { CheckIcon, InfoOutlineIcon, ChevronUpIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import WalletIcon from '@/components/shared/icons/wallet.svg'
 import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
+import { FullErrorIcon } from '../shared/FullErrorIcon'
 
 const StepIcons = {
   idle: ChevronUpIcon,
@@ -43,7 +44,12 @@ const StepProcessDialog = () => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {headerContent && <Box paddingBottom={4}>{headerContent === 'redeemSummary' && <RedeemSummaryCard />}</Box>}
+          {headerContent && (
+            <Box paddingBottom={4}>
+              {headerContent === 'redeemSummary' && <RedeemSummaryCard />}
+              {headerContent === 'error' && <FullErrorIcon />}
+            </Box>
+          )}
           <Box display="flex" flexDirection="column">
             {steps.map((step) => (
               <Box key={step.id} display="flex" alignItems="center" height={14} gap={4}>
