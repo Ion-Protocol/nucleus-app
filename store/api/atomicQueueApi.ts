@@ -51,9 +51,7 @@ export const atomicQueueApi = createApi({
             chainId,
           })
           return {
-            data: {
-              response,
-            },
+            data: { response },
           }
         } catch (error) {
           return { error: serialize(error) }

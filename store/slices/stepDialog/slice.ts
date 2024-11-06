@@ -1,10 +1,18 @@
 // store/dialogSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+export enum RedeemStepType {
+  BRIDGE = 'BRIDGE',
+  APPROVE = 'APPROVE',
+  REQUEST = 'REQUEST',
+  CONFIRM = 'CONFIRM',
+}
+
 export type StepState = 'idle' | 'active' | 'completed' | 'error'
 
 export type DialogStep = {
   id: number
+  type: RedeemStepType
   description: string
   state: StepState
   errorMessage?: string

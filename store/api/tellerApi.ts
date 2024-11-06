@@ -10,6 +10,9 @@ import {
   type ReadContractParameters,
   writeContract,
   simulateContract,
+  type WriteContractReturnType,
+  type WriteContractParameters,
+  type WriteContractErrorType,
 } from 'wagmi/actions'
 
 import { bigIntToNumberAsString } from '@/utils/bigint'
@@ -36,6 +39,7 @@ export type PreviewFeeResponse = {
   feeAsString: string
   truncatedFeeAsString: string
 }
+
 export const tellerApi = createApi({
   reducerPath: 'previewFeeApi',
   baseQuery: fakeBaseQuery(),
@@ -63,8 +67,10 @@ export const tellerApi = createApi({
         }
       },
     }),
-    // TODO: UPDATE TYPES
-    bridge: builder.mutation({
+    bridge: builder.mutation<
+      WriteContractReturnType,
+      { shareAmount: bigint; bridgeData: BridgeData; contractAddress: Address; chainId: number; fee: bigint }
+    >({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
           const results = await writeContract(wagmiConfig, {

@@ -12,17 +12,20 @@ import {
   Icon,
   Spinner,
   ModalFooter,
+  Flex,
+  Link,
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
-import { CheckIcon, WarningIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { CheckIcon, InfoOutlineIcon, ChevronUpIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import WalletIcon from '@/components/shared/icons/wallet.svg'
 import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
 
 const StepIcons = {
   idle: ChevronUpIcon,
   active: Spinner,
   completed: CheckIcon,
-  error: WarningIcon,
+  error: InfoOutlineIcon,
 }
 
 const StepProcessDialog = () => {
@@ -35,7 +38,9 @@ const StepProcessDialog = () => {
     <Modal isOpen={open} onClose={() => dispatch(setOpen(false))} isCentered>
       <ModalOverlay />
       <ModalContent bg="neutral.200">
-        <ModalHeader fontWeight={500}>{title}</ModalHeader>
+        <ModalHeader fontSize="xl" color="neutral.950" fontWeight={500}>
+          {title}
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           {headerContent && <Box paddingBottom={4}>{headerContent === 'redeemSummary' && <RedeemSummaryCard />}</Box>}
@@ -64,9 +69,14 @@ const StepProcessDialog = () => {
                     />
                   )}
                 </Box>
-                <Text fontSize="xl" color={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}>
-                  {step.description}
-                </Text>
+                <Flex gap={2}>
+                  <Text fontSize="xl" color={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}>
+                    {step.description}
+                  </Text>
+                  <Link as="span" fontSize="lg" color="neutral.600">
+                    <ExternalLinkIcon />
+                  </Link>
+                </Flex>
                 <Box flex={1}>
                   {step.state === 'error' && step.errorMessage && (
                     <Text color="red.500" fontSize="sm">
@@ -78,11 +88,20 @@ const StepProcessDialog = () => {
             ))}
           </Box>
         </ModalBody>
-        <ModalFooter flex={1} justifyContent="center" alignItems="center">
+        <ModalFooter flex={1} paddingY={6} justifyContent="center" alignItems="center">
           {isLastStepCompleted ? (
             <Button onClick={() => dispatch(setOpen(false))}>Close</Button>
           ) : (
-            <Text fontSize="md" fontWeight={400}>
+            <Text
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="md"
+              color="neutral.900"
+              gap={2}
+              fontWeight={400}
+            >
+              <WalletIcon color="neutral.600" fill="neutral.700" />
               Please proceed in your wallet
             </Text>
           )}
