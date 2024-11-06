@@ -103,7 +103,6 @@ export const useRedeem = () => {
    * the layer zero chain selector, and the token keys
    */
   const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
-  console.log('redeemAmount', redeemAmount)
   const tokenKeys = useSelector(selectReceiveTokens)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
@@ -214,28 +213,6 @@ export const useRedeem = () => {
    * Mutation hooks
    ******************************************************************************
    */
-  const [
-    approveErc20ForBridge,
-    {
-      data: approveErc20ForBridgeTxHash,
-      error: approveErc20ForBridgeError,
-      isSuccess: isApproveErc20ForBridgeSuccess,
-      isLoading: isApproveErc20ForBridgeLoading,
-      isError: isApproveErc20ForBridgeError,
-    },
-  ] = useApproveMutation()
-  console.log(
-    'approveErc20ForBridgeTxHash',
-    approveErc20ForBridgeTxHash,
-    'approveErc20ForBridgeError',
-    approveErc20ForBridgeError,
-    'isApproveErc20ForBridgeSuccess',
-    isApproveErc20ForBridgeSuccess,
-    'isApproveErc20ForBridgeLoading',
-    isApproveErc20ForBridgeLoading,
-    'isApproveErc20ForBridgeError',
-    isApproveErc20ForBridgeError
-  )
 
   const [
     approveErc20,
@@ -529,5 +506,9 @@ export const useRedeem = () => {
     }
   }
 
-  return { handleRedeem, isValid }
+  return {
+    handleRedeem,
+    isValid,
+    isLoading: bridgeTxReceiptLoading || isTokenRateInQuoteLoading || isApproveErc20Loading || txReceiptLoading,
+  }
 }

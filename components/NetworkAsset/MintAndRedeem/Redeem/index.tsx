@@ -10,10 +10,11 @@ import { useSelector } from 'react-redux'
 import { selectRedemptionSourceChainKey } from '@/store/slices/networkAssets'
 import { ChainIcon } from '@/components/config/chainIcons'
 import { chainsConfig } from '@/config/chains'
+import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 interface RedeemProps extends ChakraProps {}
 
 export function Redeem({ ...props }: RedeemProps) {
-  const { handleRedeem, isValid } = useRedeem()
+  const { handleRedeem, isValid, isLoading } = useRedeem()
   const redemptionChainKey = useSelector(selectRedemptionSourceChainKey)
   const redemptionChainName = chainsConfig[redemptionChainKey!].name
   const address = useSelector(selectAddress)
@@ -42,9 +43,9 @@ export function Redeem({ ...props }: RedeemProps) {
       <RedeemTokenDestination />
       {/* Redeem Summary */}
       <RedeemSummary />
-      <Button isDisabled={!isValid} onClick={handleRedeem}>
+      <ConnectAwareButton isDisabled={!isValid} onClick={handleRedeem} isLoading={isLoading}>
         Redeem
-      </Button>
+      </ConnectAwareButton>
     </Flex>
   )
 }

@@ -17,14 +17,15 @@ import {
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
 } from '@/store/slices/networkAssets'
+import { selectBalances } from '@/store/slices/balance'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { ChainKey } from '@/types/ChainKey'
 
 const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   let selectedChainKey = selectSourceChainKey(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
+  const balances = selectBalances(state)
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
-  console.log('networkAssetFromRoute', networkAssetFromRoute)
   const tokenKeys = selectReceiveTokens(state)
   const redemptionChainKey = selectRedemptionSourceChainKey(state)
   // const redeemTokenAddress =
