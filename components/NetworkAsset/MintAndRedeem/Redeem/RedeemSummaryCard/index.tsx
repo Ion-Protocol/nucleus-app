@@ -23,7 +23,16 @@ const RedeemSummaryCard = () => {
   }
   return (
     <Box p={6} bg="white" borderRadius="lg" boxShadow="sm">
-      <Heading as="h2" fontSize="xl" fontWeight={500} mb={4} pb={2} borderBottom="1px" borderColor="gray.200">
+      <Heading
+        as="h2"
+        color="gray.700"
+        fontSize="xl"
+        fontWeight={500}
+        mb={4}
+        pb={2}
+        borderBottom="1px"
+        borderColor="gray.200"
+      >
         Redeem Summary
       </Heading>
 
@@ -70,7 +79,7 @@ const SummaryRow = ({
       {label}
     </Text>
     {dotted && <Box flex="1" mx={2} borderBottom="1px" borderStyle="dotted" borderColor="gray.300" />}
-    <Text fontSize="lg" fontWeight="medium">
+    <Text color="gray.700" fontSize="lg" fontWeight="medium">
       {value}
     </Text>
   </Flex>

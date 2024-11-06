@@ -38,7 +38,7 @@ const StepProcessDialog = () => {
   return (
     <Modal isOpen={open} onClose={() => dispatch(setOpen(false))} isCentered>
       <ModalOverlay />
-      <ModalContent bg="neutral.200">
+      <ModalContent bg="backgroundSecondary">
         <ModalHeader fontSize="xl" color="neutral.950" fontWeight={500}>
           {title}
         </ModalHeader>
@@ -107,7 +107,7 @@ const StepProcessDialog = () => {
               gap={2}
               fontWeight={400}
             >
-              <WalletIcon color="neutral.600" fill="neutral.700" />
+              <WalletIcon />
               Please proceed in your wallet
             </Text>
           )}
