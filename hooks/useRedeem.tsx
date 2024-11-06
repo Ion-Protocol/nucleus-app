@@ -1,6 +1,7 @@
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
-import { useEffect, useCallback, useMemo } from 'react'
+
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { setOpen, setSteps, setTitle, setDialogStep, setHeaderContent } from '@/store/slices/stepDialog/slice'
@@ -16,6 +17,7 @@ import {
   selectRedeemLayerZeroChainSelector,
   selectRedemptionDestinationChainKey,
   selectDestinationChainId,
+  selectIsBridgeRequired,
 } from '@/store/slices/networkAssets'
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectAddress } from '@/store/slices/account'
@@ -53,6 +55,7 @@ export const useRedeem = () => {
 
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   /**
    * Selectors for the accountant address, the teller contract address,
@@ -72,7 +75,6 @@ export const useRedeem = () => {
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
   if (
-    !userAddress ||
     !networkAssetConfig ||
     !networkId ||
     !redemptionSourceChainId ||
@@ -102,6 +104,7 @@ export const useRedeem = () => {
   const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey]
   const sharesTokenKey = networkAssetConfig?.token.key
 
+  // TODO: We will use these to handle the edge case where a user bridged but didn't redeem
   // Balance of shares token on the source chain
   const sourceSharesTokenBalance = useSelector((state: RootState) =>
     selectTokenBalance(state, redemptionSourceChainKey, sharesTokenKey!)
@@ -121,6 +124,7 @@ export const useRedeem = () => {
    Query hooks
    ******************************************************************************
    */
+
   const { data: allowance } = useAllowanceQuery(
     {
       tokenAddress: sharesTokenAddress as `0x${string}`,
@@ -133,21 +137,23 @@ export const useRedeem = () => {
     }
   )
 
-  const { data: tokenRateInQuote } = useGetRateInQuoteSafeQuery({
-    quote: wantTokenAddress as Address,
-    contractAddress: accountantAddress!,
-    chainId: redemptionSourceChainId!,
-  })
-  console.log(
-    'useRedeem redeemAmount',
-    redeemAmount,
-    'useRedeem tellerContractAddress',
-    tellerContractAddress,
-    'useRedeem redemptionSourceChainId',
-    redemptionSourceChainId,
-    'useRedeem redeemBridgeData ',
-    redeemBridgeData
+  const {
+    data: tokenRateInQuote,
+    isLoading: isTokenRateInQuoteLoading,
+    isError: isTokenRateInQuoteError,
+    error: tokenRateInQuoteError,
+  } = useGetRateInQuoteSafeQuery(
+    {
+      quote: wantTokenAddress as Address,
+      contractAddress: accountantAddress,
+      chainId: destinationChainId!,
+    },
+    {
+      skip: !accountantAddress || !destinationChainId,
+    }
   )
+  console.log('tokenRateInQuote', tokenRateInQuote, 'tokenRateInQuoteError', tokenRateInQuoteError)
+
   const {
     data: previewFeeAsBigInt,
     isLoading: isPreviewFeeLoading,
@@ -189,15 +195,27 @@ export const useRedeem = () => {
    ******************************************************************************
    */
   const [
-    approveBridgeToken,
+    approveErc20ForBridge,
     {
-      data: approveBridgeTokenTxHash,
-      error: approveBridgeTokenError,
-      isSuccess: isApproveBridgeTokenSuccess,
-      isLoading: isApproveBridgeTokenLoading,
-      isError: isApproveBridgeTokenError,
+      data: approveErc20ForBridgeTxHash,
+      error: approveErc20ForBridgeError,
+      isSuccess: isApproveErc20ForBridgeSuccess,
+      isLoading: isApproveErc20ForBridgeLoading,
+      isError: isApproveErc20ForBridgeError,
     },
   ] = useApproveMutation()
+  console.log(
+    'approveErc20ForBridgeTxHash',
+    approveErc20ForBridgeTxHash,
+    'approveErc20ForBridgeError',
+    approveErc20ForBridgeError,
+    'isApproveErc20ForBridgeSuccess',
+    isApproveErc20ForBridgeSuccess,
+    'isApproveErc20ForBridgeLoading',
+    isApproveErc20ForBridgeLoading,
+    'isApproveErc20ForBridgeError',
+    isApproveErc20ForBridgeError
+  )
 
   const [
     approveErc20,
@@ -229,7 +247,9 @@ export const useRedeem = () => {
     'isUpdateAtomicRequestLoading',
     isUpdateAtomicRequestLoading,
     'isUpdateAtomicRequestError',
-    isUpdateAtomicRequestError
+    isUpdateAtomicRequestError,
+    'atomicRequestError',
+    atomicRequestError
   )
 
   // Wait for Transaction Receipt for Atomic Request
@@ -288,24 +308,24 @@ export const useRedeem = () => {
    */
   // Watch approval status
   useEffect(() => {
-    if (isApproveErc20Loading) dispatch(setDialogStep({ stepId: '1', newState: 'active' }))
-    if (isApproveErc20Success) dispatch(setDialogStep({ stepId: '1', newState: 'completed' }))
-    if (isApproveErc20Error) dispatch(setDialogStep({ stepId: '1', newState: 'error' }))
+    if (isApproveErc20Loading) dispatch(setDialogStep({ stepId: 1, newState: 'active' }))
+    if (isApproveErc20Success) dispatch(setDialogStep({ stepId: 1, newState: 'completed' }))
+    if (isApproveErc20Error) dispatch(setDialogStep({ stepId: 1, newState: 'error' }))
     if (isApproveErc20Error) dispatch(setHeaderContent(`Approval Error: ${approveErc20Error}`))
   }, [isApproveErc20Loading, isApproveErc20Success, isApproveErc20Error, dispatch, approveErc20Error])
 
   // Separate effect for allowance check
   useEffect(() => {
     if (allowance && allowance >= redeemAmount) {
-      dispatch(setDialogStep({ stepId: '1', newState: 'completed' }))
+      dispatch(setDialogStep({ stepId: 1, newState: 'completed' }))
     }
   }, [allowance, redeemAmount, dispatch])
 
   // Watch atomic request status
   useEffect(() => {
-    if (isUpdateAtomicRequestLoading) dispatch(setDialogStep({ stepId: '2', newState: 'active' }))
-    if (isUpdateAtomicRequestSuccess) dispatch(setDialogStep({ stepId: '2', newState: 'completed' }))
-    if (isUpdateAtomicRequestError) dispatch(setDialogStep({ stepId: '2', newState: 'error' }))
+    if (isUpdateAtomicRequestLoading) dispatch(setDialogStep({ stepId: 2, newState: 'active' }))
+    if (isUpdateAtomicRequestSuccess) dispatch(setDialogStep({ stepId: 2, newState: 'completed' }))
+    if (isUpdateAtomicRequestError) dispatch(setDialogStep({ stepId: 2, newState: 'error' }))
     if (isUpdateAtomicRequestError) dispatch(setHeaderContent(`Request Error: ${atomicRequestError}`))
   }, [
     isUpdateAtomicRequestLoading,
@@ -317,9 +337,9 @@ export const useRedeem = () => {
 
   // Watch transaction receipt status
   useEffect(() => {
-    if (txReceiptLoading) dispatch(setDialogStep({ stepId: '3', newState: 'active' }))
-    if (isTxReceiptSuccess) dispatch(setDialogStep({ stepId: '3', newState: 'completed' }))
-    if (isTxReceiptError) dispatch(setDialogStep({ stepId: '3', newState: 'error' }))
+    if (txReceiptLoading) dispatch(setDialogStep({ stepId: 3, newState: 'active' }))
+    if (isTxReceiptSuccess) dispatch(setDialogStep({ stepId: 3, newState: 'completed' }))
+    if (isTxReceiptError) dispatch(setDialogStep({ stepId: 3, newState: 'error' }))
   }, [txReceiptLoading, isTxReceiptSuccess, isTxReceiptError, dispatch])
 
   /**
@@ -341,47 +361,35 @@ export const useRedeem = () => {
     // Check if a bridge is required
     if (redemptionSourceChainKey !== destinationChainKey) {
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
-        console.log('Missing redeem bridge data')
+        console.log('Missing redeem bridge data', redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector)
         throw new Error('Missing redeem bridge data')
       }
+      // Switch to the source chain if needed
       if (networkId !== redemptionSourceChainId) {
         await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
       }
       dispatch(setTitle('Redeem Status'))
       dispatch(
         setSteps([
-          { id: '1', description: 'Approve', state: 'active' },
-          { id: '2', description: 'Request Bridge', state: 'idle' },
-          { id: '3', description: 'Request Withdraw', state: 'idle' },
-          { id: '4', description: 'Confirming Transaction', state: 'idle' },
+          { id: 1, description: 'Request Bridge', state: 'active' },
+          { id: 2, description: 'Approve', state: 'idle' },
+          { id: 3, description: 'Request Withdraw', state: 'idle' },
+          { id: 4, description: 'Confirming Transaction', state: 'idle' },
         ])
       )
       dispatch(setHeaderContent('redeemSummary'))
       dispatch(setOpen(true))
-      if (!allowance || allowance < redeemAmount) {
-        try {
-          await approveErc20({
-            tokenAddress: sharesTokenAddress as `0x${string}`,
-            spenderAddress: atomicQueueContractAddress,
-            amount: redeemAmount,
-            chainId: destinationChainId!,
-          })
-          // await updateAtomicRequest({
-          //   atomicRequestArg: atomicRequestArgs,
-          //   atomicRequestOptions: atomicRequestOptions,
-          // })
-        } catch (error) {
-          console.error('Error approving ERC20 token:', error)
-        }
-      }
-      // let previewFeeAsBigInt: bigint = BigInt(0)
-      console.log('networkAssetConfig', networkAssetConfig)
-      console.log('tellerContractAddress', tellerContractAddress)
-      const boringVaultAddress = networkAssetConfig?.contracts.boringVault
-      console.log('boringVaultAddress', boringVaultAddress)
 
-      if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt)
+      if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
+        console.log(
+          'Missing redeem bridge data',
+          redeemBridgeData,
+          tellerContractAddress,
+          userAddress,
+          previewFeeAsBigInt
+        )
         throw new Error('Missing redeem bridge data')
+      }
       console.log('redeemBridgeData', redeemBridgeData)
       if (layerZeroChainSelector !== 0 && redeemBridgeData) {
         console.log('previewFeeAsBigInt', previewFeeAsBigInt)
@@ -414,29 +422,27 @@ export const useRedeem = () => {
       offerAmount: redeemAmount,
       inSolve: false,
     }
+    console.log('userRequest', userRequest)
 
     const atomicRequestArgs = {
       offer: sharesTokenAddress! as Address,
       want: wantTokenAddress! as Address,
       userRequest: userRequest,
     }
-
+    console.log('atomicRequestArgs', atomicRequestArgs)
     const atomicRequestOptions = {
       atomicQueueContractAddress: atomicQueueContractAddress as Address,
       chainId: destinationChainId!,
     }
-
-    if (networkId !== destinationChainId) {
-      await switchChain(wagmiConfig, { chainId: destinationChainId! })
-    }
+    console.log('atomicRequestOptions', atomicRequestOptions)
     if (destinationChainKey === redemptionSourceChainKey) {
       // In not bridge is required we still need to dispatch the modal
       dispatch(setTitle('Redeem Status'))
       dispatch(
         setSteps([
-          { id: '1', description: 'Approve', state: 'active' },
-          { id: '2', description: 'Request Withdraw', state: 'idle' },
-          { id: '3', description: 'Confirming Transaction', state: 'idle' },
+          { id: 1, description: 'Approve', state: 'active' },
+          { id: 2, description: 'Request Withdraw', state: 'idle' },
+          { id: 3, description: 'Confirming Transaction', state: 'idle' },
         ])
       )
       dispatch(setHeaderContent('redeemSummary'))
@@ -446,7 +452,10 @@ export const useRedeem = () => {
     //////////////////////////////////////////////////////////////////////////
     // 3. Approve shares token for withdrawal
     //////////////////////////////////////////////////////////////////////////
-    if (!allowance || allowance < redeemAmount) {
+    if (!allowance || allowance < redeemAmount || bridgeTxReceipt) {
+      if (networkId !== destinationChainId) {
+        await switchChain(wagmiConfig, { chainId: destinationChainId! })
+      }
       try {
         await approveErc20({
           tokenAddress: sharesTokenAddress as `0x${string}`,

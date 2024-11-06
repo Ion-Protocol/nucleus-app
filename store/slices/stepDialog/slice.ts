@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export type StepState = 'idle' | 'active' | 'completed' | 'error'
 
 export type DialogStep = {
-  id: string
+  id: number
   description: string
   state: StepState
   errorMessage?: string
@@ -15,6 +15,14 @@ type DialogState = {
   title: string
   open: boolean
   headerContent?: 'redeemSummary' | 'redeemSuccess' | 'mintSummary' | 'mintSuccess' | 'Error' | string
+}
+
+type HeaderContent = {
+  redeemSummary: {
+    redeemAmount: string
+    redeemSourceChain: string
+    redeemDestinationChain: string
+  }
 }
 
 const initialState: DialogState = {
@@ -34,7 +42,7 @@ const dialogSlice = createSlice({
     setDialogStep: (
       state: DialogState,
       action: PayloadAction<{
-        stepId: string
+        stepId: number
         newState?: StepState
         errorMessage?: string
       }>

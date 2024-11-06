@@ -9,6 +9,7 @@ import {
   type ReadContractErrorType,
   type ReadContractParameters,
   writeContract,
+  simulateContract,
 } from 'wagmi/actions'
 
 import { bigIntToNumberAsString } from '@/utils/bigint'

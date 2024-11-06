@@ -56,7 +56,7 @@ export const atomicQueueApi = createApi({
             },
           }
         } catch (error) {
-          return { error: { message: serialize(error) } }
+          return { error: serialize(error) }
         }
       },
       extraOptions: { maxRetries: 0 },
