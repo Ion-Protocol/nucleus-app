@@ -18,7 +18,7 @@ export const coinGeckoApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getTokenPrice: builder.query<PriceResponse, Address>({
+    getTokenPrice: builder.query<PriceResponse, string>({
       query: (tokenId) => ({
         url: 'price',
         params: {

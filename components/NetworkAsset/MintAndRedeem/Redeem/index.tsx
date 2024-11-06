@@ -13,7 +13,7 @@ import { chainsConfig } from '@/config/chains'
 interface RedeemProps extends ChakraProps {}
 
 export function Redeem({ ...props }: RedeemProps) {
-  const handleRedeem = useRedeem()
+  const { handleRedeem, isValid } = useRedeem()
   const redemptionChainKey = useSelector(selectRedemptionSourceChainKey)
   const redemptionChainName = chainsConfig[redemptionChainKey!].name
   const address = useSelector(selectAddress)
@@ -42,7 +42,7 @@ export function Redeem({ ...props }: RedeemProps) {
       <RedeemTokenDestination />
       {/* Redeem Summary */}
       <RedeemSummary />
-      <Button disabled={!address} onClick={handleRedeem}>
+      <Button isDisabled={!isValid} onClick={handleRedeem}>
         Redeem
       </Button>
     </Flex>

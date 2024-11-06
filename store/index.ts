@@ -15,7 +15,7 @@ import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 import { redstoneApi } from './slices/redstoneSlice/apiSlice'
 import { dialogReducer } from './slices/stepDialog/slice'
-import { tellerApi, accountantApi, atomicQueueApi, erc20Api, transactionReceiptApi } from './api'
+import { tellerApi, accountantApi, atomicQueueApi, erc20Api, transactionReceiptApi, coinGeckoApi } from './api'
 
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
@@ -27,6 +27,7 @@ const apiMiddlewares = [
   atomicQueueApi.middleware,
   erc20Api.middleware,
   transactionReceiptApi.middleware,
+  coinGeckoApi.middleware,
 ]
 
 // Configure the store and inject the LibraryContext as an extra argument for thunks
@@ -50,6 +51,7 @@ export const store = configureStore({
     [atomicQueueApi.reducerPath]: atomicQueueApi.reducer,
     [erc20Api.reducerPath]: erc20Api.reducer,
     [transactionReceiptApi.reducerPath]: transactionReceiptApi.reducer,
+    [coinGeckoApi.reducerPath]: coinGeckoApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

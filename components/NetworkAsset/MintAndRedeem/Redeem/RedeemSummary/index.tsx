@@ -15,6 +15,7 @@ import { selectUsdPerEthRate } from '@/store/slices/price/selectors'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
+import { useGetTokenPriceQuery } from '@/store/api/coinGecko'
 
 function RedeemSummary({
   accountantAddress,
@@ -70,11 +71,13 @@ function RedeemSummary({
     'previewFeeError',
     previewFeeError
   )
+  const { data: tokenPrice } = useGetTokenPriceQuery('sei-network')
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: receiveAssetAddress! as Address,
     contractAddress: accountantAddress!,
     chainId: chainId!,
   })
+  console.log('tokenPrice from RedeemSummary', tokenPrice)
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
     ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
@@ -83,11 +86,10 @@ function RedeemSummary({
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
   const formattedPriceFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
 
-  const formattedPreviewFee = previewFee?.fee
-    ? convertToUsd(previewFee?.fee, price, {
-        usdDigits: 2,
-      })
-    : '0'
+  console.log('Preview Fee:', previewFee?.feeAsString, 'Token Price:', tokenPrice?.usd)
+
+  const formattedPreviewFee =
+    previewFee?.feeAsString && tokenPrice?.usd ? Number(previewFee.feeAsString) * Number(tokenPrice.usd) : 0
 
   return (
     <Accordion allowToggle>

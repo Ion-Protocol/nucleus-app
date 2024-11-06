@@ -107,34 +107,21 @@ export const useRedeem = () => {
   const tokenKeys = useSelector(selectReceiveTokens)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
-  if (
-    !networkAssetConfig ||
-    !networkId ||
-    !redemptionSourceChainId ||
-    !destinationChainId ||
-    !redemptionSourceChainKey ||
-    !destinationChainKey ||
-    !accountantAddress ||
-    !tellerContractAddress
-  ) {
-    // TODO: dispatch error modal showing missing value
-    console.table('Missing required values', [
-      userAddress,
-      networkAssetConfig,
-      networkId,
-      redemptionSourceChainId,
-      destinationChainId,
-      redemptionSourceChainKey,
-      destinationChainKey,
-      accountantAddress,
-      tellerContractAddress,
-    ])
-    throw new Error('Missing required values')
-  }
+  const isValid = Boolean(
+    redeemAmount > BigInt(0) &&
+      networkAssetConfig &&
+      networkId &&
+      redemptionSourceChainId &&
+      destinationChainId &&
+      redemptionSourceChainKey &&
+      destinationChainKey &&
+      accountantAddress &&
+      tellerContractAddress
+  )
   // Bridge Data Selector, Only used for redeem with bridge
   const redeemBridgeData = useSelector(selectRedeemBridgeData)
 
-  const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey]
+  const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
   const sharesTokenKey = networkAssetConfig?.token.key
 
   // TODO: We will use these to handle the edge case where a user bridged but didn't redeem
@@ -149,7 +136,7 @@ export const useRedeem = () => {
   const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
 
   const wantTokenAddress = effectiveWantTokenKey
-    ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey]
+    ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey!]
     : null
 
   /*
@@ -163,7 +150,7 @@ export const useRedeem = () => {
       tokenAddress: sharesTokenAddress as `0x${string}`,
       spenderAddress: atomicQueueContractAddress,
       userAddress: userAddress!,
-      chainId: destinationChainId,
+      chainId: destinationChainId!,
     },
     {
       skip: !userAddress || !sharesTokenAddress,
@@ -178,7 +165,7 @@ export const useRedeem = () => {
   } = useGetRateInQuoteSafeQuery(
     {
       quote: wantTokenAddress as Address,
-      contractAddress: accountantAddress,
+      contractAddress: accountantAddress!,
       chainId: destinationChainId!,
     },
     {
@@ -421,23 +408,20 @@ export const useRedeem = () => {
    ******************************************************************************
    */
   const handleRedeem = async () => {
-    if (!redemptionSourceChainId) {
-      // Add other values here to check for errors
-      throw new Error('Missing required values')
-    }
-    //////////////////////////////////////////////////////////////////////////
-    // 1. Switch chains if needed
-    //     If the chain the wallet is connected to does not match the source
-    //     chain that the user selected, switch it to the source chain.
-    //////////////////////////////////////////////////////////////////////////
     console.log('redemptionSourceChainId', redemptionSourceChainId)
     // Check if a bridge is required
     if (redemptionSourceChainKey !== destinationChainKey) {
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
         console.log('Missing redeem bridge data', redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector)
-        throw new Error('Missing redeem bridge data')
+        dispatch(setHeaderContent('Error'))
+        dispatch(setOpen(true))
+        return
       }
-      // Switch to the source chain if needed
+      //////////////////////////////////////////////////////////////////////////
+      // 1. Switch chains to redemption source chain if needed
+      //     If the chain the wallet is connected to does not match the source
+      //     chain that the user selected, switch it to the source chain.
+      //////////////////////////////////////////////////////////////////////////
       if (networkId !== redemptionSourceChainId) {
         await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
       }
@@ -454,7 +438,9 @@ export const useRedeem = () => {
           userAddress,
           previewFeeAsBigInt
         )
-        throw new Error('Missing redeem bridge data')
+        dispatch(setHeaderContent('Error'))
+        dispatch(setOpen(true))
+        return
       }
       console.log('redeemBridgeData', redeemBridgeData)
       if (layerZeroChainSelector !== 0 && redeemBridgeData) {
@@ -543,5 +529,5 @@ export const useRedeem = () => {
     }
   }
 
-  return handleRedeem
+  return { handleRedeem, isValid }
 }
