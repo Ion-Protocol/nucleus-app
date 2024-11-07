@@ -30,7 +30,6 @@ function RedeemSummary({
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
-  const price = useSelector(selectUsdPerEthRate)
 
   const previewFeeBridgeData: BridgeData = {
     chainSelector: layerZeroChainSelector,
@@ -39,15 +38,10 @@ function RedeemSummary({
     messageGas: BigInt(100000),
     data: '0x',
   }
-  console.log('RedeemSummary redeemAmountAsBigInt:', redeemAmountAsBigInt)
-  console.log('RedeemSummary previewFeeBridgeData:', previewFeeBridgeData)
-  console.log('RedeemSummary tellerAddress:', tellerAddress)
-  console.log('RedeemSummary chainId:', chainId)
 
   const {
     data: previewFee,
-    isLoading: isPreviewFeeLoading,
-    isFetching: isPreviewFeeFetching,
+    isSuccess: isPreviewFeeSuccess,
     isError: isPreviewFeeError,
     error: previewFeeError,
   } = useGetPreviewFeeQuery(
@@ -59,25 +53,13 @@ function RedeemSummary({
     },
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
   )
-  console.log(
-    'previewFee from RedeemSummary',
-    previewFee,
-    'isPreviewFeeLoading',
-    isPreviewFeeLoading,
-    'isPreviewFeeFetching',
-    isPreviewFeeFetching,
-    'isPreviewFeeError',
-    isPreviewFeeError,
-    'previewFeeError',
-    previewFeeError
-  )
-  const { data: tokenPrice } = useGetTokenPriceQuery('sei-network')
+
+  const { data: tokenPrice, isSuccess: tokenPriceSuccess } = useGetTokenPriceQuery('sei-network')
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: receiveAssetAddress! as Address,
     contractAddress: accountantAddress!,
     chainId: chainId!,
   })
-  console.log('tokenPrice from RedeemSummary', tokenPrice)
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
     ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
@@ -86,10 +68,13 @@ function RedeemSummary({
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
   const formattedPriceFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
 
-  console.log('Preview Fee:', previewFee?.feeAsString, 'Token Price:', tokenPrice?.usd)
+  console.log('Preview Fee:', previewFee?.feeAsString, 'Token Price:', tokenPrice)
 
   const formattedPreviewFee =
-    previewFee?.feeAsString && tokenPrice?.usd ? Number(previewFee.feeAsString) * Number(tokenPrice.usd) : 0
+    previewFee?.feeAsString && tokenPrice?.['sei-network']?.usd
+      ? Number(previewFee.feeAsString) * tokenPrice['sei-network'].usd
+      : 0
+  console.log('Preview Fee formatted:', formattedPreviewFee)
 
   return (
     <Accordion allowToggle>
@@ -130,7 +115,7 @@ function RedeemSummary({
                     <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                   </IonTooltip>
                 </Flex>
-                <IonSkeleton minW="75px" isLoaded={!isPreviewFeeLoading || !isPreviewFeeFetching}>
+                <IonSkeleton minW="75px" isLoaded={isPreviewFeeSuccess && tokenPriceSuccess}>
                   <Text textAlign="right" variant="paragraph">
                     {formattedPreviewFee ? `${formattedPreviewFee}` : '0'}
                   </Text>
