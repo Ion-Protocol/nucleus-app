@@ -70,10 +70,7 @@ function RedeemSummary({
 
   console.log('Preview Fee:', previewFee?.feeAsString, 'Token Price:', tokenPrice)
 
-  const formattedPreviewFee =
-    previewFee?.feeAsString && tokenPrice?.['sei-network']?.usd
-      ? Number(previewFee.feeAsString) * tokenPrice['sei-network'].usd
-      : 0
+  const formattedPreviewFee = previewFee?.feeAsString && tokenPrice ? Number(previewFee.feeAsString) * tokenPrice : 0
   console.log('Preview Fee formatted:', formattedPreviewFee)
 
   return (
@@ -117,7 +114,7 @@ function RedeemSummary({
                 </Flex>
                 <IonSkeleton minW="75px" isLoaded={isPreviewFeeSuccess && tokenPriceSuccess}>
                   <Text textAlign="right" variant="paragraph">
-                    {formattedPreviewFee ? `${formattedPreviewFee}` : '0'}
+                    {formattedPreviewFee ? `${formattedPreviewFee.toFixed(4)} ${networkAssetName}` : '0'}
                   </Text>
                 </IonSkeleton>
               </Flex>
