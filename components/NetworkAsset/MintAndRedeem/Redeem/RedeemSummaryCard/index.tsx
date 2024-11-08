@@ -86,7 +86,7 @@ const RedeemSummaryCard = () => {
                 <SummaryRow label="Redeem" value={'3.50'} />
                 <SummaryRow label="Receive" value={'4.20'} />
               </Flex>
-              <AccordionIcon color="gray.500" />
+              <AccordionIcon alignSelf={'flex-end'} color="gray.500" />
             </AccordionButton>
             <AccordionPanel paddingX={0}>
               <Flex flexDirection="column" gap={1}>
@@ -98,7 +98,7 @@ const RedeemSummaryCard = () => {
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
-
+        {/* Total has been removed. Keeping it here for now if that is reveresed */}
         {/* {data.total && data.totalUsd && (
           <Box mt={4} bg="purple.50" borderRadius="lg" p={4}>
             <SummaryRow

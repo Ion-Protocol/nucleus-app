@@ -6,12 +6,10 @@ import { Accordion, AccordionItem, Flex, AccordionButton, AccordionIcon, Accordi
 
 import { nativeAddress } from '@/config/constants'
 import { bigIntToNumberAsString } from '@/utils/bigint'
-import { convertToUsd } from '@/utils/currency'
 import { selectAddress } from '@/store/slices/account/'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
 import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
-import { selectUsdPerEthRate } from '@/store/slices/price/selectors'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'

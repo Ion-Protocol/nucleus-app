@@ -35,6 +35,7 @@ export interface NetworkAsset {
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
   showRewardsAndHistory?: boolean
   redeem: {
+    sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
     redemptionSourceChain: ChainKey
     redemptionSourceAsset: TokenKey
     redemptionDestinationChain: ChainKey

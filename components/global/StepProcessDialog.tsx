@@ -20,7 +20,8 @@ import { setOpen } from '@/store/slices/stepDialog/slice'
 import { CheckIcon, InfoOutlineIcon, ChevronUpIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import WalletIcon from '@/components/shared/icons/wallet.svg'
 import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
-import { FullErrorIcon } from '../shared/FullErrorIcon'
+import DialogError from './StepProcessDialog/DialogError'
+import DialogSuccess from './StepProcessDialog/DialogSuccess'
 
 const StepIcons = {
   idle: ChevronUpIcon,
@@ -30,7 +31,7 @@ const StepIcons = {
 }
 
 const StepProcessDialog = () => {
-  const { steps, title, open, headerContent } = useSelector((state: RootState) => state.dialog)
+  const { steps, title, open, headerContent, status } = useSelector((state: RootState) => state.dialog)
   const dispatch = useDispatch()
   const lastStep = steps[steps.length - 1]
   const isLastStepCompleted = lastStep?.state === 'completed'
@@ -43,13 +44,10 @@ const StepProcessDialog = () => {
           {title}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          {headerContent && (
-            <Box paddingBottom={4}>
-              {headerContent === 'redeemSummary' && <RedeemSummaryCard />}
-              {headerContent === 'error' && <FullErrorIcon />}
-            </Box>
-          )}
+        <ModalBody display="flex" flexDirection="column" gap={4}>
+          {status?.type === 'success' && <DialogSuccess />}
+          {status?.type === 'error' && <DialogError />}
+          {headerContent && headerContent === 'redeemSummary' && <RedeemSummaryCard />}
           <Box display="flex" flexDirection="column">
             {steps.map((step) => (
               <Box key={step.id} display="flex" alignItems="center" height={14} gap={4}>
@@ -79,9 +77,11 @@ const StepProcessDialog = () => {
                   <Text fontSize="xl" color={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}>
                     {step.description}
                   </Text>
-                  <Link as="span" fontSize="lg" color="neutral.600">
-                    <ExternalLinkIcon />
-                  </Link>
+                  {step.link && (
+                    <Link href={step.link} as="span" fontSize="lg" color="neutral.600">
+                      <ExternalLinkIcon />
+                    </Link>
+                  )}
                 </Flex>
                 <Box flex={1}>
                   {step.state === 'error' && step.errorMessage && (

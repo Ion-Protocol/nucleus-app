@@ -16,21 +16,20 @@ export type DialogStep = {
   description: string
   state: StepState
   errorMessage?: string
+  link?: string
 }
+
+type DialogStatus =
+  | { type: 'success'; message?: string; fullMessage?: string; link?: string }
+  | { type: 'error'; message?: string; fullMessage?: string; link?: string }
+  | undefined
 
 type DialogState = {
   steps: DialogStep[]
   title: string
   open: boolean
-  headerContent?: 'redeemSummary' | 'redeemSuccess' | 'mintSummary' | 'mintSuccess' | 'Error' | string
-}
-
-type HeaderContent = {
-  redeemSummary: {
-    redeemAmount: string
-    redeemSourceChain: string
-    redeemDestinationChain: string
-  }
+  headerContent?: 'redeemSummary' | 'mintSummary' | string
+  status: DialogStatus
 }
 
 const initialState: DialogState = {
@@ -38,6 +37,7 @@ const initialState: DialogState = {
   title: 'Transaction in progress...',
   open: false,
   headerContent: undefined,
+  status: undefined,
 }
 
 const dialogSlice = createSlice({
@@ -53,6 +53,7 @@ const dialogSlice = createSlice({
         stepId: number
         newState?: StepState
         errorMessage?: string
+        link?: string
       }>
     ) => {
       const { stepId, newState, errorMessage } = action.payload
@@ -76,6 +77,9 @@ const dialogSlice = createSlice({
     },
     setTitle: (state: DialogState, action: PayloadAction<string>) => {
       state.title = action.payload
+    },
+    setStatus: (state: DialogState, action: PayloadAction<DialogStatus>) => {
+      state.status = action.payload
     },
     setHeaderContent: (
       state: DialogState,

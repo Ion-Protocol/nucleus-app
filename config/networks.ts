@@ -110,6 +110,16 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     redeem: {
       redemptionSourceChain: ChainKey.SEI,
+      sourceChains: {
+        [ChainKey.SEI]: {
+          chain: ChainKey.SEI,
+          explorerBaseUrl: seiExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
       redemptionSourceAsset: TokenKey.SSETH,
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {

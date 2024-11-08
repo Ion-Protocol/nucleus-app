@@ -34,7 +34,6 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
 
   // used for useGetRateInQuoteSafeQuery hook
-  const layerZeroChainSelector = selectLayerZeroChainSelector(state)
   const redeemLayerZeroChainSelector = selectRedeemLayerZeroChainSelector(state)
   const accountantAddress = selectContractAddressByName(state, 'accountant')
   const tellerAddress = selectContractAddressByName(state, 'teller')

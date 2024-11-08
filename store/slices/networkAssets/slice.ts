@@ -21,6 +21,9 @@ const networkAssetsSlice = createSlice({
     setSelectedSourceToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
       state.selectedSourceToken = action.payload.tokenKey
     },
+    setSelectedRedeemSourceToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
+      state.selectedRedeemSourceToken = action.payload.tokenKey
+    },
     clearSelectedSourceToken: (state) => {
       state.selectedSourceToken = null
     },
@@ -38,6 +41,9 @@ const networkAssetsSlice = createSlice({
     },
     clearDepositAmount: (state) => {
       state.depositAmount = ''
+    },
+    setRedemptionSourceChainId: (state, action) => {
+      state.redemptionSourceChainId = action.payload
     },
     setRedeemAmount: (state, action) => {
       state.redeemAmount = sanitizeDepositInput(action.payload, state.redeemAmount)
@@ -71,6 +77,7 @@ export const {
   setSelectedReceiveToken,
   setRedeemAmount,
   setRedemptionChain,
+  setSelectedRedeemSourceToken,
   setReceiveAmount,
   setSourceChain,
   setSolanaAddress,

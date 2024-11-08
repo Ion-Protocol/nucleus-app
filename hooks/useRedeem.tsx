@@ -333,13 +333,23 @@ export const useRedeem = () => {
       dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
     }
     if (isApproveErc20Success) {
-      dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
+      dispatch(
+        setDialogStep({ stepId: approveStepId, newState: 'completed', link: approveErc20TxHash.transactionHash })
+      )
     }
     if (isApproveErc20Error) {
       dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
       dispatch(setHeaderContent(`Approval Error: ${approveErc20Error}`))
     }
-  }, [isApproveErc20Loading, isApproveErc20Success, isApproveErc20Error, dispatch, approveErc20Error, getStepId])
+  }, [
+    isApproveErc20Loading,
+    isApproveErc20Success,
+    isApproveErc20Error,
+    dispatch,
+    approveErc20Error,
+    getStepId,
+    approveErc20TxHash,
+  ])
 
   // Separate effect for allowance check
   useEffect(() => {
