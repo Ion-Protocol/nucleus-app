@@ -5,6 +5,8 @@ import { Flex, Input, Text, Button, Divider } from '@chakra-ui/react'
 
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { RedeemTokenInputConnector } from './connector'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store'
 
 function RedeemTokenInput({
   onChange,
@@ -17,6 +19,7 @@ function RedeemTokenInput({
   loadingTokenRate,
 }: RedeemTokenInputConnector.Props) {
   const [isFocused, setIsFocused] = useState(false)
+
   return (
     <IonCard variant="outline" bg="formBackground" border="1px solid" borderColor="borderLight">
       {/* Top Row */}

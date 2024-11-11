@@ -70,12 +70,19 @@ export type NetworkAssetsState = {
   // 2. The value is used in a thunk
   sourceChain: ChainKey
 
-  // The receive destination chain is the chain that the user selects in the drop down menu on the redeem page
+  // The redemption source chain is the chain that the user selects in the drop down menu on the redeem page
   // ---
   // Justification for storing in global state:
   // 1. The value is used in multiple components
   // 2. The value is used in a thunk
-  redemptionChain: ChainKey | null
+  redeemSourceChain: ChainKey | null
+
+  // The redemption destination chain is the chain that the user selects in the drop down menu on the redeem page
+  // ---
+  // Justification for storing in global state:
+  // 1. The value is used in multiple components
+  // 2. The value is used in a thunk
+  redeemDestinationChain: ChainKey | null
 
   // The deposit amount is the number that is input by the user in the input field on the token page
   // ---
@@ -186,8 +193,11 @@ export const initialState: NetworkAssetsState = {
   // Source chain
   sourceChain: ChainKey.ETHEREUM,
 
-  // Redemption chain
-  redemptionChain: ChainKey.ETHEREUM,
+  // Redemption source chain
+  redeemSourceChain: null,
+
+  // Redemption destination chain
+  redeemDestinationChain: ChainKey.ETHEREUM,
 
   // Deposit amount
   depositAmount: '',

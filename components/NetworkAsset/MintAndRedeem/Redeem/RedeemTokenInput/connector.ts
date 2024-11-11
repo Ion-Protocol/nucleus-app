@@ -4,6 +4,8 @@ import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slic
 import {
   selectNetworkAssetConfig,
   selectTokenRateInQuoteLoading,
+  selectRedemptionSourceChainKey,
+  selectRedeemSourceChain,
   selectRedeemAmount,
   setRedeemAmount,
 } from '@/store/slices/networkAssets'
@@ -33,6 +35,10 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps): MapStat
       loadingTokenBalance: false,
     }
   }
+  const redeemSourceChainKey = selectRedeemSourceChain(state)
+  console.log('redeemSourceChainKey', redeemSourceChainKey)
+  const redemptionSourceChainKey = selectRedemptionSourceChainKey(state)
+  console.log('redemptionSourceChainKey', redemptionSourceChainKey)
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
 
@@ -40,7 +46,7 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps): MapStat
 
   const tokenRateInQuoteLoading = selectTokenRateInQuoteLoading(state)
 
-  const tokenBalance = selectFormattedTokenBalance(state, networkAssetConfig?.receiveOn, networkAssetFromRoute)
+  const tokenBalance = selectFormattedTokenBalance(state, redemptionSourceChainKey, networkAssetFromRoute)
 
   return {
     inputValue: redeemAmount,

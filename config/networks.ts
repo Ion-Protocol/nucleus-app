@@ -110,7 +110,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     redeem: {
       redemptionSourceChain: ChainKey.SEI,
-      sourceChains: {
+      redemptionSourceChains: {
         [ChainKey.SEI]: {
           chain: ChainKey.SEI,
           explorerBaseUrl: seiExplorerBaseUrl,
@@ -203,6 +203,12 @@ const mainnetNetworkAssets: NetworkAssets = {
     apys: {},
     redeem: {
       redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
       redemptionSourceAsset: TokenKey.FETH,
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {
@@ -272,6 +278,12 @@ const mainnetNetworkAssets: NetworkAssets = {
     apys: {},
     redeem: {
       redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
       redemptionSourceAsset: TokenKey.EARNETH,
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {
@@ -329,6 +341,12 @@ const mainnetNetworkAssets: NetworkAssets = {
     apys: {},
     redeem: {
       redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
       redemptionSourceAsset: TokenKey.TETH,
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {

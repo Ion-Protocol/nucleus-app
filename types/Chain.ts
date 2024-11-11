@@ -35,14 +35,14 @@ export interface NetworkAsset {
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
   showRewardsAndHistory?: boolean
   redeem: {
-    sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
     redemptionSourceChain: ChainKey
+    redemptionSourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
     redemptionSourceAsset: TokenKey
     redemptionDestinationChain: ChainKey
+    redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
     withdrawalChain: ChainKey
     layerZeroChainSelector: number
     wantTokens: Partial<Record<ChainKey, TokenKey[]>>
-    redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   }
 }
 

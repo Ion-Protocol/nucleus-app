@@ -12,8 +12,17 @@ const networkAssetsSlice = createSlice({
     setSourceChain: (state, action) => {
       state.sourceChain = action.payload
     },
-    setRedemptionChain: (state, action) => {
-      state.redemptionChain = action.payload
+    setRedeemSourceChain: (state, action: PayloadAction<ChainKey>) => {
+      state.redeemSourceChain = action.payload
+    },
+    clearRedeemSourceChain: (state) => {
+      state.redeemSourceChain = null
+    },
+    setRedeemDestinationChain: (state, action: PayloadAction<ChainKey>) => {
+      state.redeemDestinationChain = action.payload
+    },
+    clearRedeemDestinationChain: (state) => {
+      state.redeemDestinationChain = null
     },
     resetSourceChain: (state) => {
       state.sourceChain = ChainKey.ETHEREUM
@@ -41,9 +50,6 @@ const networkAssetsSlice = createSlice({
     },
     clearDepositAmount: (state) => {
       state.depositAmount = ''
-    },
-    setRedemptionSourceChainId: (state, action) => {
-      state.redemptionSourceChainId = action.payload
     },
     setRedeemAmount: (state, action) => {
       state.redeemAmount = sanitizeDepositInput(action.payload, state.redeemAmount)
@@ -76,7 +82,10 @@ export const {
   setSelectedSourceToken,
   setSelectedReceiveToken,
   setRedeemAmount,
-  setRedemptionChain,
+  setRedeemSourceChain,
+  clearRedeemSourceChain,
+  setRedeemDestinationChain,
+  clearRedeemDestinationChain,
   setSelectedRedeemSourceToken,
   setReceiveAmount,
   setSourceChain,
