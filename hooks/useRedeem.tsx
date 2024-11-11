@@ -39,6 +39,7 @@ import { atomicQueueContractAddress } from '@/config/constants'
 import { calculateDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
+import { ChainKey } from '@/types/ChainKey'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
   if (isBridgeRequired) {
@@ -106,6 +107,23 @@ export const useRedeem = () => {
   const tokenKeys = useSelector(selectReceiveTokens)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
+  /**
+   * Selectors for token balance on destination chain (always mainnet) and
+   * the source chain. This is a safety guard to check if user has funds on mainnet
+   * from a previous bridge but failure to redeem.
+   */
+
+  const destinationTokenBalance = useSelector((state: RootState) =>
+    selectTokenBalance(state, destinationChainKey, wantTokenKey)
+  )
+  const sourceTokenBalance = useSelector((state: RootState) =>
+    selectTokenBalance(state, redemptionSourceChainKey, wantTokenKey)
+  )
+
+  //
+  const hasExcessDestinationBalance =
+    destinationTokenBalance && sourceTokenBalance && BigInt(destinationTokenBalance) > redeemAmount
+
   const isValid = Boolean(
     redeemAmount > BigInt(0) &&
       networkAssetConfig &&
@@ -123,15 +141,6 @@ export const useRedeem = () => {
   const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
   const sharesTokenKey = networkAssetConfig?.token.key
 
-  // TODO: We will use these to handle the edge case where a user bridged but didn't redeem
-  // Balance of shares token on the source chain
-  const sourceSharesTokenBalance = useSelector((state: RootState) =>
-    selectTokenBalance(state, redemptionSourceChainKey, sharesTokenKey!)
-  )
-  // Balance of shares token on the destination chain
-  const destinationSharesTokenBalance = useSelector((state: RootState) =>
-    selectTokenBalance(state, destinationChainKey, sharesTokenKey!)
-  )
   const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
 
   const wantTokenAddress = effectiveWantTokenKey
