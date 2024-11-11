@@ -17,13 +17,12 @@ export function MintAndRedeem() {
               Mint
             </Text>
           </Tab>
-          <IonTooltip label="Coming soon < 1 month" aria-label="Redeem tab tooltip">
-            <Tab _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-              <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
-                Redeem
-              </Text>
-            </Tab>
-          </IonTooltip>
+
+          <Tab _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
+            <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+              Redeem
+            </Text>
+          </Tab>
         </TabList>
 
         {/* Tabs Content, Mint and Redeem */}
