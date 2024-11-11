@@ -79,11 +79,13 @@ export const useRedeem = () => {
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
 
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
+  const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  // Explorer Base URLs
   const redemptionSourceExplorerBaseUrl =
     networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey!]?.explorerBaseUrl
-  const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   const redemptionDestinationExplorerBaseUrl =
     networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey!]?.explorerBaseUrl
+
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   const getStepId = useCallback(
@@ -463,9 +465,8 @@ export const useRedeem = () => {
         dispatch(setOpen(true))
         return
       }
-      console.log('redeemBridgeData', redeemBridgeData)
-      if (layerZeroChainSelector !== 0 && redeemBridgeData) {
-        console.log('previewFeeAsBigInt', previewFeeAsBigInt)
+
+      if (layerZeroChainSelector !== 0 && redeemBridgeData && !hasExcessDestinationBalance) {
         // Call Bridge function
         try {
           await bridge({
