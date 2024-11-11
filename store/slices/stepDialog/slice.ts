@@ -56,13 +56,14 @@ const dialogSlice = createSlice({
         link?: string
       }>
     ) => {
-      const { stepId, newState, errorMessage } = action.payload
+      const { stepId, newState, errorMessage, link } = action.payload
       const stepIndex = state.steps.findIndex((step) => step.id === stepId)
       if (stepIndex !== -1) {
         state.steps[stepIndex] = {
           ...state.steps[stepIndex],
           state: newState || (errorMessage ? 'error' : 'active'),
           errorMessage: errorMessage || '',
+          link: link || '',
         }
         for (let i = 0; i < stepIndex; i++) {
           state.steps[i].state = 'completed'

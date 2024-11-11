@@ -73,12 +73,19 @@ const StepProcessDialog = () => {
                     />
                   )}
                 </Box>
-                <Flex gap={2}>
+                <Flex gap={2} alignItems="center">
                   <Text fontSize="xl" color={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}>
                     {step.description}
                   </Text>
                   {step.link && (
-                    <Link href={step.link} as="span" fontSize="lg" color="neutral.600">
+                    <Link
+                      isExternal
+                      href={step.link}
+                      fontSize="lg"
+                      color="neutral.600"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <ExternalLinkIcon />
                     </Link>
                   )}

@@ -39,7 +39,7 @@ import { atomicQueueContractAddress } from '@/config/constants'
 import { calculateDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
-import { ChainKey } from '@/types/ChainKey'
+import { chainsConfig } from '@/config/chains'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
   if (isBridgeRequired) {
@@ -79,7 +79,11 @@ export const useRedeem = () => {
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
 
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
+  const redemptionSourceExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey!]?.explorerBaseUrl
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const redemptionDestinationExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey!]?.explorerBaseUrl
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   const getStepId = useCallback(
@@ -320,35 +324,47 @@ export const useRedeem = () => {
     if (isBridgeLoading) dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
     if (isBridgeError) {
       dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
-      dispatch(setHeaderContent(`Bridge Error: ${bridgeError}`))
+      // dispatch(setHeaderContent(`Bridge Error: ${bridgeError}`))
     }
   }, [isBridgeLoading, isBridgeSuccess, isBridgeError, dispatch, bridgeError, getStepId])
 
   // Watch bridge transaction receipt status
   useEffect(() => {
     const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
-    if (isBridgeTxReceiptSuccess) dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'completed' }))
+    if (isBridgeTxReceiptSuccess)
+      dispatch(
+        setDialogStep({
+          stepId: bridgeStepId,
+          newState: 'completed',
+          link: `${redemptionSourceExplorerBaseUrl}/${bridgeTxHash}`,
+        })
+      )
     if (isBridgeTxReceiptError) {
       dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
-      dispatch(setHeaderContent(`Bridge Transaction Receipt Error: ${bridgeTxReceiptError}`))
+      // dispatch(setHeaderContent(`Bridge Transaction Receipt Error: ${bridgeTxReceiptError}`))
     }
-  }, [isBridgeTxReceiptSuccess, isBridgeTxReceiptError, dispatch, bridgeTxReceiptError, getStepId])
+  }, [
+    isBridgeTxReceiptSuccess,
+    isBridgeTxReceiptError,
+    dispatch,
+    bridgeTxReceiptError,
+    getStepId,
+    redemptionSourceExplorerBaseUrl,
+    bridgeTxHash,
+  ])
 
   // Watch approval status
   useEffect(() => {
     const approveStepId = getStepId(RedeemStepType.APPROVE)
-
     if (isApproveErc20Loading) {
       dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
     }
     if (isApproveErc20Success) {
-      dispatch(
-        setDialogStep({ stepId: approveStepId, newState: 'completed', link: approveErc20TxHash.transactionHash })
-      )
+      dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
     }
     if (isApproveErc20Error) {
       dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
-      dispatch(setHeaderContent(`Approval Error: ${approveErc20Error}`))
+      // dispatch(setHeaderContent(`Approval Error: ${approveErc20Error}`))
     }
   }, [
     isApproveErc20Loading,
@@ -375,11 +391,17 @@ export const useRedeem = () => {
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
     }
     if (isUpdateAtomicRequestSuccess) {
-      dispatch(setDialogStep({ stepId: requestStepId, newState: 'completed' }))
+      dispatch(
+        setDialogStep({
+          stepId: requestStepId,
+          newState: 'completed',
+          link: `${redemptionDestinationExplorerBaseUrl}/${atomicRequestResponse?.response}`,
+        })
+      )
     }
     if (isUpdateAtomicRequestError) {
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'error' }))
-      dispatch(setHeaderContent(`Request Error: ${atomicRequestError}`))
+      // dispatch(setHeaderContent(`Request Error: ${atomicRequestError}`))
     }
   }, [
     isUpdateAtomicRequestLoading,
@@ -388,6 +410,9 @@ export const useRedeem = () => {
     dispatch,
     atomicRequestError,
     getStepId,
+    atomicRequestResponse?.response,
+    redemptionSourceExplorerBaseUrl,
+    redemptionDestinationExplorerBaseUrl,
   ])
 
   // Watch transaction receipt status
