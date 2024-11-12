@@ -9,26 +9,25 @@ import {
   Button,
   Text,
   Box,
-  Icon,
-  Spinner,
   ModalFooter,
   Flex,
   Link,
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
-import { ChevronUp, Check, LoaderCircle, OctagonX, type LucideIcon } from 'lucide-react'
-import { CheckIcon, InfoOutlineIcon, ChevronUpIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import { ChevronUp, Check, OctagonX, ExternalLink } from 'lucide-react'
+import Loader from '@/components/global/Loader'
+import { Icon, IconProps } from '@chakra-ui/react'
 import WalletIcon from '@/components/shared/icons/wallet.svg'
 import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
 import DialogError from './StepProcessDialog/DialogError'
 import DialogSuccess from './StepProcessDialog/DialogSuccess'
 
 const StepIcons = {
-  idle: ChevronUpIcon,
-  active: Spinner,
-  completed: CheckIcon,
-  error: InfoOutlineIcon,
+  idle: (props: IconProps) => <Icon as={ChevronUp} {...props} />,
+  active: Loader,
+  completed: (props: IconProps) => <Icon as={Check} {...props} />,
+  error: (props: IconProps) => <Icon as={OctagonX} {...props} />,
 }
 
 const StepProcessDialog = () => {
@@ -87,7 +86,7 @@ const StepProcessDialog = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <ExternalLinkIcon />
+                      <ExternalLink />
                     </Link>
                   )}
                 </Flex>

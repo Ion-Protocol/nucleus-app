@@ -83,9 +83,7 @@ export const useRedeem = () => {
    */
   const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId) // Id of chain where redemption starts
-  console.log('redemptionSourceChainId', redemptionSourceChainId)
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
-  console.log('destinationChainId', destinationChainId)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   // Explorer Base URLs
