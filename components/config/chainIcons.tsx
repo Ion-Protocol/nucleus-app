@@ -13,7 +13,7 @@ import { FormIcon } from '../shared/icons/Form'
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
   // The SeiIcon is broken and doesn't play with Chakra's Icons
-  [ChainKey.SEI]: (props: IconProps) => <SeiIcon {...(props as any)} />,
+  [ChainKey.SEI]: (props: IconProps) => <SeiIcon />,
   [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
   [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
