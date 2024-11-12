@@ -54,6 +54,9 @@ const networkAssetsSlice = createSlice({
     setRedeemAmount: (state, action) => {
       state.redeemAmount = sanitizeDepositInput(action.payload, state.redeemAmount)
     },
+    clearRedeemAmount: (state) => {
+      state.redeemAmount = ''
+    },
     setReceiveAmount: (state, action) => {
       state.receiveAmount = action.payload
     },
@@ -81,6 +84,7 @@ export const {
   setSelectedSourceToken,
   setSelectedReceiveToken,
   setRedeemAmount,
+  clearRedeemAmount,
   setRedeemSourceChain,
   clearRedeemSourceChain,
   setRedeemDestinationChain,
