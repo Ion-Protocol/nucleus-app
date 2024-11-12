@@ -76,8 +76,9 @@ export const useRedeem = () => {
    */
   const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId) // Id of chain where redemption starts
+  console.log('redemptionSourceChainId', redemptionSourceChainId)
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
-
+  console.log('destinationChainId', destinationChainId)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   // Explorer Base URLs
@@ -186,7 +187,7 @@ export const useRedeem = () => {
       skip: !accountantAddress || !destinationChainId,
     }
   )
-  console.log('tokenRateInQuote', tokenRateInQuote, 'tokenRateInQuoteError', tokenRateInQuoteError)
+  // console.log('tokenRateInQuote', tokenRateInQuote, 'tokenRateInQuoteError', tokenRateInQuoteError)
 
   const {
     data: previewFeeAsBigInt,
@@ -210,18 +211,18 @@ export const useRedeem = () => {
         layerZeroChainSelector === 0,
     }
   )
-  console.log(
-    'Preview Fee results',
-    previewFeeAsBigInt,
-    'isPreviewFeeLoading',
-    isPreviewFeeLoading,
-    'isPreviewFeeFetching',
-    isPreviewFeeFetching,
-    'isPreviewFeeError',
-    isPreviewFeeError,
-    'previewFeeError',
-    previewFeeError
-  )
+  // console.log(
+  //   'Preview Fee results',
+  //   previewFeeAsBigInt,
+  //   'isPreviewFeeLoading',
+  //   isPreviewFeeLoading,
+  //   'isPreviewFeeFetching',
+  //   isPreviewFeeFetching,
+  //   'isPreviewFeeError',
+  //   isPreviewFeeError,
+  //   'previewFeeError',
+  //   previewFeeError
+  // )
 
   /**
    ******************************************************************************
@@ -251,18 +252,18 @@ export const useRedeem = () => {
     },
   ] = useUpdateAtomicRequestMutation()
 
-  console.log(
-    'atomicRequestResponse',
-    atomicRequestResponse,
-    'isUpdateAtomicRequestSuccess',
-    isUpdateAtomicRequestSuccess,
-    'isUpdateAtomicRequestLoading',
-    isUpdateAtomicRequestLoading,
-    'isUpdateAtomicRequestError',
-    isUpdateAtomicRequestError,
-    'atomicRequestError',
-    atomicRequestError
-  )
+  // console.log(
+  //   'atomicRequestResponse',
+  //   atomicRequestResponse,
+  //   'isUpdateAtomicRequestSuccess',
+  //   isUpdateAtomicRequestSuccess,
+  //   'isUpdateAtomicRequestLoading',
+  //   isUpdateAtomicRequestLoading,
+  //   'isUpdateAtomicRequestError',
+  //   isUpdateAtomicRequestError,
+  //   'atomicRequestError',
+  //   atomicRequestError
+  // )
 
   // Wait for Transaction Receipt for Atomic Request
   const {
@@ -303,16 +304,16 @@ export const useRedeem = () => {
     isSuccess: isBridgeTxReceiptSuccess,
     isError: isBridgeTxReceiptError,
   } = useWaitForTransactionReceiptQuery({ hash: bridgeTxHash! }, { skip: !bridgeTxHash })
-  console.log(
-    'bridgeTxReceipt',
-    bridgeTxReceipt,
-    'bridgeTxReceiptLoading',
-    bridgeTxReceiptLoading,
-    'isBridgeTxReceiptSuccess',
-    isBridgeTxReceiptSuccess,
-    'isBridgeTxReceiptError',
-    isBridgeTxReceiptError
-  )
+  // console.log(
+  //   'bridgeTxReceipt',
+  //   bridgeTxReceipt,
+  //   'bridgeTxReceiptLoading',
+  //   bridgeTxReceiptLoading,
+  //   'isBridgeTxReceiptSuccess',
+  //   isBridgeTxReceiptSuccess,
+  //   'isBridgeTxReceiptError',
+  //   isBridgeTxReceiptError
+  // )
 
   /**
    ******************************************************************************
@@ -431,9 +432,9 @@ export const useRedeem = () => {
    ******************************************************************************
    */
   const handleRedeem = async () => {
-    console.log('redemptionSourceChainId', redemptionSourceChainId)
     // Check if a bridge is required
     if (redemptionSourceChainKey !== destinationChainKey) {
+      console.log('Bridge is required Check:', redemptionSourceChainKey, destinationChainKey)
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
         console.log('Missing redeem bridge data', redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector)
         dispatch(setHeaderContent('Error'))
@@ -466,7 +467,14 @@ export const useRedeem = () => {
         return
       }
 
-      if (layerZeroChainSelector !== 0 && redeemBridgeData && !hasExcessDestinationBalance) {
+      console.log(
+        'Check if layerZeroChainSelector is not 0',
+        layerZeroChainSelector,
+        redeemBridgeData,
+        hasExcessDestinationBalance
+      )
+      if (layerZeroChainSelector !== 0 && redeemBridgeData) {
+        console.log('BRIDGE REQUIRED: Calling bridge function')
         // Call Bridge function
         try {
           await bridge({
@@ -475,9 +483,10 @@ export const useRedeem = () => {
             contractAddress: tellerContractAddress,
             chainId: redemptionSourceChainId!,
             fee: previewFeeAsBigInt.fee,
-          })
+          }).unwrap()
         } catch (error) {
           console.error('Error bridging:', error)
+          return
         }
       }
     }
@@ -496,19 +505,19 @@ export const useRedeem = () => {
       offerAmount: redeemAmount,
       inSolve: false,
     }
-    console.log('userRequest', userRequest)
+    // console.log('userRequest', userRequest)
 
     const atomicRequestArgs = {
       offer: sharesTokenAddress! as Address,
       want: wantTokenAddress! as Address,
       userRequest: userRequest,
     }
-    console.log('atomicRequestArgs', atomicRequestArgs)
+    // console.log('atomicRequestArgs', atomicRequestArgs)
     const atomicRequestOptions = {
       atomicQueueContractAddress: atomicQueueContractAddress as Address,
       chainId: destinationChainId!,
     }
-    console.log('atomicRequestOptions', atomicRequestOptions)
+    // console.log('atomicRequestOptions', atomicRequestOptions)
     if (destinationChainKey === redemptionSourceChainKey) {
       // In not bridge is required we still need to dispatch the modal
       dispatch(setTitle('Redeem Status'))
@@ -530,9 +539,10 @@ export const useRedeem = () => {
           spenderAddress: atomicQueueContractAddress,
           amount: redeemAmount,
           chainId: destinationChainId!,
-        })
+        }).unwrap()
       } catch (error) {
         console.error('Error approving ERC20 token:', error)
+        return
       }
     }
 
@@ -544,9 +554,10 @@ export const useRedeem = () => {
         await updateAtomicRequest({
           atomicRequestArg: atomicRequestArgs,
           atomicRequestOptions: atomicRequestOptions,
-        })
+        }).unwrap()
       } catch (error) {
         console.error('Error updating atomic request:', error)
+        return
       }
     }
   }

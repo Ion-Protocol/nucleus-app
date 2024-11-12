@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
 import { setOpen } from '@/store/slices/stepDialog/slice'
+import { ChevronUp, Check, LoaderCircle, OctagonX, type LucideIcon } from 'lucide-react'
 import { CheckIcon, InfoOutlineIcon, ChevronUpIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import WalletIcon from '@/components/shared/icons/wallet.svg'
 import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'

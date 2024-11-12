@@ -97,7 +97,6 @@ export const fetchAllTokenBalances = createAsyncThunk<
       })
 
       const results = await Promise.all(balancePromises)
-      console.log('results', results)
 
       for (const result of results) {
         if (result && result.tokenKey && result.chainKey) {

@@ -628,7 +628,6 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
             { shareAmount, bridgeData: previewFeeBridgeData },
             { contractAddress: tellerContractAddress }
           )
-          console.log('fee Thunk', fee)
         }
 
         return { fee: fee.toString() }

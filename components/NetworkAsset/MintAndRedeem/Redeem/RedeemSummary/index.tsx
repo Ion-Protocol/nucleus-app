@@ -66,10 +66,7 @@ function RedeemSummary({
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
   const formattedPriceFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
 
-  console.log('Preview Fee:', previewFee?.feeAsString, 'Token Price:', tokenPrice)
-
   const formattedPreviewFee = previewFee?.feeAsString && tokenPrice ? Number(previewFee.feeAsString) * tokenPrice : 0
-  console.log('Preview Fee formatted:', formattedPreviewFee)
 
   return (
     <Accordion allowToggle>

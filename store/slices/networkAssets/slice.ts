@@ -55,7 +55,6 @@ const networkAssetsSlice = createSlice({
       state.redeemAmount = sanitizeDepositInput(action.payload, state.redeemAmount)
     },
     setReceiveAmount: (state, action) => {
-      console.log('setReceiveAmount', action.payload)
       state.receiveAmount = action.payload
     },
     setSelectedReceiveToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
