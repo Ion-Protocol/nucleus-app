@@ -30,6 +30,7 @@ type DialogState = {
   open: boolean
   headerContent?: 'redeemSummary' | 'mintSummary' | string
   status: DialogStatus
+  completedSteps: number[]
 }
 
 const initialState: DialogState = {
@@ -38,6 +39,7 @@ const initialState: DialogState = {
   open: false,
   headerContent: undefined,
   status: undefined,
+  completedSteps: [],
 }
 
 const dialogSlice = createSlice({
@@ -65,6 +67,9 @@ const dialogSlice = createSlice({
           errorMessage: errorMessage || '',
           link: link || '',
         }
+        if (newState === 'completed' && !state.completedSteps.includes(stepId)) {
+          state.completedSteps.push(stepId)
+        }
         for (let i = 0; i < stepIndex; i++) {
           state.steps[i].state = 'completed'
         }
@@ -88,9 +93,28 @@ const dialogSlice = createSlice({
     ) => {
       state.headerContent = action.payload
     },
+    clearCompletedSteps: (state: DialogState) => {
+      state.completedSteps = []
+    },
+    restoreCompletedSteps: (state: DialogState) => {
+      state.completedSteps.forEach((stepId) => {
+        const stepIndex = state.steps.findIndex((step) => step.id === stepId)
+        if (stepIndex !== -1) {
+          state.steps[stepIndex].state = 'completed'
+        }
+      })
+    },
   },
 })
 
-export const { setSteps, setDialogStep, setOpen, setTitle, setHeaderContent } = dialogSlice.actions
+export const {
+  setSteps,
+  setDialogStep,
+  setOpen,
+  setTitle,
+  setHeaderContent,
+  clearCompletedSteps,
+  restoreCompletedSteps,
+} = dialogSlice.actions
 
 export const dialogReducer = dialogSlice.reducer

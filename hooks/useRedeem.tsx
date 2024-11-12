@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 
@@ -12,6 +12,7 @@ import {
   setHeaderContent,
   DialogStep,
   RedeemStepType,
+  restoreCompletedSteps,
 } from '@/store/slices/stepDialog/slice'
 import {
   selectNetworkAssetConfig,
@@ -54,6 +55,12 @@ const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
     { id: 1, type: RedeemStepType.APPROVE, description: 'Approve', state: 'idle' },
     { id: 2, type: RedeemStepType.REQUEST, description: 'Request Withdraw', state: 'idle' },
   ]
+}
+
+// Add new state type
+type RedeemStatus = {
+  currentStep: RedeemStepType | null
+  isLoading: boolean
 }
 
 export const useRedeem = () => {
@@ -268,13 +275,24 @@ export const useRedeem = () => {
    ******************************************************************************
    */
 
-  // Separate effect for allowance check
+  // Add local state to track the current step and loading state
+  const [redeemStatus, setRedeemStatus] = useState<RedeemStatus>({
+    currentStep: null,
+    isLoading: false,
+  })
+
+  // Effect to update dialog when status changes
   useEffect(() => {
-    if (allowance && allowance >= redeemAmount) {
-      const approveStepId = getStepId(RedeemStepType.APPROVE)
-      dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
+    if (redeemStatus.currentStep) {
+      const stepId = getStepId(redeemStatus.currentStep)
+      dispatch(
+        setDialogStep({
+          stepId,
+          newState: redeemStatus.isLoading ? 'active' : 'completed',
+        })
+      )
     }
-  }, [allowance, redeemAmount, dispatch, getStepId])
+  }, [redeemStatus, getStepId, dispatch])
 
   /**
    ******************************************************************************
@@ -286,8 +304,13 @@ export const useRedeem = () => {
     dispatch(setSteps(createSteps(isBridgeRequired)))
     dispatch(setHeaderContent('redeemSummary'))
     dispatch(setOpen(true))
+
+    // Before starting a new step, restore completed steps
+    dispatch(restoreCompletedSteps())
+
     // Check if a bridge is required
     if (redemptionSourceChainKey !== destinationChainKey) {
+      dispatch(restoreCompletedSteps())
       const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
       console.log('Bridge is required Check:', redemptionSourceChainKey, destinationChainKey)
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
@@ -325,6 +348,9 @@ export const useRedeem = () => {
         hasExcessDestinationBalance
       )
       if (layerZeroChainSelector !== 0 && redeemBridgeData) {
+        if (networkId !== destinationChainId) {
+          await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
+        }
         console.log('BRIDGE REQUIRED: Calling bridge function')
         // Call Bridge function
         try {
@@ -379,6 +405,7 @@ export const useRedeem = () => {
     //////////////////////////////////////////////////////////////////////////
     // 3. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
+    dispatch(restoreCompletedSteps())
     if (!allowance || allowance < redeemAmount) {
       const approveStepId = getStepId(RedeemStepType.APPROVE)
       try {
@@ -410,6 +437,7 @@ export const useRedeem = () => {
     //////////////////////////////////////////////////////////////////////////
     // 4. Update atomic request
     //////////////////////////////////////////////////////////////////////////
+    dispatch(restoreCompletedSteps())
     if ((!allowance || allowance < redeemAmount) && !approveTokenTxHash) {
       console.log('Insufficient allowance and no approval transaction:', {
         allowance,
@@ -421,11 +449,20 @@ export const useRedeem = () => {
     }
     const requestStepId = getStepId(RedeemStepType.REQUEST)
     try {
+      if (networkId !== destinationChainId) {
+        await switchChain(wagmiConfig, { chainId: destinationChainId! })
+      }
+      dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
+
+      // Add a small delay to ensure the UI updates
+      // await new Promise((resolve) => setTimeout(resolve, 100))
+
       const updateAtomicRequestTxHash = await updateAtomicRequest({
         atomicRequestArg: atomicRequestArgs,
         atomicRequestOptions: atomicRequestOptions,
       }).unwrap()
+
       if (updateAtomicRequestTxHash) {
         dispatch(setDialogStep({ stepId: requestStepId, newState: 'completed' }))
         return updateAtomicRequestTxHash
@@ -439,6 +476,6 @@ export const useRedeem = () => {
   return {
     handleRedeem,
     isValid,
-    isLoading: isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
+    isLoading: redeemStatus.isLoading || isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
   }
 }
