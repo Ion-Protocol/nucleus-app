@@ -64,13 +64,13 @@ const RedeemSummaryCard = () => {
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
 
   return (
-    <Box p={6} bg="white" borderRadius="lg" boxShadow="sm">
+    <Box p={6} bg="white" borderRadius="lg" boxShadow="sm" paddingBottom={2}>
       <Heading
         as="h2"
         color="gray.700"
         fontSize="xl"
         fontWeight={500}
-        mb={4}
+        mb={2}
         pb={2}
         borderBottom="1px"
         borderColor="gray.200"
@@ -80,15 +80,17 @@ const RedeemSummaryCard = () => {
 
       <VStack spacing={3} align="stretch">
         <Accordion allowToggle>
-          <AccordionItem>
-            <AccordionButton display={'flex'} flex={1} paddingX={0} width="100%">
+          <AccordionItem borderBottom={'none'} borderTop={'none'}>
+            <AccordionButton display={'flex'} flex={1} paddingX={0} width="100%" _hover={'none'}>
               <Flex flexDirection="column" gap={1} width="100%">
                 <SummaryRow label="Redeem" value={'3.50'} />
                 <SummaryRow label="Receive" value={'4.20'} />
+                <Flex justifyContent={'center'}>
+                  <AccordionIcon alignSelf={'flex-end'} color="gray.500" />
+                </Flex>
               </Flex>
-              <AccordionIcon alignSelf={'flex-end'} color="gray.500" />
             </AccordionButton>
-            <AccordionPanel paddingX={0}>
+            <AccordionPanel paddingX={0} paddingTop={1}>
               <Flex flexDirection="column" gap={1}>
                 <SummaryRow label="Price" value={`${formattedPrice} ${receiveToken?.name} / ${sharesTokenKey}`} />
                 {isBridgeRequired && <SummaryRow label="Bridge Fee" value={'0.00'} />}
