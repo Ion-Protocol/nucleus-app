@@ -80,6 +80,11 @@ const dialogSlice = createSlice({
     },
     setOpen: (state: DialogState, action: PayloadAction<boolean>) => {
       state.open = action.payload
+      if (!action.payload) {
+        state.status = undefined
+        state.completedSteps = []
+        state.headerContent = undefined
+      }
     },
     setTitle: (state: DialogState, action: PayloadAction<string>) => {
       state.title = action.payload
@@ -112,6 +117,7 @@ export const {
   setDialogStep,
   setOpen,
   setTitle,
+  setStatus,
   setHeaderContent,
   clearCompletedSteps,
   restoreCompletedSteps,

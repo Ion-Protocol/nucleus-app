@@ -13,6 +13,7 @@ import {
   DialogStep,
   RedeemStepType,
   restoreCompletedSteps,
+  setStatus,
 } from '@/store/slices/stepDialog/slice'
 import {
   selectNetworkAssetConfig,
@@ -256,18 +257,6 @@ export const useRedeem = () => {
       isError: isBridgeError,
     },
   ] = useBridgeMutation()
-  // console.log(
-  //   'bridgeTxHash',
-  //   bridgeTxHash,
-  //   'bridgeError',
-  //   bridgeError,
-  //   'isBridgeSuccess',
-  //   isBridgeSuccess,
-  //   'isBridgeLoading',
-  //   isBridgeLoading,
-  //   'isBridgeError',
-  //   isBridgeError
-  // )
 
   /**
    ******************************************************************************
@@ -316,6 +305,12 @@ export const useRedeem = () => {
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
         console.log('Missing redeem bridge data', redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector)
         dispatch(setHeaderContent('Error'))
+        dispatch(
+          setStatus({
+            type: 'error',
+            message: 'Missing bridge data',
+          })
+        )
         dispatch(setOpen(true))
         return
       }
@@ -337,6 +332,12 @@ export const useRedeem = () => {
           previewFeeAsBigInt
         )
         dispatch(setHeaderContent('Error'))
+        dispatch(
+          setStatus({
+            type: 'error',
+            message: 'Missing bridge data',
+          })
+        )
         dispatch(setOpen(true))
         return
       }
@@ -362,12 +363,24 @@ export const useRedeem = () => {
             chainId: redemptionSourceChainId!,
             fee: previewFeeAsBigInt.fee,
           }).unwrap()
+          // Mock bridge response with delay
+          // const bridgeResponse = await new Promise<string>((resolve) => {
+          //   setTimeout(() => {
+          //     resolve('0x123...')
+          //   }, 2000) // 2 second delay
+          // })
           if (bridgeResponse) {
             dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'completed' }))
           }
-          return bridgeResponse
         } catch (error) {
           dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
+          dispatch(
+            setStatus({
+              type: 'error',
+              message: 'Bridge transaction failed',
+              fullMessage: error instanceof Error ? error.message : 'Unknown error occurred',
+            })
+          )
           return
         }
       }
@@ -427,6 +440,13 @@ export const useRedeem = () => {
         }
       } catch (error) {
         dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
+        dispatch(
+          setStatus({
+            type: 'error',
+            message: 'Approval failed',
+            fullMessage: error instanceof Error ? error.message : 'Unknown error occurred',
+          })
+        )
         return
       }
     } else {
@@ -445,6 +465,12 @@ export const useRedeem = () => {
         approveTokenTxHash,
       })
       dispatch(setHeaderContent('Error'))
+      dispatch(
+        setStatus({
+          type: 'error',
+          message: 'Insufficient allowance',
+        })
+      )
       return
     }
     const requestStepId = getStepId(RedeemStepType.REQUEST)
@@ -455,20 +481,35 @@ export const useRedeem = () => {
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
 
-      // Add a small delay to ensure the UI updates
-      // await new Promise((resolve) => setTimeout(resolve, 100))
-
       const updateAtomicRequestTxHash = await updateAtomicRequest({
         atomicRequestArg: atomicRequestArgs,
         atomicRequestOptions: atomicRequestOptions,
       }).unwrap()
+      // Mock updateAtomicRequest with delay
+      // const updateAtomicRequestTxHash = await new Promise<string>((resolve) => {
+      //   setTimeout(() => {
+      //     resolve('0x123...')
+      //   }, 2000) // 2 second delay
+      // })
 
       if (updateAtomicRequestTxHash) {
         dispatch(setDialogStep({ stepId: requestStepId, newState: 'completed' }))
-        return updateAtomicRequestTxHash
+        dispatch(
+          setStatus({
+            type: 'success',
+          })
+        )
+        dispatch(setHeaderContent('redeemSummary'))
       }
     } catch (error) {
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'error' }))
+      dispatch(
+        setStatus({
+          type: 'error',
+          message: 'Request failed',
+          fullMessage: error instanceof Error ? error.message : 'Unknown error occurred',
+        })
+      )
       return
     }
   }
