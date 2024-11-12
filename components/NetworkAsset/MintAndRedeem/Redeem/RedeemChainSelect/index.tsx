@@ -11,6 +11,7 @@ import {
 } from '@/store/slices/networkAssets'
 import { RootState } from '@/store'
 import { useEffect } from 'react'
+import { SeiIcon } from '@/components/shared/icons/Sei'
 
 interface RedeemChainSelectProps {
   role: 'source' | 'destination'
