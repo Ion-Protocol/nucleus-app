@@ -36,6 +36,10 @@ export const semanticTokens = {
       default: 'neutral.500',
       _dark: 'darkMode.300',
     },
+    successDialogSummary: {
+      default: 'neutral.50',
+      _dark: 'darkMode.300',
+    },
     iconBackground: {
       default: 'neutral.200',
       _dark: 'darkMode.300',

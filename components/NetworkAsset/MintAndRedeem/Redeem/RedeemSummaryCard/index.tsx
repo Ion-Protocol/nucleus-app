@@ -64,10 +64,10 @@ const RedeemSummaryCard = () => {
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
 
   return (
-    <Box p={6} bg="white" borderRadius="lg" boxShadow="sm" paddingBottom={2}>
+    <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm" paddingBottom={2}>
       <Heading
         as="h2"
-        color="gray.700"
+        color="text"
         fontSize="xl"
         fontWeight={500}
         mb={2}
@@ -129,11 +129,11 @@ const SummaryRow = ({
   dotted?: boolean
 }) => (
   <Flex align="center" justifyContent={'space-between'}>
-    <Text color="gray.700" fontSize="lg">
+    <Text color="tooltipLabel" fontSize="lg">
       {label}
     </Text>
-    {dotted && <Box flex="1" mx={2} borderBottom="1px" borderStyle="dotted" borderColor="gray.300" />}
-    <Text color="gray.700" fontSize="lg" fontWeight="medium">
+    {dotted && <Box flex="1" mx={2} borderBottom="1px" borderStyle="dotted" borderColor="tooltipLabel" />}
+    <Text color="tooltipLabel" fontSize="lg" fontWeight="medium">
       {value}
     </Text>
   </Flex>

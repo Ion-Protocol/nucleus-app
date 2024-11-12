@@ -18,6 +18,9 @@ import {
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectAddress } from '@/store/slices/account'
 import { selectNetworkId } from '@/store/slices/chain'
+import { Address } from 'viem'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
+import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 
 export const useRedeemSelectors = () => {
   const userAddress = useSelector(selectAddress)
@@ -81,6 +84,45 @@ export const useRedeemSelectors = () => {
       destinationChainKey &&
       accountantAddress &&
       tellerContractAddress
+  )
+
+  const {
+    data: tokenRateInQuote,
+    isLoading: isTokenRateInQuoteLoading,
+    isError: isTokenRateInQuoteError,
+    error: tokenRateInQuoteError,
+  } = useGetRateInQuoteSafeQuery(
+    {
+      quote: wantTokenAddress as Address,
+      contractAddress: accountantAddress!,
+      chainId: destinationChainId!,
+    },
+    {
+      skip: !accountantAddress || !destinationChainId,
+    }
+  )
+
+  const {
+    data: previewFee,
+    isLoading: isPreviewFeeLoading,
+    isFetching: isPreviewFeeFetching,
+    isError: isPreviewFeeError,
+    error: previewFeeError,
+  } = useGetPreviewFeeQuery(
+    {
+      shareAmount: redeemAmount,
+      bridgeData: redeemBridgeData!,
+      contractAddress: tellerContractAddress!,
+      chainId: redemptionSourceChainId!,
+    },
+    {
+      skip:
+        !redeemBridgeData ||
+        !tellerContractAddress ||
+        !redemptionSourceChainId ||
+        !redeemAmount ||
+        layerZeroChainSelector === 0,
+    }
   )
 
   return {
