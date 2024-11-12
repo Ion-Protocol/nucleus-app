@@ -5,6 +5,7 @@ import {
   type ReadContractReturnType,
   type ReadContractErrorType,
   type ReadContractParameters,
+  waitForTransactionReceipt,
 } from 'wagmi/actions'
 import { Address } from 'viem'
 import { AtomicQueueAbi } from '@/contracts/AtomicQueueAbi'
@@ -36,23 +37,24 @@ export const atomicQueueApi = createApi({
   tagTypes: ['atomicRequest'],
   endpoints: (builder) => ({
     updateAtomicRequest: builder.mutation<
-      { response: `0x${string}` },
+      `0x${string}`,
       { atomicRequestArg: UpdateAtomicRequestArgs; atomicRequestOptions: UpdateAtomicRequestOptions }
     >({
-      queryFn: async ({ atomicRequestArg, atomicRequestOptions }) => {
+      queryFn: async ({ atomicRequestArg, atomicRequestOptions }, api, extraOptions, baseQuery) => {
         const { offer, want, userRequest } = atomicRequestArg
         const { atomicQueueContractAddress, chainId } = atomicRequestOptions
         try {
-          const response = await writeContract(wagmiConfig, {
+          const hash = await writeContract(wagmiConfig, {
             abi: AtomicQueueAbi,
             address: atomicQueueContractAddress,
             functionName: 'updateAtomicRequest',
             args: [offer, want, userRequest as never],
             chainId,
           })
-          return {
-            data: { response },
-          }
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: hash,
+          })
+          return { data: txReceipt.transactionHash }
         } catch (error) {
           return { error: serialize(error) }
         }

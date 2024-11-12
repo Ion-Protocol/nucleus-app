@@ -30,7 +30,7 @@ import {
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectAddress } from '@/store/slices/account'
 import { selectNetworkId } from '@/store/slices/chain'
-import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
+import { erc20Api, useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
 import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
 import { useWaitForTransactionReceiptQuery } from '@/store/api/transactionReceiptApt'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
@@ -40,6 +40,7 @@ import { calculateDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
 import { chainsConfig } from '@/config/chains'
+import { ApiError } from 'next/dist/server/api-utils'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
   if (isBridgeRequired) {
@@ -47,13 +48,11 @@ const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
       { id: 1, type: RedeemStepType.BRIDGE, description: 'Request Bridge', state: 'idle' },
       { id: 2, type: RedeemStepType.APPROVE, description: 'Approve', state: 'idle' },
       { id: 3, type: RedeemStepType.REQUEST, description: 'Request Withdraw', state: 'idle' },
-      { id: 4, type: RedeemStepType.CONFIRM, description: 'Confirming Transaction', state: 'idle' },
     ]
   }
   return [
     { id: 1, type: RedeemStepType.APPROVE, description: 'Approve', state: 'idle' },
     { id: 2, type: RedeemStepType.REQUEST, description: 'Request Withdraw', state: 'idle' },
-    { id: 3, type: RedeemStepType.CONFIRM, description: 'Confirming Transaction', state: 'idle' },
   ]
 }
 
@@ -211,18 +210,6 @@ export const useRedeem = () => {
         layerZeroChainSelector === 0,
     }
   )
-  // console.log(
-  //   'Preview Fee results',
-  //   previewFeeAsBigInt,
-  //   'isPreviewFeeLoading',
-  //   isPreviewFeeLoading,
-  //   'isPreviewFeeFetching',
-  //   isPreviewFeeFetching,
-  //   'isPreviewFeeError',
-  //   isPreviewFeeError,
-  //   'previewFeeError',
-  //   previewFeeError
-  // )
 
   /**
    ******************************************************************************
@@ -252,27 +239,6 @@ export const useRedeem = () => {
     },
   ] = useUpdateAtomicRequestMutation()
 
-  // console.log(
-  //   'atomicRequestResponse',
-  //   atomicRequestResponse,
-  //   'isUpdateAtomicRequestSuccess',
-  //   isUpdateAtomicRequestSuccess,
-  //   'isUpdateAtomicRequestLoading',
-  //   isUpdateAtomicRequestLoading,
-  //   'isUpdateAtomicRequestError',
-  //   isUpdateAtomicRequestError,
-  //   'atomicRequestError',
-  //   atomicRequestError
-  // )
-
-  // Wait for Transaction Receipt for Atomic Request
-  const {
-    data: txReceipt,
-    isLoading: txReceiptLoading,
-    isSuccess: isTxReceiptSuccess,
-    isError: isTxReceiptError,
-  } = useWaitForTransactionReceiptQuery({ hash: atomicRequestResponse?.response! }, { skip: !atomicRequestResponse })
-
   const [
     bridge,
     {
@@ -296,88 +262,11 @@ export const useRedeem = () => {
   //   isBridgeError
   // )
 
-  // Wait for Transaction Receipt for Bridge
-  const {
-    data: bridgeTxReceipt,
-    error: bridgeTxReceiptError,
-    isLoading: bridgeTxReceiptLoading,
-    isSuccess: isBridgeTxReceiptSuccess,
-    isError: isBridgeTxReceiptError,
-  } = useWaitForTransactionReceiptQuery({ hash: bridgeTxHash! }, { skip: !bridgeTxHash })
-  // console.log(
-  //   'bridgeTxReceipt',
-  //   bridgeTxReceipt,
-  //   'bridgeTxReceiptLoading',
-  //   bridgeTxReceiptLoading,
-  //   'isBridgeTxReceiptSuccess',
-  //   isBridgeTxReceiptSuccess,
-  //   'isBridgeTxReceiptError',
-  //   isBridgeTxReceiptError
-  // )
-
   /**
    ******************************************************************************
    * Watch effects
    ******************************************************************************
    */
-
-  // Watch bridge status
-  useEffect(() => {
-    const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
-    if (isBridgeLoading) dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
-    if (isBridgeError) {
-      dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
-      // dispatch(setHeaderContent(`Bridge Error: ${bridgeError}`))
-    }
-  }, [isBridgeLoading, isBridgeSuccess, isBridgeError, dispatch, bridgeError, getStepId])
-
-  // Watch bridge transaction receipt status
-  useEffect(() => {
-    const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
-    if (isBridgeTxReceiptSuccess)
-      dispatch(
-        setDialogStep({
-          stepId: bridgeStepId,
-          newState: 'completed',
-          link: `${redemptionSourceExplorerBaseUrl}/${bridgeTxHash}`,
-        })
-      )
-    if (isBridgeTxReceiptError) {
-      dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
-      // dispatch(setHeaderContent(`Bridge Transaction Receipt Error: ${bridgeTxReceiptError}`))
-    }
-  }, [
-    isBridgeTxReceiptSuccess,
-    isBridgeTxReceiptError,
-    dispatch,
-    bridgeTxReceiptError,
-    getStepId,
-    redemptionSourceExplorerBaseUrl,
-    bridgeTxHash,
-  ])
-
-  // Watch approval status
-  useEffect(() => {
-    const approveStepId = getStepId(RedeemStepType.APPROVE)
-    if (isApproveErc20Loading) {
-      dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
-    }
-    if (isApproveErc20Success) {
-      dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
-    }
-    if (isApproveErc20Error) {
-      dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
-      // dispatch(setHeaderContent(`Approval Error: ${approveErc20Error}`))
-    }
-  }, [
-    isApproveErc20Loading,
-    isApproveErc20Success,
-    isApproveErc20Error,
-    dispatch,
-    approveErc20Error,
-    getStepId,
-    approveErc20TxHash,
-  ])
 
   // Separate effect for allowance check
   useEffect(() => {
@@ -387,53 +276,19 @@ export const useRedeem = () => {
     }
   }, [allowance, redeemAmount, dispatch, getStepId])
 
-  // Watch atomic request status
-  useEffect(() => {
-    const requestStepId = getStepId(RedeemStepType.REQUEST)
-    if (isUpdateAtomicRequestLoading) {
-      dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
-    }
-    if (isUpdateAtomicRequestSuccess) {
-      dispatch(
-        setDialogStep({
-          stepId: requestStepId,
-          newState: 'completed',
-          link: `${redemptionDestinationExplorerBaseUrl}/${atomicRequestResponse?.response}`,
-        })
-      )
-    }
-    if (isUpdateAtomicRequestError) {
-      dispatch(setDialogStep({ stepId: requestStepId, newState: 'error' }))
-      // dispatch(setHeaderContent(`Request Error: ${atomicRequestError}`))
-    }
-  }, [
-    isUpdateAtomicRequestLoading,
-    isUpdateAtomicRequestSuccess,
-    isUpdateAtomicRequestError,
-    dispatch,
-    atomicRequestError,
-    getStepId,
-    atomicRequestResponse?.response,
-    redemptionSourceExplorerBaseUrl,
-    redemptionDestinationExplorerBaseUrl,
-  ])
-
-  // Watch transaction receipt status
-  useEffect(() => {
-    const requestStepId = getStepId(RedeemStepType.REQUEST)
-    if (txReceiptLoading) dispatch(setDialogStep({ stepId: 3, newState: 'active' }))
-    if (isUpdateAtomicRequestSuccess) dispatch(setDialogStep({ stepId: requestStepId, newState: 'completed' }))
-    if (isTxReceiptError) dispatch(setDialogStep({ stepId: 3, newState: 'error' }))
-  }, [txReceiptLoading, isTxReceiptSuccess, isTxReceiptError, dispatch, getStepId, isUpdateAtomicRequestSuccess])
-
   /**
    ******************************************************************************
    * Handle redeem
    ******************************************************************************
    */
   const handleRedeem = async () => {
+    dispatch(setTitle('Redeem Status'))
+    dispatch(setSteps(createSteps(isBridgeRequired)))
+    dispatch(setHeaderContent('redeemSummary'))
+    dispatch(setOpen(true))
     // Check if a bridge is required
     if (redemptionSourceChainKey !== destinationChainKey) {
+      const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
       console.log('Bridge is required Check:', redemptionSourceChainKey, destinationChainKey)
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
         console.log('Missing redeem bridge data', redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector)
@@ -446,13 +301,9 @@ export const useRedeem = () => {
       //     If the chain the wallet is connected to does not match the source
       //     chain that the user selected, switch it to the source chain.
       //////////////////////////////////////////////////////////////////////////
-      if (networkId !== redemptionSourceChainId) {
+      if (isBridgeRequired) {
         await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
       }
-      dispatch(setTitle('Redeem Status'))
-      dispatch(setSteps(createSteps(isBridgeRequired)))
-      dispatch(setHeaderContent('redeemSummary'))
-      dispatch(setOpen(true))
 
       if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
         console.log(
@@ -477,15 +328,20 @@ export const useRedeem = () => {
         console.log('BRIDGE REQUIRED: Calling bridge function')
         // Call Bridge function
         try {
-          await bridge({
+          dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
+          const bridgeResponse = await bridge({
             shareAmount: redeemAmount,
             bridgeData: redeemBridgeData,
             contractAddress: tellerContractAddress,
             chainId: redemptionSourceChainId!,
             fee: previewFeeAsBigInt.fee,
           }).unwrap()
+          if (bridgeResponse) {
+            dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'completed' }))
+          }
+          return bridgeResponse
         } catch (error) {
-          console.error('Error bridging:', error)
+          dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
           return
         }
       }
@@ -517,54 +373,72 @@ export const useRedeem = () => {
       atomicQueueContractAddress: atomicQueueContractAddress as Address,
       chainId: destinationChainId!,
     }
-    // console.log('atomicRequestOptions', atomicRequestOptions)
-    if (destinationChainKey === redemptionSourceChainKey) {
-      // In not bridge is required we still need to dispatch the modal
-      dispatch(setTitle('Redeem Status'))
-      dispatch(setSteps(createSteps(isBridgeRequired)))
-      dispatch(setHeaderContent('redeemSummary'))
-      dispatch(setOpen(true))
-    }
+
+    let approveTokenTxHash: `0x${string}` | undefined
 
     //////////////////////////////////////////////////////////////////////////
-    // 3. Approve shares token for withdrawal
+    // 3. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
-    if (!allowance || allowance < redeemAmount || bridgeTxReceipt) {
-      if (networkId !== destinationChainId) {
-        await switchChain(wagmiConfig, { chainId: destinationChainId! })
-      }
+    if (!allowance || allowance < redeemAmount) {
+      const approveStepId = getStepId(RedeemStepType.APPROVE)
       try {
-        await approveErc20({
+        // Switch chain if needed
+        if (networkId !== destinationChainId) {
+          await switchChain(wagmiConfig, { chainId: destinationChainId! })
+        }
+
+        // Handle approval
+        dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
+        approveTokenTxHash = await approveErc20({
           tokenAddress: sharesTokenAddress as `0x${string}`,
           spenderAddress: atomicQueueContractAddress,
           amount: redeemAmount,
           chainId: destinationChainId!,
         }).unwrap()
+        if (approveTokenTxHash) {
+          dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
+        }
       } catch (error) {
-        console.error('Error approving ERC20 token:', error)
+        dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
         return
       }
+    } else {
+      const approveStepId = getStepId(RedeemStepType.APPROVE)
+      dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
     }
 
     //////////////////////////////////////////////////////////////////////////
     // 4. Update atomic request
     //////////////////////////////////////////////////////////////////////////
-    if (approveErc20TxHash || (allowance && allowance >= redeemAmount)) {
-      try {
-        await updateAtomicRequest({
-          atomicRequestArg: atomicRequestArgs,
-          atomicRequestOptions: atomicRequestOptions,
-        }).unwrap()
-      } catch (error) {
-        console.error('Error updating atomic request:', error)
-        return
+    if ((!allowance || allowance < redeemAmount) && !approveTokenTxHash) {
+      console.log('Insufficient allowance and no approval transaction:', {
+        allowance,
+        redeemAmount,
+        approveTokenTxHash,
+      })
+      dispatch(setHeaderContent('Error'))
+      return
+    }
+    const requestStepId = getStepId(RedeemStepType.REQUEST)
+    try {
+      dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
+      const updateAtomicRequestTxHash = await updateAtomicRequest({
+        atomicRequestArg: atomicRequestArgs,
+        atomicRequestOptions: atomicRequestOptions,
+      }).unwrap()
+      if (updateAtomicRequestTxHash) {
+        dispatch(setDialogStep({ stepId: requestStepId, newState: 'completed' }))
+        return updateAtomicRequestTxHash
       }
+    } catch (error) {
+      dispatch(setDialogStep({ stepId: requestStepId, newState: 'error' }))
+      return
     }
   }
 
   return {
     handleRedeem,
     isValid,
-    isLoading: bridgeTxReceiptLoading || isTokenRateInQuoteLoading || isApproveErc20Loading || txReceiptLoading,
+    isLoading: isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
   }
 }

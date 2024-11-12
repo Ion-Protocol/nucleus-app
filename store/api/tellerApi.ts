@@ -13,6 +13,7 @@ import {
   type WriteContractReturnType,
   type WriteContractParameters,
   type WriteContractErrorType,
+  waitForTransactionReceipt,
 } from 'wagmi/actions'
 
 import { bigIntToNumberAsString } from '@/utils/bigint'
@@ -68,7 +69,7 @@ export const tellerApi = createApi({
       },
     }),
     bridge: builder.mutation<
-      WriteContractReturnType,
+      `0x${string}`,
       { shareAmount: bigint; bridgeData: BridgeData; contractAddress: Address; chainId: number; fee: bigint }
     >({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
@@ -81,7 +82,11 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          return { data: results }
+
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: results,
+          })
+          return { data: txReceipt.transactionHash }
         } catch (error) {
           return { error: serialize(error) }
         }

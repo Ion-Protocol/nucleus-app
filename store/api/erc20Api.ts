@@ -76,7 +76,7 @@ export const erc20Api = createApi({
           const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
             hash: writeContractResult,
           })
-          return { data: txReceipt }
+          return { data: txReceipt.transactionHash }
         } catch (error) {
           return { error: serialize(error) }
         }
