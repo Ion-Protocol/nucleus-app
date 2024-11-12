@@ -24,6 +24,7 @@ import { ChainKey } from '@/types/ChainKey'
 const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   let selectedChainKey = selectSourceChainKey(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
+  const nativeTokenForBridgeFee = networkAssetConfig?.chain
   const balances = selectBalances(state)
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const tokenKeys = selectReceiveTokens(state)
@@ -53,6 +54,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
     receiveAssetAddress,
     chainId,
     bridgeFromChainId,
+    nativeTokenForBridgeFee,
     receiveToken: receiveToken?.name,
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),
     networkAssetName,

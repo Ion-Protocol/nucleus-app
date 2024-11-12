@@ -86,7 +86,7 @@ const RedeemSummaryCard = () => {
                 <SummaryRow label="Redeem" value={'3.50'} />
                 <SummaryRow label="Receive" value={'4.20'} />
                 <Flex justifyContent={'center'}>
-                  <AccordionIcon alignSelf={'flex-end'} color="gray.500" />
+                  <AccordionIcon color="gray.500" />
                 </Flex>
               </Flex>
             </AccordionButton>
@@ -128,7 +128,7 @@ const SummaryRow = ({
   value: string | React.ReactNode
   dotted?: boolean
 }) => (
-  <Flex align="center" justify="space-between">
+  <Flex align="center" justifyContent={'space-between'}>
     <Text color="gray.700" fontSize="lg">
       {label}
     </Text>

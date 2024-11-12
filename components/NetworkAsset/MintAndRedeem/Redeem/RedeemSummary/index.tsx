@@ -21,6 +21,7 @@ function RedeemSummary({
   receiveToken,
   networkAssetName,
   isSameChain,
+  nativeTokenForBridgeFee,
   receiveAssetAddress,
   chainId,
   bridgeFromChainId,
@@ -52,6 +53,7 @@ function RedeemSummary({
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
   )
 
+  console.log('previewFee', previewFee)
   const { data: tokenPrice, isSuccess: tokenPriceSuccess } = useGetTokenPriceQuery('sei-network')
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: receiveAssetAddress! as Address,
@@ -109,7 +111,9 @@ function RedeemSummary({
                 </Flex>
                 <IonSkeleton minW="75px" isLoaded={isPreviewFeeSuccess && tokenPriceSuccess}>
                   <Text textAlign="right" variant="paragraph">
-                    {formattedPreviewFee ? `${formattedPreviewFee.toFixed(4)} ${networkAssetName}` : '0'}
+                    {formattedPreviewFee
+                      ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee} (≈${formattedPreviewFee.toFixed(4)} USD)`
+                      : '0'}
                   </Text>
                 </IonSkeleton>
               </Flex>
