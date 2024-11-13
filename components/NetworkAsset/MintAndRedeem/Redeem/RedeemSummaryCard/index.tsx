@@ -29,6 +29,8 @@ import { Address } from 'viem'
 import { RootState } from '@/store'
 import { tokensConfig } from '@/config/tokens'
 import { bigIntToNumberAsString } from '@/utils/bigint'
+import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
+import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
 
 export type RedeemSummaryCardProps = {
   redeemAmount: string
@@ -41,6 +43,14 @@ export type RedeemSummaryCardProps = {
 }
 
 const RedeemSummaryCard = () => {
+  const {
+    redeemAmount,
+    tellerContractAddress,
+    redemptionSourceChainId,
+    userAddress,
+    layerZeroChainSelector,
+    redeemBridgeData,
+  } = useRedeemSelectors()
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
   const tokenKeys = useSelector(selectReceiveTokens)
@@ -56,6 +66,21 @@ const RedeemSummaryCard = () => {
     contractAddress: accountantAddress!,
     chainId: chainId!,
   })
+
+  const {
+    data: previewFee,
+    isSuccess: isPreviewFeeSuccess,
+    isError: isPreviewFeeError,
+    error: previewFeeError,
+  } = useGetPreviewFeeQuery(
+    {
+      shareAmount: redeemAmount,
+      bridgeData: redeemBridgeData!,
+      contractAddress: tellerContractAddress!,
+      chainId: redemptionSourceChainId!,
+    },
+    { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmount }
+  )
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
     ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
@@ -93,7 +118,9 @@ const RedeemSummaryCard = () => {
             <AccordionPanel paddingX={0} paddingTop={1}>
               <Flex flexDirection="column" gap={1}>
                 <SummaryRow label="Price" value={`${formattedPrice} ${receiveToken?.name} / ${sharesTokenKey}`} />
-                {isBridgeRequired && <SummaryRow label="Bridge Fee" value={'0.00'} />}
+                {isBridgeRequired && (
+                  <SummaryRow label="Bridge Fee" value={`${previewFee?.truncatedFeeAsString} sei`} />
+                )}
                 <SummaryRow label="Withdraw Fee" value={'0.5%'} />
                 <SummaryRow label="Deadline" value={'3 days'} />
               </Flex>

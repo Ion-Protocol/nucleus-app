@@ -126,6 +126,7 @@ export const useRedeemSelectors = () => {
   )
 
   return {
+    previewFee,
     userAddress,
     networkAssetConfig,
     networkId,
