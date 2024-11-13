@@ -104,7 +104,7 @@ function RedeemSummary({
                   <Text variant="paragraph" color="disabledText">
                     Bridge Fee
                   </Text>
-                  <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane">
+                  <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane. These fees are an estimate and any unused amount will be refunded to the user.">
                     <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                   </IonTooltip>
                 </Flex>

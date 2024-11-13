@@ -55,20 +55,21 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        isSerializable: (value: unknown) =>
-          isPlainObject(value) ||
-          Array.isArray(value) ||
-          typeof value === 'string' ||
-          typeof value === 'number' ||
-          typeof value === 'boolean' ||
-          typeof value === 'undefined' ||
-          value === null ||
-          typeof value === 'bigint',
-        serialize: (value: unknown) => serialize(value),
-        deserialize: (value: string) => deserialize(value),
-      },
+      serializableCheck: false,
+      //   isSerializable: (value: unknown) =>
+      //     isPlainObject(value) ||
+      //     Array.isArray(value) ||
+      //     typeof value === 'string' ||
+      //     typeof value === 'number' ||
+      //     typeof value === 'boolean' ||
+      //     typeof value === 'undefined' ||
+      //     value === null ||
+      //     typeof value === 'bigint',
+      //   serialize: (value: unknown) => serialize(value),
+      //   deserialize: (value: string) => deserialize(value),
+      // },
     }).concat(...regularMiddlewares, ...sideEffectMiddlewares, ...apiMiddlewares),
+  devTools: process.env.NODE_ENV !== 'production',
 })
 
 export type RootState = ReturnType<typeof store.getState>
