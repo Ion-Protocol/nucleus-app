@@ -42,7 +42,6 @@ import { calculateDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
 import { chainsConfig } from '@/config/chains'
-import { ApiError } from 'next/dist/server/api-utils'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
   if (isBridgeRequired) {
@@ -192,7 +191,6 @@ export const useRedeem = () => {
       skip: !accountantAddress || !destinationChainId,
     }
   )
-  // console.log('tokenRateInQuote', tokenRateInQuote, 'tokenRateInQuoteError', tokenRateInQuoteError)
 
   const {
     data: previewFeeAsBigInt,
@@ -299,9 +297,7 @@ export const useRedeem = () => {
     if (redemptionSourceChainKey !== destinationChainKey) {
       dispatch(restoreCompletedSteps())
       const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
-      console.log('Bridge is required Check:', redemptionSourceChainKey, destinationChainKey)
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
-        console.log('Missing redeem bridge data', redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector)
         dispatch(setHeaderContent('Error'))
         dispatch(
           setStatus({
@@ -322,13 +318,6 @@ export const useRedeem = () => {
       }
 
       if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
-        console.log(
-          'Missing redeem bridge data',
-          redeemBridgeData,
-          tellerContractAddress,
-          userAddress,
-          previewFeeAsBigInt
-        )
         dispatch(setHeaderContent('Error'))
         dispatch(
           setStatus({
@@ -340,17 +329,11 @@ export const useRedeem = () => {
         return
       }
 
-      console.log(
-        'Check if layerZeroChainSelector is not 0',
-        layerZeroChainSelector,
-        redeemBridgeData,
-        hasExcessDestinationBalance
-      )
       if (layerZeroChainSelector !== 0 && redeemBridgeData) {
         if (networkId !== destinationChainId) {
           await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
         }
-        console.log('BRIDGE REQUIRED: Calling bridge function')
+
         // Call Bridge function
         try {
           dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
@@ -398,14 +381,13 @@ export const useRedeem = () => {
       offerAmount: redeemAmount,
       inSolve: false,
     }
-    // console.log('userRequest', userRequest)
 
     const atomicRequestArgs = {
       offer: sharesTokenAddress! as Address,
       want: wantTokenAddress! as Address,
       userRequest: userRequest,
     }
-    // console.log('atomicRequestArgs', atomicRequestArgs)
+
     const atomicRequestOptions = {
       atomicQueueContractAddress: atomicQueueContractAddress as Address,
       chainId: destinationChainId!,
@@ -457,11 +439,6 @@ export const useRedeem = () => {
     //////////////////////////////////////////////////////////////////////////
     dispatch(restoreCompletedSteps())
     if ((!allowance || allowance < redeemAmount) && !approveTokenTxHash) {
-      console.log('Insufficient allowance and no approval transaction:', {
-        allowance,
-        redeemAmount,
-        approveTokenTxHash,
-      })
       dispatch(setHeaderContent('Error'))
       dispatch(
         setStatus({

@@ -53,7 +53,6 @@ function RedeemSummary({
     { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
   )
 
-  console.log('previewFee', previewFee)
   const { data: tokenPrice, isSuccess: tokenPriceSuccess } = useGetTokenPriceQuery('sei-network')
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
     quote: receiveAssetAddress! as Address,

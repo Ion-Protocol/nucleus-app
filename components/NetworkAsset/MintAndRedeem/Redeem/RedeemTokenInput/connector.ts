@@ -36,9 +36,7 @@ const mapState = (state: RootState, ownProps: RedeemTokenInputOwnProps): MapStat
     }
   }
   const redeemSourceChainKey = selectRedeemSourceChain(state)
-  console.log('redeemSourceChainKey', redeemSourceChainKey)
   const redemptionSourceChainKey = selectRedemptionSourceChainKey(state)
-  console.log('redemptionSourceChainKey', redemptionSourceChainKey)
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
 
