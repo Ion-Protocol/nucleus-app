@@ -46,9 +46,7 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 export type ChainSelectRole = 'source' | 'destination'
-export type ChainSelectType = 'mint' | 'redeem'
 interface ChainSelectOwnProps {
-  txType: ChainSelectType
   role: ChainSelectRole
   isActive: boolean
 }

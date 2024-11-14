@@ -14,6 +14,10 @@ export const coinGeckoApi = createApi({
     baseUrl: 'https://pro-api.coingecko.com/api/v3/simple/',
     prepareHeaders: (headers) => {
       headers.set('x-cg-pro-api-key', process.env.NEXT_PUBLIC_COINGECKO_API_KEY ?? '')
+      // ! Still needed?
+      // headers.set('Access-Control-Allow-Origin', '*')
+      // headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+      // headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
       return headers
     },
   }),
