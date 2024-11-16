@@ -19,7 +19,10 @@ const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface TvlOwnProps {}
+interface TvlOwnProps {
+  tvl: number | undefined
+  loading: boolean
+}
 
 interface TvlProps extends TvlOwnProps, PropsFromRedux, ChakraProps {}
 

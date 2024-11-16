@@ -20,6 +20,7 @@ const mapState = (state: RootState, ownProps: NetworkAssetTitleOwnProps) => {
   const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
 
   return {
+    boringVaultAddress,
     networkAssetFullName,
     chainNameOfNetworkAsset,
     networkAssetKey,

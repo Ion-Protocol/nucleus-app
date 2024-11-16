@@ -4,7 +4,7 @@ import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Text } from '@chakra-ui/react'
 import { TvlConnector } from './connector'
 
-function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
+function Tvl({ tvlFormatted, tvl, loading }: TvlConnector.Props) {
   return (
     <Flex
       border="1px solid"
@@ -27,7 +27,7 @@ function Tvl({ tvlFormatted, loading }: TvlConnector.Props) {
       </Flex>
       <IonSkeleton minW="150px" isLoaded={!loading}>
         <Text textAlign="center" variant="bigNumbers">
-          {tvlFormatted}
+          {tvl ? tvl : tvlFormatted}
         </Text>
       </IonSkeleton>
     </Flex>
