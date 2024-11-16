@@ -20,7 +20,7 @@ function RedeemSummary({
   tellerAddress,
   receiveToken,
   networkAssetName,
-  isSameChain,
+  isBridgeRequired,
   nativeTokenForBridgeFee,
   receiveAssetAddress,
   chainId,
@@ -29,6 +29,7 @@ function RedeemSummary({
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
+  console.log('isBridgeRequired', isBridgeRequired)
 
   const previewFeeBridgeData: BridgeData = {
     chainSelector: layerZeroChainSelector,
@@ -41,6 +42,7 @@ function RedeemSummary({
   const {
     data: previewFee,
     isSuccess: isPreviewFeeSuccess,
+    isLoading: isPreviewFeeLoading,
     isError: isPreviewFeeError,
     error: previewFeeError,
   } = useGetPreviewFeeQuery(
@@ -98,7 +100,7 @@ function RedeemSummary({
         <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3}>
           <Flex direction="column" gap={3}>
             {/* Bridge Fee */}
-            {!isSameChain && (
+            {isBridgeRequired && (
               <Flex align="center" justify="space-between">
                 <Flex color="secondaryText" gap={2} align="center">
                   <Text variant="paragraph" color="disabledText">
@@ -108,7 +110,7 @@ function RedeemSummary({
                     <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                   </IonTooltip>
                 </Flex>
-                <IonSkeleton minW="75px" isLoaded={isPreviewFeeSuccess && tokenPriceSuccess}>
+                <IonSkeleton minW="75px" isLoaded={!isPreviewFeeLoading}>
                   <Text textAlign="right" variant="paragraph">
                     {formattedPreviewFee
                       ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee} (≈${formattedPreviewFee.toFixed(4)} USD)`

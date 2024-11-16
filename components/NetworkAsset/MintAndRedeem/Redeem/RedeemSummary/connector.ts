@@ -16,6 +16,7 @@ import {
   selectRedeemLayerZeroChainSelector,
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
+  selectIsBridgeRequired,
 } from '@/store/slices/networkAssets'
 import { selectBalances } from '@/store/slices/balance'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
@@ -41,6 +42,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)
   const chainId = selectSourceChainId(state)
   const bridgeFromChainId = selectRedemptionSourceChainId(state)
+  const isBridgeRequired = selectIsBridgeRequired(state)
 
   const networkAssetName = networkAssetFromRoute
     ? tokensConfig[networkAssetFromRoute as keyof typeof tokensConfig].name
@@ -58,7 +60,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
     receiveToken: receiveToken?.name,
     exchangeRateLoading: selectTokenRateInQuoteLoading(state),
     networkAssetName,
-    isSameChain,
+    isBridgeRequired,
     layerZeroChainSelector: redeemLayerZeroChainSelector,
   }
 }
