@@ -109,7 +109,7 @@ const StepProcessDialog = () => {
               display="flex"
               alignItems="center"
               justifyContent="center"
-              fontSize="md"
+              fontSize="15px"
               color="neutral.900"
               gap={2}
               fontWeight={400}

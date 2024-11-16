@@ -93,7 +93,7 @@ const RedeemSummaryCard = () => {
       <Heading
         as="h2"
         color="text"
-        fontSize="xl"
+        fontSize="15px"
         fontWeight={500}
         mb={2}
         pb={2}
@@ -119,7 +119,7 @@ const RedeemSummaryCard = () => {
               <Flex flexDirection="column" gap={1}>
                 <SummaryRow label="Price" value={`${formattedPrice} ${receiveToken?.name} / ${sharesTokenKey}`} />
                 {isBridgeRequired && (
-                  <SummaryRow label="Bridge Fee" value={`${previewFee?.truncatedFeeAsString} sei`} />
+                  <SummaryRow label="Bridge Fee" value={`${previewFee?.truncatedFeeAsString} Sei`} />
                 )}
                 <SummaryRow label="Withdraw Fee" value={'0.5%'} />
                 <SummaryRow label="Deadline" value={'3 days'} />
@@ -156,11 +156,13 @@ const SummaryRow = ({
   dotted?: boolean
 }) => (
   <Flex align="center" justifyContent={'space-between'}>
-    <Text color="tooltipLabel" fontSize="lg">
+    <Text color="tooltipLabel" fontSize="15px">
       {label}
     </Text>
-    {dotted && <Box flex="1" mx={2} borderBottom="1px" borderStyle="dotted" borderColor="tooltipLabel" />}
-    <Text color="tooltipLabel" fontSize="lg" fontWeight="medium">
+    {dotted && (
+      <Box flex="1" mx={2} paddingTop={1} borderBottom="1px" borderStyle="dotted" borderColor="tooltipLabel" />
+    )}
+    <Text color="tooltipLabel" fontSize="15px" fontWeight="medium">
       {value}
     </Text>
   </Flex>
