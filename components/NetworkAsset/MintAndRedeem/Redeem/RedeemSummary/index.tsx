@@ -63,7 +63,7 @@ function RedeemSummary({
   })
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(995)) / BigInt(1000)
+    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9998)) / BigInt(10000)
     : BigInt(0)
 
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
@@ -97,7 +97,7 @@ function RedeemSummary({
           </Flex>
         </AccordionButton>
 
-        <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3}>
+        <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3} paddingRight={4}>
           <Flex direction="column" gap={3}>
             {/* Bridge Fee */}
             {isBridgeRequired && (
@@ -131,7 +131,7 @@ function RedeemSummary({
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
                 <Text textAlign="right" variant="paragraph">
-                  0.5%
+                  0.2%
                 </Text>
               </IonSkeleton>
             </Flex>

@@ -13,10 +13,10 @@ const DialogSuccess = () => {
         height={180}
         src={colorMode === 'light' ? '/assets/images/mint-success-light.webp' : '/assets/images/mint-success-dark.webp'}
       />
-      <Heading fontSize={'bigParagraph'} textAlign={'center'}>
+      <Heading fontSize={'22px'} fontWeight={400} textAlign={'center'} maxWidth={'18rem'}>
         Your withdraw request has been successfully received.
       </Heading>
-      <Text textAlign={'center'} w={'70%'}>
+      <Text fontSize={'12px'} fontWeight={400} textAlign={'center'} w={'70%'} maxWidth={'18rem'}>
         Once the request is processed, the assets will be automatically credited to your account.
       </Text>
     </Flex>

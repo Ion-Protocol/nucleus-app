@@ -14,7 +14,7 @@ import {
   Link,
 } from '@chakra-ui/react'
 import { RootState } from '@/store'
-import { setOpen } from '@/store/slices/stepDialog/slice'
+import { clearCompletedSteps, setOpen, setStatus, resetDialog } from '@/store/slices/stepDialog/slice'
 import { ChevronUp, Check, OctagonX, ExternalLink } from 'lucide-react'
 import Loader from '@/components/global/Loader'
 import { Icon, IconProps } from '@chakra-ui/react'
@@ -36,15 +36,20 @@ const StepProcessDialog = () => {
   const lastStep = steps[steps.length - 1]
   const isLastStepCompleted = lastStep?.state === 'completed'
 
+  const handleCloseDialog = () => {
+    dispatch(resetDialog())
+  }
+
   return (
-    <Modal isOpen={open} onClose={() => dispatch(setOpen(false))} isCentered>
+    <Modal isOpen={open} onClose={handleCloseDialog} isCentered>
       <ModalOverlay />
       <ModalContent bg="backgroundSecondary">
-        <ModalHeader fontSize="xl" color="neutral.950" fontWeight={500}>
+        <ModalHeader fontSize="22px" color="neutral.950" fontWeight={400} paddingX={12} paddingTop={8}>
           {title}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody display="flex" flexDirection="column" gap={4}>
+        <ModalBody display="flex" flexDirection="column" gap={4} paddingBottom={0} paddingX={'50px'}>
+          {/* <DialogSuccess /> */}
           {status?.type === 'success' && <DialogSuccess />}
           {status?.type === 'error' && <DialogError />}
           {headerContent && headerContent === 'redeemSummary' && <RedeemSummaryCard />}
@@ -57,11 +62,15 @@ const StepProcessDialog = () => {
                     alignItems="center"
                     justifyContent="center"
                     borderRadius="50%"
-                    bg={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}
+                    bg={step.state === 'idle' ? 'dialogSteps.idle' : 'dialogSteps.active'}
                     padding="4"
                     boxSize={2}
                   >
-                    <Icon as={StepIcons[step.state]} boxSize={5} color={step.state === 'idle' ? 'black' : 'white'} />
+                    <Icon
+                      as={StepIcons[step.state]}
+                      boxSize={5}
+                      color={step.state === 'idle' ? 'dialogSteps.icon.idle' : 'dialogSteps.icon.active'}
+                    />
                   </Box>
                   {lastStep !== step && (
                     <Box
@@ -69,12 +78,12 @@ const StepProcessDialog = () => {
                       h={6}
                       top={8}
                       position="absolute"
-                      bg={step.state === 'completed' ? 'neutral.900' : 'neutral.600'}
+                      bg={step.state === 'completed' ? 'dialogSteps.active' : 'dialogSteps.idle'}
                     />
                   )}
                 </Box>
                 <Flex gap={2} alignItems="center">
-                  <Text fontSize="xl" color={step.state === 'idle' ? 'neutral.600' : 'neutral.900'}>
+                  <Text fontSize="22px" fontWeight={400} color={step.state === 'idle' ? 'textSecondary' : 'text'}>
                     {step.description}
                   </Text>
                   {step.link && (
@@ -82,7 +91,7 @@ const StepProcessDialog = () => {
                       isExternal
                       href={step.link}
                       fontSize="lg"
-                      color="neutral.600"
+                      color="text"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -101,16 +110,18 @@ const StepProcessDialog = () => {
             ))}
           </Box>
         </ModalBody>
-        <ModalFooter flex={1} paddingY={6} justifyContent="center" alignItems="center">
+        <ModalFooter flex={1} paddingBottom={8} justifyContent="center" alignItems="center" paddingX={12}>
           {isLastStepCompleted ? (
-            <Button onClick={() => dispatch(setOpen(false))}>Close</Button>
+            <Button width={'100%'} onClick={handleCloseDialog}>
+              Close
+            </Button>
           ) : (
             <Text
               display="flex"
               alignItems="center"
               justifyContent="center"
               fontSize="15px"
-              color="neutral.900"
+              color="tooltipLabel"
               gap={2}
               fontWeight={400}
             >

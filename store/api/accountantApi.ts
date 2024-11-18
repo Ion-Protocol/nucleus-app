@@ -40,6 +40,15 @@ export const accountantApi = createApi({
             chainId,
           })
           return {
+            /**
+             * TODO: This should be handled with transformResponse
+             * * The fee needed to process the withdrawal is hardcoded
+             * * We should return the following, maybe in two objects
+             * rateInQuoteSafe: BigInt
+             * rateInQuoteSafeAsString: String
+             * rateInQuoteSafeAsTruncatedString: String
+             * rateInQuoteSafeWithFee: BigInt
+             */
             data: {
               rateInQuoteSafeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 18 }),
               truncatedRateInQuoteSafeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 4 }),

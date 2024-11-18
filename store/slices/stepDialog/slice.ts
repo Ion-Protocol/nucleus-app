@@ -109,6 +109,9 @@ const dialogSlice = createSlice({
         }
       })
     },
+    resetDialog: () => {
+      return initialState
+    },
   },
 })
 
@@ -121,6 +124,7 @@ export const {
   setHeaderContent,
   clearCompletedSteps,
   restoreCompletedSteps,
+  resetDialog,
 } = dialogSlice.actions
 
 export const dialogReducer = dialogSlice.reducer

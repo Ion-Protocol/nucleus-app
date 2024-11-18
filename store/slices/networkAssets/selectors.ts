@@ -788,7 +788,6 @@ export const selectRedeemBridgeData = createSelector(
     return {
       chainSelector: selectRedeemLayerZeroChainSelector,
       destinationChainReceiver: userAddress,
-      // TODO: Update to use const for bridgeFeeToken
       bridgeFeeToken: nativeAddress,
       messageGas: BigInt(100000),
       data: '0x',
