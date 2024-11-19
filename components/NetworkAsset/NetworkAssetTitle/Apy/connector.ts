@@ -30,7 +30,7 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 interface ApyOwnProps {
-  apy: number | undefined
+  apy: string | undefined
   loading: boolean
 }
 

@@ -22,6 +22,7 @@ interface MapStateToPropsType {
   boringVaultAddress: string
   tokenIncentives: {
     tokenKey: TokenKey
+    tokenAddress: string | undefined
     name: string
     formattedApy: string | null
     etherscanUrl: string | null
@@ -52,16 +53,21 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
 
   const tokenIncentives: {
     tokenKey: TokenKey
+    tokenAddress: string | undefined
     name: string
     formattedApy: string | null
     etherscanUrl: string | null
   }[] = Object.keys(networkAssetConfig.apys).map((apyTokenKey) => {
     const apy = selectNetworkAssetApy(state, networkAssetKey, apyTokenKey as TokenKey) || 0
-    const tokenAddress = tokensConfig[apyTokenKey as TokenKey].addresses[ChainKey.ETHEREUM]
+    const tokenAddress = tokensConfig[apyTokenKey as TokenKey].addresses[networkAssetConfig.deployedOn]
     return {
       tokenKey: apyTokenKey as TokenKey,
+      tokenAddress,
       name: tokensConfig[apyTokenKey as TokenKey].symbol,
-      etherscanUrl: tokenAddress !== '0x' ? `${etherscanBaseUrl}${tokenAddress}` : null,
+      etherscanUrl:
+        tokenAddress !== '0x'
+          ? `${networkAssetConfig.sourceChains[networkAssetConfig.deployedOn]?.explorerBaseUrl}/token/${tokenAddress}`
+          : null,
       formattedApy: `${apy?.toFixed(1)}%`,
     }
   })

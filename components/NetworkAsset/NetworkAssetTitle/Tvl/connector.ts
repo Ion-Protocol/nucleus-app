@@ -20,7 +20,7 @@ const connector = connect(mapState, mapDispatch)
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
 interface TvlOwnProps {
-  tvl: number | undefined
+  tvl: string | undefined
   loading: boolean
 }
 

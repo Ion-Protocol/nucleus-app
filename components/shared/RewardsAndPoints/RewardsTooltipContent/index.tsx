@@ -1,10 +1,14 @@
+import { Address } from 'viem'
+import { Divider, Flex, Link, Text } from '@chakra-ui/react'
+import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+
+import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
-import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
-import { Divider, Flex, Link, Text } from '@chakra-ui/react'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RewardsTooltipContentConnector } from './connector'
-import { IonTooltip } from '../../IonTooltip'
-import { useGetRewardsAPYQuery } from '@/store/api/nucleusBackendApi'
+import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
+import { TokenKey } from '@/types/TokenKey'
 
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
@@ -12,11 +16,34 @@ export function RewardsTooltipContent({
   boringVaultAddress,
   tokenIncentives,
   rewards,
-  netApy,
-  fullFormattedNetApy,
+  netApy, // TODO: remove
+  fullFormattedNetApy, // TODO: remove
   shouldShowMessageForLargeNetApy,
+  tokenKey,
 }: RewardsTooltipContentConnector.Props) {
-  const { data: boringVaultApy } = useGetRewardsAPYQuery({ tokenAddress: boringVaultAddress })
+  const { data: rewardsResponse } = useGetRewardsAPYQuery(
+    { vaultAddress: boringVaultAddress as Address },
+    { skip: !boringVaultAddress || tokenKey !== TokenKey.SSETH }
+  )
+  const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
+  const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
+  const totalApy = tokenKey === TokenKey.SSETH && rewardsResponse ? rewardsResponse?.APY + vaultAssetApy : vaultAssetApy
+
+  /*
+   * Process tokenIncentives to include reward APYs
+   * This is not a great solution as it is has a lot of logic specific to the SSETH vault
+   */
+  const processedTokenIncentives = tokenIncentives.map((incentive) => {
+    if (incentive.tokenAddress && rewardsResponse?.APYPerToken) {
+      const rewardApy = rewardsResponse.APYPerToken[incentive.tokenAddress as Address] || 0
+      return {
+        ...incentive,
+        formattedApy: `${rewardApy.toFixed(2)}%`,
+      }
+    }
+    return incentive
+  })
+
   return (
     <Flex direction="column" p={3} gap={3}>
       <Flex align="center" gap={2}>
@@ -28,27 +55,29 @@ export function RewardsTooltipContent({
 
       {/* Default Yield */}
       <Flex direction="column">
-        <Text variant="smallParagraph" color="textSecondary">
-          Default Yield
-        </Text>
+        <Flex align="center" gap={2}>
+          <Text variant="smallParagraph" color="textSecondary">
+            Default Yield
+          </Text>
+          <IonTooltip label="Default yield is calculated by annualizing the increase in the token redemption value over a 7 day period.">
+            <InfoOutlineIcon fontSize="12px" color="infoIcon" />
+          </IonTooltip>
+        </Flex>
         <Flex align="center" justify="space-between" mt={1}>
           <Flex gap={2}>
             <TokenIcon tokenKey={defaultYieldAssetKey} fontSize="20px" />
             <Text variant="smallParagraph" color="text">
               {defaultYieldAssetName}
             </Text>
-            <IonTooltip label="Your rewards are calculated using a daily snapshot, and claims are made available each week until the end of the incentives campaign.">
-              <InfoOutlineIcon fontSize="12px" color="infoIcon" />
-            </IonTooltip>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {boringVaultApy ? boringVaultApy.apy.toFixed(1) : '0.00'}%
+            {vaultAssetApy ? vaultAssetApy.toFixed(2) : '0.00'}%
           </Text>
         </Flex>
       </Flex>
 
       {/* Token Incentives */}
-      {tokenIncentives.length > 0 && (
+      {processedTokenIncentives.length > 0 && (
         <>
           <Divider borderColor="borderLight" />
 
@@ -57,11 +86,11 @@ export function RewardsTooltipContent({
               <Text variant="smallParagraph" color="textSecondary">
                 Token Incentives
               </Text>
-              <IonTooltip label="APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
+              <IonTooltip label="Your rewards are calculated using a daily snapshot, and claims are made available each week until the end of the incentives campaign.APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
                 <InfoOutlineIcon fontSize="12px" color="infoIcon" />
               </IonTooltip>
             </Flex>
-            {tokenIncentives.map((tokenIncentive) => (
+            {processedTokenIncentives.map((tokenIncentive) => (
               <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
                 <Flex gap={2}>
                   <TokenIcon tokenKey={tokenIncentive.tokenKey} fontSize="20px" />
@@ -115,15 +144,13 @@ export function RewardsTooltipContent({
       <Divider borderColor="borderLight" />
 
       {/* Net Apy */}
-      <IonTooltip
-        label={shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined}
-      >
+      <IonTooltip label={shouldShowMessageForLargeNetApy ? `${totalApy} will likely decrease...` : undefined}>
         <Flex justify="space-between">
           <Text variant="smallParagraphBold" color="text">
             Net APY
           </Text>
           <Text variant="smallParagraphBold" color="text">
-            {netApy}
+            {totalApy.toFixed(2)}%
           </Text>
         </Flex>
       </IonTooltip>

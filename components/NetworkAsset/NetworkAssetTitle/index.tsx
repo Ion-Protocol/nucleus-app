@@ -3,7 +3,6 @@ import { OpenNewTabIcon } from '@/components/shared/icons/OpenNewTab'
 import { Flex, IconButton, Link, Text } from '@chakra-ui/react'
 import { NetworkAssetTitleConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { useGetIncentivesAPYQuery } from '@/store/api/incentivesApi'
 
 function NetworkAssetTitle({
   boringVaultAddress,

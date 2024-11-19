@@ -43,7 +43,7 @@ export const nucleusIncentivesApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: nucleusApiBaseUrl }),
   endpoints: (builder) => ({
     // Keep the original single query endpoint
-    getIncentivesAPY: builder.query<IncentivesResponse, IncentivesAPYParams>({
+    getRewardsAPY: builder.query<IncentivesResponse, IncentivesAPYParams>({
       query: ({ vaultAddress }) => {
         const params = new URLSearchParams()
         params.append('vaultAddress', vaultAddress)
@@ -53,4 +53,4 @@ export const nucleusIncentivesApi = createApi({
   }),
 })
 
-export const { useGetIncentivesAPYQuery } = nucleusIncentivesApi
+export const { useGetRewardsAPYQuery } = nucleusIncentivesApi

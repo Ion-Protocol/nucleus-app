@@ -7,7 +7,7 @@ import {
   selectNetworkAssetPaused,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
-import { IncentivesResponse, useGetIncentivesAPYQuery } from '@/store/api/incentivesApi'
+import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { abbreviateNumber } from '@/utils/number'
 import { TokenKey } from '@/types/TokenKey'
 
@@ -18,6 +18,8 @@ import Apy from '@/components/NetworkAsset/NetworkAssetTitle/Apy'
 import RewardsAndPoints from '@/components/NetworkAsset/NetworkAssetTitle/RewardsAndPoints'
 import Tvl from '@/components/NetworkAsset/NetworkAssetTitle/Tvl'
 import RewardsAndHistory from '@/components/NetworkAsset/RewardsAndHistory'
+import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
+import { Address } from 'viem'
 
 export default function Token() {
   const isNetworkAssetPaused = useAppSelector(selectNetworkAssetPaused)
@@ -28,55 +30,25 @@ export default function Token() {
 
   console.log('boringVaultAddress', boringVaultAddress)
   const {
-    data: incentivesAPY,
-    isSuccess: isIncentivesAPYSuccess,
-    isLoading: isIncentivesAPYLoading,
-    isError: isIncentivesAPYError,
-    error: incentivesAPYError,
-  } = useGetIncentivesAPYQuery(
+    data: rewardsResponse,
+    isSuccess: isRewardsAPYSuccess,
+    isLoading: isRewardsAPYLoading,
+    isError: isRewardsAPYError,
+    error: rewardsAPYError,
+  } = useGetRewardsAPYQuery(
     { vaultAddress: boringVaultAddress! },
     { skip: !boringVaultAddress || networkAssetFromRoute !== TokenKey.SSETH }
   )
+  const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
 
-  console.log(
-    'boringVaultAddress',
-    boringVaultAddress,
-    'networkAssetFromRoute',
-    networkAssetFromRoute,
-    'incentivesAPY',
-    incentivesAPY,
-    'isSuccess',
-    isIncentivesAPYSuccess,
-    'isError',
-    isIncentivesAPYError,
-    'error',
-    incentivesAPYError
-  )
-
-  // const mockIncentivesAPYData: IncentivesResponse = {
-  //   startDate: '2024-11-15',
-  //   endDate: '2024-11-16',
-  //   prices: {
-  //     '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423': 0.427664,
-  //     '0x09D9420332bff75522a45FcFf4855F82a0a3ff50': 0.04196945,
-  //   },
-  //   tokenIncentives: [
-  //     { token_address: '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423', token_amount: 16210 },
-  //     { token_address: '0x09D9420332bff75522a45FcFf4855F82a0a3ff50', token_amount: 161000 },
-  //   ],
-  //   APYPerToken: {
-  //     '0x5Cf6826140C1C56Ff49C808A1A75407Cd1DF9423': 15.806487122822526,
-  //     '0x09D9420332bff75522a45FcFf4855F82a0a3ff50': 15.406670954966712,
-  //   },
-  //   APY: 31.21,
-  //   TVL: 2280624,
-  // }
-  // const tvl = abbreviateNumber(mockIncentivesAPYData.TVL)
-  // const apy = mockIncentivesAPYData.APY
+  const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
 
   const tvl =
-    networkAssetFromRoute !== TokenKey.SSETH && incentivesAPY ? abbreviateNumber(incentivesAPY?.TVL) : undefined
-  const apy = networkAssetFromRoute === TokenKey.SSETH && incentivesAPY ? incentivesAPY?.APY : undefined
+    networkAssetFromRoute !== TokenKey.SSETH && rewardsResponse ? abbreviateNumber(rewardsResponse?.TVL) : undefined
+  const apy =
+    networkAssetFromRoute === TokenKey.SSETH && rewardsResponse
+      ? `${(rewardsResponse?.APY + vaultAssetApy).toFixed(2)}%`
+      : `${vaultAssetApy.toFixed(2)}%`
 
   if (isNetworkAssetPaused) {
     return <Paused />
@@ -91,7 +63,7 @@ export default function Token() {
         <Flex h={8} />
 
         {/* TVL */}
-        {isIncentivesAPYError && (
+        {isRewardsAPYError && (
           <Flex
             border="1px solid"
             borderColor="border"
@@ -114,13 +86,14 @@ export default function Token() {
             <Button colorScheme="blue">Discord</Button>
           </Flex>
         )}
-        {isIncentivesAPYSuccess && (
+        {(isRewardsAPYSuccess && networkAssetFromRoute === TokenKey.SSETH) ||
+        networkAssetFromRoute !== TokenKey.SSETH ? (
           <Flex gap={6}>
-            <Tvl tvl={tvl} loading={isIncentivesAPYLoading} />
-            <Apy apy={apy} loading={isIncentivesAPYLoading} />
+            <Tvl tvl={tvl} loading={isRewardsAPYLoading} />
+            <Apy apy={apy} loading={isRewardsAPYLoading} />
             <RewardsAndPoints />
           </Flex>
-        )}
+        ) : null}
 
         {/* Rewards and History */}
         {networkAssetConfig?.showRewardsAndHistory && (
