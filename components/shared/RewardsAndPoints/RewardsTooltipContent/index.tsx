@@ -9,6 +9,7 @@ import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RewardsTooltipContentConnector } from './connector'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { TokenKey } from '@/types/TokenKey'
+import { numberToPercent } from '@/utils/number'
 
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
@@ -38,7 +39,7 @@ export function RewardsTooltipContent({
       const rewardApy = rewardsResponse.APYPerToken[incentive.tokenAddress as Address] || 0
       return {
         ...incentive,
-        formattedApy: `${rewardApy.toFixed(2)}%`,
+        formattedApy: numberToPercent(rewardApy, 2),
       }
     }
     return incentive
@@ -71,7 +72,7 @@ export function RewardsTooltipContent({
             </Text>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {vaultAssetApy ? vaultAssetApy.toFixed(2) : '0.00'}%
+            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '&rbrace;'}
           </Text>
         </Flex>
       </Flex>
@@ -150,7 +151,7 @@ export function RewardsTooltipContent({
             Net APY
           </Text>
           <Text variant="smallParagraphBold" color="text">
-            {totalApy.toFixed(2)}%
+            {numberToPercent(totalApy, 2)}
           </Text>
         </Flex>
       </IonTooltip>

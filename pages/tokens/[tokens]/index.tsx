@@ -108,7 +108,7 @@ export default function Token() {
         {(isRewardsAPYSuccess && networkAssetFromRoute === TokenKey.SSETH) ||
         networkAssetFromRoute !== TokenKey.SSETH ? (
           <Flex gap={6}>
-            <Tvl tvl={tvl} loading={isRewardsAPYLoading} />
+            <Tvl />
             <Apy apy={apy} loading={isRewardsAPYLoading} />
             <RewardsAndPoints />
           </Flex>
