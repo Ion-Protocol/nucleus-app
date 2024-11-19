@@ -7,7 +7,6 @@ import { InfoOutlineIcon } from '@chakra-ui/icons'
 
 function RewardsAndPoints() {
   const tokenKey = useAppSelector(selectNetworkAssetFromRoute)
-
   return (
     <RewardsTooltip tokenKey={tokenKey}>
       <Flex

@@ -3,7 +3,13 @@ import { ApyConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 
-function Apy({ formattedNetApy, fullFormattedNetApy, loading, shouldShowMessageForLargeNetApy }: ApyConnector.Props) {
+function Apy({
+  formattedNetApy,
+  fullFormattedNetApy,
+  loading,
+  shouldShowMessageForLargeNetApy,
+  apy,
+}: ApyConnector.Props) {
   return (
     <Flex
       border="1px solid"
@@ -21,7 +27,7 @@ function Apy({ formattedNetApy, fullFormattedNetApy, loading, shouldShowMessageF
         <IonTooltip
           label={shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined}
         >
-          <Text variant="bigNumbers">{formattedNetApy}</Text>
+          <Text variant="bigNumbers">{apy ? apy : formattedNetApy}</Text>
         </IonTooltip>
       </IonSkeleton>
     </Flex>
