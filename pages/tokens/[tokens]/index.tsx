@@ -1,4 +1,4 @@
-import { Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Button, Flex, Heading, Text, Image, useTheme, Link } from '@chakra-ui/react'
 
 import { useAppSelector } from '@/store/hooks'
 import {
@@ -9,7 +9,9 @@ import {
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { abbreviateNumber } from '@/utils/number'
+import { discordUrl } from '@/config/constants'
 import { TokenKey } from '@/types/TokenKey'
+import { useColorMode } from '@chakra-ui/react'
 
 import Paused from '@/pages/tokens/[tokens]/paused'
 import { MintAndRedeem } from '@/components/NetworkAsset/MintAndRedeem'
@@ -22,13 +24,12 @@ import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { Address } from 'viem'
 
 export default function Token() {
+  const { colorMode } = useColorMode()
   const isNetworkAssetPaused = useAppSelector(selectNetworkAssetPaused)
   const networkAssetConfig = useAppSelector(selectNetworkAssetConfig)
   const networkAssetFromRoute = useAppSelector(selectNetworkAssetFromRoute)
-  console.log('networkAssetFromRoute', networkAssetFromRoute)
   const boringVaultAddress = useAppSelector((state) => selectContractAddressByName(state, 'boringVault'))
 
-  console.log('boringVaultAddress', boringVaultAddress)
   const {
     data: rewardsResponse,
     isSuccess: isRewardsAPYSuccess,
@@ -66,24 +67,42 @@ export default function Token() {
         {isRewardsAPYError && (
           <Flex
             border="1px solid"
-            borderColor="border"
             borderRadius="8px"
-            bg="error.background"
-            py={6}
-            px={6}
-            direction="column"
-            gap={3}
+            position="relative"
+            bg="warningCard.bg"
+            borderColor="warningCard.border"
             align="center"
+            overflow="hidden"
             w="100%"
           >
-            <Heading size="md">Check back soon</Heading>
-            <Text variant="paragraph" whiteSpace="nowrap">
-              We’re in the process of calculating rewards for the next cycle.
-            </Text>
-            <Text whiteSpace="nowrap">
-              We should be done soon but feel free to join our discord to get more active updates.
-            </Text>
-            <Button colorScheme="blue">Discord</Button>
+            <Image
+              src={
+                colorMode === 'light'
+                  ? '/assets/images/nucleus-warn-light.webp'
+                  : '/assets/images/nucleus-warn-dark.webp'
+              }
+              position="absolute"
+              left={'-72px'}
+              height={'210px'}
+              width={'210px'}
+              alt="nucleus warning"
+            />
+            <Flex direction="column" py={6} paddingLeft={44} gap={2}>
+              <Flex direction="column">
+                <Heading variant="paragraphBig" lineHeight="27.5px" fontWeight={500} fontSize="22px">
+                  Check back soon
+                </Heading>
+                <Text variant="paragraphBold" lineHeight="18px" whiteSpace="nowrap" fontWeight={500} size="small">
+                  We’re in the process of calculating rewards for the next cycle.
+                </Text>
+                <Text variant="smallParagraph" lineHeight="15px" whiteSpace="nowrap">
+                  We should be done soon but feel free to join our discord to get more active updates.
+                </Text>
+              </Flex>
+              <Button as="a" href={discordUrl} target="_blank" rel="noopener noreferrer" width="fit-content" size="sm">
+                Check Our Discord Updates
+              </Button>
+            </Flex>
           </Flex>
         )}
         {(isRewardsAPYSuccess && networkAssetFromRoute === TokenKey.SSETH) ||
