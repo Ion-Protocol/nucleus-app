@@ -21,8 +21,8 @@ const networkAssetsSlice = createSlice({
     setRedeemDestinationChain: (state, action: PayloadAction<ChainKey>) => {
       state.redeemDestinationChain = action.payload
     },
-    clearRedeemDestinationChain: (state) => {
-      state.redeemDestinationChain = null
+    resetRedeemDestinationChain: (state) => {
+      state.redeemDestinationChain = ChainKey.ETHEREUM
     },
     resetSourceChain: (state) => {
       state.sourceChain = ChainKey.ETHEREUM
@@ -88,7 +88,7 @@ export const {
   setRedeemSourceChain,
   clearRedeemSourceChain,
   setRedeemDestinationChain,
-  clearRedeemDestinationChain,
+  resetRedeemDestinationChain,
   setSelectedRedeemSourceToken,
   setReceiveAmount,
   setSourceChain,

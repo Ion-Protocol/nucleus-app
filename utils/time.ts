@@ -1,4 +1,4 @@
-export const calculateDeadline = (daysFromNow = 3): number => {
+export const calculateRedeemDeadline = (daysFromNow = 3): number => {
   // Get days in seconds
   const daysInSeconds = daysFromNow * 24 * 60 * 60
 

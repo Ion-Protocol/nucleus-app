@@ -14,6 +14,7 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RedeemSummaryConnector } from './connector'
 import { useGetTokenPriceQuery } from '@/store/api/coinGecko'
+import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
 
 function RedeemSummary({
   accountantAddress,
@@ -29,7 +30,6 @@ function RedeemSummary({
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
-  console.log('isBridgeRequired', isBridgeRequired)
 
   const previewFeeBridgeData: BridgeData = {
     chainSelector: layerZeroChainSelector,
@@ -63,7 +63,7 @@ function RedeemSummary({
   })
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9998)) / BigInt(10000)
+    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
     : BigInt(0)
 
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })

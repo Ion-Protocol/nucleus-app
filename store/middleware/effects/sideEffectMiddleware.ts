@@ -7,7 +7,7 @@ import {
   clearSelectedSourceToken,
   clearRedeemAmount,
   clearRedeemSourceChain,
-  clearRedeemDestinationChain,
+  resetRedeemDestinationChain,
   resetSourceChain,
   selectNetworkAssetConfig,
   selectSolanaAddressError,
@@ -48,7 +48,7 @@ export const sideEffectMiddleware: Middleware =
       // Clear redeem-related state
       dispatch(clearRedeemAmount())
       dispatch(clearRedeemSourceChain())
-      dispatch(clearRedeemDestinationChain())
+      dispatch(resetRedeemDestinationChain())
     }
 
     // Side effects for source chain change. This triggers when the user changes the source chain

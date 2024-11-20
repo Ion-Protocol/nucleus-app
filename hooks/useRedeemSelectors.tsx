@@ -21,10 +21,10 @@ import { selectNetworkId } from '@/store/slices/chain'
 import { Address } from 'viem'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
-import { calculateDeadline } from '@/utils/time'
+import { calculateRedeemDeadline } from '@/utils/time'
 
 export const useRedeemSelectors = () => {
-  const deadline = calculateDeadline() // default value in function is 3 days
+  const deadline = calculateRedeemDeadline() // default value in function is 3 days
   const fee = 0
   const userAddress = useSelector(selectAddress)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
@@ -89,12 +89,7 @@ export const useRedeemSelectors = () => {
       tellerContractAddress
   )
 
-  const {
-    data: tokenRateInQuote,
-    isLoading: isTokenRateInQuoteLoading,
-    isError: isTokenRateInQuoteError,
-    error: tokenRateInQuoteError,
-  } = useGetRateInQuoteSafeQuery(
+  const tokenRateInQuoteSafeQuery = useGetRateInQuoteSafeQuery(
     {
       quote: wantTokenAddress as Address,
       contractAddress: accountantAddress!,

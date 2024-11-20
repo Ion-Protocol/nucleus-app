@@ -5,8 +5,6 @@ import { Flex, Input, Text, Button, Divider } from '@chakra-ui/react'
 
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { RedeemTokenInputConnector } from './connector'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store'
 
 function RedeemTokenInput({
   onChange,

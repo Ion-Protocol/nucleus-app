@@ -94,7 +94,7 @@ const RedeemSummaryCard = () => {
   )
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9998)) / BigInt(10000)
+    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
     : BigInt(0)
 
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })

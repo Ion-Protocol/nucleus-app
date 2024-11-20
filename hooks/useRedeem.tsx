@@ -38,7 +38,7 @@ import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { atomicQueueContractAddress } from '@/config/constants'
-import { calculateDeadline } from '@/utils/time'
+import { calculateRedeemDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
 
@@ -64,7 +64,7 @@ type RedeemStatus = {
 
 export const useRedeem = () => {
   const dispatch = useDispatch()
-  const deadline = calculateDeadline() // default value in function is 3 days
+  const deadline = calculateRedeemDeadline() // default value in function is 3 days
   /**
    ******************************************************************************
    * Selectors
