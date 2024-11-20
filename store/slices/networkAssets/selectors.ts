@@ -276,17 +276,6 @@ export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
 // APY
 /////////////////////////////////////////////////////////////////////
 
-// ! Mark: Finish this selector
-// export const selectBoringVaultApy = createSelector([selectNetworkAssetConfig], (networkAssetConfig) => {
-//   const boringVaultAddress = networkAssetConfig?.contracts.boringVault
-//   if (!boringVaultAddress) {
-//     return 0
-//   }
-//   const boringVaultApy = nucleusBackendApi.endpoints.getRewardsAPY.select({ tokenAddress: boringVaultAddress })
-//   console.log('boringVaultApy', boringVaultApy)
-//   return boringVaultApy
-// })
-
 // SHOULD memoize: Returns a new array; memoization avoids unnecessary recalculations.
 export const selectApyTokenKeys = createSelector([selectNetworkAssetConfigByKey], (networkAssetConfig) => {
   if (!networkAssetConfig) return []
