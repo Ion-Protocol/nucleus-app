@@ -23,6 +23,8 @@ import {
   selectNetworkAssetConfig,
   selectRedemptionSourceChainId,
   selectDestinationChainId,
+  selectRedeemAmount,
+  selectReceiveAmount,
 } from '@/store/slices/networkAssets/selectors'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { Address } from 'viem'
@@ -31,6 +33,11 @@ import { tokensConfig } from '@/config/tokens'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
+import { TokenIcon } from '@/components/config/tokenIcons'
+import { TokenKey } from '@/types/TokenKey'
+import { ChainIcon } from '@/components/config/chainIcons'
+import { ChainKey } from '@/types/ChainKey'
+import { capitalizeFirstLetter } from '@/utils/string'
 
 export type RedeemSummaryCardProps = {
   redeemAmount: string
@@ -50,6 +57,8 @@ const RedeemSummaryCard = () => {
     userAddress,
     layerZeroChainSelector,
     redeemBridgeData,
+    redemptionSourceChainKey,
+    destinationChainKey,
   } = useRedeemSelectors()
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
@@ -57,6 +66,8 @@ const RedeemSummaryCard = () => {
   const receiveTokenKey = useSelector(selectReceiveTokenKey) || tokenKeys[0]
   const receiveAssetAddress = useSelector((state: RootState) => selectTokenAddressByTokenKey(state, receiveTokenKey))
   const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
+  const formattedRedeemAmount = useSelector(selectRedeemAmount)
+  const formattedReceiveAmount = useSelector(selectReceiveAmount)
   const chainId = useSelector(selectSourceChainId)
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
   const sharesTokenKey = networkAssetConfig?.token.name
@@ -116,8 +127,16 @@ const RedeemSummaryCard = () => {
               _hover={'none'}
             >
               <Flex flexDirection="column" gap={1} width="100%">
-                <SummaryRow label="Redeem" value={'3.50'} />
-                <SummaryRow label="Receive" value={'4.20'} />
+                <SummaryRow
+                  label={`Redeem from`}
+                  chainKey={redemptionSourceChainKey ? redemptionSourceChainKey : undefined}
+                  value={`${formattedRedeemAmount} ${sharesTokenKey}`}
+                />
+                <SummaryRow
+                  label={`Receive on`}
+                  chainKey={destinationChainKey ? destinationChainKey : undefined}
+                  value={`${formattedReceiveAmount} ${receiveToken?.name}`}
+                />
               </Flex>
               <Flex justifyContent={'center'}>
                 <AccordionIcon color="gray.500" />
@@ -127,7 +146,10 @@ const RedeemSummaryCard = () => {
               <Flex flexDirection="column" gap={1}>
                 <SummaryRow label="Price" value={`${formattedPrice} ${receiveToken?.name} / ${sharesTokenKey}`} />
                 {isBridgeRequired && (
-                  <SummaryRow label="Bridge Fee" value={`${previewFee?.truncatedFeeAsString} Sei`} />
+                  <SummaryRow
+                    label="Bridge Fee"
+                    value={`${previewFee?.truncatedFeeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
+                  />
                 )}
                 <SummaryRow label="Withdraw Fee" value={'0.2%'} />
                 <SummaryRow label="Deadline" value={'3 days'} />
@@ -156,17 +178,31 @@ const RedeemSummaryCard = () => {
 
 const SummaryRow = ({
   label,
+  chainKey,
   value,
   dotted = true,
 }: {
   label: string
+  chainKey?: ChainKey
   value: string | React.ReactNode
   dotted?: boolean
 }) => (
-  <Flex align="center" justifyContent={'space-between'}>
-    <Text color="tooltipLabel" fontSize="15px">
-      {label}
-    </Text>
+  <Flex align="center" justifyContent="space-between">
+    {chainKey ? (
+      <Flex color="tooltipLabel" alignItems={'center'} gap={1} fontSize="15px">
+        <Text as="span" color="tooltipLabel" fontSize="15px">
+          {label}
+        </Text>
+        <ChainIcon chainKey={chainKey} />
+        <Text as="span" color="tooltipLabel" fontSize="15px">
+          {capitalizeFirstLetter(chainKey)}
+        </Text>
+      </Flex>
+    ) : (
+      <Text color="tooltipLabel" fontSize="15px">
+        {label}
+      </Text>
+    )}
     {dotted && (
       <Box flex="1" mx={2} paddingTop={1} borderBottom="1px" borderStyle="dotted" borderColor="tooltipLabel" />
     )}

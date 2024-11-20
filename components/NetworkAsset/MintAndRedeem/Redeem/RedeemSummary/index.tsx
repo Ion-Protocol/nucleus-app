@@ -113,7 +113,7 @@ function RedeemSummary({
                 <IonSkeleton minW="75px" isLoaded={!isPreviewFeeLoading}>
                   <Text textAlign="right" variant="paragraph">
                     {formattedPreviewFee
-                      ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee} (≈${formattedPreviewFee.toFixed(4)} USD)`
+                      ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee?.toUpperCase()} (≈ ${formattedPreviewFee.toFixed(4)} USD)`
                       : '0'}
                   </Text>
                 </IonSkeleton>

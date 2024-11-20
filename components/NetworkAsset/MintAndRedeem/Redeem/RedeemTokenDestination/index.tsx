@@ -52,7 +52,7 @@ function RedeemTokenDestination({
   return (
     <IonCard variant="outline" bg={'backgroundSecondary'} pt={shouldIgnoreBalance ? 3 : 5}>
       {/* Top Row */}
-      <Flex justify="space-between" align="center">
+      <Flex justifyContent="spaceBetween" align="center">
         {shouldIgnoreBalance ? (
           <Flex
             border="1px solid"
