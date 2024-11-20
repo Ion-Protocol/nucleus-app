@@ -13,10 +13,16 @@ import { statusReducer } from './slices/status/slice'
 import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 import { redstoneApi } from './slices/redstoneSlice/apiSlice'
-
+import { nucleusBackendApi } from './api/nucleusBackendApi'
+import { nucleusIncentivesApi } from './api/incentivesApi'
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
-const apiMiddlewares = [userProofApi.middleware, redstoneApi.middleware]
+const apiMiddlewares = [
+  userProofApi.middleware,
+  redstoneApi.middleware,
+  nucleusBackendApi.middleware,
+  nucleusIncentivesApi.middleware,
+]
 
 // Configure the store and inject the LibraryContext as an extra argument for thunks
 export const store = configureStore({
@@ -33,6 +39,8 @@ export const store = configureStore({
     // Api slices
     [userProofApi.reducerPath]: userProofApi.reducer,
     [redstoneApi.reducerPath]: redstoneApi.reducer,
+    [nucleusBackendApi.reducerPath]: nucleusBackendApi.reducer,
+    [nucleusIncentivesApi.reducerPath]: nucleusIncentivesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(...regularMiddlewares, ...sideEffectMiddlewares, ...apiMiddlewares),

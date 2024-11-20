@@ -158,6 +158,16 @@ export const semanticTokens = {
         _dark: 'red.lighter',
       },
     },
+    warningCard: {
+      bg: {
+        default: 'neutral.100',
+        _dark: 'darkMode.300',
+      },
+      border: {
+        default: 'neutral.600',
+        _dark: 'darkMode.100',
+      },
+    },
     skeleton: {
       startColor: {
         default: 'neutral.600',

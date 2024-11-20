@@ -8,6 +8,7 @@ import {
   selectNetworkAssetConfigByKey,
   selectShouldShowMessageForLargeNetApy,
   selectTvlLoading,
+  selectContractAddressByName,
 } from '@/store/slices/networkAssets'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
@@ -20,6 +21,7 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const tvlLoading = selectTvlLoading(state)
   const tvl = selectFormattedNetworkAssetTvlByKey(state, networkAssetKey)
   const networkAssetName = networkAssetConfig?.token.name
+  const boringVaultAddress = networkAssetConfig?.contracts.boringVault
   const chainName = networkAssetConfig ? chainsConfig[networkAssetConfig.chain].name : ''
   const comingSoon = networkAssetConfig?.comingSoon || null
   const formattedNetApy = selectFormattedNetApy(state, networkAssetKey)
@@ -31,6 +33,7 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
 
   return {
     tvl,
+    boringVaultAddress,
     networkAssetName,
     networkAssetKey,
     chainName,

@@ -29,7 +29,10 @@ const connector = connect(mapState, mapDispatch)
 
 export type PropsFromRedux = ConnectedProps<typeof connector>
 
-interface ApyOwnProps {}
+interface ApyOwnProps {
+  apy: string | undefined
+  loading: boolean
+}
 
 interface ApyProps extends ApyOwnProps, PropsFromRedux, ChakraProps {}
 

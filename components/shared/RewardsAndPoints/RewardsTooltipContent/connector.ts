@@ -19,9 +19,10 @@ import { ConnectedProps, connect } from 'react-redux'
 interface MapStateToPropsType {
   defaultYieldAssetKey: TokenKey | null
   defaultYieldAssetName: string
-  defaultYieldAssetPercent: string
+  boringVaultAddress: string
   tokenIncentives: {
     tokenKey: TokenKey
+    tokenAddress: string | undefined
     name: string
     formattedApy: string | null
     etherscanUrl: string | null
@@ -39,7 +40,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
     return {
       defaultYieldAssetKey: null,
       defaultYieldAssetName: '',
-      defaultYieldAssetPercent: '',
+      boringVaultAddress: '',
       tokenIncentives: [],
       rewards: [],
       netApy: '',
@@ -47,21 +48,26 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
       shouldShowMessageForLargeNetApy: false,
     }
   }
+  const boringVaultAddress = networkAssetConfig.contracts.boringVault
   const defaultYieldAssetName = tokensConfig[networkAssetKey as TokenKey].name
-  const defaultYieldAssetPercent = `${hardcodedApy.toFixed(1)}%`
 
   const tokenIncentives: {
     tokenKey: TokenKey
+    tokenAddress: string | undefined
     name: string
     formattedApy: string | null
     etherscanUrl: string | null
   }[] = Object.keys(networkAssetConfig.apys).map((apyTokenKey) => {
     const apy = selectNetworkAssetApy(state, networkAssetKey, apyTokenKey as TokenKey) || 0
-    const tokenAddress = tokensConfig[apyTokenKey as TokenKey].addresses[ChainKey.ETHEREUM]
+    const tokenAddress = tokensConfig[apyTokenKey as TokenKey].addresses[networkAssetConfig.deployedOn]
     return {
       tokenKey: apyTokenKey as TokenKey,
+      tokenAddress,
       name: tokensConfig[apyTokenKey as TokenKey].symbol,
-      etherscanUrl: tokenAddress !== '0x' ? `${etherscanBaseUrl}${tokenAddress}` : null,
+      etherscanUrl:
+        tokenAddress !== '0x'
+          ? `${networkAssetConfig.sourceChains[networkAssetConfig.deployedOn]?.explorerBaseUrl}/token/${tokenAddress}`
+          : null,
       formattedApy: `${apy?.toFixed(1)}%`,
     }
   })
@@ -76,7 +82,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
   return {
     defaultYieldAssetKey: networkAssetKey,
     defaultYieldAssetName,
-    defaultYieldAssetPercent,
+    boringVaultAddress,
     tokenIncentives,
     rewards,
     netApy,
