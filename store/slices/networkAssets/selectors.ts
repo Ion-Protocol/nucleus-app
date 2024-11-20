@@ -24,6 +24,8 @@ import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { RewardsTableData } from '@/types/RewardsTableData'
 import { selectTransactionExplorerUrl } from '../status'
 import { type BridgeData } from '@/store/api/tellerApi'
+import Apy from '@/components/NetworkAsset/NetworkAssetTitle/Apy'
+import { nucleusBackendApi } from '@/store/api/nucleusBackendApi'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -273,6 +275,17 @@ export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
 /////////////////////////////////////////////////////////////////////
 // APY
 /////////////////////////////////////////////////////////////////////
+
+// ! Mark: Finish this selector
+// export const selectBoringVaultApy = createSelector([selectNetworkAssetConfig], (networkAssetConfig) => {
+//   const boringVaultAddress = networkAssetConfig?.contracts.boringVault
+//   if (!boringVaultAddress) {
+//     return 0
+//   }
+//   const boringVaultApy = nucleusBackendApi.endpoints.getRewardsAPY.select({ tokenAddress: boringVaultAddress })
+//   console.log('boringVaultApy', boringVaultApy)
+//   return boringVaultApy
+// })
 
 // SHOULD memoize: Returns a new array; memoization avoids unnecessary recalculations.
 export const selectApyTokenKeys = createSelector([selectNetworkAssetConfigByKey], (networkAssetConfig) => {

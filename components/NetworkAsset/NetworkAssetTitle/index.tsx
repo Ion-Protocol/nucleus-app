@@ -5,6 +5,7 @@ import { NetworkAssetTitleConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 
 function NetworkAssetTitle({
+  boringVaultAddress,
   networkAssetFullName,
   chainNameOfNetworkAsset,
   networkAssetKey,

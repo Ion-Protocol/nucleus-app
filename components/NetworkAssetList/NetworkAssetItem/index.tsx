@@ -1,16 +1,24 @@
+import { useRouter } from 'next/router'
+import { Button, Flex, Text } from '@chakra-ui/react'
+
+import { Address } from 'viem'
+
+import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
 import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
-import { Button, Flex, Text } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 import { YieldBridgeItemConnector } from './connector'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
+import { TokenKey } from '@/types/TokenKey'
+import { numberToPercent } from '@/utils/number'
 
 function NetworkAssetItem({
   tvl,
   networkAssetName,
   networkAssetKey,
+  boringVaultAddress,
   chainName,
   comingSoon,
   disabled,
@@ -21,6 +29,19 @@ function NetworkAssetItem({
   shouldShowMessageForLargeNetApy,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
+  const { data: rewardsResponse } = useGetRewardsAPYQuery(
+    { vaultAddress: boringVaultAddress as Address },
+    { skip: !boringVaultAddress || networkAssetKey !== TokenKey.SSETH }
+  )
+  const {
+    data: boringVaultApy,
+    isLoading: isBoringVaultApyLoading,
+    isError: isBoringVaultApyError,
+  } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
+
+  const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
+  const totalApy =
+    networkAssetKey === TokenKey.SSETH && rewardsResponse ? rewardsResponse?.APY + vaultAssetApy : vaultAssetApy
 
   function handleClick() {
     if (!disabled) {
@@ -68,13 +89,13 @@ function NetworkAssetItem({
               {/* APY */}
               <Flex direction="column">
                 <Text variant="smallParagraph">APY</Text>
-                <IonSkeleton isLoaded={!netApyLoading} w="100%">
+                <IonSkeleton isLoaded={!isBoringVaultApyLoading} w="100%">
                   <IonTooltip
                     label={
                       shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
                     }
                   >
-                    <Text variant="paragraphBold">{formattedNetApy}</Text>
+                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '&rbrace;'}`}</Text>
                   </IonTooltip>
                 </IonSkeleton>
               </Flex>

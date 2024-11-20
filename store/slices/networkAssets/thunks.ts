@@ -177,7 +177,7 @@ export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectV
 
       dispatch(setTransactionSuccessMessage(`Claim Successful`))
       dispatch(setTransactionTxHash(txHash))
-      dispatch(setTransactionExplorerUrl(seiExplorerBaseUrl))
+      dispatch(setTransactionExplorerUrl(`${seiExplorerBaseUrl}/tx/`))
       return { txHash }
     } catch (e) {
       console.error(e)
