@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 
 import { tokensConfig } from '@/config/tokens'
+import { etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { RootState } from '@/store'
 import {
   setOpen,
@@ -32,16 +33,14 @@ import {
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectAddress } from '@/store/slices/account'
 import { selectNetworkId } from '@/store/slices/chain'
-import { erc20Api, useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
+import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
 import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
-import { useWaitForTransactionReceiptQuery } from '@/store/api/transactionReceiptApt'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { atomicQueueContractAddress } from '@/config/constants'
 import { calculateDeadline } from '@/utils/time'
 import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
-import { chainsConfig } from '@/config/chains'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
   if (isBridgeRequired) {
@@ -351,7 +350,13 @@ export const useRedeem = () => {
           //   }, 2000) // 2 second delay
           // })
           if (bridgeResponse) {
-            dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'completed' }))
+            dispatch(
+              setDialogStep({
+                stepId: bridgeStepId,
+                newState: 'completed',
+                link: `${seiExplorerBaseUrl}tx/${bridgeResponse}`,
+              })
+            )
           }
         } catch (error) {
           dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
@@ -416,7 +421,13 @@ export const useRedeem = () => {
           chainId: destinationChainId!,
         }).unwrap()
         if (approveTokenTxHash) {
-          dispatch(setDialogStep({ stepId: approveStepId, newState: 'completed' }))
+          dispatch(
+            setDialogStep({
+              stepId: approveStepId,
+              newState: 'completed',
+              link: `${etherscanBaseUrl}tx/${approveTokenTxHash}`,
+            })
+          )
         }
       } catch (error) {
         dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
@@ -468,7 +479,13 @@ export const useRedeem = () => {
       // })
 
       if (updateAtomicRequestTxHash) {
-        dispatch(setDialogStep({ stepId: requestStepId, newState: 'completed' }))
+        dispatch(
+          setDialogStep({
+            stepId: requestStepId,
+            newState: 'completed',
+            link: `${etherscanBaseUrl}tx/${updateAtomicRequestTxHash}`,
+          })
+        )
         dispatch(
           setStatus({
             type: 'success',

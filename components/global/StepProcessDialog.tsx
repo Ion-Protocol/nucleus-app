@@ -88,14 +88,14 @@ const StepProcessDialog = () => {
                   </Text>
                   {step.link && (
                     <Link
+                      paddingTop={1}
                       isExternal
                       href={step.link}
-                      fontSize="lg"
                       color="text"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <ExternalLink />
+                      <ExternalLink size={20} />
                     </Link>
                   )}
                 </Flex>
