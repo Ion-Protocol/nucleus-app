@@ -1,5 +1,4 @@
-import React from 'react'
-import { Flex, Text, Heading, Code, useColorMode } from '@chakra-ui/react'
+import { Flex, Heading, Text, useColorMode } from '@chakra-ui/react'
 // import { Image } from '@chakra-ui/next-js'
 import Image from 'next/image'
 
@@ -11,6 +10,7 @@ const DialogSuccess = () => {
         alt="redeem success nucleus"
         width={180}
         height={180}
+        fetchPriority={undefined}
         src={colorMode === 'light' ? '/assets/images/mint-success-light.webp' : '/assets/images/mint-success-dark.webp'}
       />
       <Heading fontSize={'22px'} fontWeight={400} textAlign={'center'} maxWidth={'18rem'}>

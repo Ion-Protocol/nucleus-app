@@ -1,27 +1,29 @@
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store'
 import { tokensConfig } from '@/config/tokens'
+import { RootState } from '@/store'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
+import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
+import { selectAddress } from '@/store/slices/account'
+import { selectTokenBalance } from '@/store/slices/balance/selectors'
+import { selectNetworkId } from '@/store/slices/chain'
 import {
-  selectNetworkAssetConfig,
-  selectReceiveTokens,
-  selectReceiveTokenKey,
-  selectRedeemAmountAsBigInt,
   selectContractAddressByName,
-  selectRedemptionSourceChainId,
-  selectRedemptionSourceChainKey,
+  selectDestinationChainId,
+  selectIsBridgeRequired,
+  selectNetworkAssetConfig,
+  selectReceiveTokenKey,
+  selectReceiveTokens,
+  selectRedeemAmount,
+  selectRedeemAmountAsBigInt,
   selectRedeemBridgeData,
   selectRedeemLayerZeroChainSelector,
   selectRedemptionDestinationChainKey,
-  selectDestinationChainId,
-  selectIsBridgeRequired,
+  selectRedemptionSourceChainId,
+  selectRedemptionSourceChainKey,
 } from '@/store/slices/networkAssets'
-import { selectTokenBalance } from '@/store/slices/balance/selectors'
-import { selectAddress } from '@/store/slices/account'
-import { selectNetworkId } from '@/store/slices/chain'
-import { Address } from 'viem'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
+import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { calculateRedeemDeadline } from '@/utils/time'
+import { useSelector } from 'react-redux'
+import { Address, formatUnits } from 'viem'
 
 export const useRedeemSelectors = () => {
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
@@ -49,7 +51,8 @@ export const useRedeemSelectors = () => {
   const layerZeroChainSelector = useSelector(selectRedeemLayerZeroChainSelector)
 
   // Token Related
-  const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
+  const redeemAmount = useSelector(selectRedeemAmount)
+  const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
   const tokenKeys = useSelector(selectReceiveTokens)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
@@ -66,7 +69,7 @@ export const useRedeemSelectors = () => {
 
   // Derived Values
   const hasExcessDestinationBalance =
-    destinationTokenBalance && sourceTokenBalance && BigInt(destinationTokenBalance) > redeemAmount
+    destinationTokenBalance && sourceTokenBalance && BigInt(destinationTokenBalance) > redeemAmountAsBigInt
 
   const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
   const sharesTokenKey = networkAssetConfig?.token.key
@@ -78,7 +81,7 @@ export const useRedeemSelectors = () => {
     : null
 
   const isValid = Boolean(
-    redeemAmount > BigInt(0) &&
+    redeemAmountAsBigInt > BigInt(0) &&
       networkAssetConfig &&
       networkId &&
       redemptionSourceChainId &&
@@ -108,7 +111,7 @@ export const useRedeemSelectors = () => {
     error: previewFeeError,
   } = useGetPreviewFeeQuery(
     {
-      shareAmount: redeemAmount,
+      shareAmount: redeemAmountAsBigInt,
       bridgeData: redeemBridgeData!,
       contractAddress: tellerContractAddress!,
       chainId: redemptionSourceChainId!,
@@ -118,10 +121,37 @@ export const useRedeemSelectors = () => {
         !redeemBridgeData ||
         !tellerContractAddress ||
         !redemptionSourceChainId ||
-        !redeemAmount ||
+        !redeemAmountAsBigInt ||
         layerZeroChainSelector === 0,
     }
   )
+
+  // Calculate rate with 0.02% fee
+  const rateInQuoteWithFee = tokenRateInQuoteSafeQuery.data?.rateInQuoteSafe
+    ? (tokenRateInQuoteSafeQuery.data.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    : BigInt(0)
+
+  const formattedTokenRateWithFee = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
+  const formattedTokenRateWithFeeFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
+
+  // Calculate redeem amount using rate
+  const receiveAmountAsBigInt =
+    rateInQuoteWithFee > 0 ? (redeemAmountAsBigInt * rateInQuoteWithFee) / WAD.bigint : redeemAmountAsBigInt
+
+  // Format the amount for display
+  const decimalAmountForPrecisionCheck = parseFloat(formatUnits(receiveAmountAsBigInt, 18))
+  const redeemAmountTruncated = bigIntToNumberAsString(redeemAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  })
+  const receiveAmountTruncated = bigIntToNumberAsString(receiveAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  })
+  const receiveAmountFormattedFull = bigIntToNumberAsString(receiveAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimalAmountForPrecisionCheck < 1 ? 18 : 8,
+  })
 
   return {
     previewFee,
@@ -139,6 +169,13 @@ export const useRedeemSelectors = () => {
     tellerContractAddress,
     layerZeroChainSelector,
     redeemAmount,
+    redeemAmountAsBigInt,
+    receiveAmountAsBigInt,
+    redeemAmountTruncated,
+    receiveAmountTruncated,
+    receiveAmountFormattedFull,
+    formattedTokenRateWithFee,
+    formattedTokenRateWithFeeFull,
     tokenKeys,
     wantTokenKey,
     destinationTokenBalance,
