@@ -1,41 +1,28 @@
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
+  Flex,
+  Heading,
+  Text,
+  VStack,
+} from '@chakra-ui/react'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import {
-  Flex,
-  Text,
-  Box,
-  Heading,
-  VStack,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-} from '@chakra-ui/react'
 
+import { ChainIcon } from '@/components/config/chainIcons'
+import { IonTooltip } from '@/components/shared/IonTooltip'
+import { tokensConfig } from '@/config/tokens'
+import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
 import {
   selectIsBridgeRequired,
+  selectNetworkAssetConfig,
   selectReceiveTokenKey,
   selectReceiveTokens,
-  selectTokenAddressByTokenKey,
-  selectContractAddressByName,
-  selectSourceChainId,
-  selectNetworkAssetConfig,
-  selectRedemptionSourceChainId,
-  selectDestinationChainId,
-  selectRedeemAmount,
-  selectReceiveAmount,
 } from '@/store/slices/networkAssets/selectors'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { Address } from 'viem'
-import { RootState } from '@/store'
-import { tokensConfig } from '@/config/tokens'
-import { bigIntToNumberAsString } from '@/utils/bigint'
-import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
-import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
-import { TokenIcon } from '@/components/config/tokenIcons'
-import { TokenKey } from '@/types/TokenKey'
-import { ChainIcon } from '@/components/config/chainIcons'
 import { ChainKey } from '@/types/ChainKey'
 import { capitalizeFirstLetter } from '@/utils/string'
 
@@ -52,52 +39,27 @@ export type RedeemSummaryCardProps = {
 const RedeemSummaryCard = () => {
   const {
     redeemAmount,
+    redeemAmountAsBigInt,
     tellerContractAddress,
     redemptionSourceChainId,
     userAddress,
     layerZeroChainSelector,
     redeemBridgeData,
+    redeemAmountTruncated,
+    receiveAmountTruncated,
+    receiveAmountFormattedFull,
+    formattedTokenRateWithFee,
+    formattedTokenRateWithFeeFull,
     redemptionSourceChainKey,
     destinationChainKey,
+    previewFee,
   } = useRedeemSelectors()
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
   const tokenKeys = useSelector(selectReceiveTokens)
   const receiveTokenKey = useSelector(selectReceiveTokenKey) || tokenKeys[0]
-  const receiveAssetAddress = useSelector((state: RootState) => selectTokenAddressByTokenKey(state, receiveTokenKey))
-  const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
-  const formattedRedeemAmount = useSelector(selectRedeemAmount)
-  const formattedReceiveAmount = useSelector(selectReceiveAmount)
-  const chainId = useSelector(selectSourceChainId)
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
   const sharesTokenKey = networkAssetConfig?.token.name
-
-  const { data: tokenRateInQuote } = useGetRateInQuoteSafeQuery({
-    quote: receiveAssetAddress! as Address,
-    contractAddress: accountantAddress!,
-    chainId: chainId!,
-  })
-
-  const {
-    data: previewFee,
-    isSuccess: isPreviewFeeSuccess,
-    isError: isPreviewFeeError,
-    error: previewFeeError,
-  } = useGetPreviewFeeQuery(
-    {
-      shareAmount: redeemAmount,
-      bridgeData: redeemBridgeData!,
-      contractAddress: tellerContractAddress!,
-      chainId: redemptionSourceChainId!,
-    },
-    { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmount }
-  )
-
-  const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
-    : BigInt(0)
-
-  const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
 
   return (
     <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm" paddingBottom={2}>
@@ -117,6 +79,20 @@ const RedeemSummaryCard = () => {
       <VStack spacing={3} align="stretch">
         <Accordion allowToggle>
           <AccordionItem borderBottom={'none'} borderTop={'none'}>
+            <Flex flexDirection="column" gap={1} width="100%">
+              <SummaryRow
+                label={`Redeem from`}
+                chainKey={redemptionSourceChainKey ? redemptionSourceChainKey : undefined}
+                value={`${redeemAmountTruncated} ${sharesTokenKey}`}
+                tooltip={`${redeemAmount} ${sharesTokenKey}`}
+              />
+              <SummaryRow
+                label={`Receive on`}
+                chainKey={destinationChainKey ? destinationChainKey : undefined}
+                value={`${receiveAmountTruncated} ${receiveToken?.name}`}
+                tooltip={`${receiveAmountFormattedFull} ${receiveToken?.name}`}
+              />
+            </Flex>
             <AccordionButton
               display={'flex'}
               flexDirection={'column'}
@@ -124,31 +100,24 @@ const RedeemSummaryCard = () => {
               paddingX={0}
               paddingBottom={0}
               width="100%"
-              _hover={'none'}
+              _hover={{ bg: 'none' }}
             >
-              <Flex flexDirection="column" gap={1} width="100%">
-                <SummaryRow
-                  label={`Redeem from`}
-                  chainKey={redemptionSourceChainKey ? redemptionSourceChainKey : undefined}
-                  value={`${formattedRedeemAmount} ${sharesTokenKey}`}
-                />
-                <SummaryRow
-                  label={`Receive on`}
-                  chainKey={destinationChainKey ? destinationChainKey : undefined}
-                  value={`${formattedReceiveAmount} ${receiveToken?.name}`}
-                />
-              </Flex>
               <Flex justifyContent={'center'}>
                 <AccordionIcon color="gray.500" />
               </Flex>
             </AccordionButton>
             <AccordionPanel paddingX={0} paddingTop={0}>
               <Flex flexDirection="column" gap={1}>
-                <SummaryRow label="Price" value={`${formattedPrice} ${receiveToken?.name} / ${sharesTokenKey}`} />
+                <SummaryRow
+                  label="Price"
+                  value={`${formattedTokenRateWithFee} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  tooltip={`${formattedTokenRateWithFeeFull} ${receiveToken?.name} / ${sharesTokenKey}`}
+                />
                 {isBridgeRequired && (
                   <SummaryRow
                     label="Bridge Fee"
                     value={`${previewFee?.truncatedFeeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
+                    tooltip={`${previewFee?.feeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
                   />
                 )}
                 <SummaryRow label="Withdraw Fee" value={'0.2%'} />
@@ -180,11 +149,13 @@ const SummaryRow = ({
   label,
   chainKey,
   value,
+  tooltip,
   dotted = true,
 }: {
   label: string
   chainKey?: ChainKey
   value: string | React.ReactNode
+  tooltip?: string
   dotted?: boolean
 }) => (
   <Flex align="center" justifyContent="space-between">
@@ -206,9 +177,17 @@ const SummaryRow = ({
     {dotted && (
       <Box flex="1" mx={2} paddingTop={1} borderBottom="1px" borderStyle="dotted" borderColor="tooltipLabel" />
     )}
-    <Text color="tooltipLabel" fontSize="15px" fontWeight="medium">
-      {value}
-    </Text>
+    {tooltip ? (
+      <IonTooltip label={tooltip}>
+        <Text color="tooltipLabel" fontSize="15px" fontWeight="medium">
+          {value}
+        </Text>
+      </IonTooltip>
+    ) : (
+      <Text color="tooltipLabel" fontSize="15px" fontWeight="medium">
+        {value}
+      </Text>
+    )}
   </Flex>
 )
 

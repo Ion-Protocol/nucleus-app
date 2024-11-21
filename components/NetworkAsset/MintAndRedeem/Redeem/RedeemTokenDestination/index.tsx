@@ -1,13 +1,13 @@
-import { Address, formatUnits } from 'viem'
+import TokenSelect from '@/components/NetworkAsset/MintAndRedeem/shared/TokenSelect'
 import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { InfoOutlineIcon } from '@chakra-ui/icons'
-import { Flex, Input, Text } from '@chakra-ui/react'
-import { RedeemTokenDestinationConnector } from './connector'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import TokenSelect from '@/components/NetworkAsset/MintAndRedeem/shared/TokenSelect'
 import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { Flex, Input, Text } from '@chakra-ui/react'
+import { Address, formatUnits } from 'viem'
+import { RedeemTokenDestinationConnector } from './connector'
 
 function RedeemTokenDestination({
   error,
@@ -52,7 +52,7 @@ function RedeemTokenDestination({
   return (
     <IonCard variant="outline" bg={'backgroundSecondary'} pt={shouldIgnoreBalance ? 3 : 5}>
       {/* Top Row */}
-      <Flex justifyContent="spaceBetween" align="center">
+      <Flex justifyContent="space-between" align="center">
         {shouldIgnoreBalance ? (
           <Flex
             border="1px solid"
@@ -76,12 +76,10 @@ function RedeemTokenDestination({
         )}
 
         <Flex color="secondaryText" gap={1}>
-          <>
-            <Text variant="smallParagraph">Balance: </Text>
-            <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
-              <Text>{tokenBalance}</Text>
-            </IonSkeleton>
-          </>
+          <Text variant="smallParagraph">Balance: </Text>
+          <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
+            <Text>{tokenBalance}</Text>
+          </IonSkeleton>
         </Flex>
       </Flex>
 

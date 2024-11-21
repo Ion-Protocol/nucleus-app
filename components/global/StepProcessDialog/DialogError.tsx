@@ -1,6 +1,4 @@
-import React from 'react'
-import { FullErrorIcon } from '@/components/shared/FullErrorIcon'
-import { Flex, Text, Heading, Code, useColorMode } from '@chakra-ui/react'
+import { Flex, Heading, useColorMode } from '@chakra-ui/react'
 import Image from 'next/image'
 
 const DialogError = () => {
@@ -18,6 +16,7 @@ const DialogError = () => {
         alt="redeem success nucleus"
         width={180}
         height={180}
+        fetchPriority={undefined}
         src={
           colorMode === 'light' ? '/assets/images/nucleus-error-light.webp' : '/assets/images/nucleus-error-dark.webp'
         }
