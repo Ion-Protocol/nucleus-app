@@ -36,6 +36,10 @@ export const semanticTokens = {
       default: 'neutral.500',
       _dark: 'darkMode.300',
     },
+    successDialogSummary: {
+      default: 'neutral.50',
+      _dark: 'darkMode.300',
+    },
     iconBackground: {
       default: 'neutral.200',
       _dark: 'darkMode.300',
@@ -176,6 +180,26 @@ export const semanticTokens = {
       endColor: {
         default: 'neutral.700',
         _dark: 'darkMode.400',
+      },
+    },
+    dialogSteps: {
+      idle: {
+        default: 'neutral.600',
+        _dark: 'darkMode.300',
+      },
+      active: {
+        default: 'neutral.900',
+        _dark: 'darkMode.200',
+      },
+      icon: {
+        idle: {
+          default: 'darkMode.500',
+          _dark: 'darkMode.200',
+        },
+        active: {
+          default: 'white',
+          _dark: 'white',
+        },
       },
     },
     code: {

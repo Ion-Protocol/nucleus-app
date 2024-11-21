@@ -31,20 +31,20 @@ function TokenDestination({
         <Flex w="full">
           <IonSkeleton isLoaded={!loadingTokenRate} minW="250px" w="60%">
             <Input
+              color="textSecondary"
+              cursor="pointer"
               disabled
               _disabled={{
                 cursor: 'text',
                 color: 'disabled',
               }}
-              color="textSecondary"
-              cursor="pointer"
-              value={value}
-              variant="unstyled"
-              size="lg"
-              placeholder="Amount"
               fontFamily="var(--font-ppformula)"
               fontSize="18px"
               letterSpacing="0.05em"
+              placeholder="Amount"
+              size="lg"
+              value={value}
+              variant="unstyled"
             />
           </IonSkeleton>
         </Flex>

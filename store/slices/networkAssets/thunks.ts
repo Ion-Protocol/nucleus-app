@@ -48,13 +48,14 @@ import {
   selectNetworkAssetConfig,
   selectNetworkAssetConfigByKey,
   selectNetworkConfig,
+  selectRedemptionSourceChainKey,
   selectSolanaAddressBytes32,
   selectSourceChainId,
   selectSourceChainKey,
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { clearDepositAmount, setDepositAmount } from './slice'
+import { clearDepositAmount, setDepositAmount, setRedeemAmount } from './slice'
 import { claim } from '@/api/contracts/MerkleClaim/claim'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
@@ -290,6 +291,26 @@ export const setDepositAmountMax = createAsyncThunk<void, void, { state: RootSta
   }
 )
 
+export const setRedeemAmountMax = createAsyncThunk<void, void, { state: RootState; rejectValue: string }>(
+  'bridges/setRedeemAmountMax',
+  async (_, { getState, rejectWithValue, dispatch }) => {
+    const state = getState() as RootState
+    const networkAssetKey = selectNetworkAssetFromRoute(state)
+    const chainKeyFromRedemptionSourceChain = selectRedemptionSourceChainKey(state)
+    const tokenBalance = selectTokenBalance(state, chainKeyFromRedemptionSourceChain, networkAssetKey)
+
+    let tokenBalanceAsNumber = tokenBalance ? convertFromDecimals(tokenBalance) : '0'
+
+    if (networkAssetKey === TokenKey.TETH) {
+      tokenBalanceAsNumber = truncateToSignificantDigits(tokenBalanceAsNumber, 9)
+    }
+
+    // Using dispatch within the thunk to trigger the setInputValue action so
+    // that the the previewFee side effect will also trigger
+    dispatch(setRedeemAmount(tokenBalanceAsNumber))
+  }
+)
+
 export interface FetchChainRateResult {
   rate: string | null
 }
@@ -306,7 +327,6 @@ export const fetchTokenRateInQuote = createAsyncThunk<
     const chainId = selectSourceChainId(state)
 
     if (!despositAssetAddress || !accountantAddress || !chainId) return { result: { rate: null } }
-
     const rateAsBigInt = await getRateInQuoteSafe(
       { quote: despositAssetAddress as `0x${string}` },
       { contractAddress: accountantAddress, chainId }
@@ -560,7 +580,6 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const depositAssetTokenKey = selectSourceTokenKey(state)
       const chainId = selectSourceChainId(state)
       const userAddress = selectAddress(state)
-
       if (!depositAssetTokenKey || !chainKeyFromSelector) {
         return rejectWithValue('Missing deposit asset token key')
       }

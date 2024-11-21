@@ -1,5 +1,10 @@
 import { DebounceConfig } from '@/store/middleware/debounceMiddleware'
-import { setDepositAmount, setDepositAmountDebounceComplete } from '@/store/slices/networkAssets'
+import {
+  setDepositAmount,
+  setDepositAmountDebounceComplete,
+  setRedeemAmount,
+  setRedeemAmountDebounceComplete,
+} from '@/store/slices/networkAssets'
 
 /**
  * Configuration for debouncing actions in the application.
@@ -26,6 +31,11 @@ export const debounceConfigs: DebounceConfig[] = [
   {
     debounceActionType: setDepositAmount.type,
     triggerActionType: setDepositAmountDebounceComplete.type,
+    debounceTime: 1000,
+  },
+  {
+    debounceActionType: setRedeemAmount.type,
+    triggerActionType: setRedeemAmountDebounceComplete.type,
     debounceTime: 1000,
   },
 ]

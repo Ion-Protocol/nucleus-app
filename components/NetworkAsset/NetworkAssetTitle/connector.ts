@@ -17,7 +17,7 @@ const mapState = (state: RootState, ownProps: NetworkAssetTitleOwnProps) => {
   const chainNameOfNetworkAsset = networkAssetConfig?.chain ? chainsConfig[networkAssetConfig.chain].name : ''
 
   const boringVaultAddress = selectContractAddressByName(state, 'boringVault')
-  const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}${boringVaultAddress}` : undefined
+  const etherscanHref = boringVaultAddress ? `${etherscanBaseUrl}/address/${boringVaultAddress}` : undefined
 
   return {
     boringVaultAddress,

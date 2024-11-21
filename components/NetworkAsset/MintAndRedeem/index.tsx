@@ -1,8 +1,7 @@
-import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Tooltip } from '@chakra-ui/react'
+import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Mint } from './Mint'
 import { Redeem } from './Redeem'
-import { IonTooltip } from '@/components/shared/IonTooltip'
 
 export function MintAndRedeem() {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -17,13 +16,12 @@ export function MintAndRedeem() {
               Mint
             </Text>
           </Tab>
-          <IonTooltip label="Coming soon < 1 month" aria-label="Redeem tab tooltip">
-            <Tab isDisabled _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-              <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
-                Redeem
-              </Text>
-            </Tab>
-          </IonTooltip>
+
+          <Tab _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
+            <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+              Redeem
+            </Text>
+          </Tab>
         </TabList>
 
         {/* Tabs Content, Mint and Redeem */}

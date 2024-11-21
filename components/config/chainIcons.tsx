@@ -1,7 +1,8 @@
 import { SeiIcon } from '@/components/shared/icons/Sei'
+// import SeiIcon from '@/components/shared/icons/Sei_Symbol_Red.svg'
 import { ChainKey } from '@/types/ChainKey'
-import { ChakraProps } from '@chakra-ui/react'
-import React from 'react'
+import { ChakraProps, IconProps, Icon } from '@chakra-ui/react'
+import React, { SVGAttributes } from 'react'
 import { DineroIcon } from '../shared/icons/Dinero'
 import { EclipseIcon } from '../shared/icons/Eclipse'
 import { EthereumIcon } from '../shared/icons/Ethereum'
@@ -9,16 +10,17 @@ import { SwellChainIcon } from '../shared/icons/SwellChain'
 import { TokenFethIcon } from '../shared/icons/TokenFeth'
 import { FormIcon } from '../shared/icons/Form'
 
-export const chainIconMap: Partial<Record<ChainKey, (props: ChakraProps) => JSX.Element>> = {
+export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
-  [ChainKey.SEI]: (props) => <SeiIcon {...props} />,
+  // The SeiIcon is broken and doesn't play with Chakra's Icons
+  [ChainKey.SEI]: (props: IconProps) => <SeiIcon />,
   [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
   [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
   [ChainKey.FORM]: (props) => <FormIcon {...props} />,
 }
 
-interface ChainIconMapProps extends ChakraProps {
+interface ChainIconMapProps extends IconProps {
   chainKey?: ChainKey
 }
 

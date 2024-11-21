@@ -126,6 +126,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'SSETH',
     addresses: {
       [ChainKey.SEI]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
+      [ChainKey.ETHEREUM]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
     },
   },
   [TokenKey.TETH]: {
