@@ -516,6 +516,7 @@ export const useRedeem = () => {
   return {
     handleRedeem,
     isValid,
+    redeemAmount,
     isLoading: redeemStatus.isLoading || isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
   }
 }
