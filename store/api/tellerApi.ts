@@ -1,22 +1,16 @@
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Address } from 'viem'
-import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
-import { serialize } from 'wagmi'
 import { wagmiConfig } from '@/config/wagmi'
+import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
+import { bigIntToNumberAsString } from '@/utils/bigint'
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
+import { Address, Hash } from 'viem'
 import {
   readContract,
-  type ReadContractReturnType,
   type ReadContractErrorType,
-  type ReadContractParameters,
-  writeContract,
-  simulateContract,
-  type WriteContractReturnType,
-  type WriteContractParameters,
-  type WriteContractErrorType,
   waitForTransactionReceipt,
+  type WaitForTransactionReceiptErrorType,
+  writeContract,
+  type WriteContractErrorType,
 } from 'wagmi/actions'
-
-import { bigIntToNumberAsString } from '@/utils/bigint'
 
 export type BridgeData =
   | {
@@ -35,15 +29,21 @@ export interface PreviewFeeArgs {
   chainId: number
 }
 
-export type PreviewFeeResponse = {
+export interface BridgeArgs extends PreviewFeeArgs {
+  fee: bigint
+}
+
+export interface PreviewFeeResponse {
   fee: bigint
   feeAsString: string
   truncatedFeeAsString: string
 }
 
+type WagmiError = ReadContractErrorType | WriteContractErrorType | WaitForTransactionReceiptErrorType
+
 export const tellerApi = createApi({
   reducerPath: 'previewFeeApi',
-  baseQuery: fakeBaseQuery(),
+  baseQuery: fakeBaseQuery<WagmiError>(),
   tagTypes: ['PreviewFee'],
   endpoints: (builder) => ({
     getPreviewFee: builder.query<PreviewFeeResponse, PreviewFeeArgs>({
@@ -63,18 +63,20 @@ export const tellerApi = createApi({
               truncatedFeeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 4 }),
             },
           }
-        } catch (error) {
-          return { error: serialize(error) }
+        } catch (err) {
+          const error = err as WagmiError
+          return {
+            error,
+            data: undefined,
+            meta: undefined,
+          }
         }
       },
     }),
-    bridge: builder.mutation<
-      `0x${string}`,
-      { shareAmount: bigint; bridgeData: BridgeData; contractAddress: Address; chainId: number; fee: bigint }
-    >({
+    bridge: builder.mutation<Hash, BridgeArgs>({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
-          const results = await writeContract(wagmiConfig, {
+          const hash = await writeContract(wagmiConfig, {
             abi: CrossChainTellerBaseAbi,
             address: contractAddress,
             functionName: 'bridge',
@@ -82,13 +84,17 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-
           const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash: results,
+            hash,
           })
           return { data: txReceipt.transactionHash }
-        } catch (error) {
-          return { error: serialize(error) }
+        } catch (err) {
+          const error = err as WagmiError
+          return {
+            error,
+            data: undefined,
+            meta: undefined,
+          }
         }
       },
     }),
