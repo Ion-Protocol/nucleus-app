@@ -25,6 +25,8 @@ import {
 } from '@/store/slices/networkAssets/selectors'
 import { ChainKey } from '@/types/ChainKey'
 import { capitalizeFirstLetter } from '@/utils/string'
+import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { RedeemSummaryCopy } from '../RedeemSummary'
 
 export type RedeemSummaryCardProps = {
   redeemAmount: string
@@ -62,7 +64,7 @@ const RedeemSummaryCard = () => {
   const sharesTokenKey = networkAssetConfig?.token.name
 
   return (
-    <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm" paddingBottom={2}>
+    <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm">
       <Heading
         as="h2"
         color="text"
@@ -79,49 +81,60 @@ const RedeemSummaryCard = () => {
       <VStack spacing={3} align="stretch">
         <Accordion allowToggle>
           <AccordionItem borderBottom={'none'} borderTop={'none'}>
-            <Flex flexDirection="column" gap={1} width="100%">
-              <SummaryRow
-                label={`Redeem from`}
-                chainKey={redemptionSourceChainKey ? redemptionSourceChainKey : undefined}
-                value={`${redeemAmountTruncated} ${sharesTokenKey}`}
-                tooltip={`${redeemAmount} ${sharesTokenKey}`}
-              />
-              <SummaryRow
-                label={`Receive on`}
-                chainKey={destinationChainKey ? destinationChainKey : undefined}
-                value={`${receiveAmountTruncated} ${receiveToken?.name}`}
-                tooltip={`${receiveAmountFormattedFull} ${receiveToken?.name}`}
-              />
-            </Flex>
             <AccordionButton
               display={'flex'}
-              flexDirection={'column'}
               flex={1}
               paddingX={0}
               paddingBottom={0}
               width="100%"
               _hover={{ bg: 'none' }}
             >
-              <Flex justifyContent={'center'}>
-                <AccordionIcon color="gray.500" />
-              </Flex>
-            </AccordionButton>
-            <AccordionPanel paddingX={0} paddingTop={0}>
-              <Flex flexDirection="column" gap={1}>
+              <Flex flexDirection="column" gap={1} width="100%">
                 <SummaryRow
-                  label="Price"
-                  value={`${formattedTokenRateWithFee} ${receiveToken?.name} / ${sharesTokenKey}`}
-                  tooltip={`${formattedTokenRateWithFeeFull} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  label={`Redeem from`}
+                  chainKey={redemptionSourceChainKey ? redemptionSourceChainKey : undefined}
+                  value={`${redeemAmountTruncated} ${sharesTokenKey}`}
+                  fullValue={`${redeemAmount} ${sharesTokenKey}`}
+                  darkTextValue
+                />
+                <SummaryRow
+                  label={`Receive on`}
+                  chainKey={destinationChainKey ? destinationChainKey : undefined}
+                  value={`${receiveAmountTruncated} ${receiveToken?.name}`}
+                  fullValue={`${receiveAmountFormattedFull} ${receiveToken?.name}`}
+                  darkTextValue
                 />
                 {isBridgeRequired && (
                   <SummaryRow
-                    label="Bridge Fee"
+                    label={RedeemSummaryCopy.bridgeFee.label}
+                    tooltip={RedeemSummaryCopy.bridgeFee.tooltip}
                     value={`${previewFee?.truncatedFeeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
-                    tooltip={`${previewFee?.feeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
+                    fullValue={`${previewFee?.feeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
+                    darkTextValue
                   />
                 )}
-                <SummaryRow label="Withdraw Fee" value={'0.2%'} />
-                <SummaryRow label="Deadline" value={'3 days'} />
+                <SummaryRow
+                  label={RedeemSummaryCopy.redemptionPrice.label}
+                  tooltip={RedeemSummaryCopy.redemptionPrice.tooltip}
+                  value={`${formattedTokenRateWithFee} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  fullValue={`${formattedTokenRateWithFeeFull} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  darkTextValue
+                  showDropdownIcon
+                />
+              </Flex>
+            </AccordionButton>
+            <AccordionPanel paddingBottom={0}>
+              <Flex flexDirection="column" gap={1}>
+                <SummaryRow
+                  label={RedeemSummaryCopy.withdrawFee.label}
+                  tooltip={RedeemSummaryCopy.withdrawFee.tooltip}
+                  value={'0.2%'}
+                />
+                <SummaryRow
+                  label={RedeemSummaryCopy.deadline.label}
+                  tooltip={RedeemSummaryCopy.deadline.tooltip}
+                  value={'3 days'}
+                />
               </Flex>
             </AccordionPanel>
           </AccordionItem>
@@ -147,20 +160,26 @@ const RedeemSummaryCard = () => {
 
 const SummaryRow = ({
   label,
+  tooltip,
   chainKey,
   value,
-  tooltip,
+  fullValue,
   dotted = true,
+  showDropdownIcon,
+  darkTextValue,
 }: {
   label: string
+  tooltip?: string
   chainKey?: ChainKey
   value: string | React.ReactNode
-  tooltip?: string
+  fullValue?: string
   dotted?: boolean
+  showDropdownIcon?: boolean
+  darkTextValue?: boolean
 }) => (
   <Flex align="center" justifyContent="space-between">
     {chainKey ? (
-      <Flex color="tooltipLabel" alignItems={'center'} gap={1} fontSize="15px">
+      <Flex color="fullValueLabel" alignItems={'center'} gap={1} fontSize="15px">
         <Text as="span" color="tooltipLabel" fontSize="15px">
           {label}
         </Text>
@@ -170,24 +189,30 @@ const SummaryRow = ({
         </Text>
       </Flex>
     ) : (
-      <Text color="tooltipLabel" fontSize="15px">
-        {label}
-      </Text>
+      <Flex align="center" gap={1}>
+        <Text color="tooltipLabel" fontSize="15px">
+          {label}
+        </Text>
+        <IonTooltip label={tooltip}>
+          <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+        </IonTooltip>
+      </Flex>
     )}
     {dotted && (
       <Box flex="1" mx={2} paddingTop={1} borderBottom="1px" borderStyle="dotted" borderColor="tooltipLabel" />
     )}
-    {tooltip ? (
-      <IonTooltip label={tooltip}>
-        <Text color="tooltipLabel" fontSize="15px" fontWeight="medium">
+    {fullValue ? (
+      <IonTooltip label={fullValue}>
+        <Text color={darkTextValue ? 'text' : 'tooltipLabel'} fontSize="15px" fontWeight="medium">
           {value}
         </Text>
       </IonTooltip>
     ) : (
-      <Text color="tooltipLabel" fontSize="15px" fontWeight="medium">
+      <Text color={darkTextValue ? 'text' : 'tooltipLabel'} fontSize="15px" fontWeight="medium">
         {value}
       </Text>
     )}
+    {showDropdownIcon && <AccordionIcon alignSelf={'flex-end'} color="gray.500" />}
   </Flex>
 )
 

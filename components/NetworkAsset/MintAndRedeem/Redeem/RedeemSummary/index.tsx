@@ -14,7 +14,7 @@ import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selecto
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { RedeemSummaryConnector } from './connector'
 
-// Move to a better place? or componentize the dropdown?
+// TODO: Move to a better place? or componentize the dropdown?
 export const RedeemSummaryCopy = {
   bridgeFee: {
     label: 'Bridge Fee',
