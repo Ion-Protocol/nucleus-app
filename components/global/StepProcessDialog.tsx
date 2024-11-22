@@ -1,24 +1,25 @@
-import { useDispatch, useSelector } from 'react-redux'
+import Loader from '@/components/global/Loader'
+import WalletIcon from '@/components/shared/icons/wallet.svg'
+import { RootState } from '@/store'
+import { resetDialog } from '@/store/slices/stepDialog/slice'
 import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  IconProps,
+  Link,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
   ModalBody,
   ModalCloseButton,
-  Button,
-  Text,
-  Box,
+  ModalContent,
   ModalFooter,
-  Flex,
-  Link,
+  ModalHeader,
+  ModalOverlay,
+  Text,
 } from '@chakra-ui/react'
-import { RootState } from '@/store'
-import { clearCompletedSteps, setOpen, setStatus, resetDialog } from '@/store/slices/stepDialog/slice'
-import { ChevronUp, Check, OctagonX, ExternalLink } from 'lucide-react'
-import Loader from '@/components/global/Loader'
-import { Icon, IconProps } from '@chakra-ui/react'
-import WalletIcon from '@/components/shared/icons/wallet.svg'
+import { Check, ChevronUp, ExternalLink, OctagonX } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
 import RedeemSummaryCard from '../NetworkAsset/MintAndRedeem/Redeem/RedeemSummaryCard'
 import DialogError from './StepProcessDialog/DialogError'
 import DialogSuccess from './StepProcessDialog/DialogSuccess'
@@ -43,8 +44,8 @@ const StepProcessDialog = () => {
   return (
     <Modal isOpen={open} onClose={handleCloseDialog} isCentered>
       <ModalOverlay />
-      <ModalContent bg="backgroundSecondary">
-        <ModalHeader fontSize="22px" color="neutral.950" fontWeight={400} paddingX={12} paddingTop={8}>
+      <ModalContent bg="backgroundSecondary" minWidth={'500px'}>
+        <ModalHeader fontSize="22px" color="neutral.950" fontWeight={400} paddingX={12} paddingTop={6}>
           {title}
         </ModalHeader>
         <ModalCloseButton />

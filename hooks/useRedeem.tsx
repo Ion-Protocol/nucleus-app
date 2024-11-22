@@ -2,44 +2,43 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 
+import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { tokensConfig } from '@/config/tokens'
-import { etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
+import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
+import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
+import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
+import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
+import { selectAddress } from '@/store/slices/account'
+import { selectTokenBalance } from '@/store/slices/balance/selectors'
+import { selectNetworkId } from '@/store/slices/chain'
 import {
-  setOpen,
-  setSteps,
-  setTitle,
-  setDialogStep,
-  setHeaderContent,
-  DialogStep,
-  RedeemStepType,
-  restoreCompletedSteps,
-  setStatus,
-} from '@/store/slices/stepDialog/slice'
-import {
-  selectNetworkAssetConfig,
-  selectReceiveTokens,
-  selectReceiveTokenKey,
-  selectRedeemAmountAsBigInt,
   selectContractAddressByName,
-  selectRedemptionSourceChainId,
-  selectRedemptionSourceChainKey,
+  selectDestinationChainId,
+  selectIsBridgeRequired,
+  selectNetworkAssetConfig,
+  selectReceiveTokenKey,
+  selectReceiveTokens,
+  selectRedeemAmountAsBigInt,
   selectRedeemBridgeData,
   selectRedeemLayerZeroChainSelector,
   selectRedemptionDestinationChainKey,
-  selectDestinationChainId,
-  selectIsBridgeRequired,
+  selectRedemptionSourceChainId,
+  selectRedemptionSourceChainKey,
 } from '@/store/slices/networkAssets'
-import { selectTokenBalance } from '@/store/slices/balance/selectors'
-import { selectAddress } from '@/store/slices/account'
-import { selectNetworkId } from '@/store/slices/chain'
-import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
-import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
-import { atomicQueueContractAddress } from '@/config/constants'
+import {
+  DialogStep,
+  RedeemStepType,
+  restoreCompletedSteps,
+  setDialogStep,
+  setHeaderContent,
+  setOpen,
+  setStatus,
+  setSteps,
+  setTitle,
+} from '@/store/slices/stepDialog/slice'
 import { calculateRedeemDeadline } from '@/utils/time'
-import { wagmiConfig } from '@/config/wagmi'
 import { switchChain } from 'wagmi/actions'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
@@ -84,11 +83,6 @@ export const useRedeem = () => {
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
-  // Explorer Base URLs
-  const redemptionSourceExplorerBaseUrl =
-    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey!]?.explorerBaseUrl
-  const redemptionDestinationExplorerBaseUrl =
-    networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey!]?.explorerBaseUrl
 
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
@@ -373,16 +367,38 @@ export const useRedeem = () => {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    // 2. Create atomic request
-    // Required Parameters:
+    // 2. Prepare atomic request data
+    // 2.1. Apply 0.2% fee to the rateInQuoteSafe
+    // 2.2. Create userRequest object with Fee applied
+    // @params userRequest:
     //   deadline: BigInt(deadline)
     //   atomicPrice: tokenRateInQuote?.rateInQuoteSafe!
     //   offerAmount: redeemAmount
     //   inSolve: false
+    // 2.3. Create atomicRequestArgs object
+    // @params atomicRequestArgs:
+    //   offer: sharesTokenAddress
+    //   want: wantTokenAddress
+    //   userRequest: userRequest
+    // 2.4. Create atomicRequestOptions object
+    // @params atomicRequestOptions:
+    //   atomicQueueContractAddress: atomicQueueContractAddress
+    //   chainId: destinationChainId!
     //////////////////////////////////////////////////////////////////////////
+    if (!tokenRateInQuote?.rateInQuoteSafe) {
+      dispatch(setHeaderContent('Error'))
+      dispatch(
+        setStatus({
+          type: 'error',
+          message: 'Missing rateInQuoteSafe',
+        })
+      )
+      return
+    }
+    const rateInQuoteWithFee = (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
     const userRequest = {
       deadline: BigInt(deadline),
-      atomicPrice: tokenRateInQuote?.rateInQuoteSafe!,
+      atomicPrice: rateInQuoteWithFee,
       offerAmount: redeemAmount,
       inSolve: false,
     }

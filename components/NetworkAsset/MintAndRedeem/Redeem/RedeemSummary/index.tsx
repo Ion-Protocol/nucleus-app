@@ -1,20 +1,41 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Flex, Text } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
 import { Address } from 'viem'
-import { Accordion, AccordionItem, Flex, AccordionButton, AccordionIcon, AccordionPanel, Text } from '@chakra-ui/react'
 
-import { nativeAddress } from '@/config/constants'
-import { bigIntToNumberAsString } from '@/utils/bigint'
-import { selectAddress } from '@/store/slices/account/'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
-import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { RedeemSummaryConnector } from './connector'
+import { nativeAddress } from '@/config/constants'
+import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
 import { useGetTokenPriceQuery } from '@/store/api/coinGecko'
-import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
+import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
+import { selectAddress } from '@/store/slices/account/'
+import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
+import { bigIntToNumberAsString } from '@/utils/bigint'
+import { RedeemSummaryConnector } from './connector'
+
+// TODO: Move to a better place? or componentize the dropdown?
+export const RedeemSummaryCopy = {
+  bridgeFee: {
+    label: 'Bridge Fee',
+    tooltip:
+      'Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane. These fees are an estimate and any unused amount will be refunded to the user.',
+  },
+  redemptionPrice: {
+    label: 'Redemption Price',
+    tooltip:
+      'Redemption price is the current exchange rate discounted by the withdraw fee. This price determines how much assets you receive from the withdrawal.',
+  },
+  withdrawFee: {
+    label: 'Withdraw Fee',
+    tooltip:
+      'Withdraw fees are applied in order to incentivize solvers to process withdraw orders into arbitrary requested assets.',
+  },
+  deadline: {
+    label: 'Deadline',
+    tooltip: 'If the deadline is reached, your order will automatically expire and will not be processed.',
+  },
+}
 
 function RedeemSummary({
   accountantAddress,
@@ -75,62 +96,62 @@ function RedeemSummary({
     <Accordion allowToggle>
       <AccordionItem borderTop="none">
         <AccordionButton _hover={{ bg: 'none' }} paddingX={0} paddingBottom={4}>
-          <Flex align="center" justify="space-between" flex="1">
-            <Flex color="secondaryText" gap={2} align="center">
-              <Text variant="paragraph" color="disabledText">
-                Price
-              </Text>
-              <IonTooltip label={'Price consists of the current rate of the asset and fees'}>
-                <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
-              </IonTooltip>
-            </Flex>
-            <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
-              <Flex align="center">
-                <IonTooltip label={formattedPriceFull}>
-                  <Text textAlign="right" variant="paragraph">
-                    {`${formattedPrice} ${receiveToken} / ${networkAssetName}`}
-                  </Text>
-                </IonTooltip>
-                <AccordionIcon />
-              </Flex>
-            </IonSkeleton>
-          </Flex>
-        </AccordionButton>
-
-        <AccordionPanel paddingX={0} paddingTop={0} paddingBottom={3} paddingRight={4}>
-          <Flex direction="column" gap={3}>
+          <Flex direction="column" width="100%" gap={3}>
             {/* Bridge Fee */}
             {isBridgeRequired && (
               <Flex align="center" justify="space-between">
-                <Flex color="secondaryText" gap={2} align="center">
-                  <Text variant="paragraph" color="disabledText">
-                    Bridge Fee
-                  </Text>
+                <Flex gap={2} align="center">
+                  <Text variant="paragraph">Bridge Fee</Text>
                   <IonTooltip label="Fees are charged by the underlying bridge provider such as LayerZero or Hyperlane. These fees are an estimate and any unused amount will be refunded to the user.">
-                    <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+                    <InfoOutlineIcon mt={'2px'} fontSize="sm" />
                   </IonTooltip>
                 </Flex>
                 <IonSkeleton minW="75px" isLoaded={!isPreviewFeeLoading}>
-                  <Text textAlign="right" variant="paragraph">
-                    {formattedPreviewFee
-                      ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee?.toUpperCase()} (≈ ${formattedPreviewFee.toFixed(4)} USD)`
-                      : '0'}
-                  </Text>
+                  <IonTooltip label={`${previewFee?.feeAsString} ${nativeTokenForBridgeFee?.toUpperCase()}`}>
+                    <Text textAlign="right" variant="paragraph">
+                      {formattedPreviewFee
+                        ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee?.toUpperCase()} (≈ ${formattedPreviewFee.toFixed(4)} USD)`
+                        : '0'}
+                    </Text>
+                  </IonTooltip>
                 </IonSkeleton>
               </Flex>
             )}
+            <Flex align="center" justify="space-between" flex="1">
+              <Flex gap={2} align="center">
+                <Text variant="paragraph">{RedeemSummaryCopy.redemptionPrice.label}</Text>
+                <IonTooltip label={RedeemSummaryCopy.redemptionPrice.tooltip}>
+                  <InfoOutlineIcon mt={'2px'} fontSize="sm" />
+                </IonTooltip>
+              </Flex>
+              <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
+                <Flex align="center">
+                  <IonTooltip label={formattedPriceFull}>
+                    <Text textAlign="right" variant="paragraph">
+                      {`${formattedPrice} ${receiveToken} / ${networkAssetName}`}
+                    </Text>
+                  </IonTooltip>
+                  <AccordionIcon />
+                </Flex>
+              </IonSkeleton>
+            </Flex>
+          </Flex>
+        </AccordionButton>
+
+        <AccordionPanel paddingTop={0} paddingBottom={3}>
+          <Flex direction="column" gap={3}>
             {/* Withdrawal Fee */}
             <Flex align="center" justify="space-between">
               <Flex color="secondaryText" gap={2} align="center">
                 <Text variant="paragraph" color="disabledText">
-                  Withdraw Fee
+                  {RedeemSummaryCopy.withdrawFee.label}
                 </Text>
-                <IonTooltip label="Withdraw fees applied in order to incentivize solvers to process withdraw orders into arbitrary requested assets.">
+                <IonTooltip label={RedeemSummaryCopy.withdrawFee.tooltip}>
                   <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                 </IonTooltip>
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
-                <Text textAlign="right" variant="paragraph">
+                <Text textAlign="right" variant="paragraph" color="disabledText">
                   0.2%
                 </Text>
               </IonSkeleton>
@@ -139,14 +160,14 @@ function RedeemSummary({
             <Flex align="center" justify="space-between">
               <Flex color="secondaryText" gap={2} align="center">
                 <Text variant="paragraph" color="disabledText">
-                  Deadline
+                  {RedeemSummaryCopy.deadline.label}
                 </Text>
-                <IonTooltip label={'If the deadline is reached, the transaction will be cancelled.'}>
+                <IonTooltip label={RedeemSummaryCopy.deadline.tooltip}>
                   <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                 </IonTooltip>
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
-                <Text textAlign="right" variant="paragraph">
+                <Text textAlign="right" variant="paragraph" color="disabledText">
                   3 days
                 </Text>
               </IonSkeleton>
