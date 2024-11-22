@@ -385,17 +385,8 @@ export const useRedeem = () => {
     //   atomicQueueContractAddress: atomicQueueContractAddress
     //   chainId: destinationChainId!
     //////////////////////////////////////////////////////////////////////////
-    if (!tokenRateInQuote?.rateInQuoteSafe) {
-      dispatch(setHeaderContent('Error'))
-      dispatch(
-        setStatus({
-          type: 'error',
-          message: 'Missing rateInQuoteSafe',
-        })
-      )
-      return
-    }
-    const rateInQuoteWithFee = (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    const rateInQuoteWithFee = (tokenRateInQuote?.rateInQuoteSafe! * BigInt(9980)) / BigInt(10000)
+    console.log('rateInQuoteWithFee', rateInQuoteWithFee)
     const userRequest = {
       deadline: BigInt(deadline),
       atomicPrice: rateInQuoteWithFee,
@@ -525,6 +516,7 @@ export const useRedeem = () => {
   return {
     handleRedeem,
     isValid,
+    redeemAmount,
     isLoading: redeemStatus.isLoading || isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
   }
 }
