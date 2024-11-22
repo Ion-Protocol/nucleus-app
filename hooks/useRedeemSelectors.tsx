@@ -154,6 +154,7 @@ export const useRedeemSelectors = () => {
   })
 
   return {
+    tokenRateInQuoteSafeQuery,
     previewFee,
     userAddress,
     networkAssetConfig,
