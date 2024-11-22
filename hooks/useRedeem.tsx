@@ -139,6 +139,8 @@ export const useRedeem = () => {
       accountantAddress &&
       tellerContractAddress
   )
+
+  console.log('redemptionSourceChainId', redemptionSourceChainId, 'destinationChainId', destinationChainId)
   // Bridge Data Selector, Only used for redeem with bridge
   const redeemBridgeData = useSelector(selectRedeemBridgeData)
 
