@@ -55,7 +55,9 @@ const RedeemSummaryCard = () => {
     redemptionSourceChainKey,
     destinationChainKey,
     previewFee,
+    tokenRateInQuoteSafeQuery,
   } = useRedeemSelectors()
+  const { data: tokenRateInQuoteSafe } = tokenRateInQuoteSafeQuery
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
   const tokenKeys = useSelector(selectReceiveTokens)
@@ -125,6 +127,12 @@ const RedeemSummaryCard = () => {
             </AccordionButton>
             <AccordionPanel paddingBottom={0}>
               <Flex flexDirection="column" gap={1}>
+                <SummaryRow
+                  label={RedeemSummaryCopy.exchangeRate.label}
+                  tooltip={RedeemSummaryCopy.exchangeRate.tooltip}
+                  value={`${tokenRateInQuoteSafe?.truncatedRateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  fullValue={`${tokenRateInQuoteSafe?.rateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
+                />
                 <SummaryRow
                   label={RedeemSummaryCopy.withdrawFee.label}
                   tooltip={RedeemSummaryCopy.withdrawFee.tooltip}

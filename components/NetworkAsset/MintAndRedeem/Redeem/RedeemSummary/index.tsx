@@ -26,6 +26,11 @@ export const RedeemSummaryCopy = {
     tooltip:
       'Redemption price is the current exchange rate discounted by the withdraw fee. This price determines how much assets you receive from the withdrawal.',
   },
+  exchangeRate: {
+    label: 'Exchange Rate',
+    tooltip:
+      'The current exchange rate used to calculate the redemption price that is not inclusive of the withdrawal fee.',
+  },
   withdrawFee: {
     label: 'Withdraw Fee',
     tooltip:
@@ -140,6 +145,24 @@ function RedeemSummary({
 
         <AccordionPanel paddingTop={0} paddingBottom={3}>
           <Flex direction="column" gap={3}>
+            {/* Exchange Rate */}
+            <Flex align="center" justify="space-between">
+              <Flex color="secondaryText" gap={2} align="center">
+                <Text variant="paragraph" color="disabledText">
+                  {RedeemSummaryCopy.exchangeRate.label}
+                </Text>
+                <IonTooltip label={RedeemSummaryCopy.exchangeRate.tooltip}>
+                  <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
+                </IonTooltip>
+              </Flex>
+              <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
+                <IonTooltip label={tokenRateInQuote?.rateInQuoteSafeAsString}>
+                  <Text textAlign="right" variant="paragraph" color="disabledText">
+                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken} / ${networkAssetName}`}
+                  </Text>
+                </IonTooltip>
+              </IonSkeleton>
+            </Flex>
             {/* Withdrawal Fee */}
             <Flex align="center" justify="space-between">
               <Flex color="secondaryText" gap={2} align="center">
