@@ -39,6 +39,7 @@ import {
   setTitle,
 } from '@/store/slices/stepDialog/slice'
 import { calculateRedeemDeadline } from '@/utils/time'
+import { getAccount } from '@wagmi/core'
 import { switchChain } from 'wagmi/actions'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
@@ -59,6 +60,50 @@ const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
 type RedeemStatus = {
   currentStep: RedeemStepType | null
   isLoading: boolean
+}
+
+// utility function to verify chain switch
+const verifyChainSwitch = async (targetChainId: number, maxAttempts = 3, delayMs = 1000): Promise<boolean> => {
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      const account = getAccount(wagmiConfig)
+      if (account.chainId === targetChainId) {
+        return true
+      }
+      // Wait before checking again
+      await new Promise((resolve) => setTimeout(resolve, delayMs))
+    } catch (error) {
+      console.error('Error verifying chain switch:', error)
+    }
+  }
+  return false
+}
+
+// utility function to switch chain safely
+const switchChainSafely = async (targetChainId: number): Promise<boolean> => {
+  try {
+    // Only attempt switch if we're on the wrong chain
+    const account = getAccount(wagmiConfig)
+    if (account.chainId === targetChainId) {
+      return true
+    }
+
+    // Attempt chain switch
+    await switchChain(wagmiConfig, { chainId: targetChainId })
+
+    // Verify the switch was successful
+    const success = await verifyChainSwitch(targetChainId)
+    if (!success) {
+      throw new Error(`Failed to switch to chain ${targetChainId}`)
+    }
+
+    return true
+  } catch (error) {
+    console.error('Chain switch failed:', error)
+    throw new Error(
+      `Failed to switch to chain ${targetChainId}: ${error instanceof Error ? error.message : 'Unknown error'}`
+    )
+  }
 }
 
 export const useRedeem = () => {
@@ -308,7 +353,7 @@ export const useRedeem = () => {
       //     chain that the user selected, switch it to the source chain.
       //////////////////////////////////////////////////////////////////////////
       if (isBridgeRequired) {
-        await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
+        await switchChainSafely(redemptionSourceChainId!)
       }
 
       if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
@@ -331,7 +376,30 @@ export const useRedeem = () => {
 
       if (layerZeroChainSelector !== 0 && redeemBridgeData) {
         if (networkId !== destinationChainId) {
-          await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
+          try {
+            const switched = await switchChainSafely(destinationChainId!)
+            if (!switched) {
+              dispatch(setHeaderContent('Error'))
+              dispatch(
+                setStatus({
+                  type: 'error',
+                  message: 'Failed to switch networks',
+                })
+              )
+              return
+            }
+          } catch (error) {
+            console.error('Network switch failed:', error)
+            dispatch(setHeaderContent('Error'))
+            dispatch(
+              setStatus({
+                type: 'error',
+                message: 'Failed to switch networks',
+                fullMessage: error instanceof Error ? error.message : 'Unknown error occurred',
+              })
+            )
+            return
+          }
         }
 
         // Call Bridge function
@@ -424,7 +492,7 @@ export const useRedeem = () => {
       try {
         // Switch chain if needed
         if (networkId !== destinationChainId) {
-          await switchChain(wagmiConfig, { chainId: destinationChainId! })
+          await switchChainSafely(destinationChainId!)
         }
 
         // Handle approval
@@ -483,7 +551,7 @@ export const useRedeem = () => {
     const requestStepId = getStepId(RedeemStepType.REQUEST)
     try {
       if (networkId !== destinationChainId) {
-        await switchChain(wagmiConfig, { chainId: destinationChainId! })
+        await switchChainSafely(destinationChainId!)
       }
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
