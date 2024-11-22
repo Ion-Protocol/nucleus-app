@@ -350,6 +350,11 @@ export const useRedeem = () => {
           //     resolve('0x123...')
           //   }, 2000) // 2 second delay
           // })
+          console.log('Bridge response:', bridgeResponse)
+
+          if (!bridgeResponse) {
+            throw new Error('Bridge response is empty')
+          }
           if (bridgeResponse) {
             dispatch(
               setDialogStep({
