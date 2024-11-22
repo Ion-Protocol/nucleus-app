@@ -291,6 +291,7 @@ export const useRedeem = () => {
       dispatch(restoreCompletedSteps())
       const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
       if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
+        console.error('Bridge data missing:', { redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector })
         dispatch(setHeaderContent('Error'))
         dispatch(
           setStatus({
@@ -311,6 +312,12 @@ export const useRedeem = () => {
       }
 
       if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
+        console.error('Bridge requirements missing:', {
+          redeemBridgeData,
+          tellerContractAddress,
+          userAddress,
+          previewFeeAsBigInt,
+        })
         dispatch(setHeaderContent('Error'))
         dispatch(
           setStatus({
@@ -353,6 +360,7 @@ export const useRedeem = () => {
             )
           }
         } catch (error) {
+          console.error('Bridge transaction failed:', error)
           dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
           dispatch(
             setStatus({
@@ -437,6 +445,7 @@ export const useRedeem = () => {
           )
         }
       } catch (error) {
+        console.error('Approval failed:', error)
         dispatch(setDialogStep({ stepId: approveStepId, newState: 'error' }))
         dispatch(
           setStatus({
@@ -456,7 +465,12 @@ export const useRedeem = () => {
     // 4. Update atomic request
     //////////////////////////////////////////////////////////////////////////
     dispatch(restoreCompletedSteps())
-    if ((!allowance || allowance < redeemAmount) && !approveTokenTxHash) {
+    if (!((allowance && allowance >= redeemAmount) || approveTokenTxHash)) {
+      console.error('Insufficient allowance or missing approval:', {
+        allowance,
+        redeemAmount,
+        hasApprovalTx: !!approveTokenTxHash,
+      })
       dispatch(setHeaderContent('Error'))
       dispatch(
         setStatus({
@@ -501,6 +515,7 @@ export const useRedeem = () => {
         dispatch(setHeaderContent('redeemSummary'))
       }
     } catch (error) {
+      console.error('Atomic request failed:', error)
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'error' }))
       dispatch(
         setStatus({
