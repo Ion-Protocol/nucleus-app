@@ -6,7 +6,6 @@ import { Address, Hash } from 'viem'
 import {
   readContract,
   type ReadContractErrorType,
-  waitForTransactionReceipt,
   type WaitForTransactionReceiptErrorType,
   writeContract,
   type WriteContractErrorType,
@@ -76,7 +75,8 @@ export const tellerApi = createApi({
     bridge: builder.mutation<Hash, BridgeArgs>({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
-          const hash = await writeContract(wagmiConfig, {
+          // Write the contract
+          const receipt = await writeContract(wagmiConfig, {
             abi: CrossChainTellerBaseAbi,
             address: contractAddress,
             functionName: 'bridge',
@@ -84,10 +84,15 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash,
-          })
-          return { data: txReceipt.transactionHash }
+          // This is actually a messageId
+          console.log('receipt', receipt)
+
+          // Wait for the transaction receipt
+          // const receipt = await waitForTransactionReceipt(wagmiConfig, {
+          //   hash: writeResult.hash,
+          // })
+
+          return { data: receipt }
         } catch (err) {
           const error = err as WagmiError
           return {
