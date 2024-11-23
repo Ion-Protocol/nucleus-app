@@ -1,3 +1,5 @@
+'use-client'
+
 import { wagmiConfig } from '@/config/wagmi'
 import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
 import { bigIntToNumberAsString } from '@/utils/bigint'

@@ -44,7 +44,11 @@ export function middleware(req: NextRequest) {
 // Add middleware config to handle matcher
 export const config = {
   matcher: [
-    // Match all paths except Next.js HMR websocket
-    '/((?!_next/webpack-hmr).*)',
+    // Exclude paths with a dot and specifically exclude /api/ws*
+    '/((?!.*\\..*|_next|api/ws).*?)',
+    // Include root
+    '/',
+    // Include paths starting with /api and /trpc, but exclude /api/ws*
+    '/(api(?!/ws)|trpc)(.*)',
   ],
 }

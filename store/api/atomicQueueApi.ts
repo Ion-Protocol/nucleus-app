@@ -1,3 +1,5 @@
+'use-client'
+
 import { wagmiConfig } from '@/config/wagmi'
 import { AtomicQueueAbi } from '@/contracts/AtomicQueueAbi'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
