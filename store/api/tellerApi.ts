@@ -12,15 +12,13 @@ import {
   type WriteContractErrorType,
 } from 'wagmi/actions'
 
-export type BridgeData =
-  | {
-      chainSelector: number
-      destinationChainReceiver: Address
-      bridgeFeeToken: Address
-      messageGas: bigint
-      data: `0x${string}`
-    }
-  | never
+export type BridgeData = {
+  chainSelector: number
+  destinationChainReceiver: Address
+  bridgeFeeToken: Address
+  messageGas: bigint
+  data: `0x${string}`
+}
 
 export interface PreviewFeeArgs {
   shareAmount: bigint
@@ -100,6 +98,10 @@ export const tellerApi = createApi({
           return { data: receipt.transactionHash }
         } catch (err) {
           console.error('Bridge error:', err)
+          if (err instanceof Error) {
+            console.error('Error message:', err.message)
+            console.error('Error stack:', err.stack)
+          }
           const error = err as WagmiError
           return {
             error,
