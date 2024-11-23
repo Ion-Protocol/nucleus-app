@@ -1,7 +1,7 @@
 {
   "name": "nucleus",
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   },
   "version": "0.1.2",
   "private": true,

@@ -62,7 +62,7 @@ export const tellerApi = createApi({
             },
           }
         } catch (err) {
-          const error = err as WagmiError
+          const error = err as ReadContractErrorType
           return {
             error,
             data: undefined,
@@ -93,7 +93,7 @@ export const tellerApi = createApi({
           console.log('Bridge receipt:', txReceipt)
           return { data: txReceipt.transactionHash }
         } catch (err) {
-          const error = err as WagmiError
+          const error = err as WriteContractErrorType | WaitForTransactionReceiptErrorType
           return { error, data: undefined, meta: undefined }
         }
       },
