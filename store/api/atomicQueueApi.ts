@@ -44,9 +44,11 @@ export const atomicQueueApi = createApi({
             args: [offer, want, userRequest as never],
             chainId,
           })
+          console.log('Atomic queue hash:', hash)
           const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
             hash: hash,
           })
+          console.log('Atomic queue receipt:', txReceipt)
           return { data: txReceipt.transactionHash }
         } catch (err) {
           const error = err as WagmiError

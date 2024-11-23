@@ -515,10 +515,20 @@ export const useRedeem = () => {
       return
     }
     const requestStepId = getStepId(RedeemStepType.REQUEST)
-    try {
-      if (networkId !== destinationChainId) {
-        await switchChain(wagmiConfig, { chainId: destinationChainId! })
+    if (networkId !== destinationChainId) {
+      console.log('Switching chain for approval:', {
+        from: networkId,
+        to: destinationChainId,
+      })
+      try {
+        await switchChain(wagmiConfig, { chainId: destinationChainId })
+      } catch (switchError) {
+        console.error('Chain switch failed:', switchError)
+        throw new Error('Failed to switch to the correct network. Please switch manually and try again.')
       }
+    }
+
+    try {
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
 
