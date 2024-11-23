@@ -85,10 +85,12 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
+          console.log('Bridge results:', results, typeof results)
 
           const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
             hash: results,
           })
+          console.log('Bridge receipt:', txReceipt)
           return { data: txReceipt.transactionHash }
         } catch (err) {
           const error = err as WagmiError
