@@ -353,33 +353,37 @@ export const useRedeem = () => {
         // Call Bridge function
         try {
           dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
-          const bridgeResponse = await bridge({
+          console.log('Bridge parameters:', {
+            shareAmount: redeemAmount,
+            bridgeData: redeemBridgeData,
+            contractAddress: tellerContractAddress,
+            chainId: redemptionSourceChainId,
+            fee: previewFeeAsBigInt?.fee,
+          })
+
+          if (!previewFeeAsBigInt?.fee) {
+            throw new Error('Bridge fee is undefined')
+          }
+
+          const txHash = await bridge({
             shareAmount: redeemAmount,
             bridgeData: redeemBridgeData,
             contractAddress: tellerContractAddress,
             chainId: redemptionSourceChainId,
             fee: previewFeeAsBigInt.fee,
           }).unwrap()
-          // Mock bridge response with delay
-          // const bridgeResponse = await new Promise<string>((resolve) => {
-          //   setTimeout(() => {
-          //     resolve('0x123...')
-          //   }, 2000) // 2 second delay
-          // })
-          console.log('Bridge response:', bridgeResponse)
 
-          if (!bridgeResponse) {
-            throw new Error('Bridge response is empty')
+          if (!txHash) {
+            throw new Error('Bridge transaction failed - no transaction hash returned')
           }
-          if (bridgeResponse) {
-            dispatch(
-              setDialogStep({
-                stepId: bridgeStepId,
-                newState: 'completed',
-                link: `${seiExplorerBaseUrl}tx/${bridgeResponse}`,
-              })
-            )
-          }
+
+          dispatch(
+            setDialogStep({
+              stepId: bridgeStepId,
+              newState: 'completed',
+              link: `${seiExplorerBaseUrl}tx/${txHash}`,
+            })
+          )
         } catch (error) {
           console.error('Bridge transaction failed:', error)
           dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))

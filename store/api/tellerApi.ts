@@ -73,9 +73,17 @@ export const tellerApi = createApi({
         }
       },
     }),
-    bridge: builder.mutation<any, BridgeArgs>({
+    bridge: builder.mutation<`0x${string}`, BridgeArgs>({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
+          console.log('Bridge parameters:', {
+            shareAmount: shareAmount.toString(),
+            bridgeData,
+            contractAddress,
+            chainId,
+            fee: fee.toString(),
+          })
+
           const hash = await writeContract(wagmiConfig, {
             abi: CrossChainTellerBaseAbi,
             address: contractAddress,
@@ -84,11 +92,14 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+
+          const receipt = await waitForTransactionReceipt(wagmiConfig, {
             hash,
           })
-          return { data: txReceipt.transactionHash }
+
+          return { data: receipt.transactionHash }
         } catch (err) {
+          console.error('Bridge error:', err)
           const error = err as WagmiError
           return {
             error,
