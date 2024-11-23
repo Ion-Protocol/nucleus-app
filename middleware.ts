@@ -40,3 +40,11 @@ export function middleware(req: NextRequest) {
 
   return NextResponse.rewrite(req.nextUrl)
 }
+
+// Add middleware config to handle matcher
+export const config = {
+  matcher: [
+    // Match all paths except Next.js HMR websocket
+    '/((?!_next/webpack-hmr).*)',
+  ],
+}
