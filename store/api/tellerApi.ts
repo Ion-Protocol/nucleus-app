@@ -71,18 +71,13 @@ export const tellerApi = createApi({
         }
       },
     }),
-    bridge: builder.mutation<`0x${string}`, BridgeArgs>({
+    bridge: builder.mutation<
+      `0x${string}`,
+      { shareAmount: bigint; bridgeData: BridgeData; contractAddress: Address; chainId: number; fee: bigint }
+    >({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
-          console.log('Bridge parameters:', {
-            shareAmount: shareAmount.toString(),
-            bridgeData,
-            contractAddress,
-            chainId,
-            fee: fee.toString(),
-          })
-
-          const hash = await writeContract(wagmiConfig, {
+          const results = await writeContract(wagmiConfig, {
             abi: CrossChainTellerBaseAbi,
             address: contractAddress,
             functionName: 'bridge',
@@ -90,25 +85,14 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          console.log('Bridge hash:', hash)
 
-          const receipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash,
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash: results,
           })
-          console.log('Bridge receipt:', receipt)
-          return { data: receipt.transactionHash }
+          return { data: txReceipt.transactionHash }
         } catch (err) {
-          console.error('Bridge error:', err)
-          if (err instanceof Error) {
-            console.error('Error message:', err.message)
-            console.error('Error stack:', err.stack)
-          }
           const error = err as WagmiError
-          return {
-            error,
-            data: undefined,
-            meta: undefined,
-          }
+          return { error, data: undefined, meta: undefined }
         }
       },
     }),

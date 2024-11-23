@@ -315,6 +315,10 @@ export const useRedeem = () => {
       //     chain that the user selected, switch it to the source chain.
       //////////////////////////////////////////////////////////////////////////
       if (isBridgeRequired) {
+        console.log('Switching chain for bridge:', {
+          from: networkId,
+          to: redemptionSourceChainId,
+        })
         await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
       }
 
