@@ -2,7 +2,7 @@ import { wagmiConfig } from '@/config/wagmi'
 import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Address, Hash } from 'viem'
+import { Address } from 'viem'
 import {
   readContract,
   type ReadContractErrorType,
@@ -73,7 +73,7 @@ export const tellerApi = createApi({
         }
       },
     }),
-    bridge: builder.mutation<Hash, BridgeArgs>({
+    bridge: builder.mutation<any, BridgeArgs>({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
           const hash = await writeContract(wagmiConfig, {

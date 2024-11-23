@@ -139,6 +139,8 @@ export const useRedeem = () => {
       accountantAddress &&
       tellerContractAddress
   )
+
+  console.log('redemptionSourceChainId', redemptionSourceChainId, 'destinationChainId', destinationChainId)
   // Bridge Data Selector, Only used for redeem with bridge
   const redeemBridgeData = useSelector(selectRedeemBridgeData)
 
@@ -286,6 +288,11 @@ export const useRedeem = () => {
     // Before starting a new step, restore completed steps
     dispatch(restoreCompletedSteps())
 
+    if (!destinationChainId || !redemptionSourceChainId) {
+      console.error('Destination or source chain ID is not set')
+      return
+    }
+
     // Check if a bridge is required
     if (redemptionSourceChainKey !== destinationChainKey) {
       dispatch(restoreCompletedSteps())
@@ -330,8 +337,17 @@ export const useRedeem = () => {
       }
 
       if (layerZeroChainSelector !== 0 && redeemBridgeData) {
-        if (networkId !== destinationChainId) {
-          await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
+        if (networkId !== redemptionSourceChainId) {
+          console.log('Switching chain for bridge:', {
+            from: networkId,
+            to: redemptionSourceChainId,
+          })
+          try {
+            await switchChain(wagmiConfig, { chainId: redemptionSourceChainId })
+          } catch (switchError) {
+            console.error('Chain switch failed:', switchError)
+            throw new Error('Failed to switch to the correct network. Please switch manually and try again.')
+          }
         }
 
         // Call Bridge function
@@ -341,7 +357,7 @@ export const useRedeem = () => {
             shareAmount: redeemAmount,
             bridgeData: redeemBridgeData,
             contractAddress: tellerContractAddress,
-            chainId: redemptionSourceChainId!,
+            chainId: redemptionSourceChainId,
             fee: previewFeeAsBigInt.fee,
           }).unwrap()
           // Mock bridge response with delay
@@ -350,6 +366,11 @@ export const useRedeem = () => {
           //     resolve('0x123...')
           //   }, 2000) // 2 second delay
           // })
+          console.log('Bridge response:', bridgeResponse)
+
+          if (!bridgeResponse) {
+            throw new Error('Bridge response is empty')
+          }
           if (bridgeResponse) {
             dispatch(
               setDialogStep({
@@ -422,9 +443,18 @@ export const useRedeem = () => {
     if (!allowance || allowance < redeemAmount) {
       const approveStepId = getStepId(RedeemStepType.APPROVE)
       try {
-        // Switch chain if needed
+        // Switch chain if needed - fixing the chain switching logic
         if (networkId !== destinationChainId) {
-          await switchChain(wagmiConfig, { chainId: destinationChainId! })
+          console.log('Switching chain for approval:', {
+            from: networkId,
+            to: destinationChainId,
+          })
+          try {
+            await switchChain(wagmiConfig, { chainId: destinationChainId })
+          } catch (switchError) {
+            console.error('Chain switch failed:', switchError)
+            throw new Error('Failed to switch to the correct network. Please switch manually and try again.')
+          }
         }
 
         // Handle approval
@@ -433,7 +463,7 @@ export const useRedeem = () => {
           tokenAddress: sharesTokenAddress as `0x${string}`,
           spenderAddress: atomicQueueContractAddress,
           amount: redeemAmount,
-          chainId: destinationChainId!,
+          chainId: destinationChainId,
         }).unwrap()
         if (approveTokenTxHash) {
           dispatch(
