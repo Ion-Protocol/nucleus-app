@@ -2,10 +2,11 @@ import { wagmiConfig } from '@/config/wagmi'
 import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Address, Hash } from 'viem'
+import { Address } from 'viem'
 import {
   readContract,
   type ReadContractErrorType,
+  waitForTransactionReceipt,
   type WaitForTransactionReceiptErrorType,
   writeContract,
   type WriteContractErrorType,
@@ -72,11 +73,10 @@ export const tellerApi = createApi({
         }
       },
     }),
-    bridge: builder.mutation<Hash, BridgeArgs>({
+    bridge: builder.mutation<any, BridgeArgs>({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
-          // Write the contract
-          const receipt = await writeContract(wagmiConfig, {
+          const hash = await writeContract(wagmiConfig, {
             abi: CrossChainTellerBaseAbi,
             address: contractAddress,
             functionName: 'bridge',
@@ -84,15 +84,10 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          // This is actually a messageId
-          console.log('receipt', receipt)
-
-          // Wait for the transaction receipt
-          // const receipt = await waitForTransactionReceipt(wagmiConfig, {
-          //   hash: writeResult.hash,
-          // })
-
-          return { data: receipt }
+          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
+            hash,
+          })
+          return { data: txReceipt.transactionHash }
         } catch (err) {
           const error = err as WagmiError
           return {
