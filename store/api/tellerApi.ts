@@ -90,11 +90,12 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
+          console.log('Bridge hash:', hash)
 
           const receipt = await waitForTransactionReceipt(wagmiConfig, {
             hash,
           })
-
+          console.log('Bridge receipt:', receipt)
           return { data: receipt.transactionHash }
         } catch (err) {
           console.error('Bridge error:', err)
