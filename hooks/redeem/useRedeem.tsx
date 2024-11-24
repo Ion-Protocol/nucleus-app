@@ -4,7 +4,6 @@ import { Address } from 'viem'
 
 import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { tokensConfig } from '@/config/tokens'
-import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { selectAddress } from '@/store/slices/account'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
@@ -39,7 +38,7 @@ import {
 } from '@/store/slices/stepDialog/slice'
 import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { calculateRedeemDeadline } from '@/utils/time'
-import { switchChain } from 'wagmi/actions'
+import { useChainManagement } from '../useChainManagement'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
   if (isBridgeRequired) {
@@ -63,6 +62,7 @@ type RedeemStatus = {
 
 export const useRedeem = () => {
   const dispatch = useDispatch()
+  const { switchToChain } = useChainManagement()
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
   /**
    ******************************************************************************
@@ -319,7 +319,7 @@ export const useRedeem = () => {
           from: networkId,
           to: redemptionSourceChainId,
         })
-        await switchChain(wagmiConfig, { chainId: redemptionSourceChainId! })
+        await switchToChain(redemptionSourceChainId!)
       }
 
       if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
@@ -346,12 +346,7 @@ export const useRedeem = () => {
             from: networkId,
             to: redemptionSourceChainId,
           })
-          try {
-            await switchChain(wagmiConfig, { chainId: redemptionSourceChainId })
-          } catch (switchError) {
-            console.error('Chain switch failed:', switchError)
-            throw new Error('Failed to switch to the correct network. Please switch manually and try again.')
-          }
+          await switchToChain(redemptionSourceChainId)
         }
 
         // Call Bridge function
@@ -457,12 +452,7 @@ export const useRedeem = () => {
             from: networkId,
             to: destinationChainId,
           })
-          try {
-            await switchChain(wagmiConfig, { chainId: destinationChainId })
-          } catch (switchError) {
-            console.error('Chain switch failed:', switchError)
-            throw new Error('Failed to switch to the correct network. Please switch manually and try again.')
-          }
+          await switchToChain(destinationChainId)
         }
 
         // Handle approval
@@ -520,12 +510,7 @@ export const useRedeem = () => {
         from: networkId,
         to: destinationChainId,
       })
-      try {
-        await switchChain(wagmiConfig, { chainId: destinationChainId })
-      } catch (switchError) {
-        console.error('Chain switch failed:', switchError)
-        throw new Error('Failed to switch to the correct network. Please switch manually and try again.')
-      }
+      await switchToChain(destinationChainId)
     }
 
     try {
