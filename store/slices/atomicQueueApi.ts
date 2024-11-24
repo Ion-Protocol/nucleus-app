@@ -49,6 +49,7 @@ export const atomicQueueApi = createApi({
           console.log('Atomic queue hash:', hash)
           const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
             hash: hash,
+            timeout: 60_000,
           })
           console.log('Atomic queue receipt:', txReceipt)
           return { data: txReceipt.transactionHash }

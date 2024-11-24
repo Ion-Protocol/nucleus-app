@@ -2,7 +2,7 @@ import TokenSelect from '@/components/NetworkAsset/MintAndRedeem/shared/TokenSel
 import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
+import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Input, Text } from '@chakra-ui/react'

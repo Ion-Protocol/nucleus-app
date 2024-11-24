@@ -11,12 +11,29 @@ const BLOCKED_COUNTRIES = ['US', 'PA', 'CU', 'IR', 'KP', 'RU', 'SY']
 const PUBLIC_FILE = /\.(.*)$/
 
 export function middleware(req: NextRequest) {
+  console.log(`Middleware executing for: ${req.nextUrl.pathname}`)
   const { pathname } = req.nextUrl
+
+  // Check if the request is an RTK Query request
+  const isRTKQuery =
+    req.headers.get('content-type')?.includes('application/json') &&
+    (req.method === 'POST' || req.method === 'GET') &&
+    pathname.startsWith('/tokens/')
+
+  // Early return for RTK Query requests
+  if (isRTKQuery) {
+    return NextResponse.next()
+  }
+
   const token = MANUALLY_PAUSED_NETWORK_ASSETS.find((token) => pathname.includes(token))
   const isPausedPage = pathname.startsWith('/tokens/') && !!token
 
   if (isPausedPage) {
     return NextResponse.rewrite(new URL(`/tokens/${token}/paused`, req.url))
+  }
+
+  if (pathname.includes('/api')) {
+    return NextResponse.next()
   }
 
   if (!GEOBLOCKING_ENABLED) {
@@ -44,11 +61,12 @@ export function middleware(req: NextRequest) {
 // Add middleware config to handle matcher
 export const config = {
   matcher: [
-    // Exclude paths with a dot and specifically exclude /api/ws*
-    '/((?!.*\\..*|_next|api/ws).*?)',
-    // Include root
-    '/',
-    // Include paths starting with /api and /trpc, but exclude /api/ws*
-    '/(api(?!/ws)|trpc)(.*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 }

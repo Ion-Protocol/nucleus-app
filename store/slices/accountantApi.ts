@@ -3,7 +3,7 @@ import { AccountantWithRateProvidersAbi } from '@/contracts/AccountantWithRatePr
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
-import { readContract, type ReadContractErrorType } from 'wagmi/actions'
+import { readContract, ReadContractErrorType } from 'wagmi/actions'
 
 interface GetRateInQuoteSafeQueryArgs {
   quote: Address

@@ -1,8 +1,7 @@
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { selectAddress } from '@/store/slices/account'
+import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectNetworkId } from '@/store/slices/chain'
 import {
@@ -20,6 +19,7 @@ import {
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
 } from '@/store/slices/networkAssets'
+import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { calculateRedeemDeadline } from '@/utils/time'
 import { useSelector } from 'react-redux'

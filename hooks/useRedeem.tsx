@@ -6,13 +6,12 @@ import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from
 import { tokensConfig } from '@/config/tokens'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { useUpdateAtomicRequestMutation } from '@/store/api/atomicQueueApi'
-import { useAllowanceQuery, useApproveMutation } from '@/store/api/erc20Api'
-import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { selectAddress } from '@/store/slices/account'
+import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
+import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
 import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectNetworkId } from '@/store/slices/chain'
+import { useAllowanceQuery, useApproveMutation } from '@/store/slices/erc20Api'
 import {
   selectContractAddressByName,
   selectDestinationChainId,
@@ -38,6 +37,7 @@ import {
   setSteps,
   setTitle,
 } from '@/store/slices/stepDialog/slice'
+import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { calculateRedeemDeadline } from '@/utils/time'
 import { switchChain } from 'wagmi/actions'
 

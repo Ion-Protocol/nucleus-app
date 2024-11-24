@@ -91,6 +91,7 @@ export const tellerApi = createApi({
 
           const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
             hash: results,
+            timeout: 60_000,
           })
           console.log('Bridge receipt:', txReceipt)
           return { data: txReceipt.transactionHash }

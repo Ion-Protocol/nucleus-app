@@ -1,5 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { accountantApi, atomicQueueApi, coinGeckoApi, erc20Api, tellerApi, transactionReceiptApi } from './api'
 import { debounceMiddleware } from './middleware/debounceMiddleware'
 import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
 import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
@@ -16,8 +15,14 @@ import { dialogReducer } from './slices/stepDialog/slice'
 import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 
-import { nucleusIncentivesApi } from './api/incentivesApi'
-import { nucleusBackendApi } from './api/nucleusBackendApi'
+import { accountantApi } from './slices/accountantApi'
+import { atomicQueueApi } from './slices/atomicQueueApi'
+import { coinGeckoApi } from './slices/coinGecko'
+import { erc20Api } from './slices/erc20Api'
+import { nucleusIncentivesApi } from './slices/incentivesApi'
+import { nucleusBackendApi } from './slices/nucleusBackendApi'
+import { tellerApi } from './slices/tellerApi'
+import { transactionReceiptApi } from './slices/transactionReceiptApt'
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
 const apiMiddlewares = [
