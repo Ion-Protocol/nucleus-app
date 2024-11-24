@@ -3,28 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 
 import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
-import { tokensConfig } from '@/config/tokens'
-import { RootState } from '@/store'
-import { selectAddress } from '@/store/slices/account'
-import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
-import { selectTokenBalance } from '@/store/slices/balance/selectors'
 import { selectNetworkId } from '@/store/slices/chain'
-import { useAllowanceQuery, useApproveMutation } from '@/store/slices/erc20Api'
-import {
-  selectContractAddressByName,
-  selectDestinationChainId,
-  selectIsBridgeRequired,
-  selectNetworkAssetConfig,
-  selectReceiveTokenKey,
-  selectReceiveTokens,
-  selectRedeemAmountAsBigInt,
-  selectRedeemBridgeData,
-  selectRedeemLayerZeroChainSelector,
-  selectRedemptionDestinationChainKey,
-  selectRedemptionSourceChainId,
-  selectRedemptionSourceChainKey,
-} from '@/store/slices/networkAssets'
+import { useApproveMutation } from '@/store/slices/erc20Api'
+import { selectIsBridgeRequired } from '@/store/slices/networkAssets'
 import {
   DialogStep,
   RedeemStepType,
@@ -36,8 +18,8 @@ import {
   setSteps,
   setTitle,
 } from '@/store/slices/stepDialog/slice'
-import { useBridgeMutation, useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
-import { calculateRedeemDeadline } from '@/utils/time'
+import { BridgeData, useBridgeMutation } from '@/store/slices/tellerApi'
+import { AtomicRequestArgs, AtomicRequestOptions } from '@/utils/atomicRequest'
 import { useChainManagement } from '../useChainManagement'
 
 const createSteps = (isBridgeRequired: boolean): DialogStep[] => {
@@ -60,30 +42,45 @@ type RedeemStatus = {
   isLoading: boolean
 }
 
+type BaseRedeemData = {
+  isBridgeRequired: boolean
+  userAddress: Address
+  redeemAmount: bigint
+  allowance?: bigint
+  sharesTokenAddress: Address
+  wantTokenAddress: Address
+  redemptionSourceChainId: number
+  destinationChainId: number
+  atomicRequestData: {
+    rateInQuoteWithFee: bigint
+    deadline: number
+    atomicRequestArgs: AtomicRequestArgs
+    atomicRequestOptions: AtomicRequestOptions
+  }
+}
+
+type StandardRedeemData = BaseRedeemData & {
+  isBridgeRequired: false
+  redeemBridgeData?: never
+}
+
+type RedeemWithBridgeData = BaseRedeemData & {
+  isBridgeRequired: true
+  redeemWithBridgeData: {
+    tellerContractAddress: Address
+    previewFeeAsBigInt: bigint
+    layerZeroChainSelector: number
+    bridgeData: BridgeData
+  }
+}
+
+type HandleRedeem = StandardRedeemData | RedeemWithBridgeData
+
 export const useRedeem = () => {
   const dispatch = useDispatch()
   const { switchToChain } = useChainManagement()
-  const deadline = calculateRedeemDeadline() // default value in function is 3 days
-  /**
-   ******************************************************************************
-   * Selectors
-   * Note maybe should happen outside of this hook.
-   * Data can be checked and transformed also allowing for disable of button
-   * and transformation of data to be displayed in the modal.
-   ******************************************************************************
-   */
-  const userAddress = useSelector(selectAddress)
-  const networkAssetConfig = useSelector(selectNetworkAssetConfig)
-  /**
-   * Ids for tracking the Id of the chain the user is connected to,
-   * the source chain of the redemption, and the destination chain where the withdrawal will take place
-   */
-  const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
-  const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId) // Id of chain where redemption starts
-  const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
-  const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
-  const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
 
+  const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   const getStepId = useCallback(
@@ -93,121 +90,6 @@ export const useRedeem = () => {
       return step?.id || 0
     },
     [isBridgeRequired]
-  )
-
-  /**
-   * Selectors for the accountant address, the teller contract address,
-   * and the layer zero chain selector
-   */
-  const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
-  const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
-  const layerZeroChainSelector = useSelector((state: RootState) => selectRedeemLayerZeroChainSelector(state))
-
-  /**
-   * Selectors for the redeem amount, the accountant address, the teller contract address,
-   * the layer zero chain selector, and the token keys
-   */
-  const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
-  const tokenKeys = useSelector(selectReceiveTokens)
-  const wantTokenKey = useSelector(selectReceiveTokenKey)
-
-  /**
-   * Selectors for token balance on destination chain (always mainnet) and
-   * the source chain. This is a safety guard to check if user has funds on mainnet
-   * from a previous bridge but failure to redeem.
-   */
-
-  const destinationTokenBalance = useSelector((state: RootState) =>
-    selectTokenBalance(state, destinationChainKey, wantTokenKey)
-  )
-  const sourceTokenBalance = useSelector((state: RootState) =>
-    selectTokenBalance(state, redemptionSourceChainKey, wantTokenKey)
-  )
-
-  //
-  const hasExcessDestinationBalance =
-    destinationTokenBalance && sourceTokenBalance && BigInt(destinationTokenBalance) > redeemAmount
-
-  const isValid = Boolean(
-    redeemAmount > BigInt(0) &&
-      networkAssetConfig &&
-      networkId &&
-      redemptionSourceChainId &&
-      destinationChainId &&
-      redemptionSourceChainKey &&
-      destinationChainKey &&
-      accountantAddress &&
-      tellerContractAddress
-  )
-
-  console.log('redemptionSourceChainId', redemptionSourceChainId, 'destinationChainId', destinationChainId)
-  // Bridge Data Selector, Only used for redeem with bridge
-  const redeemBridgeData = useSelector(selectRedeemBridgeData)
-
-  const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
-  const sharesTokenKey = networkAssetConfig?.token.key
-
-  const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
-
-  const wantTokenAddress = effectiveWantTokenKey
-    ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey!]
-    : null
-
-  /*
-   ******************************************************************************
-   Query hooks
-   ******************************************************************************
-   */
-
-  const { data: allowance } = useAllowanceQuery(
-    {
-      tokenAddress: sharesTokenAddress as `0x${string}`,
-      spenderAddress: atomicQueueContractAddress,
-      userAddress: userAddress!,
-      chainId: destinationChainId!,
-    },
-    {
-      skip: !userAddress || !sharesTokenAddress,
-    }
-  )
-
-  const {
-    data: tokenRateInQuote,
-    isLoading: isTokenRateInQuoteLoading,
-    isError: isTokenRateInQuoteError,
-    error: tokenRateInQuoteError,
-  } = useGetRateInQuoteSafeQuery(
-    {
-      quote: wantTokenAddress as Address,
-      contractAddress: accountantAddress!,
-      chainId: destinationChainId!,
-    },
-    {
-      skip: !accountantAddress || !destinationChainId,
-    }
-  )
-
-  const {
-    data: previewFeeAsBigInt,
-    isLoading: isPreviewFeeLoading,
-    isFetching: isPreviewFeeFetching,
-    isError: isPreviewFeeError,
-    error: previewFeeError,
-  } = useGetPreviewFeeQuery(
-    {
-      shareAmount: redeemAmount,
-      bridgeData: redeemBridgeData!,
-      contractAddress: tellerContractAddress!,
-      chainId: redemptionSourceChainId!,
-    },
-    {
-      skip:
-        !redeemBridgeData ||
-        !tellerContractAddress ||
-        !redemptionSourceChainId ||
-        !redeemAmount ||
-        layerZeroChainSelector === 0,
-    }
   )
 
   /**
@@ -279,7 +161,19 @@ export const useRedeem = () => {
    * Handle redeem
    ******************************************************************************
    */
-  const handleRedeem = async () => {
+
+  const handleRedeem = async (data: HandleRedeem) => {
+    const {
+      isBridgeRequired,
+      redemptionSourceChainId,
+      destinationChainId,
+      redeemAmount,
+      allowance,
+      atomicRequestData,
+      sharesTokenAddress,
+    } = data
+    // Now TypeScript knows that if isBridgeRequired is true, redeemBridgeData must exist
+    const { rateInQuoteWithFee, deadline, atomicRequestArgs, atomicRequestOptions } = atomicRequestData
     dispatch(setTitle('Redeem Status'))
     dispatch(setSteps(createSteps(isBridgeRequired)))
     dispatch(setHeaderContent('redeemSummary'))
@@ -288,17 +182,13 @@ export const useRedeem = () => {
     // Before starting a new step, restore completed steps
     dispatch(restoreCompletedSteps())
 
-    if (!destinationChainId || !redemptionSourceChainId) {
-      console.error('Destination or source chain ID is not set')
-      return
-    }
-
     // Check if a bridge is required
-    if (redemptionSourceChainKey !== destinationChainKey) {
+    if (isBridgeRequired) {
+      const redeemWithBridgeData = data.redeemWithBridgeData
       dispatch(restoreCompletedSteps())
       const bridgeStepId = getStepId(RedeemStepType.BRIDGE)
-      if (!redeemBridgeData || !previewFeeAsBigInt || !layerZeroChainSelector) {
-        console.error('Bridge data missing:', { redeemBridgeData, previewFeeAsBigInt, layerZeroChainSelector })
+      if (!redeemWithBridgeData) {
+        console.error('Bridge data missing:', { redeemWithBridgeData })
         dispatch(setHeaderContent('Error'))
         dispatch(
           setStatus({
@@ -322,121 +212,70 @@ export const useRedeem = () => {
         await switchToChain(redemptionSourceChainId!)
       }
 
-      if (!redeemBridgeData || !tellerContractAddress || !userAddress || !previewFeeAsBigInt) {
-        console.error('Bridge requirements missing:', {
-          redeemBridgeData,
-          tellerContractAddress,
-          userAddress,
-          previewFeeAsBigInt,
+      // Call Bridge function
+      try {
+        dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
+        const { previewFeeAsBigInt, layerZeroChainSelector, bridgeData, tellerContractAddress } = redeemWithBridgeData
+        console.log('Bridge parameters:', {
+          shareAmount: redeemAmount,
+          bridgeData: bridgeData,
+          contractAddress: tellerContractAddress,
+          chainId: redemptionSourceChainId,
+          fee: previewFeeAsBigInt,
         })
-        dispatch(setHeaderContent('Error'))
+
+        if (!previewFeeAsBigInt) {
+          throw new Error('Bridge fee is undefined')
+        }
+
+        const txHash = await bridge({
+          shareAmount: redeemAmount,
+          bridgeData: bridgeData,
+          contractAddress: tellerContractAddress,
+          chainId: redemptionSourceChainId,
+          fee: previewFeeAsBigInt,
+        }).unwrap()
+
+        if (!txHash) {
+          throw new Error('Bridge transaction failed - no transaction hash returned')
+        }
+
+        dispatch(
+          setDialogStep({
+            stepId: bridgeStepId,
+            newState: 'completed',
+            link: `${seiExplorerBaseUrl}tx/${txHash}`,
+          })
+        )
+      } catch (error) {
+        console.error('Bridge transaction failed:', error)
+        dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
         dispatch(
           setStatus({
             type: 'error',
-            message: 'Missing bridge data',
+            message: 'Bridge transaction failed',
+            fullMessage: error instanceof Error ? error.message : 'Unknown error occurred',
           })
         )
-        dispatch(setOpen(true))
         return
-      }
-
-      if (layerZeroChainSelector !== 0 && redeemBridgeData) {
-        if (networkId !== redemptionSourceChainId) {
-          console.log('Switching chain for bridge:', {
-            from: networkId,
-            to: redemptionSourceChainId,
-          })
-          await switchToChain(redemptionSourceChainId)
-        }
-
-        // Call Bridge function
-        try {
-          dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
-          console.log('Bridge parameters:', {
-            shareAmount: redeemAmount,
-            bridgeData: redeemBridgeData,
-            contractAddress: tellerContractAddress,
-            chainId: redemptionSourceChainId,
-            fee: previewFeeAsBigInt?.fee,
-          })
-
-          if (!previewFeeAsBigInt?.fee) {
-            throw new Error('Bridge fee is undefined')
-          }
-
-          const txHash = await bridge({
-            shareAmount: redeemAmount,
-            bridgeData: redeemBridgeData,
-            contractAddress: tellerContractAddress,
-            chainId: redemptionSourceChainId,
-            fee: previewFeeAsBigInt.fee,
-          }).unwrap()
-
-          if (!txHash) {
-            throw new Error('Bridge transaction failed - no transaction hash returned')
-          }
-
-          dispatch(
-            setDialogStep({
-              stepId: bridgeStepId,
-              newState: 'completed',
-              link: `${seiExplorerBaseUrl}tx/${txHash}`,
-            })
-          )
-        } catch (error) {
-          console.error('Bridge transaction failed:', error)
-          dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'error' }))
-          dispatch(
-            setStatus({
-              type: 'error',
-              message: 'Bridge transaction failed',
-              fullMessage: error instanceof Error ? error.message : 'Unknown error occurred',
-            })
-          )
-          return
-        }
       }
     }
 
     //////////////////////////////////////////////////////////////////////////
     // 2. Prepare atomic request data
-    // 2.1. Apply 0.2% fee to the rateInQuoteSafe
-    // 2.2. Create userRequest object with Fee applied
     // @params userRequest:
     //   deadline: BigInt(deadline)
     //   atomicPrice: tokenRateInQuote?.rateInQuoteSafe!
     //   offerAmount: redeemAmount
     //   inSolve: false
-    // 2.3. Create atomicRequestArgs object
     // @params atomicRequestArgs:
     //   offer: sharesTokenAddress
     //   want: wantTokenAddress
     //   userRequest: userRequest
-    // 2.4. Create atomicRequestOptions object
     // @params atomicRequestOptions:
     //   atomicQueueContractAddress: atomicQueueContractAddress
     //   chainId: destinationChainId!
     //////////////////////////////////////////////////////////////////////////
-    const rateInQuoteWithFee = (tokenRateInQuote?.rateInQuoteSafe! * BigInt(9980)) / BigInt(10000)
-    console.log('rateInQuoteWithFee', rateInQuoteWithFee)
-    const userRequest = {
-      deadline: BigInt(deadline),
-      atomicPrice: rateInQuoteWithFee,
-      offerAmount: redeemAmount,
-      inSolve: false,
-    }
-
-    const atomicRequestArgs = {
-      offer: sharesTokenAddress! as Address,
-      want: wantTokenAddress! as Address,
-      userRequest: userRequest,
-    }
-
-    const atomicRequestOptions = {
-      atomicQueueContractAddress: atomicQueueContractAddress as Address,
-      chainId: destinationChainId!,
-    }
-
     let approveTokenTxHash: `0x${string}` | undefined
 
     //////////////////////////////////////////////////////////////////////////
@@ -458,7 +297,7 @@ export const useRedeem = () => {
         // Handle approval
         dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
         approveTokenTxHash = await approveErc20({
-          tokenAddress: sharesTokenAddress as `0x${string}`,
+          tokenAddress: sharesTokenAddress,
           spenderAddress: atomicQueueContractAddress,
           amount: redeemAmount,
           chainId: destinationChainId,
@@ -516,7 +355,6 @@ export const useRedeem = () => {
     try {
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
-
       const updateAtomicRequestTxHash = await updateAtomicRequest({
         atomicRequestArg: atomicRequestArgs,
         atomicRequestOptions: atomicRequestOptions,
@@ -559,8 +397,6 @@ export const useRedeem = () => {
 
   return {
     handleRedeem,
-    isValid,
-    redeemAmount,
     isLoading: redeemStatus.isLoading || isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
   }
 }

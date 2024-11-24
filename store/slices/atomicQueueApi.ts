@@ -62,7 +62,7 @@ export const atomicQueueApi = createApi({
           }
         }
       },
-      extraOptions: { maxRetries: 0 },
+      extraOptions: { maxRetries: 2 },
     }),
   }),
 })
