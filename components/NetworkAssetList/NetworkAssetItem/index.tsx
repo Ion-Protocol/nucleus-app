@@ -1,18 +1,19 @@
+import { Button, Flex, Link, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { Button, Flex, Text } from '@chakra-ui/react'
 
 import { Address } from 'viem'
 
-import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
 import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
-import { YieldBridgeItemConnector } from './connector'
-import { IonTooltip } from '@/components/shared/IonTooltip'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
+import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { YieldBridgeItemConnector } from './connector'
 
 function NetworkAssetItem({
   tvl,
@@ -21,6 +22,8 @@ function NetworkAssetItem({
   boringVaultAddress,
   chainName,
   comingSoon,
+  isExternal,
+  partnerUrl,
   disabled,
   tvlLoading,
   formattedNetApy,
@@ -44,7 +47,10 @@ function NetworkAssetItem({
     networkAssetKey === TokenKey.SSETH && rewardsResponse ? rewardsResponse?.APY + vaultAssetApy : vaultAssetApy
 
   function handleClick() {
-    if (!disabled) {
+    if (isExternal) {
+      window.open(partnerUrl, '_blank')
+    }
+    if (!disabled && !isExternal) {
       router.push(`/tokens/${networkAssetName?.toLowerCase()}`)
     }
   }
@@ -100,14 +106,31 @@ function NetworkAssetItem({
                 </IonSkeleton>
               </Flex>
             </Flex>
-
-            {/* Rewards */}
-            <Flex direction="column" gap={1} w="fit-content">
-              <Text variant="smallParagraph">Rewards</Text>
-              <RewardsTooltip tokenKey={networkAssetKey}>
-                <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
-              </RewardsTooltip>
-            </Flex>
+            {isExternal ? (
+              <Flex gap={1}>
+                <Link
+                  as="a"
+                  href={partnerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  fontSize="14px"
+                  variant="link"
+                  display="flex"
+                  fontFamily="var(--font-ppformula)"
+                  gap={1}
+                >
+                  {`Bridge on ${chainName}`} <ExternalLinkIcon fontSize="16px" />
+                </Link>
+              </Flex>
+            ) : (
+              <Flex direction="column" gap={1} w="fit-content">
+                {/* Rewards */}
+                <Text variant="smallParagraph">Rewards</Text>
+                <RewardsTooltip tokenKey={networkAssetKey}>
+                  <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
+                </RewardsTooltip>
+              </Flex>
+            )}
           </>
         ) : (
           <Flex mb={6}>

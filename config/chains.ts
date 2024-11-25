@@ -1,6 +1,5 @@
 import { ChainKey } from '@/types/ChainKey'
 import { mainnet, sei } from 'viem/chains'
-import { etherscanBaseUrl } from './constants'
 
 export interface Chain {
   name: string
@@ -33,5 +32,8 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   },
   [ChainKey.FORM]: {
     name: 'Form',
+  },
+  [ChainKey.RARI]: {
+    name: 'Rari',
   },
 }

@@ -3,8 +3,8 @@ import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
-import { tokensConfig } from './tokens'
 import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from './constants'
+import { tokensConfig } from './tokens'
 
 const MANUALLY_PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
 
@@ -144,7 +144,9 @@ const mainnetNetworkAssets: NetworkAssets = {
     token: tokensConfig[TokenKey.EARNETH],
     description:
       'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
-    comingSoon: true,
+    comingSoon: false,
+    isExternal: true,
+    partnerUrl: 'https://app.swellnetwork.io/earn/earneth',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.EARNETH),
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
@@ -180,7 +182,9 @@ const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.TETH]: {
     token: tokensConfig[TokenKey.TETH],
     description: '',
-    comingSoon: true,
+    comingSoon: false,
+    isExternal: true,
+    partnerUrl: 'https://app.eclipse.xyz/mint-teth',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.TETH),
     chain: ChainKey.ECLIPSE,
     deployedOn: ChainKey.ETHEREUM,
@@ -194,9 +198,36 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
     contracts: {
-      teller: '0x0',
-      accountant: '0x0',
-      boringVault: '0x0',
+      teller: '0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf',
+      accountant: '0x8c1902A5996978F2628558DD93d309F7e3926dfD',
+      boringVault: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [],
+    apys: {},
+  },
+  [TokenKey.RARIETH]: {
+    token: tokensConfig[TokenKey.RARIETH],
+    description: '',
+    comingSoon: true,
+    isExternal: true,
+    partnerUrl: 'https://app.rari.capital/earn/rarieth',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
+    chain: ChainKey.RARI,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    contracts: {
+      teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
+      accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
+      boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
     receiveOn: ChainKey.ETHEREUM,
     points: [],

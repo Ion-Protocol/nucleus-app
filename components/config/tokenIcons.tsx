@@ -4,14 +4,20 @@ import React from 'react'
 import { DineroIcon } from '../shared/icons/Dinero'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { OptimismIcon } from '../shared/icons/Optimism'
+import { RariethIcon } from '../shared/icons/Rarieth'
 import { RswethIcon } from '../shared/icons/Rsweth'
 import { SeiIcon } from '../shared/icons/Sei'
 import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
 import { TokenEarnbtcIcon } from '../shared/icons/TokenEarnbtc'
+import { TokenEarnethIcon } from '../shared/icons/TokenEarneth'
 import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
+import { TokenFethIcon } from '../shared/icons/TokenFeth'
+import { TokenIseiIcon } from '../shared/icons/TokenIsei'
 import { TokenPufethIcon } from '../shared/icons/TokenPufeth'
+import { TokenPzethIcon } from '../shared/icons/TokenPzeth'
 import { TokenRsethIcon } from '../shared/icons/TokenRseth'
 import { TokenRswbtcIcon } from '../shared/icons/TokenRswbtc'
+import { TokenSeiyanethIcon } from '../shared/icons/TokenSeiyaneth'
 import { TokenSsethIcon } from '../shared/icons/TokenSseth'
 import { TokenSwbtcIcon } from '../shared/icons/TokenSwbtc'
 import { TokenTethIcon } from '../shared/icons/TokenTeth'
@@ -20,11 +26,6 @@ import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
 import { WstethIcon } from '../shared/icons/Wsteth'
-import { TokenSeiyanethIcon } from '../shared/icons/TokenSeiyaneth'
-import { TokenEarnethIcon } from '../shared/icons/TokenEarneth'
-import { TokenFethIcon } from '../shared/icons/TokenFeth'
-import { TokenPzethIcon } from '../shared/icons/TokenPzeth'
-import { TokenIseiIcon } from '../shared/icons/TokenIsei'
 
 function DefaultIcon() {
   return <></>
@@ -55,6 +56,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.WSTETH]: (props) => <WstethIcon {...props} />,
   [TokenKey.PZETH]: (props) => <TokenPzethIcon {...props} />,
   [TokenKey.ISEI]: (props) => <TokenIseiIcon {...props} />,
+  [TokenKey.RARIETH]: (props) => <RariethIcon {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

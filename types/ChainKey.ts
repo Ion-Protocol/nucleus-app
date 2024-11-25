@@ -3,6 +3,7 @@ export enum ChainKey {
   SEI = 'sei',
   SWELL = 'swell',
   ECLIPSE = 'eclipse',
+  RARI = 'rari',
   DINERO = 'dinero',
   FORM = 'form',
 }
