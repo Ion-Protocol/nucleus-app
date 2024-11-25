@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, isPlainObject } from '@reduxjs/toolkit'
 import { debounceMiddleware } from './middleware/debounceMiddleware'
 import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
 import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
@@ -15,6 +15,7 @@ import { dialogReducer } from './slices/stepDialog/slice'
 import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 
+import { deserialize, serialize } from 'wagmi'
 import { accountantApi } from './slices/accountantApi'
 import { atomicQueueApi } from './slices/atomicQueueApi'
 import { coinGeckoApi } from './slices/coinGecko'
@@ -65,19 +66,30 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
-      //   isSerializable: (value: unknown) =>
-      //     isPlainObject(value) ||
-      //     Array.isArray(value) ||
-      //     typeof value === 'string' ||
-      //     typeof value === 'number' ||
-      //     typeof value === 'boolean' ||
-      //     typeof value === 'undefined' ||
-      //     value === null ||
-      //     typeof value === 'bigint',
-      //   serialize: (value: unknown) => serialize(value),
-      //   deserialize: (value: string) => deserialize(value),
-      // },
+      serializableCheck: {
+        isSerializable: (value: unknown) =>
+          isPlainObject(value) ||
+          Array.isArray(value) ||
+          typeof value === 'string' ||
+          typeof value === 'number' ||
+          typeof value === 'boolean' ||
+          typeof value === 'undefined' ||
+          value === null ||
+          typeof value === 'bigint',
+        serialize: (value: unknown) => {
+          if (typeof value === 'bigint') {
+            return serialize(value)
+          }
+          return value
+        },
+        deserialize: (value: string) => {
+          try {
+            return deserialize(value)
+          } catch {
+            return value
+          }
+        },
+      },
     }).concat(...regularMiddlewares, ...sideEffectMiddlewares, ...apiMiddlewares),
   devTools: process.env.NODE_ENV !== 'production',
 })
