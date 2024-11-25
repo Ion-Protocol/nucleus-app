@@ -52,8 +52,6 @@ type BaseRedeemData = {
   redemptionSourceChainId: number
   destinationChainId: number
   atomicRequestData: {
-    rateInQuoteWithFee: bigint
-    deadline: number
     atomicRequestArgs: AtomicRequestArgs
     atomicRequestOptions: AtomicRequestOptions
   }
@@ -172,13 +170,11 @@ export const useRedeem = () => {
       atomicRequestData,
       sharesTokenAddress,
     } = data
-    // Now TypeScript knows that if isBridgeRequired is true, redeemBridgeData must exist
-    const { rateInQuoteWithFee, deadline, atomicRequestArgs, atomicRequestOptions } = atomicRequestData
+
     dispatch(setTitle('Redeem Status'))
     dispatch(setSteps(createSteps(isBridgeRequired)))
     dispatch(setHeaderContent('redeemSummary'))
     dispatch(setOpen(true))
-
     // Before starting a new step, restore completed steps
     dispatch(restoreCompletedSteps())
 
@@ -261,25 +257,9 @@ export const useRedeem = () => {
       }
     }
 
-    //////////////////////////////////////////////////////////////////////////
-    // 2. Prepare atomic request data
-    // @params userRequest:
-    //   deadline: BigInt(deadline)
-    //   atomicPrice: tokenRateInQuote?.rateInQuoteSafe!
-    //   offerAmount: redeemAmount
-    //   inSolve: false
-    // @params atomicRequestArgs:
-    //   offer: sharesTokenAddress
-    //   want: wantTokenAddress
-    //   userRequest: userRequest
-    // @params atomicRequestOptions:
-    //   atomicQueueContractAddress: atomicQueueContractAddress
-    //   chainId: destinationChainId!
-    //////////////////////////////////////////////////////////////////////////
     let approveTokenTxHash: `0x${string}` | undefined
-
     //////////////////////////////////////////////////////////////////////////
-    // 3. Approve shares token for withdrawal if needed
+    // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
     dispatch(restoreCompletedSteps())
     if (!allowance || allowance < redeemAmount) {
@@ -329,7 +309,7 @@ export const useRedeem = () => {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    // 4. Update atomic request
+    // 3. Update atomic request
     //////////////////////////////////////////////////////////////////////////
     dispatch(restoreCompletedSteps())
     if ((!allowance || allowance < redeemAmount) && !approveTokenTxHash) {
@@ -353,6 +333,7 @@ export const useRedeem = () => {
     }
 
     try {
+      const { atomicRequestArgs, atomicRequestOptions } = atomicRequestData
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
       const updateAtomicRequestTxHash = await updateAtomicRequest({

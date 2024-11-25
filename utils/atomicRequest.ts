@@ -1,21 +1,21 @@
 import { Address } from 'viem'
 
 export type AtomicRequestArgs = {
-  offer: Address
-  want: Address
-  userRequest: UserRequest
+  offer: Address // sharesTokenAddress
+  want: Address // wantTokenAddress
+  userRequest: UserRequest // userRequest
 }
 
 export type AtomicRequestOptions = {
-  atomicQueueContractAddress: Address
-  chainId: number
+  atomicQueueContractAddress: Address // atomicQueueContractAddress
+  chainId: number // destinationChainId
 }
 
 export type UserRequest = {
-  deadline: bigint
-  atomicPrice: bigint
-  offerAmount: bigint
-  inSolve: boolean
+  deadline: bigint // deadline
+  atomicPrice: bigint // rateInQuoteWithFee
+  offerAmount: bigint // redeemAmount
+  inSolve: boolean // false
 }
 
 export const prepareAtomicRequestData = (

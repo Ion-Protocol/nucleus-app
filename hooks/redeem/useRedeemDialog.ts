@@ -1,4 +1,5 @@
 import {
+  DialogStep,
   RedeemStepType,
   restoreCompletedSteps,
   setDialogStep,
@@ -8,13 +9,15 @@ import {
   setSteps,
   setTitle,
 } from '@/store/slices/stepDialog/slice'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
+// hooks/redeem/useRedeemDialog.ts
 export const useRedeemDialog = (isBridgeRequired: boolean) => {
   const dispatch = useDispatch()
 
-  const createSteps = useCallback(() => {
+  // Move createSteps outside useCallback since it only depends on isBridgeRequired
+  const steps = useMemo((): DialogStep[] => {
     if (isBridgeRequired) {
       return [
         { id: 1, type: RedeemStepType.BRIDGE, description: 'Request Bridge', state: 'idle' },
@@ -30,15 +33,14 @@ export const useRedeemDialog = (isBridgeRequired: boolean) => {
 
   const initializeDialog = useCallback(() => {
     dispatch(setTitle('Redeem Status'))
-    dispatch(setSteps(createSteps()))
+    dispatch(setSteps(steps))
     dispatch(setHeaderContent('redeemSummary'))
     dispatch(setOpen(true))
     dispatch(restoreCompletedSteps())
-  }, [dispatch, createSteps])
+  }, [dispatch, steps])
 
   const updateStep = useCallback(
     (stepType: RedeemStepType, state: 'active' | 'completed' | 'error', link?: string) => {
-      const steps = createSteps()
       const step = steps.find((s) => s.type === stepType)
       if (step) {
         dispatch(
@@ -50,7 +52,7 @@ export const useRedeemDialog = (isBridgeRequired: boolean) => {
         )
       }
     },
-    [dispatch, createSteps]
+    [dispatch, steps]
   )
 
   const setError = useCallback(
@@ -76,5 +78,6 @@ export const useRedeemDialog = (isBridgeRequired: boolean) => {
     updateStep,
     setError,
     setSuccess,
+    steps, // Expose steps if needed elsewhere
   }
 }

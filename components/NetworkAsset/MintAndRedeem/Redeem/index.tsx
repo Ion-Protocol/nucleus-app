@@ -140,22 +140,25 @@ export function Redeem({ ...props }: RedeemProps) {
       console.error('Token rate in quote is not set')
       return
     }
+    // Apply 0.2% fee to the rateInQuoteSafe
+    const rateInQuoteWithFee = (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+
     const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
       deadline,
-      tokenRateInQuote.rateInQuoteSafe,
+      rateInQuoteWithFee,
       redeemAmount,
       sharesTokenAddress as Address,
       wantTokenAddress as Address,
       atomicQueueContractAddress as Address,
       destinationChainId
     )
-    const rateInQuoteWithFee = (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+
+    // Create userRequest object with Fee applied
     const atomicRequestData = {
-      rateInQuoteWithFee,
-      deadline: calculateRedeemDeadline(), // default value in function is 3 days
       atomicRequestArgs,
       atomicRequestOptions,
     }
+
     if (isBridgeRequired) {
       if (!previewFee?.fee || !bridgeData || !tellerContractAddress) {
         console.error('Preview fee is not set')
@@ -181,7 +184,6 @@ export function Redeem({ ...props }: RedeemProps) {
         redeemWithBridgeData,
       })
     } else {
-      // Redeem without bridge data
       handleRedeem({
         userAddress: userAddress as Address,
         atomicRequestData,
@@ -207,7 +209,7 @@ export function Redeem({ ...props }: RedeemProps) {
       {/* Redeem Summary */}
       <RedeemSummary />
       <ConnectAwareButton
-        // isDisabled={!isValid || redeemAmount > BigInt(tokenBalance || '0')}
+        isDisabled={!isValid || redeemAmount > BigInt(tokenBalance || '0')}
         onClick={handleRedeemClick}
         isLoading={isLoading}
       >
