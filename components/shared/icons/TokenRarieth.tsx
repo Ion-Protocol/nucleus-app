@@ -1,97 +1,15 @@
-import { Icon } from '@chakra-ui/react'
+import { createIcon } from '@chakra-ui/react'
 
-export const TokenRariethIcon = (props) => (
-  <Icon viewBox="0 0 192 192">
-    <svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="96" cy="96" r="94.75" fill="#19062E" stroke="#6C1CC9" stroke-width="2.5" />
+export const TokenRariethIcon = createIcon({
+  displayName: 'TokenRariethIcon',
+  viewBox: '0 0 24 24',
+  path: (
+    <>
       <path
-        d="M174.03 73.5003C162.899 33.6008 122.82 8.24168 81.3922 16.1685C39.9644 24.0953 10.8719 64.1513 16.7899 106.36"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-dasharray="6 12"
+        xmlns="http://www.w3.org/2000/svg"
+        d="M0 7.777V4.226c0-1.079 1.083-1.953 2.42-1.953h4.398c1.337 0 2.42.874 2.42 1.953v2.867c0 .495.243.969.676 1.319.902.728 2.364.728 3.266 0l6.896-5.567c.454-.367 1.07-.572 1.711-.572h1.198c1.336 0 2.419.874 2.419 1.953v.966c0 .518-.255 1.015-.709 1.381L17.8 12.14c-.902.728-.902 1.909 0 2.636.433.35 1.02.546 1.633.546h3.553c1.336 0 2.419.875 2.419 1.954v3.55c0 1.08-1.083 1.953-2.42 1.953h-4.398c-1.337 0-2.42-.874-2.42-1.952v-2.868c0-.494-.243-.969-.676-1.318-.902-.728-2.364-.728-3.266 0l-6.896 5.567c-.454.366-1.07.572-1.711.572H2.419C1.083 22.78 0 21.904 0 20.826v-.967c0-.518.255-1.015.709-1.381l6.896-5.567c.902-.728.902-1.908 0-2.636-.433-.35-1.02-.546-1.633-.546H2.419C1.083 9.73 0 8.855 0 7.777Z"
+        fill="#B16EFF"
       />
-      <g filter="url(#filter0_b_16386_2553)">
-        <path
-          d="M17.8965 111.05C26.9486 154.578 69.5655 182.522 113.094 173.469C156.623 164.417 184.566 121.8 175.514 78.2718"
-          fill="#9850EB"
-        />
-        <path
-          d="M17.8965 111.05C26.9486 154.578 69.5655 182.522 113.094 173.469C156.623 164.417 184.566 121.8 175.514 78.2718"
-          stroke="#6C1CC9"
-          stroke-width="2.5"
-          stroke-linejoin="round"
-        />
-      </g>
-      <path
-        d="M100.697 113.322C144.222 104.271 177.74 88.4416 175.562 77.9666C173.383 67.4916 136.334 66.3376 92.8088 75.3889C49.2839 84.4403 15.7659 100.269 17.9443 110.744C20.1226 121.219 57.1724 122.374 100.697 113.322Z"
-        fill="#9850EB"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-linejoin="round"
-      />
-      <path d="M59.5625 112.208L96.6674 152.167L133.771 112.208L96.6667 120.771L59.5625 112.208Z" fill="white" />
-      <path d="M51 89.3759L96.6667 100.792L142.333 89.375L96.6667 38L51 89.3759Z" fill="white" />
-      <path d="M96.6667 38V77.9588V38Z" fill="white" />
-      <path d="M51 89.3759L96.6667 77.9588L142.333 89.375" fill="white" />
-      <path
-        d="M51 89.3759L96.6667 100.792L142.333 89.375M51 89.3759L96.6667 38M51 89.3759L96.6667 77.9588M142.333 89.375L96.6667 38M142.333 89.375L96.6667 77.9588M96.6667 38V77.9588M59.5625 112.208L96.6674 152.167L133.771 112.208L96.6667 120.771L59.5625 112.208Z"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M175.514 78.2719C177.692 88.7469 144.174 104.576 100.65 113.627C57.1246 122.679 20.0748 121.525 17.8965 111.05"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-linejoin="round"
-      />
-      <path
-        d="M146.5 148C150.642 148 154 144.642 154 140.5C154 136.358 150.642 133 146.5 133C142.358 133 139 136.358 139 140.5C139 144.642 142.358 148 146.5 148Z"
-        fill="#6C1CC9"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-miterlimit="10"
-      />
-      <path
-        d="M28.5 146C32.6421 146 36 142.642 36 138.5C36 134.358 32.6421 131 28.5 131C24.3579 131 21 134.358 21 138.5C21 142.642 24.3579 146 28.5 146Z"
-        fill="#9850EB"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-miterlimit="10"
-      />
-      <path
-        d="M50.5021 66C54.6454 66 58.0042 62.6421 58.0042 58.5C58.0042 54.3579 54.6454 51 50.5021 51C46.3588 51 43 54.3579 43 58.5C43 62.6421 46.3588 66 50.5021 66Z"
-        fill="#051A2B"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-miterlimit="10"
-      />
-      <path
-        d="M150.5 45C154.642 45 158 41.6421 158 37.5C158 33.3579 154.642 30 150.5 30C146.358 30 143 33.3579 143 37.5C143 41.6421 146.358 45 150.5 45Z"
-        fill="white"
-        stroke="#6C1CC9"
-        stroke-width="2.5"
-        stroke-miterlimit="10"
-      />
-      <defs>
-        <filter
-          id="filter0_b_16386_2553"
-          x="-3.32715"
-          y="58.0173"
-          width="201.794"
-          height="138.405"
-          filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
-        >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
-          <feGaussianBlur in="BackgroundImageFix" stdDeviation="10" />
-          <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_16386_2553" />
-          <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_16386_2553" result="shape" />
-        </filter>
-      </defs>
-    </svg>
-  </Icon>
-)
+    </>
+  ),
+})
