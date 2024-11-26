@@ -1,10 +1,11 @@
 import { TokenKey } from '@/types/TokenKey'
-import { ChakraProps } from '@chakra-ui/react'
+import { ChakraProps, Icon } from '@chakra-ui/react'
 import React from 'react'
 import { DineroIcon } from '../shared/icons/Dinero'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { OptimismIcon } from '../shared/icons/Optimism'
-import { RariethIcon } from '../shared/icons/Rarieth'
+// import { RariethIcon } from '../shared/icons/Rarieth'
+import RariethIcon from '../shared/icons/rarieth.svg'
 import { RswethIcon } from '../shared/icons/Rsweth'
 import { SeiIcon } from '../shared/icons/Sei'
 import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
@@ -56,7 +57,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.WSTETH]: (props) => <WstethIcon {...props} />,
   [TokenKey.PZETH]: (props) => <TokenPzethIcon {...props} />,
   [TokenKey.ISEI]: (props) => <TokenIseiIcon {...props} />,
-  [TokenKey.RARIETH]: (props) => <RariethIcon {...props} />,
+  [TokenKey.RARIETH]: (props) => <Icon as={RariethIcon} {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {

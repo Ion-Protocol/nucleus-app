@@ -39,3 +39,24 @@ export const sei = {
   ...seiWagmi,
   iconUrl: '/assets/svgs/sei.svg',
 }
+
+export const rari = {
+  id: 1380012617,
+  name: 'Rari',
+  iconUrl: '/assets/svgs/rari.svg',
+  // network: 'Rari',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    public: { http: ['https://rari.calderachain.xyz/infra-partner-http'] },
+    default: { http: ['https://rari.calderachain.xyz/infra-partner-http'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'Blockscout', url: 'https://mainnet.explorer.rarichain.org/' },
+    default: { name: 'Blockscout', url: 'https://mainnet.explorer.rarichain.org/' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xb6D5B39F96d379569d47cC84024f3Cd78c5Ef651',
+    },
+  },
+} as const satisfies Chain

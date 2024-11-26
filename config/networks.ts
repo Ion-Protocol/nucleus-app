@@ -164,11 +164,13 @@ const mainnetNetworkAssets: NetworkAssets = {
       boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
     receiveOn: ChainKey.ETHEREUM,
-    points: [      {
-      key: PointSystemKey.NUCLEUS,
-      name: 'Nucleus',
-      pointsMultiplier: 2,
-    },],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
     apys: {},
   },
   [TokenKey.SEIYANETH]: {
