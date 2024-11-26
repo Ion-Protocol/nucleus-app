@@ -1,7 +1,7 @@
 export const docsUrl = 'https://docs.nucleusearn.io/'
 export const discordUrl = 'https://discord.com/invite/CjQqUgPA6Y'
 export const nativeAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
-export const etherscanBaseUrl = 'https://etherscan.io/'
+export const etherscanBaseUrl = 'https://etherscan.io'
 export const seiExplorerBaseUrl = 'https://seitrace.com/'
 export const layerZeroBaseUrl = 'https://layerzeroscan.com/tx/'
 export const eclipseRpcUrl = 'https://mainnetbeta-rpc.eclipse.xyz'
