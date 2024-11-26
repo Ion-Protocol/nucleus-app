@@ -1,3 +1,4 @@
+import StepProcessDialog from '@/components/global/StepProcessDialog'
 import { Layout } from '@/components/layouts/Layout'
 import { funkitConfig, funkitThemeConfig, isDebug } from '@/config/funkit'
 import { queryClient } from '@/config/queryClient'
@@ -32,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <ColorModeScript initialColorMode={theme.config?.initialColorMode} />
                 <Layout>
                   <Component {...pageProps} />
+                  <StepProcessDialog />
                 </Layout>
               </ChakraProvider>
             </ReduxProvider>

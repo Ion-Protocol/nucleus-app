@@ -19,8 +19,9 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   const chainKeyOfNetworkAsset = networkAssetConfig?.receiveOn
   const chainNameOfNetworkAsset = chainKeyOfNetworkAsset ? chainsConfig[chainKeyOfNetworkAsset].name : ''
 
-  const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
   const primaryText = role === 'source' ? `Deposit from ${selectedChainName}` : `Receive on ${chainNameOfNetworkAsset}`
+
+  const placeholder = role === 'source' ? 'Source Chain' : 'Destination Chain'
 
   if (role === 'destination' && chainKeyOfNetworkAsset) {
     selectedChainKey = chainKeyOfNetworkAsset

@@ -17,8 +17,6 @@ export function RewardsTooltipContent({
   boringVaultAddress,
   tokenIncentives,
   rewards,
-  netApy, // TODO: remove
-  fullFormattedNetApy, // TODO: remove
   shouldShowMessageForLargeNetApy,
   tokenKey,
 }: RewardsTooltipContentConnector.Props) {
