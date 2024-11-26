@@ -8,9 +8,20 @@ interface NavItemProps extends ChakraProps {
   leftIcon?: ReactElement
   disabled?: boolean
   comingSoon?: boolean
+  isExternal?: boolean
+  partnerUrl?: string
 }
 
-export function NavItem({ title, href, leftIcon, disabled, comingSoon, ...props }: NavItemProps) {
+export function NavItem({
+  title,
+  href,
+  leftIcon,
+  disabled,
+  comingSoon,
+  isExternal,
+  partnerUrl,
+  ...props
+}: NavItemProps) {
   const router = useRouter()
   const isSelected = router.asPath === href
   const { colorMode } = useColorMode()
@@ -20,6 +31,9 @@ export function NavItem({ title, href, leftIcon, disabled, comingSoon, ...props 
   const handleClick = (event: React.MouseEvent) => {
     if (disabled) return
     event.preventDefault()
+    if (isExternal) {
+      window.open(partnerUrl, '_blank')
+    }
     if (!isSelected) {
       router.push(href)
     }
