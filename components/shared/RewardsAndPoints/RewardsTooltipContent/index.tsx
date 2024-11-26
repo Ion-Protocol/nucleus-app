@@ -72,7 +72,7 @@ export function RewardsTooltipContent({
             </Text>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '—'}
+            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '4% > TBD'}
           </Text>
         </Flex>
       </Flex>

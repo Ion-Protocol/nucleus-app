@@ -85,7 +85,7 @@ function NetworkAssetItem({
           <>
             <Flex w="138px" justify="space-between">
               {/* TVL */}
-              <Flex direction="column" w="100%" mr={6}>
+              <Flex direction="column">
                 <Text variant="smallParagraph">TVL</Text>
                 <IonSkeleton isLoaded={!tvlLoading} w="100%">
                   <Text variant="paragraphBold">{tvl}</Text>
@@ -95,13 +95,13 @@ function NetworkAssetItem({
               {/* APY */}
               <Flex direction="column">
                 <Text variant="smallParagraph">APY</Text>
-                <IonSkeleton isLoaded={!isBoringVaultApyLoading} w="100%">
+                <IonSkeleton isLoaded={!isBoringVaultApyLoading}>
                   <IonTooltip
                     label={
                       shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
                     }
                   >
-                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '—'}`}</Text>
+                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '4% > TBD'}`}</Text>
                   </IonTooltip>
                 </IonSkeleton>
               </Flex>
