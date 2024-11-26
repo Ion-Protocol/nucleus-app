@@ -1,15 +1,15 @@
-import { Address } from 'viem'
-import { Divider, Flex, Link, Text } from '@chakra-ui/react'
 import { InfoIcon, InfoOutlineIcon } from '@chakra-ui/icons'
+import { Divider, Flex, Link, Text } from '@chakra-ui/react'
+import { Address } from 'viem'
 
-import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { RewardsTooltipContentConnector } from './connector'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
+import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
+import { RewardsTooltipContentConnector } from './connector'
 
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
@@ -72,7 +72,7 @@ export function RewardsTooltipContent({
             </Text>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '&rbrace;'}
+            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '—'}
           </Text>
         </Flex>
       </Flex>

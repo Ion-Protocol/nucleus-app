@@ -19,6 +19,8 @@ export enum TokenKey {
   SSETH = 'sseth',
   SWBTC = 'swbtc',
   TETH = 'teth',
+  RARIETH = 'rarieth',
+  RARI = 'rari',
   WBTC = 'wbtc',
   WEETH = 'weeth',
   WETH = 'weth',

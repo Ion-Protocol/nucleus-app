@@ -12,7 +12,7 @@ interface TxHashTagProps extends TagProps, PropsWithChildren {
 
 export function TxHashTag({ children, txHash, baseUrl, ...props }: TxHashTagProps) {
   return (
-    <Link href={`${baseUrl}${txHash.raw}`} isExternal>
+    <Link href={`${baseUrl}/tx/${txHash.raw}`} isExternal>
       <Tag
         borderRadius="100px"
         px={3}

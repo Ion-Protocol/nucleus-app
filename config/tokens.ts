@@ -196,6 +196,22 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811',
     },
   },
+  [TokenKey.RARI]: {
+    key: TokenKey.RARIETH,
+    name: 'rari',
+    symbol: 'RARI',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+    },
+  },
+  [TokenKey.RARIETH]: {
+    key: TokenKey.RARIETH,
+    name: 'rariETH',
+    symbol: 'RARIETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+    },
+  },
   [TokenKey.ISEI]: {
     key: TokenKey.ISEI,
     name: 'iSEI',
