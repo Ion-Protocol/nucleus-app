@@ -1,6 +1,6 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
-import { TokenKey } from '@/types/TokenKey'
 import { Token } from '@/types/Token'
+import { TokenKey } from '@/types/TokenKey'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 

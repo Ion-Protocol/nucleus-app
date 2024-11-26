@@ -148,7 +148,8 @@ const mainnetNetworkAssets: NetworkAssets = {
     partnerUrl: 'https://app.rari.capital/earn/rarieth',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
     chain: ChainKey.RARI,
-    deployedOn: ChainKey.ETHEREUM,
+    layerZeroChainSelector: 30235,
+    deployedOn: ChainKey.RARI,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
@@ -163,7 +164,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
       boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
-    receiveOn: ChainKey.ETHEREUM,
+    receiveOn: ChainKey.RARI,
     points: [
       {
         key: PointSystemKey.NUCLEUS,

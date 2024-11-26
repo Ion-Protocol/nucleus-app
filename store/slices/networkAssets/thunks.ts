@@ -239,15 +239,9 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   try {
     // Fetch total supply of shares
     const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: deployedOnChainId })
-    if (vaultAddress === '0x9Ed15383940CC380fAEF0a75edacE507cC775f22') {
-      console.log('totalSharesSupply', totalSharesSupply)
-    }
 
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
-    if (vaultAddress === '0x9Ed15383940CC380fAEF0a75edacE507cC775f22') {
-      console.log('tokenPerShareRate', tokenPerShareRate)
-    }
 
     // Calculate TVL
     const tvlInToken = (totalSharesSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
