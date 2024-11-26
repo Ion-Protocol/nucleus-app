@@ -1,4 +1,4 @@
-import { Button, Flex, Link, Text } from '@chakra-ui/react'
+import { Button, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
 import { Address } from 'viem'
@@ -108,19 +108,17 @@ function NetworkAssetItem({
             </Flex>
             {isExternal ? (
               <Flex gap={1}>
-                <Link
-                  as="a"
-                  href={partnerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Text
                   fontSize="14px"
                   variant="link"
                   display="flex"
                   fontFamily="var(--font-ppformula)"
                   gap={1}
+                  textDecoration="underline"
+                  textUnderlineOffset={2}
                 >
                   {`Bridge on ${chainName}`} <ExternalLinkIcon fontSize="16px" />
-                </Link>
+                </Text>
               </Flex>
             ) : (
               <Flex direction="column" gap={1} w="fit-content">
