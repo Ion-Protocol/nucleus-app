@@ -39,7 +39,7 @@ export const sei = {
   ...seiWagmi,
   iconUrl: '/assets/svgs/sei.svg',
 }
-
+// TODO Should move custom chain configs into own file
 export const rari = {
   id: 1380012617,
   name: 'Rari',
@@ -56,7 +56,7 @@ export const rari = {
   },
   contracts: {
     multicall3: {
-      address: '0xb6D5B39F96d379569d47cC84024f3Cd78c5Ef651',
+      address: '0x3F5Fc48153f8aDd3E429F0c84fA6FEd5c58657Dc',
     },
   },
 } as const satisfies Chain
