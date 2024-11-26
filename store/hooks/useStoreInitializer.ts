@@ -27,7 +27,7 @@ export function useStoreInitializer() {
   const claimables = useAppSelector(selectTotalClaimables)
 
   useEffect(() => {
-    if (!sourceTokenKey || !networkAsset) return
+    if (!sourceTokenKey) return
     dispatch(fetchTokenRateInQuote(sourceTokenKey))
   }, [sourceTokenKey, dispatch, networkAsset])
 

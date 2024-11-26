@@ -14,11 +14,10 @@ import { RewardsTooltipContentConnector } from './connector'
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
   defaultYieldAssetName,
+  defaultYieldTooltipText,
   boringVaultAddress,
   tokenIncentives,
   rewards,
-  netApy, // TODO: remove
-  fullFormattedNetApy, // TODO: remove
   shouldShowMessageForLargeNetApy,
   tokenKey,
 }: RewardsTooltipContentConnector.Props) {
@@ -60,7 +59,7 @@ export function RewardsTooltipContent({
           <Text variant="smallParagraph" color="textSecondary">
             Default Yield
           </Text>
-          <IonTooltip label="Default yield is calculated by annualizing the increase in the token redemption value over a 7 day period.">
+          <IonTooltip label={defaultYieldTooltipText}>
             <InfoOutlineIcon fontSize="12px" color="infoIcon" />
           </IonTooltip>
         </Flex>

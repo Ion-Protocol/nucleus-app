@@ -117,7 +117,7 @@ function NetworkAssetItem({
                   textDecoration="underline"
                   textUnderlineOffset={2}
                 >
-                  {`Bridge on ${chainName}`} <ExternalLinkIcon fontSize="16px" />
+                  {`Mint on ${chainName}`} <ExternalLinkIcon fontSize="16px" />
                 </Text>
               </Flex>
             ) : (
