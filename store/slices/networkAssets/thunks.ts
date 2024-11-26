@@ -2,6 +2,7 @@ import { Accountant } from '@/api/contracts/Accountant'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+import { claim } from '@/api/contracts/MerkleClaim/claim'
 import { getUserClaimedAmountOfAsset } from '@/api/contracts/MerkleClaim/usersClaimedAmountOfAsset'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
@@ -21,8 +22,8 @@ import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
-import { convertFromDecimals, convertToDecimals, truncateToSignificantDigits } from '@/utils/number'
+import { WAD } from '@/utils/bigint'
+import { convertFromDecimals, truncateToSignificantDigits } from '@/utils/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Address } from 'viem'
 import { switchChain } from 'wagmi/actions'
@@ -55,7 +56,6 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount } from './slice'
-import { claim } from '@/api/contracts/MerkleClaim/claim'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
 
@@ -239,9 +239,15 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   try {
     // Fetch total supply of shares
     const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: deployedOnChainId })
+    if (vaultAddress === '0x9Ed15383940CC380fAEF0a75edacE507cC775f22') {
+      console.log('totalSharesSupply', totalSharesSupply)
+    }
 
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
+    if (vaultAddress === '0x9Ed15383940CC380fAEF0a75edacE507cC775f22') {
+      console.log('tokenPerShareRate', tokenPerShareRate)
+    }
 
     // Calculate TVL
     const tvlInToken = (totalSharesSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals

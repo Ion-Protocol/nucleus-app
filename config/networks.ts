@@ -181,7 +181,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     partnerUrl: 'https://seiyaneth.com/',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
     chain: ChainKey.SEI,
-    deployedOn: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.SEI,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
