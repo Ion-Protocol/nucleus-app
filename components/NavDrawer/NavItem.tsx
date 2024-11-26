@@ -33,6 +33,7 @@ export function NavItem({
     event.preventDefault()
     if (isExternal) {
       window.open(partnerUrl, '_blank')
+      return
     }
     if (!isSelected) {
       router.push(href)
