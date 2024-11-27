@@ -179,13 +179,13 @@ const mainnetNetworkAssets: NetworkAssets = {
   //   token: tokensConfig[TokenKey.UNIFIETH],
   //   description: '',
   //   comingSoon: false,
-  //   isExternal: false,
+  //   isExternal: true,
   //   isNewDeployment: true,
-  //   partnerUrl: 'https://app.unifi.xyz/mint-unifieth',
+  //   partnerUrl: 'https://quest.puffer.fi/unifi#stake-and-earn',
   //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIETH),
-  //   chain: ChainKey.RARI,
+  //   chain: ChainKey.PUFFER,
   //   layerZeroChainSelector: 30235,
-  //   deployedOn: ChainKey.RARI,
+  //   deployedOn: ChainKey.PUFFER,
   //   sourceChains: {
   //     [ChainKey.ETHEREUM]: {
   //       chain: ChainKey.ETHEREUM,
@@ -200,7 +200,7 @@ const mainnetNetworkAssets: NetworkAssets = {
   //     accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
   //     boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
   //   },
-  //   receiveOn: ChainKey.RARI,
+  //   receiveOn: ChainKey.PUFFER,
   //   points: [
   //     {
   //       key: PointSystemKey.NUCLEUS,

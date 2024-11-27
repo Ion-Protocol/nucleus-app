@@ -101,7 +101,7 @@ function NetworkAssetItem({
                       shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
                     }
                   >
-                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '4% > TBD'}`}</Text>
+                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '4%'}`}</Text>
                   </IonTooltip>
                 </IonSkeleton>
               </Flex>

@@ -6,4 +6,6 @@ export enum ChainKey {
   RARI = 'rari',
   DINERO = 'dinero',
   FORM = 'form',
+  UNIFI = 'unifi',
+  PUFFER = 'puffer',
 }
