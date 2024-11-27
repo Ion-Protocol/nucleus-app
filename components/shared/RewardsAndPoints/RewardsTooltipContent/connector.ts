@@ -1,4 +1,3 @@
-import { etherscanBaseUrl, hardcodedApy } from '@/config/constants'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import {
@@ -9,7 +8,6 @@ import {
   selectPointsSystemForNetworkAsset,
   selectShouldShowMessageForLargeNetApy,
 } from '@/store/slices/networkAssets'
-import { ChainKey } from '@/types/ChainKey'
 import { PointSystem } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
@@ -19,6 +17,7 @@ import { ConnectedProps, connect } from 'react-redux'
 interface MapStateToPropsType {
   defaultYieldAssetKey: TokenKey | null
   defaultYieldAssetName: string
+  defaultYieldTooltipText: string
   boringVaultAddress: string
   tokenIncentives: {
     tokenKey: TokenKey
@@ -40,6 +39,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
     return {
       defaultYieldAssetKey: null,
       defaultYieldAssetName: '',
+      defaultYieldTooltipText: '',
       boringVaultAddress: '',
       tokenIncentives: [],
       rewards: [],
@@ -50,6 +50,7 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
   }
   const boringVaultAddress = networkAssetConfig.contracts.boringVault
   const defaultYieldAssetName = tokensConfig[networkAssetKey as TokenKey].name
+  const isNewDeployment = networkAssetConfig.isNewDeployment
 
   const tokenIncentives: {
     tokenKey: TokenKey
@@ -79,9 +80,14 @@ const mapState = (state: RootState, ownProps: RewardsTooltipContentOwnProps): Ma
   const netApy = selectFormattedNetApy(state, networkAssetKey)
   const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(state, networkAssetKey)
 
+  const defaultYieldTooltipText = isNewDeployment
+    ? 'New deployments require a few days before its APY can be estimated'
+    : 'Default yield is calculated by annualizing the increase in the token redemption value over a 7 day period.'
+
   return {
     defaultYieldAssetKey: networkAssetKey,
     defaultYieldAssetName,
+    defaultYieldTooltipText,
     boringVaultAddress,
     tokenIncentives,
     rewards,

@@ -145,6 +145,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     description: '',
     comingSoon: false,
     isExternal: false,
+    isNewDeployment: true,
     partnerUrl: 'https://app.rari.capital/earn/rarieth',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
     chain: ChainKey.RARI,
@@ -174,6 +175,41 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
   },
+  // [TokenKey.UNIFIETH]: {
+  //   token: tokensConfig[TokenKey.UNIFIETH],
+  //   description: '',
+  //   comingSoon: false,
+  //   isExternal: true,
+  //   isNewDeployment: true,
+  //   partnerUrl: 'https://quest.puffer.fi/unifi#stake-and-earn',
+  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIETH),
+  //   chain: ChainKey.PUFFER,
+  //   layerZeroChainSelector: 30235,
+  //   deployedOn: ChainKey.PUFFER,
+  //   sourceChains: {
+  //     [ChainKey.ETHEREUM]: {
+  //       chain: ChainKey.ETHEREUM,
+  //       explorerBaseUrl: etherscanBaseUrl,
+  //     },
+  //   },
+  //   sourceTokens: {
+  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+  //   },
+  //   contracts: {
+  //     teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
+  //     accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
+  //     boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+  //   },
+  //   receiveOn: ChainKey.PUFFER,
+  //   points: [
+  //     {
+  //       key: PointSystemKey.NUCLEUS,
+  //       name: 'Nucleus',
+  //       pointsMultiplier: 2,
+  //     },
+  //   ],
+  //   apys: {},
+  // },
   [TokenKey.SEIYANETH]: {
     token: tokensConfig[TokenKey.SEIYANETH],
     description: '',
