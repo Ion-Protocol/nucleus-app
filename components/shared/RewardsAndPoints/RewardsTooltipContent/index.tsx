@@ -5,6 +5,7 @@ import { Address } from 'viem'
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { hardcodedApy } from '@/config/constants'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
@@ -71,7 +72,7 @@ export function RewardsTooltipContent({
             </Text>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '4%'}
+            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : numberToPercent(hardcodedApy, 2)}
           </Text>
         </Flex>
       </Flex>
@@ -150,7 +151,7 @@ export function RewardsTooltipContent({
             Net APY
           </Text>
           <Text variant="smallParagraphBold" color="text">
-            {numberToPercent(totalApy, 2)}
+            {totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}
           </Text>
         </Flex>
       </IonTooltip>
