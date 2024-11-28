@@ -14,7 +14,7 @@ interface GetRateInQuoteSafeQueryArgs {
 interface GetRateInQuoteSafeQueryResponse {
   rateInQuoteSafeAsString: string
   truncatedRateInQuoteSafeAsString: string
-  rateInQuoteSafe: bigint
+  rateInQuoteSafe: string
 }
 
 type WagmiError = ReadContractErrorType
