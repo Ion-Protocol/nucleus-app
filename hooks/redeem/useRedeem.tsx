@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
+import { useAccount } from 'wagmi'
 
 import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
@@ -77,6 +78,8 @@ type HandleRedeem = StandardRedeemData | RedeemWithBridgeData
 export const useRedeem = () => {
   const dispatch = useDispatch()
   const { switchToChain } = useChainManagement()
+  const { chainId } = useAccount()
+  console.log('chainId', chainId)
 
   const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
@@ -257,23 +260,25 @@ export const useRedeem = () => {
       }
     }
 
-    let approveTokenTxHash: `0x${string}` | undefined
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
+    //////////////////////////////////////////////////////////////////////////
+    if (networkId !== destinationChainId) {
+      console.log('Switching chain for approval:', {
+        from: networkId,
+        to: destinationChainId,
+      })
+      await switchToChain(destinationChainId)
+    }
+
+    let approveTokenTxHash: `0x${string}` | undefined
+    //////////////////////////////////////////////////////////////////////////
+    // 3.1 Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
     dispatch(restoreCompletedSteps())
     if (!allowance || allowance < redeemAmount) {
       const approveStepId = getStepId(RedeemStepType.APPROVE)
       try {
-        // Switch chain if needed - fixing the chain switching logic
-        if (networkId !== destinationChainId) {
-          console.log('Switching chain for approval:', {
-            from: networkId,
-            to: destinationChainId,
-          })
-          await switchToChain(destinationChainId)
-        }
-
         // Handle approval
         dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
         approveTokenTxHash = await approveErc20({
@@ -309,7 +314,7 @@ export const useRedeem = () => {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    // 3. Update atomic request
+    // 3.2 Update atomic request
     //////////////////////////////////////////////////////////////////////////
     dispatch(restoreCompletedSteps())
     if ((!allowance || allowance < redeemAmount) && !approveTokenTxHash) {
@@ -324,13 +329,6 @@ export const useRedeem = () => {
       return
     }
     const requestStepId = getStepId(RedeemStepType.REQUEST)
-    if (networkId !== destinationChainId) {
-      console.log('Switching chain for approval:', {
-        from: networkId,
-        to: destinationChainId,
-      })
-      await switchToChain(destinationChainId)
-    }
 
     try {
       const { atomicRequestArgs, atomicRequestOptions } = atomicRequestData
