@@ -141,7 +141,7 @@ export function Redeem({ ...props }: RedeemProps) {
       return
     }
     // Apply 0.2% fee to the rateInQuoteSafe
-    const rateInQuoteWithFee = (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    const rateInQuoteWithFee = (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
 
     const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
       deadline,

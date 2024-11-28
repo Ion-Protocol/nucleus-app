@@ -128,7 +128,7 @@ export const useRedeemSelectors = () => {
 
   // Calculate rate with 0.02% fee
   const rateInQuoteWithFee = tokenRateInQuoteSafeQuery.data?.rateInQuoteSafe
-    ? (tokenRateInQuoteSafeQuery.data.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    ? (BigInt(tokenRateInQuoteSafeQuery.data.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
     : BigInt(0)
 
   const formattedTokenRateWithFee = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })

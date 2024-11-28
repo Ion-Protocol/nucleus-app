@@ -39,7 +39,7 @@ export const accountantApi = createApi({
             data: {
               rateInQuoteSafeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 18 }),
               truncatedRateInQuoteSafeAsString: bigIntToNumberAsString(data, { maximumFractionDigits: 4 }),
-              rateInQuoteSafe: data,
+              rateInQuoteSafe: data.toString(),
             },
           }
         } catch (err) {

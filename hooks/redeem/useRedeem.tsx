@@ -260,6 +260,9 @@ export const useRedeem = () => {
       }
     }
 
+    console.log('networkId', networkId)
+    console.log('destinationChainId', destinationChainId)
+    await new Promise((resolve) => setTimeout(resolve, 5000))
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////

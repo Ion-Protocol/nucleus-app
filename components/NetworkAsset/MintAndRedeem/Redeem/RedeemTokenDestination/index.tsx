@@ -35,7 +35,7 @@ function RedeemTokenDestination({
 
   // Calculate rate with 0.02% fee
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    ? (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
     : BigInt(0)
 
   // Calculate redeem amount using rate
