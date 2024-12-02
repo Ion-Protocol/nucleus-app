@@ -210,33 +210,34 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
   },
-  [TokenKey.SEIYANETH]: {
-    token: tokensConfig[TokenKey.SEIYANETH],
-    description: '',
-    comingSoon: false,
-    isExternal: true,
-    partnerUrl: 'https://seiyaneth.com/',
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
-    chain: ChainKey.SEI,
-    deployedOn: ChainKey.SEI,
-    sourceChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: etherscanBaseUrl,
-      },
-    },
-    sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-    },
-    contracts: {
-      teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
-      accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
-      boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
-    },
-    receiveOn: ChainKey.ETHEREUM,
-    points: [],
-    apys: {},
-  },
+  // ! commented out as Seiyan ETH was leading to confusion with SSETH. Will Delete after we're sure we are not going to list
+  // [TokenKey.SEIYANETH]: {
+  //   token: tokensConfig[TokenKey.SEIYANETH],
+  //   description: '',
+  //   comingSoon: false,
+  //   isExternal: true,
+  //   partnerUrl: 'https://seiyaneth.com/',
+  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
+  //   chain: ChainKey.SEI,
+  //   deployedOn: ChainKey.SEI,
+  //   sourceChains: {
+  //     [ChainKey.ETHEREUM]: {
+  //       chain: ChainKey.ETHEREUM,
+  //       explorerBaseUrl: etherscanBaseUrl,
+  //     },
+  //   },
+  //   sourceTokens: {
+  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+  //   },
+  //   contracts: {
+  //     teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
+  //     accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
+  //     boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
+  //   },
+  //   receiveOn: ChainKey.ETHEREUM,
+  //   points: [],
+  //   apys: {},
+  // },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
