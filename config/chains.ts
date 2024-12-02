@@ -34,6 +34,9 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.FORM]: {
     name: 'Form',
   },
+  [ChainKey.UNIFI]: {
+    name: 'UniFi',
+  },
   [ChainKey.RARI]: {
     name: 'Rari',
     id: rari.id,

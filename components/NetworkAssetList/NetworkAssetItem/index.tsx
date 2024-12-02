@@ -8,6 +8,7 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
 import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
+import { hardcodedApy } from '@/config/constants'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
@@ -41,6 +42,9 @@ function NetworkAssetItem({
     isLoading: isBoringVaultApyLoading,
     isError: isBoringVaultApyError,
   } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
+  if (boringVaultAddress === '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc') {
+    console.log('boringVaultApy', boringVaultApy)
+  }
 
   const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
   const totalApy =
@@ -101,7 +105,7 @@ function NetworkAssetItem({
                       shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
                     }
                   >
-                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '4%'}`}</Text>
+                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}`}</Text>
                   </IonTooltip>
                 </IonSkeleton>
               </Flex>

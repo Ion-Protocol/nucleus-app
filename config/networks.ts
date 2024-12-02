@@ -175,50 +175,17 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
   },
-  // [TokenKey.UNIFIETH]: {
-  //   token: tokensConfig[TokenKey.UNIFIETH],
-  //   description: '',
-  //   comingSoon: false,
-  //   isExternal: true,
-  //   isNewDeployment: true,
-  //   partnerUrl: 'https://quest.puffer.fi/unifi#stake-and-earn',
-  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIETH),
-  //   chain: ChainKey.PUFFER,
-  //   layerZeroChainSelector: 30235,
-  //   deployedOn: ChainKey.PUFFER,
-  //   sourceChains: {
-  //     [ChainKey.ETHEREUM]: {
-  //       chain: ChainKey.ETHEREUM,
-  //       explorerBaseUrl: etherscanBaseUrl,
-  //     },
-  //   },
-  //   sourceTokens: {
-  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-  //   },
-  //   contracts: {
-  //     teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
-  //     accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
-  //     boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
-  //   },
-  //   receiveOn: ChainKey.PUFFER,
-  //   points: [
-  //     {
-  //       key: PointSystemKey.NUCLEUS,
-  //       name: 'Nucleus',
-  //       pointsMultiplier: 2,
-  //     },
-  //   ],
-  //   apys: {},
-  // },
-  [TokenKey.SEIYANETH]: {
-    token: tokensConfig[TokenKey.SEIYANETH],
+  [TokenKey.UNIFIETH]: {
+    token: tokensConfig[TokenKey.UNIFIETH],
     description: '',
     comingSoon: false,
     isExternal: true,
-    partnerUrl: 'https://seiyaneth.com/',
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
-    chain: ChainKey.SEI,
-    deployedOn: ChainKey.SEI,
+    isNewDeployment: true,
+    partnerUrl: 'https://quest.puffer.fi/unifi#stake-and-earn',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIETH),
+    chain: ChainKey.UNIFI,
+    layerZeroChainSelector: 111111, // Not actual
+    deployedOn: ChainKey.ETHEREUM,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
@@ -229,14 +196,48 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
     contracts: {
-      teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
-      accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
-      boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
+      teller: '0x08eb2eccdf6ebd7aba601791f23ec5b5f68a1d53',
+      accountant: '0xa9fb7e2922216debe3fd5e1bbe7591ee446dc21c',
+      boringVault: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
     },
     receiveOn: ChainKey.ETHEREUM,
-    points: [],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
     apys: {},
   },
+  // ! commented out as Seiyan ETH was leading to confusion with SSETH. Will Delete after we're sure we are not going to list
+  // [TokenKey.SEIYANETH]: {
+  //   token: tokensConfig[TokenKey.SEIYANETH],
+  //   description: '',
+  //   comingSoon: false,
+  //   isExternal: true,
+  //   partnerUrl: 'https://seiyaneth.com/',
+  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
+  //   chain: ChainKey.SEI,
+  //   deployedOn: ChainKey.SEI,
+  //   sourceChains: {
+  //     [ChainKey.ETHEREUM]: {
+  //       chain: ChainKey.ETHEREUM,
+  //       explorerBaseUrl: etherscanBaseUrl,
+  //     },
+  //   },
+  //   sourceTokens: {
+  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+  //   },
+  //   contracts: {
+  //     teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
+  //     accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
+  //     boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
+  //   },
+  //   receiveOn: ChainKey.ETHEREUM,
+  //   points: [],
+  //   apys: {},
+  // },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
