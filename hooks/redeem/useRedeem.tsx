@@ -5,6 +5,7 @@ import { useAccount } from 'wagmi'
 
 import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
+import { selectNetworkId } from '@/store/slices/chain'
 import { useApproveMutation } from '@/store/slices/erc20Api'
 import { selectIsBridgeRequired } from '@/store/slices/networkAssets'
 import {
@@ -88,7 +89,7 @@ export const useRedeem = () => {
   const { switchToChain } = useChainManagement()
   const { chainId } = useAccount()
 
-  // const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
+  const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   const getStepId = useCallback(
@@ -188,6 +189,10 @@ export const useRedeem = () => {
     }
   }, [isUpdateAtomicRequestSuccess, atomicRequestResponse])
 
+  useEffect(() => {
+    console.log('Chain changed:', networkId)
+  }, [networkId])
+
   // Add local state to track the current step and loading state
   const [redeemStatus, setRedeemStatus] = useState<RedeemStatus>({
     currentStep: null,
@@ -215,7 +220,7 @@ export const useRedeem = () => {
 
     console.log('Environment info:', {
       nodeEnv: process.env.NODE_ENV,
-      chainId: chainId,
+      chainId: networkId,
       rpcUrl: MAINNET_CHAINSTACK_URL, // or however you configure this
     })
 
@@ -252,7 +257,7 @@ export const useRedeem = () => {
       //////////////////////////////////////////////////////////////////////////
       if (isBridgeRequired) {
         console.log('Switching chain for bridge:', {
-          from: chainId,
+          from: networkId,
           to: redemptionSourceChainId,
         })
         await switchToChain(redemptionSourceChainId!)
@@ -337,18 +342,24 @@ export const useRedeem = () => {
       }
     }
 
-    console.log('chainId', chainId)
+    console.log('chainId', networkId)
     console.log('destinationChainId', destinationChainId)
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
-    if (chainId !== destinationChainId) {
-      console.log('Switching chain for approval:', {
-        from: chainId,
-        to: destinationChainId,
-      })
-      await switchToChain(destinationChainId)
-    }
+    // if (networkId !== destinationChainId) {
+    //   console.log('Switching to destination chain for approval:', {
+    //     from: networkId,
+    //     to: destinationChainId,
+    //   })
+    //   await switchToChain(destinationChainId)
+
+    //   // Verify chain switch was successful
+    //   if (networkId !== destinationChainId) {
+    //     throw new Error(`Failed to switch to destination chain ${destinationChainId}`)
+    //   }
+    // }
+    await switchToChain(destinationChainId)
 
     let approveTokenTxHash: `0x${string}` | undefined
     //////////////////////////////////////////////////////////////////////////
@@ -359,7 +370,6 @@ export const useRedeem = () => {
     if (!allowance || allowance < redeemAmount) {
       try {
         // Handle approval
-
         approveTokenTxHash = await approveErc20({
           tokenAddress: sharesTokenAddress,
           spenderAddress: atomicQueueContractAddress,
@@ -415,9 +425,7 @@ export const useRedeem = () => {
       return
     }
     const requestStepId = getStepId(RedeemStepType.REQUEST)
-
     try {
-      await switchToChain(destinationChainId)
       const { atomicRequestArgs, atomicRequestOptions } = atomicRequestData
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
@@ -475,7 +483,7 @@ export const useRedeem = () => {
     } catch (error) {
       console.error('Transaction failed in', process.env.NODE_ENV, 'environment:', {
         error,
-        chainId,
+        networkId,
         timestamp: new Date().toISOString(),
       })
       console.error('Atomic request failed:', error)
