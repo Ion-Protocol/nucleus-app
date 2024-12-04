@@ -212,6 +212,14 @@ export const useRedeem = () => {
       sharesTokenAddress,
     } = data
 
+    console.log('Environment info:', {
+      nodeEnv: process.env.NODE_ENV,
+      chainId: networkId,
+      rpcUrl: process.env.NEXT_PUBLIC_RPC_URL, // or however you configure this
+    })
+
+    console.log('Starting atomic request in', process.env.NODE_ENV, 'environment')
+
     dispatch(setTitle('Redeem Status'))
     dispatch(setSteps(createSteps(isBridgeRequired)))
     dispatch(setHeaderContent('redeemSummary'))
@@ -398,6 +406,12 @@ export const useRedeem = () => {
       //   }, 2000) // 2 second delay
       // })
 
+      console.log('Transaction response:', {
+        hash: updateAtomicRequestTxHash,
+        env: process.env.NODE_ENV,
+        timestamp: new Date().toISOString(),
+      })
+
       txHashRef.current = updateAtomicRequestTxHash
       setDebugState((prev) => ({
         ...prev,
@@ -433,7 +447,13 @@ export const useRedeem = () => {
         dispatch(setHeaderContent('redeemSummary'))
       }
     } catch (error) {
+      console.error('Transaction failed in', process.env.NODE_ENV, 'environment:', {
+        error,
+        networkId,
+        timestamp: new Date().toISOString(),
+      })
       console.error('Atomic request failed:', error)
+
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'error' }))
       dispatch(
         setStatus({
