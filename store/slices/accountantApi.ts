@@ -3,6 +3,7 @@ import { AccountantWithRateProvidersAbi } from '@/contracts/AccountantWithRatePr
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
+import { serialize } from 'wagmi'
 import { readContract, ReadContractErrorType } from 'wagmi/actions'
 
 interface GetRateInQuoteSafeQueryArgs {
@@ -21,7 +22,7 @@ type WagmiError = ReadContractErrorType
 
 export const accountantApi = createApi({
   reducerPath: 'rateInQuoteSafeApi',
-  baseQuery: fakeBaseQuery<WagmiError>(),
+  baseQuery: fakeBaseQuery<string>(),
   tagTypes: ['RateInQuoteSafe'],
   endpoints: (builder) => ({
     getRateInQuoteSafe: builder.query<GetRateInQuoteSafeQueryResponse, GetRateInQuoteSafeQueryArgs>({
@@ -43,7 +44,7 @@ export const accountantApi = createApi({
             },
           }
         } catch (err) {
-          const error = err as WagmiError
+          const error = serialize(err)
           return {
             error,
             data: undefined,

@@ -44,7 +44,16 @@ export const atomicQueueApi = createApi({
             abi: AtomicQueueAbi,
             address: atomicQueueContractAddress,
             functionName: 'updateAtomicRequest',
-            args: [offer, want, userRequest as never],
+            args: [
+              offer,
+              want,
+              {
+                deadline: userRequest.deadline,
+                atomicPrice: userRequest.atomicPrice,
+                offerAmount: userRequest.offerAmount,
+                inSolve: userRequest.inSolve,
+              },
+            ],
             chainId,
           })
           console.log('Atomic queue hash:', hash)
@@ -58,7 +67,6 @@ export const atomicQueueApi = createApi({
           }
         }
       },
-      extraOptions: { maxRetries: 2 },
     }),
   }),
 })

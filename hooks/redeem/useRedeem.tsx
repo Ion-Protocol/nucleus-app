@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 import { useAccount } from 'wagmi'
@@ -77,6 +77,14 @@ type RedeemWithBridgeData = BaseRedeemData & {
 type HandleRedeem = StandardRedeemData | RedeemWithBridgeData
 
 export const useRedeem = () => {
+  const txHashRef = useRef<string | null>(null)
+  const isProcessingRef = useRef(false)
+
+  // Add state for debugging
+  const [debugState, setDebugState] = useState({
+    lastTxHash: null as string | null,
+    mutationState: '',
+  })
   const dispatch = useDispatch()
   const { switchToChain } = useChainManagement()
   const { chainId } = useAccount()
@@ -171,24 +179,21 @@ export const useRedeem = () => {
    ******************************************************************************
    */
 
+  // Add effect to track mutation state
+  useEffect(() => {
+    if (isUpdateAtomicRequestSuccess) {
+      console.log('Mutation succeeded:', {
+        atomicRequestResponse,
+        storedHash: txHashRef.current,
+      })
+    }
+  }, [isUpdateAtomicRequestSuccess, atomicRequestResponse])
+
   // Add local state to track the current step and loading state
   const [redeemStatus, setRedeemStatus] = useState<RedeemStatus>({
     currentStep: null,
     isLoading: false,
   })
-
-  // Effect to update dialog when status changes
-  useEffect(() => {
-    if (redeemStatus.currentStep) {
-      const stepId = getStepId(redeemStatus.currentStep)
-      dispatch(
-        setDialogStep({
-          stepId,
-          newState: redeemStatus.isLoading ? 'active' : 'completed',
-        })
-      )
-    }
-  }, [redeemStatus, getStepId, dispatch])
 
   /**
    ******************************************************************************
@@ -392,6 +397,19 @@ export const useRedeem = () => {
       //     resolve('0x123...')
       //   }, 2000) // 2 second delay
       // })
+
+      txHashRef.current = updateAtomicRequestTxHash
+      setDebugState((prev) => ({
+        ...prev,
+        lastTxHash: updateAtomicRequestTxHash,
+        mutationState: 'received_hash',
+      }))
+
+      console.log('Received tx hash:', {
+        hash: updateAtomicRequestTxHash,
+        refHash: txHashRef.current,
+      })
+      console.log('updateAtomicRequestTxHash in hook:', updateAtomicRequestTxHash)
 
       const atomicRequestReceipt = await queryAtomicRequestReceipt({ hash: updateAtomicRequestTxHash })
 
