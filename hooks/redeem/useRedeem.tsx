@@ -20,6 +20,7 @@ import {
   setTitle,
 } from '@/store/slices/stepDialog/slice'
 import { BridgeData, useBridgeMutation } from '@/store/slices/tellerApi'
+import { useLazyWaitForTransactionReceiptQuery } from '@/store/slices/transactionReceiptApt'
 import { AtomicRequestArgs, AtomicRequestOptions } from '@/utils/atomicRequest'
 import { useChainManagement } from '../useChainManagement'
 
@@ -79,7 +80,6 @@ export const useRedeem = () => {
   const dispatch = useDispatch()
   const { switchToChain } = useChainManagement()
   const { chainId } = useAccount()
-  console.log('chainId', chainId)
 
   const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
@@ -109,6 +109,17 @@ export const useRedeem = () => {
       isError: isApproveErc20Error,
     },
   ] = useApproveMutation()
+  const [
+    queryErc20TxReceipt,
+    {
+      data: approveErc20Receipt,
+      error: approveErc20ReceiptError,
+      isLoading: isApproveErc20TxReceiptLoading,
+      isSuccess: isApproveErc20TxReceiptSuccess,
+      isError: isApproveErc20ReceiptError,
+      status: approveErc20Status,
+    },
+  ] = useLazyWaitForTransactionReceiptQuery()
 
   const [
     updateAtomicRequest,
@@ -120,6 +131,17 @@ export const useRedeem = () => {
       isError: isUpdateAtomicRequestError,
     },
   ] = useUpdateAtomicRequestMutation()
+  const [
+    queryAtomicRequestReceipt,
+    {
+      data: atomicRequestReceipt,
+      error: atomicRequestReceiptError,
+      isLoading: isAtomicRequestReceiptLoading,
+      isSuccess: isAtomicRequestReceiptSuccess,
+      isError: isAtomicRequestReceiptError,
+      status: atomicRequestStatus,
+    },
+  ] = useLazyWaitForTransactionReceiptQuery()
 
   const [
     bridge,
@@ -131,6 +153,17 @@ export const useRedeem = () => {
       isError: isBridgeError,
     },
   ] = useBridgeMutation()
+  const [
+    queryBridgeReceipt,
+    {
+      data: bridgetReceipt,
+      error: bridgeReceiptError,
+      isLoading: isBridgeReceiptLoading,
+      isSuccess: isBridgeReceiptSuccess,
+      isError: isBridgeReceiptError,
+      status: bridgeStatus,
+    },
+  ] = useLazyWaitForTransactionReceiptQuery()
 
   /**
    ******************************************************************************
@@ -235,15 +268,21 @@ export const useRedeem = () => {
           fee: previewFeeAsBigInt,
         }).unwrap()
 
-        if (!txHash) {
-          throw new Error('Bridge transaction failed - no transaction hash returned')
+        // if (!txHash) {
+        //   throw new Error('Bridge transaction failed - no transaction hash returned')
+        // }
+
+        const bridgeReceipt = await queryBridgeReceipt({ hash: txHash })
+
+        if (bridgeReceipt.isError) {
+          throw new Error(`Bridge Receipt Error: ${bridgeReceipt.error}`)
         }
 
         dispatch(
           setDialogStep({
             stepId: bridgeStepId,
             newState: 'completed',
-            link: `${seiExplorerBaseUrl}tx/${txHash}`,
+            link: `${seiExplorerBaseUrl}tx/${bridgeReceipt.data?.transactionHash}`,
           })
         )
       } catch (error) {
@@ -262,7 +301,6 @@ export const useRedeem = () => {
 
     console.log('networkId', networkId)
     console.log('destinationChainId', destinationChainId)
-    await new Promise((resolve) => setTimeout(resolve, 5000))
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
@@ -278,24 +316,31 @@ export const useRedeem = () => {
     //////////////////////////////////////////////////////////////////////////
     // 3.1 Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
-    dispatch(restoreCompletedSteps())
+    const approveStepId = getStepId(RedeemStepType.APPROVE)
+    dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
     if (!allowance || allowance < redeemAmount) {
-      const approveStepId = getStepId(RedeemStepType.APPROVE)
       try {
         // Handle approval
-        dispatch(setDialogStep({ stepId: approveStepId, newState: 'active' }))
+
         approveTokenTxHash = await approveErc20({
           tokenAddress: sharesTokenAddress,
           spenderAddress: atomicQueueContractAddress,
           amount: redeemAmount,
           chainId: destinationChainId,
         }).unwrap()
+
+        const approvalReceipt = await queryErc20TxReceipt({ hash: approveTokenTxHash })
+
+        if (approvalReceipt.isError) {
+          throw new Error(`Approval Error: ${approvalReceipt.error}`)
+        }
+
         if (approveTokenTxHash) {
           dispatch(
             setDialogStep({
               stepId: approveStepId,
               newState: 'completed',
-              link: `${etherscanBaseUrl}tx/${approveTokenTxHash}`,
+              link: `${etherscanBaseUrl}tx/${approvalReceipt.data?.transactionHash}`,
             })
           )
         }
@@ -348,12 +393,18 @@ export const useRedeem = () => {
       //   }, 2000) // 2 second delay
       // })
 
+      const atomicRequestReceipt = await queryAtomicRequestReceipt({ hash: updateAtomicRequestTxHash })
+
+      if (atomicRequestReceipt.isError) {
+        throw new Error(`Atomic Request Error: ${atomicRequestReceipt.error}`)
+      }
+
       if (updateAtomicRequestTxHash) {
         dispatch(
           setDialogStep({
             stepId: requestStepId,
             newState: 'completed',
-            link: `${etherscanBaseUrl}tx/${updateAtomicRequestTxHash}`,
+            link: `${etherscanBaseUrl}tx/${atomicRequestReceipt.data?.transactionHash}`,
           })
         )
         dispatch(
@@ -379,6 +430,13 @@ export const useRedeem = () => {
 
   return {
     handleRedeem,
-    isLoading: redeemStatus.isLoading || isApproveErc20Loading || isUpdateAtomicRequestLoading || isBridgeLoading,
+    isLoading:
+      redeemStatus.isLoading ||
+      isApproveErc20Loading ||
+      isApproveErc20TxReceiptLoading ||
+      isUpdateAtomicRequestLoading ||
+      isAtomicRequestReceiptLoading ||
+      isBridgeLoading ||
+      isBridgeReceiptLoading,
   }
 }

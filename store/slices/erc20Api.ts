@@ -1,10 +1,10 @@
 import { wagmiConfig } from '@/config/wagmi'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address, erc20Abi, Hash } from 'viem'
+import { serialize } from 'wagmi'
 import {
   readContract,
   type ReadContractErrorType,
-  waitForTransactionReceipt,
   type WaitForTransactionReceiptErrorType,
   writeContract,
   type WriteContractErrorType,
@@ -34,8 +34,8 @@ interface BalanceOfArgs {
 
 export const erc20Api = createApi({
   reducerPath: 'erc20Api',
-  baseQuery: fakeBaseQuery<WagmiError>(),
-  tagTypes: ['allowance', 'approve'],
+  baseQuery: fakeBaseQuery<string>(),
+  tagTypes: ['allowance', 'approve', 'balance'],
   endpoints: (builder) => ({
     allowance: builder.query<bigint, AllowanceArgs>({
       queryFn: async ({ tokenAddress, spenderAddress, userAddress, chainId }) => {
@@ -49,7 +49,7 @@ export const erc20Api = createApi({
           })
           return { data: results }
         } catch (err) {
-          const error = err as WagmiError
+          const error = serialize(err)
           return {
             error,
             data: undefined,
@@ -71,7 +71,7 @@ export const erc20Api = createApi({
           })
           return { data: results }
         } catch (err) {
-          const error = err as WagmiError
+          const error = serialize(err)
           return {
             error,
             data: undefined,
@@ -79,6 +79,7 @@ export const erc20Api = createApi({
           }
         }
       },
+      providesTags: ['balance'],
     }),
     approve: builder.mutation<Hash, ApproveArgs>({
       queryFn: async ({ tokenAddress, spenderAddress, amount, chainId }) => {
@@ -90,12 +91,9 @@ export const erc20Api = createApi({
             args: [spenderAddress, amount],
             chainId,
           })
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash,
-          })
-          return { data: txReceipt.transactionHash }
+          return { data: hash }
         } catch (err) {
-          const error = err as WagmiError
+          const error = serialize(err)
           return {
             error,
             data: undefined,

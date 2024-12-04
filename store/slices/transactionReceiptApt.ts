@@ -1,13 +1,12 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import {
-  type WaitForTransactionReceiptErrorType,
-  type WaitForTransactionReceiptReturnType,
   type WaitForTransactionReceiptParameters,
+  type WaitForTransactionReceiptReturnType,
   waitForTransactionReceipt,
 } from 'wagmi/actions'
 
 import { wagmiConfig } from '@/config/wagmi'
-import { serialize, useWaitForTransactionReceipt } from 'wagmi'
+import { serialize } from 'wagmi'
 
 export const transactionReceiptApi = createApi({
   reducerPath: 'TransactionReceiptApi',
@@ -29,4 +28,4 @@ export const transactionReceiptApi = createApi({
   }),
 })
 
-export const { useWaitForTransactionReceiptQuery } = transactionReceiptApi
+export const { useWaitForTransactionReceiptQuery, useLazyWaitForTransactionReceiptQuery } = transactionReceiptApi

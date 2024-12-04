@@ -4,7 +4,8 @@ import { wagmiConfig } from '@/config/wagmi'
 import { AtomicQueueAbi } from '@/contracts/AtomicQueueAbi'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address, Hash, WaitForTransactionReceiptErrorType } from 'viem'
-import { waitForTransactionReceipt, writeContract, type WriteContractErrorType } from 'wagmi/actions'
+import { serialize } from 'wagmi'
+import { writeContract, type WriteContractErrorType } from 'wagmi/actions'
 
 export interface AtomicRequest {
   deadline: bigint
@@ -28,7 +29,7 @@ type WagmiError = WriteContractErrorType | WaitForTransactionReceiptErrorType
 
 export const atomicQueueApi = createApi({
   reducerPath: 'atomicQueueApi',
-  baseQuery: fakeBaseQuery<WagmiError>(),
+  baseQuery: fakeBaseQuery<string>(),
   tagTypes: ['atomicRequest'],
   endpoints: (builder) => ({
     updateAtomicRequest: builder.mutation<
@@ -47,14 +48,9 @@ export const atomicQueueApi = createApi({
             chainId,
           })
           console.log('Atomic queue hash:', hash)
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash: hash,
-            timeout: 60_000,
-          })
-          console.log('Atomic queue receipt:', txReceipt)
-          return { data: txReceipt.transactionHash }
+          return { data: hash }
         } catch (err) {
-          const error = err as WagmiError
+          const error = serialize(err)
           return {
             error: error,
             data: undefined,

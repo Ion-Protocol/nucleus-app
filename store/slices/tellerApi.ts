@@ -8,7 +8,6 @@ import { Address } from 'viem'
 import {
   readContract,
   type ReadContractErrorType,
-  waitForTransactionReceipt,
   type WaitForTransactionReceiptErrorType,
   writeContract,
   type WriteContractErrorType,
@@ -79,7 +78,7 @@ export const tellerApi = createApi({
     >({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
-          const results = await writeContract(wagmiConfig, {
+          const hash = await writeContract(wagmiConfig, {
             abi: CrossChainTellerBaseAbi,
             address: contractAddress,
             functionName: 'bridge',
@@ -87,14 +86,8 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          console.log('Bridge results:', results, typeof results)
-
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash: results,
-            timeout: 60_000,
-          })
-          console.log('Bridge receipt:', txReceipt)
-          return { data: txReceipt.transactionHash }
+          console.log('Bridge results:', hash, typeof hash)
+          return { data: hash }
         } catch (err) {
           const error = err as WriteContractErrorType | WaitForTransactionReceiptErrorType
           return { error, data: undefined, meta: undefined }
