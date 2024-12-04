@@ -10,6 +10,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     addresses: {
       [ChainKey.ETHEREUM]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       [ChainKey.SEI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      [ChainKey.RARI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     },
   },
   [TokenKey.WETH]: {
@@ -19,6 +20,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     addresses: {
       [ChainKey.ETHEREUM]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       [ChainKey.SEI]: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
+      [ChainKey.RARI]: '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0',
     },
   },
   [TokenKey.WEETH]: {
@@ -218,6 +220,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'RARIETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+      [ChainKey.RARI]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
   },
   [TokenKey.ISEI]: {

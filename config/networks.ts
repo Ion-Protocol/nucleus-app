@@ -3,7 +3,8 @@ import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
-import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from './constants'
+import { etherscanBaseUrl, layerZeroBaseUrl, rariExplorerBaseUrl, seiExplorerBaseUrl } from './constants'
+import { rari } from './tenderly'
 import { tokensConfig } from './tokens'
 
 const MANUALLY_PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
@@ -12,6 +13,7 @@ export enum NetworkKey {
   MAINNET = 'mainnet',
   TENDERLY_MAINNET = 'tenderly_mainnet',
   SEI = 'sei',
+  RARI = 'rari',
 }
 
 export interface NetworkConfig {
@@ -142,29 +144,33 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.RARIETH]: {
     token: tokensConfig[TokenKey.RARIETH],
-    description: '',
-    comingSoon: false,
-    isExternal: false,
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Rari Default Asset to earn while you explore the Rari ecosystem',
+    chain: ChainKey.RARI,
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
     isNewDeployment: true,
     partnerUrl: 'https://app.rari.capital/earn/rarieth',
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
-    chain: ChainKey.RARI,
-    layerZeroChainSelector: 30235,
     deployedOn: ChainKey.RARI,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: etherscanBaseUrl,
       },
+      [ChainKey.RARI]: {
+        chain: ChainKey.RARI,
+        explorerBaseUrl: rariExplorerBaseUrl,
+      },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.RARI]: [TokenKey.WETH],
     },
     contracts: {
       teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
       accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
       boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
+    layerZeroChainSelector: 30235,
     receiveOn: ChainKey.RARI,
     points: [
       {
@@ -320,6 +326,11 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.SEI]: {
     id: sei.id,
     name: 'Sei',
+    assets: mainnetNetworkAssets,
+  },
+  [NetworkKey.RARI]: {
+    id: rari.id,
+    name: 'Rari',
     assets: mainnetNetworkAssets,
   },
 }
