@@ -1,13 +1,13 @@
 {
   "name": "nucleus",
   "engines": {
-    "node": "20.x"
+    "node": "20.12.2"
   },
   "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node -v next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",

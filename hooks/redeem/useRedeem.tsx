@@ -201,6 +201,8 @@ export const useRedeem = () => {
    ******************************************************************************
    */
 
+  const MAINNET_CHAINSTACK_URL = process.env.NEXT_PUBLIC_MAINNET_CHAINSTACK_URL || ''
+
   const handleRedeem = async (data: HandleRedeem) => {
     const {
       isBridgeRequired,
@@ -215,7 +217,7 @@ export const useRedeem = () => {
     console.log('Environment info:', {
       nodeEnv: process.env.NODE_ENV,
       chainId: networkId,
-      rpcUrl: process.env.NEXT_PUBLIC_RPC_URL, // or however you configure this
+      rpcUrl: MAINNET_CHAINSTACK_URL, // or however you configure this
     })
 
     console.log('Starting atomic request in', process.env.NODE_ENV, 'environment')
