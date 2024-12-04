@@ -1,5 +1,7 @@
-import { Button, Flex, Heading, Text, Image, useTheme, Link } from '@chakra-ui/react'
+import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react'
 
+import { discordUrl, hardcodedApy } from '@/config/constants'
+import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { useAppSelector } from '@/store/hooks'
 import {
   selectContractAddressByName,
@@ -7,19 +9,17 @@ import {
   selectNetworkAssetPaused,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
-import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
-import { abbreviateNumber } from '@/utils/number'
-import { discordUrl } from '@/config/constants'
 import { TokenKey } from '@/types/TokenKey'
+import { abbreviateNumber } from '@/utils/number'
 import { useColorMode } from '@chakra-ui/react'
 
-import Paused from '@/pages/tokens/[tokens]/paused'
 import { MintAndRedeem } from '@/components/NetworkAsset/MintAndRedeem'
 import NetworkAssetTitle from '@/components/NetworkAsset/NetworkAssetTitle'
 import Apy from '@/components/NetworkAsset/NetworkAssetTitle/Apy'
 import RewardsAndPoints from '@/components/NetworkAsset/NetworkAssetTitle/RewardsAndPoints'
 import Tvl from '@/components/NetworkAsset/NetworkAssetTitle/Tvl'
 import RewardsAndHistory from '@/components/NetworkAsset/RewardsAndHistory'
+import Paused from '@/pages/tokens/[tokens]/paused'
 import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { Address } from 'viem'
 
@@ -42,7 +42,7 @@ export default function Token() {
   )
   const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
 
-  const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
+  const vaultAssetApy = boringVaultApy?.apy ? boringVaultApy.apy : hardcodedApy
 
   const tvl =
     networkAssetFromRoute !== TokenKey.SSETH && rewardsResponse ? abbreviateNumber(rewardsResponse?.TVL) : undefined

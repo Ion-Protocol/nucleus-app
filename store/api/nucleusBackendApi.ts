@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { nucleusBackendBaseUrl } from '@/config/constants'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
 
 interface RewardsAPYParams {
@@ -31,11 +31,11 @@ export const nucleusBackendApi = createApi({
   endpoints: (builder) => ({
     // Keep the original single query endpoint
     getDefaultYieldAPY: builder.query<RewardsAPYResponse, RewardsAPYParams>({
-      query: ({ tokenAddress, blockNumber, lookBackDays }) => {
+      query: ({ tokenAddress, blockNumber, lookBackDays = 14 }) => {
         const params = new URLSearchParams()
         params.append('token_address', tokenAddress)
         if (blockNumber) params.append('block_number', blockNumber.toString())
-        if (lookBackDays) params.append('look_back_days', lookBackDays.toString())
+        if (lookBackDays) params.append('lookback_days', lookBackDays.toString())
         return `v1/vaults/apy?${params.toString()}`
       },
     }),

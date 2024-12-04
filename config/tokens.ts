@@ -155,6 +155,14 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0xD9A442856C234a39a81a089C06451EBAa4306a72',
     },
   },
+  [TokenKey.UNIFIETH]: {
+    key: TokenKey.UNIFIETH,
+    name: 'UniFiETH',
+    symbol: 'UNIFIETH',
+    addresses: {
+      [ChainKey.UNIFI]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
+    },
+  },
   [TokenKey.SFRXETH]: {
     key: TokenKey.SFRXETH,
     name: 'sfrxETH',

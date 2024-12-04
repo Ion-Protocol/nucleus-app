@@ -18,6 +18,7 @@ export interface NetworkAsset {
   deployedOn: ChainKey
   comingSoon?: boolean
   isExternal?: boolean
+  isNewDeployment?: boolean
   partnerUrl?: string
   manuallyPaused?: boolean
   sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
