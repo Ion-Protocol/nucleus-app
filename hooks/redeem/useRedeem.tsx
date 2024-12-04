@@ -5,7 +5,6 @@ import { useAccount } from 'wagmi'
 
 import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
-import { selectNetworkId } from '@/store/slices/chain'
 import { useApproveMutation } from '@/store/slices/erc20Api'
 import { selectIsBridgeRequired } from '@/store/slices/networkAssets'
 import {
@@ -89,7 +88,7 @@ export const useRedeem = () => {
   const { switchToChain } = useChainManagement()
   const { chainId } = useAccount()
 
-  const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
+  // const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   const getStepId = useCallback(
@@ -216,7 +215,7 @@ export const useRedeem = () => {
 
     console.log('Environment info:', {
       nodeEnv: process.env.NODE_ENV,
-      chainId: networkId,
+      chainId: chainId,
       rpcUrl: MAINNET_CHAINSTACK_URL, // or however you configure this
     })
 
@@ -253,7 +252,7 @@ export const useRedeem = () => {
       //////////////////////////////////////////////////////////////////////////
       if (isBridgeRequired) {
         console.log('Switching chain for bridge:', {
-          from: networkId,
+          from: chainId,
           to: redemptionSourceChainId,
         })
         await switchToChain(redemptionSourceChainId!)
@@ -275,19 +274,43 @@ export const useRedeem = () => {
           throw new Error('Bridge fee is undefined')
         }
 
-        const txHash = await bridge({
-          shareAmount: redeemAmount,
-          bridgeData: bridgeData,
-          contractAddress: tellerContractAddress,
-          chainId: redemptionSourceChainId,
-          fee: previewFeeAsBigInt,
-        }).unwrap()
+        // const txHash = await bridge({
+        //   shareAmount: redeemAmount,
+        //   bridgeData: bridgeData,
+        //   contractAddress: tellerContractAddress,
+        //   chainId: redemptionSourceChainId,
+        //   fee: previewFeeAsBigInt,
+        // }).unwrap()
+        // Mock updateAtomicRequest with delay
+        const updateAtomicRequestTxHash = await new Promise<string>((resolve) => {
+          setTimeout(() => {
+            resolve('0x123...')
+          }, 2000) // 2 second delay
+        })
 
         // if (!txHash) {
         //   throw new Error('Bridge transaction failed - no transaction hash returned')
         // }
 
-        const bridgeReceipt = await queryBridgeReceipt({ hash: txHash })
+        // const bridgeReceipt = await queryBridgeReceipt({ hash: txHash })
+        const bridgeReceipt = await new Promise<{
+          data?: {
+            transactionHash: string
+          }
+          isError: boolean
+          error: null | string
+        }>((resolve) => {
+          setTimeout(() => {
+            resolve({
+              data: {
+                transactionHash: '0x123...',
+                // Add other receipt fields as needed
+              },
+              isError: false,
+              error: null,
+            })
+          }, 2000) // 2 second delay
+        })
 
         if (bridgeReceipt.isError) {
           throw new Error(`Bridge Receipt Error: ${bridgeReceipt.error}`)
@@ -314,14 +337,14 @@ export const useRedeem = () => {
       }
     }
 
-    console.log('networkId', networkId)
+    console.log('chainId', chainId)
     console.log('destinationChainId', destinationChainId)
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
-    if (networkId !== destinationChainId) {
+    if (chainId !== destinationChainId) {
       console.log('Switching chain for approval:', {
-        from: networkId,
+        from: chainId,
         to: destinationChainId,
       })
       await switchToChain(destinationChainId)
@@ -394,6 +417,7 @@ export const useRedeem = () => {
     const requestStepId = getStepId(RedeemStepType.REQUEST)
 
     try {
+      await switchToChain(destinationChainId)
       const { atomicRequestArgs, atomicRequestOptions } = atomicRequestData
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
@@ -451,7 +475,7 @@ export const useRedeem = () => {
     } catch (error) {
       console.error('Transaction failed in', process.env.NODE_ENV, 'environment:', {
         error,
-        networkId,
+        chainId,
         timestamp: new Date().toISOString(),
       })
       console.error('Atomic request failed:', error)
