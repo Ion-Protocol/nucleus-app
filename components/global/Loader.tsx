@@ -1,27 +1,24 @@
-import { Icon, IconProps } from '@chakra-ui/react'
+// import { Icon, IconProps } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
-import { LoaderCircle } from 'lucide-react'
+import { LoaderCircle, LucideProps } from 'lucide-react'
 
 // Extend IconProps to include any additional props we need
-interface LoaderProps extends IconProps {}
-
-// Create a motion component for the Chakra Icon
-const MotionIcon = motion(Icon)
+interface LoaderProps extends LucideProps {}
 
 function Loader({ ...props }: LoaderProps) {
+  const spin = {
+    rotate: [0, 360],
+    transition: {
+      duration: 1,
+      repeat: Infinity,
+      ease: 'linear',
+    },
+  }
   return (
-    <MotionIcon
-      as={LoaderCircle}
-      {...props}
-      animate={{
-        rotate: [0, 360],
-      }}
-      transition={{
-        repeat: Infinity,
-        duration: 1,
-        ease: 'linear',
-      }}
-    />
+    <Box as={motion.div} animate={spin} display="flex" alignItems="center" justifyContent="center">
+      <LoaderCircle {...props} />
+    </Box>
   )
 }
 
