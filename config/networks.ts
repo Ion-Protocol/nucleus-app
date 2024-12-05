@@ -228,6 +228,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     token: tokensConfig[TokenKey.RARIETH],
     description: '',
     comingSoon: false,
+    redeemComingSoon: true,
     isExternal: false,
     isNewDeployment: true,
     partnerUrl: 'https://app.rari.capital/earn/rarieth',

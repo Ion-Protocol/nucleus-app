@@ -17,6 +17,7 @@ export interface NetworkAsset {
   chain: ChainKey
   deployedOn: ChainKey
   comingSoon?: boolean
+  redeemComingSoon?: boolean
   isExternal?: boolean
   isNewDeployment?: boolean
   partnerUrl?: string
