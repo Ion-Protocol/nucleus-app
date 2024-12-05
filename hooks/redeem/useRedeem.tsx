@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
-import { useAccount } from 'wagmi'
 
 import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
@@ -77,27 +76,11 @@ type RedeemWithBridgeData = BaseRedeemData & {
 type HandleRedeem = StandardRedeemData | RedeemWithBridgeData
 
 export const useRedeem = () => {
-  const txHashRef = useRef<string | null>(null)
-  const isProcessingRef = useRef(false)
-
-  // Add state for debugging
-  const [debugState, setDebugState] = useState({
-    lastTxHash: null as string | null,
-    mutationState: '',
-  })
   const dispatch = useDispatch()
   const { switchToChain } = useChainManagement()
-  const { chainId } = useAccount()
 
   const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
-
-  const renderCount = useRef(0)
-
-  useEffect(() => {
-    renderCount.current += 1
-    console.log(`useRedeem hook rendered ${renderCount.current} times`)
-  })
 
   const getStepId = useCallback(
     (stepType: RedeemStepType): number => {
@@ -186,26 +169,6 @@ export const useRedeem = () => {
    ******************************************************************************
    */
 
-  // Add effect to track mutation state
-  useEffect(() => {
-    if (isUpdateAtomicRequestSuccess) {
-      console.log('Mutation succeeded:', {
-        atomicRequestResponse,
-        storedHash: txHashRef.current,
-      })
-    }
-  }, [isUpdateAtomicRequestSuccess, atomicRequestResponse])
-
-  useEffect(() => {
-    console.log('Chain changed:', networkId)
-  }, [networkId])
-
-  // Add local state to track the current step and loading state
-  const [redeemStatus, setRedeemStatus] = useState<RedeemStatus>({
-    currentStep: null,
-    isLoading: false,
-  })
-
   /**
    ******************************************************************************
    * Handle redeem
@@ -224,14 +187,6 @@ export const useRedeem = () => {
       atomicRequestData,
       sharesTokenAddress,
     } = data
-
-    console.log('Environment info:', {
-      nodeEnv: process.env.NODE_ENV,
-      chainId: networkId,
-      rpcUrl: MAINNET_CHAINSTACK_URL, // or however you configure this
-    })
-
-    console.log('Starting atomic request in', process.env.NODE_ENV, 'environment')
 
     dispatch(setTitle('Redeem Status'))
     dispatch(setSteps(createSteps(isBridgeRequired)))
@@ -286,43 +241,43 @@ export const useRedeem = () => {
           throw new Error('Bridge fee is undefined')
         }
 
-        // const txHash = await bridge({
-        //   shareAmount: redeemAmount,
-        //   bridgeData: bridgeData,
-        //   contractAddress: tellerContractAddress,
-        //   chainId: redemptionSourceChainId,
-        //   fee: previewFeeAsBigInt,
-        // }).unwrap()
+        const txHash = await bridge({
+          shareAmount: redeemAmount,
+          bridgeData: bridgeData,
+          contractAddress: tellerContractAddress,
+          chainId: redemptionSourceChainId,
+          fee: previewFeeAsBigInt,
+        }).unwrap()
         // Mock updateAtomicRequest with delay
-        const updateAtomicRequestTxHash = await new Promise<string>((resolve) => {
-          setTimeout(() => {
-            resolve('0x123...')
-          }, 2000) // 2 second delay
-        })
+        // const updateAtomicRequestTxHash = await new Promise<string>((resolve) => {
+        //   setTimeout(() => {
+        //     resolve('0x123...')
+        //   }, 2000) // 2 second delay
+        // })
 
         // if (!txHash) {
         //   throw new Error('Bridge transaction failed - no transaction hash returned')
         // }
 
-        // const bridgeReceipt = await queryBridgeReceipt({ hash: txHash })
-        const bridgeReceipt = await new Promise<{
-          data?: {
-            transactionHash: string
-          }
-          isError: boolean
-          error: null | string
-        }>((resolve) => {
-          setTimeout(() => {
-            resolve({
-              data: {
-                transactionHash: '0x123...',
-                // Add other receipt fields as needed
-              },
-              isError: false,
-              error: null,
-            })
-          }, 2000) // 2 second delay
-        })
+        const bridgeReceipt = await queryBridgeReceipt({ hash: txHash })
+        // const bridgeReceipt = await new Promise<{
+        //   data?: {
+        //     transactionHash: string
+        //   }
+        //   isError: boolean
+        //   error: null | string
+        // }>((resolve) => {
+        //   setTimeout(() => {
+        //     resolve({
+        //       data: {
+        //         transactionHash: '0x123...',
+        //         // Add other receipt fields as needed
+        //       },
+        //       isError: false,
+        //       error: null,
+        //     })
+        //   }, 2000) // 2 second delay
+        // })
 
         if (bridgeReceipt.isError) {
           throw new Error(`Bridge Receipt Error: ${bridgeReceipt.error}`)
@@ -457,17 +412,6 @@ export const useRedeem = () => {
         timestamp: new Date().toISOString(),
       })
 
-      txHashRef.current = updateAtomicRequestTxHash
-      setDebugState((prev) => ({
-        ...prev,
-        lastTxHash: updateAtomicRequestTxHash,
-        mutationState: 'received_hash',
-      }))
-
-      console.log('Received tx hash:', {
-        hash: updateAtomicRequestTxHash,
-        refHash: txHashRef.current,
-      })
       console.log('updateAtomicRequestTxHash in hook:', updateAtomicRequestTxHash)
 
       const atomicRequestReceipt = await queryAtomicRequestReceipt({ hash: updateAtomicRequestTxHash })
@@ -514,7 +458,6 @@ export const useRedeem = () => {
   return {
     handleRedeem,
     isLoading:
-      redeemStatus.isLoading ||
       isApproveErc20Loading ||
       isApproveErc20TxReceiptLoading ||
       isUpdateAtomicRequestLoading ||
