@@ -41,14 +41,7 @@ export function IonConnectButton() {
                     onClick={openChainModal}
                     leftIcon={
                       <Box bg={chain.iconBackground} borderRadius={999} overflow="hidden">
-                        {chain.iconUrl && (
-                          <Image
-                            h="20px"
-                            alt={chain.name ?? 'Chain icon'}
-                            src={chain.iconUrl}
-                            fallbackSrc="defaultIconUrl"
-                          />
-                        )}
+                        {chain.iconUrl && <Image h="20px" alt={chain.name ?? 'Chain icon'} src={chain.iconUrl} />}
                       </Box>
                     }
                   >
