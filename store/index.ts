@@ -1,24 +1,29 @@
 import { configureStore, isPlainObject } from '@reduxjs/toolkit'
-import { serialize, deserialize } from 'wagmi'
 import { debounceMiddleware } from './middleware/debounceMiddleware'
 import { termsAcceptedMiddleware } from './middleware/effects/acceptTermsMiddleware'
-import { sideEffectMiddleware } from './middleware/effects/sideEffectMiddleware'
 import { previewFeeMiddleware } from './middleware/effects/previewFeeMiddleware'
+import { sideEffectMiddleware } from './middleware/effects/sideEffectMiddleware'
 import { accountReducer } from './slices/account/slice'
 import { balancesReducer } from './slices/balance'
-import { networkAssetsReducer } from './slices/networkAssets'
 import { networkReducer } from './slices/chain/slice'
+import { networkAssetsReducer } from './slices/networkAssets'
 import { priceReducer } from './slices/price'
+import { redstoneApi } from './slices/redstoneSlice/apiSlice'
 import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
+import { dialogReducer } from './slices/stepDialog/slice'
 import { UIReducer } from './slices/ui/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
-import { redstoneApi } from './slices/redstoneSlice/apiSlice'
-import { dialogReducer } from './slices/stepDialog/slice'
-import { tellerApi, accountantApi, atomicQueueApi, erc20Api, transactionReceiptApi, coinGeckoApi } from './api'
 
-import { nucleusBackendApi } from './api/nucleusBackendApi'
-import { nucleusIncentivesApi } from './api/incentivesApi'
+import { deserialize, serialize } from 'wagmi'
+import { accountantApi } from './slices/accountantApi'
+import { atomicQueueApi } from './slices/atomicQueueApi'
+import { coinGeckoApi } from './slices/coinGecko'
+import { erc20Api } from './slices/erc20Api'
+import { nucleusIncentivesApi } from './slices/incentivesApi'
+import { nucleusBackendApi } from './slices/nucleusBackendApi'
+import { tellerApi } from './slices/tellerApi'
+import { transactionReceiptApi } from './slices/transactionReceiptApt'
 const regularMiddlewares = [debounceMiddleware]
 const sideEffectMiddlewares = [previewFeeMiddleware, sideEffectMiddleware, termsAcceptedMiddleware]
 const apiMiddlewares = [
@@ -61,22 +66,34 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false,
-      //   isSerializable: (value: unknown) =>
-      //     isPlainObject(value) ||
-      //     Array.isArray(value) ||
-      //     typeof value === 'string' ||
-      //     typeof value === 'number' ||
-      //     typeof value === 'boolean' ||
-      //     typeof value === 'undefined' ||
-      //     value === null ||
-      //     typeof value === 'bigint',
-      //   serialize: (value: unknown) => serialize(value),
-      //   deserialize: (value: string) => deserialize(value),
-      // },
+      serializableCheck: {
+        isSerializable: (value: unknown) =>
+          isPlainObject(value) ||
+          Array.isArray(value) ||
+          typeof value === 'string' ||
+          typeof value === 'number' ||
+          typeof value === 'boolean' ||
+          typeof value === 'undefined' ||
+          value === null ||
+          typeof value === 'bigint',
+        serialize: (value: unknown) => {
+          if (typeof value === 'bigint') {
+            return serialize(value)
+          }
+          return value
+        },
+        deserialize: (value: string) => {
+          try {
+            return deserialize(value)
+          } catch {
+            return value
+          }
+        },
+      },
     }).concat(...regularMiddlewares, ...sideEffectMiddlewares, ...apiMiddlewares),
   devTools: process.env.NODE_ENV !== 'production',
 })
 
+// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

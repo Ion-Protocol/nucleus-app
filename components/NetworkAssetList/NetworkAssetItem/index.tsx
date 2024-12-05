@@ -1,18 +1,18 @@
-import { useRouter } from 'next/router'
 import { Button, Flex, Text } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 
 import { Address } from 'viem'
 
-import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
 import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
-import { YieldBridgeItemConnector } from './connector'
-import { IonTooltip } from '@/components/shared/IonTooltip'
-import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
+import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
+import { useGetDefaultYieldAPYQuery } from '@/store/slices/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
+import { YieldBridgeItemConnector } from './connector'
 
 function NetworkAssetItem({
   tvl,

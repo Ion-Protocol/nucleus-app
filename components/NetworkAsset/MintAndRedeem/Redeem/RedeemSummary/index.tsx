@@ -6,11 +6,11 @@ import { Address } from 'viem'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { nativeAddress } from '@/config/constants'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
-import { useGetTokenPriceQuery } from '@/store/api/coinGecko'
-import { BridgeData, useGetPreviewFeeQuery } from '@/store/api/tellerApi'
 import { selectAddress } from '@/store/slices/account/'
+import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
+import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
 import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
+import { BridgeData, useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { RedeemSummaryConnector } from './connector'
 
@@ -89,7 +89,7 @@ function RedeemSummary({
   })
 
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    ? (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
     : BigInt(0)
 
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })

@@ -2,7 +2,7 @@ import TokenSelect from '@/components/NetworkAsset/MintAndRedeem/shared/TokenSel
 import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { useGetRateInQuoteSafeQuery } from '@/store/api/accountantApi'
+import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Input, Text } from '@chakra-ui/react'
@@ -35,7 +35,7 @@ function RedeemTokenDestination({
 
   // Calculate rate with 0.02% fee
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (tokenRateInQuote.rateInQuoteSafe * BigInt(9980)) / BigInt(10000)
+    ? (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
     : BigInt(0)
 
   // Calculate redeem amount using rate

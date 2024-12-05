@@ -1,3 +1,5 @@
+'use-client'
+
 import { wagmiConfig } from '@/config/wagmi'
 import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
@@ -6,21 +8,18 @@ import { Address } from 'viem'
 import {
   readContract,
   type ReadContractErrorType,
-  waitForTransactionReceipt,
   type WaitForTransactionReceiptErrorType,
   writeContract,
   type WriteContractErrorType,
 } from 'wagmi/actions'
 
-export type BridgeData =
-  | {
-      chainSelector: number
-      destinationChainReceiver: Address
-      bridgeFeeToken: Address
-      messageGas: bigint
-      data: `0x${string}`
-    }
-  | never
+export type BridgeData = {
+  chainSelector: number
+  destinationChainReceiver: Address
+  bridgeFeeToken: Address
+  messageGas: bigint
+  data: `0x${string}`
+}
 
 export interface PreviewFeeArgs {
   shareAmount: bigint
@@ -64,7 +63,7 @@ export const tellerApi = createApi({
             },
           }
         } catch (err) {
-          const error = err as WagmiError
+          const error = err as ReadContractErrorType
           return {
             error,
             data: undefined,
@@ -73,7 +72,10 @@ export const tellerApi = createApi({
         }
       },
     }),
-    bridge: builder.mutation<any, BridgeArgs>({
+    bridge: builder.mutation<
+      `0x${string}`,
+      { shareAmount: bigint; bridgeData: BridgeData; contractAddress: Address; chainId: number; fee: bigint }
+    >({
       queryFn: async ({ shareAmount, bridgeData, contractAddress, chainId, fee }) => {
         try {
           const hash = await writeContract(wagmiConfig, {
@@ -84,21 +86,19 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          const txReceipt = await waitForTransactionReceipt(wagmiConfig, {
-            hash,
-          })
-          return { data: txReceipt.transactionHash }
+          console.log('Bridge results:', hash, typeof hash)
+          return { data: hash }
         } catch (err) {
-          const error = err as WagmiError
-          return {
-            error,
-            data: undefined,
-            meta: undefined,
-          }
+          const error = err as WriteContractErrorType | WaitForTransactionReceiptErrorType
+          return { error, data: undefined, meta: undefined }
         }
       },
     }),
   }),
 })
 
-export const { useGetPreviewFeeQuery, useBridgeMutation } = tellerApi
+export const {
+  endpoints: { bridge },
+  useGetPreviewFeeQuery,
+  useBridgeMutation,
+} = tellerApi
