@@ -360,6 +360,8 @@ export const useRedeem = () => {
     //   }
     // }
     await switchToChain(destinationChainId)
+    // Then wait a short moment for the chain switch to take effect
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
     let approveTokenTxHash: `0x${string}` | undefined
     //////////////////////////////////////////////////////////////////////////
@@ -429,6 +431,8 @@ export const useRedeem = () => {
       const { atomicRequestArgs, atomicRequestOptions } = atomicRequestData
       dispatch(restoreCompletedSteps())
       dispatch(setDialogStep({ stepId: requestStepId, newState: 'active' }))
+      // Then wait a short moment before calling updateAtomicRequest
+      await new Promise((resolve) => setTimeout(resolve, 500))
       const updateAtomicRequestTxHash = await updateAtomicRequest({
         atomicRequestArg: atomicRequestArgs,
         atomicRequestOptions: atomicRequestOptions,
