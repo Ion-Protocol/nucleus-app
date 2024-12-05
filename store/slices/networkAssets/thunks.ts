@@ -2,6 +2,7 @@ import { Accountant } from '@/api/contracts/Accountant'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+import { claim } from '@/api/contracts/MerkleClaim/claim'
 import { getUserClaimedAmountOfAsset } from '@/api/contracts/MerkleClaim/usersClaimedAmountOfAsset'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
@@ -21,8 +22,8 @@ import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
-import { convertFromDecimals, convertToDecimals, truncateToSignificantDigits } from '@/utils/number'
+import { WAD } from '@/utils/bigint'
+import { convertFromDecimals, truncateToSignificantDigits } from '@/utils/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { Address } from 'viem'
 import { switchChain } from 'wagmi/actions'
@@ -56,7 +57,6 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount, setRedeemAmount } from './slice'
-import { claim } from '@/api/contracts/MerkleClaim/claim'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
 
@@ -177,7 +177,7 @@ export const claimRewards = createAsyncThunk<ClaimRewardsResult, void, { rejectV
 
       dispatch(setTransactionSuccessMessage(`Claim Successful`))
       dispatch(setTransactionTxHash(txHash))
-      dispatch(setTransactionExplorerUrl(`${seiExplorerBaseUrl}/tx/`))
+      dispatch(setTransactionExplorerUrl(`${seiExplorerBaseUrl}`))
       return { txHash }
     } catch (e) {
       console.error(e)

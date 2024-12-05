@@ -155,6 +155,14 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0xD9A442856C234a39a81a089C06451EBAa4306a72',
     },
   },
+  [TokenKey.UNIFIETH]: {
+    key: TokenKey.UNIFIETH,
+    name: 'UniFiETH',
+    symbol: 'UNIFIETH',
+    addresses: {
+      [ChainKey.UNIFI]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
+    },
+  },
   [TokenKey.SFRXETH]: {
     key: TokenKey.SFRXETH,
     name: 'sfrxETH',
@@ -195,6 +203,22 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'PZETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x8c9532a60E0E7C6BbD2B2c1303F63aCE1c3E9811',
+    },
+  },
+  [TokenKey.RARI]: {
+    key: TokenKey.RARIETH,
+    name: 'rari',
+    symbol: 'RARI',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+    },
+  },
+  [TokenKey.RARIETH]: {
+    key: TokenKey.RARIETH,
+    name: 'rariETH',
+    symbol: 'RARIETH',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
   },
   [TokenKey.ISEI]: {

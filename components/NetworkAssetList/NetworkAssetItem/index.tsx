@@ -1,18 +1,20 @@
-import { useRouter } from 'next/router'
 import { Button, Flex, Text } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 
 import { Address } from 'viem'
 
-import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { IonTooltip } from '@/components/shared/IonTooltip'
 import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
 import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
-import { YieldBridgeItemConnector } from './connector'
-import { IonTooltip } from '@/components/shared/IonTooltip'
+import { hardcodedApy } from '@/config/constants'
 import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
+import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { YieldBridgeItemConnector } from './connector'
 
 function NetworkAssetItem({
   tvl,
@@ -21,6 +23,8 @@ function NetworkAssetItem({
   boringVaultAddress,
   chainName,
   comingSoon,
+  isExternal,
+  partnerUrl,
   disabled,
   tvlLoading,
   formattedNetApy,
@@ -38,13 +42,19 @@ function NetworkAssetItem({
     isLoading: isBoringVaultApyLoading,
     isError: isBoringVaultApyError,
   } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
+  if (boringVaultAddress === '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc') {
+    console.log('boringVaultApy', boringVaultApy)
+  }
 
   const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
   const totalApy =
     networkAssetKey === TokenKey.SSETH && rewardsResponse ? rewardsResponse?.APY + vaultAssetApy : vaultAssetApy
 
   function handleClick() {
-    if (!disabled) {
+    if (isExternal) {
+      window.open(partnerUrl, '_blank')
+    }
+    if (!disabled && !isExternal) {
       router.push(`/tokens/${networkAssetName?.toLowerCase()}`)
     }
   }
@@ -79,7 +89,7 @@ function NetworkAssetItem({
           <>
             <Flex w="138px" justify="space-between">
               {/* TVL */}
-              <Flex direction="column" w="100%" mr={6}>
+              <Flex direction="column">
                 <Text variant="smallParagraph">TVL</Text>
                 <IonSkeleton isLoaded={!tvlLoading} w="100%">
                   <Text variant="paragraphBold">{tvl}</Text>
@@ -89,25 +99,40 @@ function NetworkAssetItem({
               {/* APY */}
               <Flex direction="column">
                 <Text variant="smallParagraph">APY</Text>
-                <IonSkeleton isLoaded={!isBoringVaultApyLoading} w="100%">
+                <IonSkeleton isLoaded={!isBoringVaultApyLoading}>
                   <IonTooltip
                     label={
                       shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
                     }
                   >
-                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : '&rbrace;'}`}</Text>
+                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}`}</Text>
                   </IonTooltip>
                 </IonSkeleton>
               </Flex>
             </Flex>
-
-            {/* Rewards */}
-            <Flex direction="column" gap={1} w="fit-content">
-              <Text variant="smallParagraph">Rewards</Text>
-              <RewardsTooltip tokenKey={networkAssetKey}>
-                <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
-              </RewardsTooltip>
-            </Flex>
+            {isExternal ? (
+              <Flex gap={1}>
+                <Text
+                  fontSize="14px"
+                  variant="link"
+                  display="flex"
+                  fontFamily="var(--font-ppformula)"
+                  gap={1}
+                  textDecoration="underline"
+                  textUnderlineOffset={2}
+                >
+                  {`Mint on ${chainName}`} <ExternalLinkIcon fontSize="16px" />
+                </Text>
+              </Flex>
+            ) : (
+              <Flex direction="column" gap={1} w="fit-content">
+                {/* Rewards */}
+                <Text variant="smallParagraph">Rewards</Text>
+                <RewardsTooltip tokenKey={networkAssetKey}>
+                  <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
+                </RewardsTooltip>
+              </Flex>
+            )}
           </>
         ) : (
           <Flex mb={6}>

@@ -6,9 +6,9 @@ import React, { SVGAttributes } from 'react'
 import { DineroIcon } from '../shared/icons/Dinero'
 import { EclipseIcon } from '../shared/icons/Eclipse'
 import { EthereumIcon } from '../shared/icons/Ethereum'
-import { SwellChainIcon } from '../shared/icons/SwellChain'
-import { TokenFethIcon } from '../shared/icons/TokenFeth'
 import { FormIcon } from '../shared/icons/Form'
+import { RariIcon } from '../shared/icons/Rari'
+import { SwellChainIcon } from '../shared/icons/SwellChain'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
@@ -18,6 +18,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
   [ChainKey.FORM]: (props) => <FormIcon {...props} />,
+  [ChainKey.RARI]: (props) => <RariIcon {...props} />,
 }
 
 interface ChainIconMapProps extends IconProps {
