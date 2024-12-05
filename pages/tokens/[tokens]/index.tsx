@@ -1,6 +1,6 @@
 import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react'
 
-import { discordUrl } from '@/config/constants'
+import { discordUrl, hardcodedApy } from '@/config/constants'
 import { useAppSelector } from '@/store/hooks'
 import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
 import {
@@ -42,7 +42,7 @@ export default function Token() {
   )
   const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
 
-  const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
+  const vaultAssetApy = boringVaultApy?.apy ? boringVaultApy.apy : hardcodedApy
 
   const tvl =
     networkAssetFromRoute !== TokenKey.SSETH && rewardsResponse ? abbreviateNumber(rewardsResponse?.TVL) : undefined

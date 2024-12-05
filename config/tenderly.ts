@@ -39,3 +39,24 @@ export const sei = {
   ...seiWagmi,
   iconUrl: '/assets/svgs/sei.svg',
 }
+// TODO Should move custom chain configs into own file
+export const rari = {
+  id: 1380012617,
+  name: 'Rari',
+  iconUrl: '/assets/svgs/rari.svg',
+  // network: 'Rari',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    public: { http: ['https://rari.calderachain.xyz/infra-partner-http'] },
+    default: { http: ['https://rari.calderachain.xyz/infra-partner-http'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'Blockscout', url: 'https://mainnet.explorer.rarichain.org/' },
+    default: { name: 'Blockscout', url: 'https://mainnet.explorer.rarichain.org/' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0x3F5Fc48153f8aDd3E429F0c84fA6FEd5c58657Dc',
+    },
+  },
+} as const satisfies Chain

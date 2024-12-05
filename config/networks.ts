@@ -3,8 +3,8 @@ import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
+import { etherscanBaseUrl, layerZeroBaseUrl, rariExplorerBaseUrl, seiExplorerBaseUrl } from './constants'
 import { tokensConfig } from './tokens'
-import { etherscanBaseUrl, layerZeroBaseUrl, seiExplorerBaseUrl } from './constants'
 
 const MANUALLY_PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
 
@@ -224,11 +224,204 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
   },
+  [TokenKey.RARIETH]: {
+    token: tokensConfig[TokenKey.RARIETH],
+    description: '',
+    comingSoon: false,
+    redeemComingSoon: true,
+    isExternal: false,
+    isNewDeployment: true,
+    partnerUrl: 'https://app.rari.capital/earn/rarieth',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
+    chain: ChainKey.RARI,
+    layerZeroChainSelector: 30235,
+    deployedOn: ChainKey.RARI,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    defaultRedemptionChain: ChainKey.RARI,
+    sourceRedemptionChains: {
+      [ChainKey.RARI]: {
+        chain: ChainKey.RARI,
+        explorerBaseUrl: rariExplorerBaseUrl,
+      },
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+    },
+    contracts: {
+      teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
+      accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
+      boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+    },
+    receiveOn: ChainKey.RARI,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
+    apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.RARI,
+      redemptionSourceChains: {
+        [ChainKey.RARI]: {
+          chain: ChainKey.RARI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.RARIETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 30235,
+      wantTokens: {
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
+  },
+  [TokenKey.UNIFIETH]: {
+    token: tokensConfig[TokenKey.UNIFIETH],
+    description: '',
+    comingSoon: false,
+    isExternal: true,
+    isNewDeployment: true,
+    partnerUrl: 'https://quest.puffer.fi/unifi#stake-and-earn',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIETH),
+    chain: ChainKey.UNIFI,
+    layerZeroChainSelector: 111111, // Not actual
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    defaultRedemptionChain: ChainKey.SEI,
+    sourceRedemptionChains: {
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
+      },
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+    },
+    contracts: {
+      teller: '0x08eb2eccdf6ebd7aba601791f23ec5b5f68a1d53',
+      accountant: '0xa9fb7e2922216debe3fd5e1bbe7591ee446dc21c',
+      boringVault: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
+    apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.UNIFI,
+      redemptionSourceChains: {
+        [ChainKey.UNIFI]: {
+          chain: ChainKey.UNIFI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.UNIFIETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 111111, // placeholder
+      wantTokens: {
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
+  },
+  // ! commented out as Seiyan ETH was leading to confusion with SSETH. Will Delete after we're sure we are not going to list
+  // [TokenKey.SEIYANETH]: {
+  //   token: tokensConfig[TokenKey.SEIYANETH],
+  //   description: '',
+  //   comingSoon: false,
+  //   isExternal: true,
+  //   partnerUrl: 'https://seiyaneth.com/',
+  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
+  //   chain: ChainKey.SEI,
+  //   deployedOn: ChainKey.SEI,
+  //   sourceChains: {
+  //     [ChainKey.ETHEREUM]: {
+  //       chain: ChainKey.ETHEREUM,
+  //       explorerBaseUrl: etherscanBaseUrl,
+  //     },
+  //   },
+  //   sourceTokens: {
+  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+  //   },
+  //   contracts: {
+  //     teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
+  //     accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
+  //     boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
+  //   },
+  //   receiveOn: ChainKey.ETHEREUM,
+  //   points: [],
+  //   apys: {},
+  // },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
       'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
-    comingSoon: true,
+    comingSoon: false,
+    isExternal: true,
+    partnerUrl: 'https://app.swellnetwork.io/earn/earneth',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.EARNETH),
     chain: ChainKey.SWELL,
     deployedOn: ChainKey.ETHEREUM,
@@ -302,7 +495,9 @@ const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.TETH]: {
     token: tokensConfig[TokenKey.TETH],
     description: '',
-    comingSoon: true,
+    comingSoon: false,
+    isExternal: true,
+    partnerUrl: 'https://app.eclipse.xyz/mint-teth',
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.TETH),
     chain: ChainKey.ECLIPSE,
     deployedOn: ChainKey.ETHEREUM,
@@ -332,9 +527,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
-      teller: '0x0',
-      accountant: '0x0',
-      boringVault: '0x0',
+      teller: '0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf',
+      accountant: '0x8c1902A5996978F2628558DD93d309F7e3926dfD',
+      boringVault: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
     },
     receiveOn: ChainKey.ETHEREUM,
     points: [],

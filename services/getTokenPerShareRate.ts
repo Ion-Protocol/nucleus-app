@@ -50,7 +50,7 @@ export async function getTokenPerShareRate(networkAssetKey: TokenKey, accountant
   const rateStrategies: Partial<Record<TokenKey, RateFetchingStrategy>> = {
     [TokenKey.SSETH]: new DefaultRateFetchingStrategy(),
     [TokenKey.TETH]: new DefaultRateFetchingStrategy(),
-    [TokenKey.EARNETH]: new RateForEarnETH(),
+    [TokenKey.EARNETH]: new DefaultRateFetchingStrategy(),
     [TokenKey.FETH]: new DefaultRateFetchingStrategy(),
   }
 

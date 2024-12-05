@@ -1,7 +1,7 @@
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { Contracts } from './Contracts'
-import { PointSystem, PointSystemKey } from './PointSystem'
+import { PointSystem } from './PointSystem'
 import { Token } from './Token'
 
 export interface TokenApyDataItem {
@@ -17,6 +17,10 @@ export interface NetworkAsset {
   chain: ChainKey
   deployedOn: ChainKey
   comingSoon?: boolean
+  redeemComingSoon?: boolean
+  isExternal?: boolean
+  isNewDeployment?: boolean
+  partnerUrl?: string
   manuallyPaused?: boolean
   sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   defaultRedemptionChain: ChainKey

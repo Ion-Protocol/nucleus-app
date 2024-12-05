@@ -5,6 +5,7 @@ import { Address } from 'viem'
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { hardcodedApy } from '@/config/constants'
 import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
 import { useGetDefaultYieldAPYQuery } from '@/store/slices/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
@@ -14,6 +15,7 @@ import { RewardsTooltipContentConnector } from './connector'
 export function RewardsTooltipContent({
   defaultYieldAssetKey,
   defaultYieldAssetName,
+  defaultYieldTooltipText,
   boringVaultAddress,
   tokenIncentives,
   rewards,
@@ -58,7 +60,7 @@ export function RewardsTooltipContent({
           <Text variant="smallParagraph" color="textSecondary">
             Default Yield
           </Text>
-          <IonTooltip label="Default yield is calculated by annualizing the increase in the token redemption value over a 7 day period.">
+          <IonTooltip label={defaultYieldTooltipText}>
             <InfoOutlineIcon fontSize="12px" color="infoIcon" />
           </IonTooltip>
         </Flex>
@@ -70,7 +72,7 @@ export function RewardsTooltipContent({
             </Text>
           </Flex>
           <Text variant="smallParagraph" color="text">
-            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : '&rbrace;'}
+            {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : numberToPercent(hardcodedApy, 2)}
           </Text>
         </Flex>
       </Flex>
@@ -149,7 +151,7 @@ export function RewardsTooltipContent({
             Net APY
           </Text>
           <Text variant="smallParagraphBold" color="text">
-            {numberToPercent(totalApy, 2)}
+            {totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}
           </Text>
         </Flex>
       </IonTooltip>

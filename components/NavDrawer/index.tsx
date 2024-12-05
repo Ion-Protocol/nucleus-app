@@ -38,6 +38,8 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
                 disabled={networkAsset.comingSoon}
                 comingSoon={networkAsset.comingSoon}
                 leftIcon={<TokenIcon tokenKey={networkAsset.token.key} />}
+                isExternal={networkAsset.isExternal}
+                partnerUrl={networkAsset.partnerUrl}
               />
             ))}
           </NavCollapse>
