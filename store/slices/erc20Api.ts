@@ -106,4 +106,9 @@ export const erc20Api = createApi({
   }),
 })
 
-export const { useAllowanceQuery, useBalanceOfQuery, useApproveMutation } = erc20Api
+export const {
+  endpoints: { approve },
+  useAllowanceQuery,
+  useBalanceOfQuery,
+  useApproveMutation,
+} = erc20Api

@@ -97,4 +97,8 @@ export const tellerApi = createApi({
   }),
 })
 
-export const { useGetPreviewFeeQuery, useBridgeMutation } = tellerApi
+export const {
+  endpoints: { bridge },
+  useGetPreviewFeeQuery,
+  useBridgeMutation,
+} = tellerApi

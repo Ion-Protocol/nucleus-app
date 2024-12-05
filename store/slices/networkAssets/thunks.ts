@@ -2,6 +2,7 @@ import { Accountant } from '@/api/contracts/Accountant'
 import { getRateInQuoteSafe } from '@/api/contracts/Accountant/getRateInQuoteSafe'
 import { getTotalSupply } from '@/api/contracts/BoringVault/getTotalSupply'
 import { quoteGasPayment } from '@/api/contracts/GasRouter/quoteGasPayment'
+import { claim } from '@/api/contracts/MerkleClaim/claim'
 import { getUserClaimedAmountOfAsset } from '@/api/contracts/MerkleClaim/usersClaimedAmountOfAsset'
 import { deposit } from '@/api/contracts/Teller/deposit'
 import { depositAndBridge } from '@/api/contracts/Teller/depositAndBridge'
@@ -9,6 +10,8 @@ import { CrossChainTellerBase, previewFee } from '@/api/contracts/Teller/preview
 import { transferRemote } from '@/api/contracts/TokenRouter/transferRemote'
 import { chainsConfig } from '@/config/chains'
 import {
+  atomicQueueContractAddress,
+  etherscanBaseUrl,
   hyperlaneIdForEclipse,
   nativeAddress,
   pollBalanceAfterTransactionAttempts,
@@ -18,14 +21,17 @@ import {
 import { contractAddresses } from '@/config/contracts'
 import { tokensConfig } from '@/config/tokens'
 import { wagmiConfig } from '@/config/wagmi'
+import { AtomicQueueAbi } from '@/contracts/AtomicQueueAbi'
+import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
 import { RootState } from '@/store'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
-import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
-import { convertFromDecimals, convertToDecimals, truncateToSignificantDigits } from '@/utils/number'
+import { AtomicRequestArgs, AtomicRequestOptions } from '@/utils/atomicRequest'
+import { WAD } from '@/utils/bigint'
+import { convertFromDecimals, truncateToSignificantDigits } from '@/utils/number'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { Address } from 'viem'
-import { switchChain } from 'wagmi/actions'
+import { Address, erc20Abi } from 'viem'
+import { switchChain, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 import { getTokenPerShareRate } from '../../../services/getTokenPerShareRate'
 import { selectAddress } from '../account/slice'
 import { fetchAllTokenBalances, selectTokenBalance } from '../balance'
@@ -38,6 +44,7 @@ import {
   setTransactionSuccessMessage,
   setTransactionTxHash,
 } from '../status'
+import { BridgeData } from '../tellerApi'
 import { selectClaimableTokenAddresses, selectTotalClaimables, selectUserProof } from '../userProofSlice/selectors'
 import {
   selectAvailableNetworkAssetKeys,
@@ -56,7 +63,6 @@ import {
   selectTokenAddressByTokenKey,
 } from './selectors'
 import { clearDepositAmount, setDepositAmount, setRedeemAmount } from './slice'
-import { claim } from '@/api/contracts/MerkleClaim/claim'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
 
@@ -555,6 +561,192 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
     }
   }
 )
+
+interface WithdrawalResult {
+  txHash: `0x${string}` | null
+}
+
+type BaseWithdrawalData = {
+  isBridgeRequired: boolean
+  userAddress: Address
+  redeemAmount: bigint
+  allowance?: bigint
+  sharesTokenAddress: Address
+  wantTokenAddress: Address
+  redemptionSourceChainId: number
+  destinationChainId: number
+  atomicRequestData: {
+    atomicRequestArgs: AtomicRequestArgs
+    atomicRequestOptions: AtomicRequestOptions
+  }
+}
+
+type StandardWithdrawalData = BaseWithdrawalData & {
+  isBridgeRequired: false
+  redeemBridgeData?: never
+}
+
+type WithdrawalWithBridgeData = BaseWithdrawalData & {
+  isBridgeRequired: true
+  redeemWithBridgeData: {
+    tellerContractAddress: Address
+    previewFeeAsBigInt: bigint
+    layerZeroChainSelector: number
+    bridgeData: BridgeData
+  }
+}
+
+type WithdrawalData = StandardWithdrawalData | WithdrawalWithBridgeData
+
+export const performWithdrawal = createAsyncThunk<
+  WithdrawalResult,
+  WithdrawalData,
+  { rejectValue: string; state: RootState }
+>('bridges/performWithdrawal', async (data, { getState, rejectWithValue, dispatch }) => {
+  try {
+    const {
+      isBridgeRequired,
+      redemptionSourceChainId,
+      destinationChainId,
+      redeemAmount,
+      allowance,
+      atomicRequestData,
+      sharesTokenAddress,
+    } = data
+
+    // Handle bridge if required
+    if (isBridgeRequired) {
+      const { previewFeeAsBigInt, bridgeData, tellerContractAddress } = data.redeemWithBridgeData
+
+      // Switch chain for bridge
+      await switchChain(wagmiConfig, { chainId: redemptionSourceChainId })
+
+      // Perform bridge transaction
+
+      const hash = await writeContract(wagmiConfig, {
+        abi: CrossChainTellerBaseAbi,
+        address: tellerContractAddress,
+        functionName: 'bridge',
+        args: [redeemAmount, bridgeData],
+        chainId: redemptionSourceChainId,
+        value: previewFeeAsBigInt,
+      })
+      // const bridgeTxHash = await dispatch(bridge.initiate({
+      //   shareAmount: redeemAmount,
+      //   bridgeData: bridgeData,
+      //   contractAddress: tellerContractAddress,
+      //   chainId: redemptionSourceChainId,
+      //   fee: previewFeeAsBigInt,
+      // }))
+
+      const bridgeReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        hash: hash,
+        timeout: 60_000,
+        confirmations: 1,
+        pollingInterval: 10_000,
+        retryCount: 5,
+        retryDelay: 5_000,
+      })
+      dispatch(setTransactionSuccessMessage('Bridge successful'))
+      dispatch(setTransactionTxHash(bridgeReceipt.transactionHash))
+      dispatch(setTransactionExplorerUrl(`${seiExplorerBaseUrl}`))
+    }
+
+    // Switch to destination chain
+    await switchChain(wagmiConfig, { chainId: destinationChainId })
+
+    // Handle approval if needed
+    if (!allowance || allowance < redeemAmount) {
+      // const approveTxHash = await dispatch(approve.initiate({
+      //   tokenAddress: sharesTokenAddress,
+      //   spenderAddress: atomicQueueContractAddress,
+      //   amount: redeemAmount,
+      //   chainId: destinationChainId,
+      // }))
+
+      const hash = await writeContract(wagmiConfig, {
+        abi: erc20Abi,
+        address: sharesTokenAddress,
+        functionName: 'approve',
+        args: [atomicQueueContractAddress, redeemAmount],
+        chainId: redemptionSourceChainId,
+      })
+
+      const approvalTokenReceipt = await waitForTransactionReceipt(wagmiConfig, {
+        hash: hash,
+        timeout: 60_000,
+        confirmations: 1,
+        pollingInterval: 10_000,
+        retryCount: 5,
+        retryDelay: 5_000,
+      })
+
+      dispatch(setTransactionSuccessMessage('Approval successful'))
+      dispatch(setTransactionTxHash(approvalTokenReceipt.transactionHash))
+      dispatch(setTransactionExplorerUrl(`${etherscanBaseUrl}`))
+    }
+
+    // Perform atomic request
+    const { atomicRequestArgs, atomicRequestOptions } = atomicRequestData
+
+    const { offer, want, userRequest } = atomicRequestArgs
+    const { chainId } = atomicRequestOptions
+
+    const hash = await writeContract(wagmiConfig, {
+      abi: AtomicQueueAbi,
+      address: atomicQueueContractAddress,
+      functionName: 'updateAtomicRequest',
+      args: [
+        offer,
+        want,
+        {
+          deadline: userRequest.deadline,
+          atomicPrice: userRequest.atomicPrice,
+          offerAmount: userRequest.offerAmount,
+          inSolve: userRequest.inSolve,
+        },
+      ],
+      chainId,
+    })
+
+    const atomicRequestReceipt = await waitForTransactionReceipt(wagmiConfig, {
+      hash: hash,
+      timeout: 60_000,
+      confirmations: 1,
+      pollingInterval: 10_000,
+      retryCount: 5,
+      retryDelay: 5_000,
+    })
+
+    // const withdrawalTxHash = await dispatch(updateAtomicRequest.initiate({
+    //   atomicRequestArg: atomicRequestArgs,
+    //   atomicRequestOptions: atomicRequestOptions,
+    // }))
+
+    // Update UI and fetch balances
+    dispatch(setTransactionSuccessMessage('Withdrawal successful'))
+    dispatch(setTransactionTxHash(atomicRequestReceipt.transactionHash))
+    dispatch(setTransactionExplorerUrl(`${etherscanBaseUrl}`))
+    dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+
+    // Poll for balance updates
+    for (let i = 0; i < pollBalanceAfterTransactionAttempts; i++) {
+      setTimeout(() => {
+        dispatch(fetchAllTokenBalances({ ignoreLoading: true }))
+      }, i * pollBalanceAfterTransactionInterval)
+    }
+
+    return { txHash: atomicRequestReceipt.transactionHash }
+  } catch (e) {
+    console.error(e)
+    const error = e as Error
+    const errorMessage = 'Withdrawal failed'
+    const fullErrorMessage = `${errorMessage}\n${error.message}`
+    dispatch(setErrorTitle('Withdrawal Not Verified'))
+    dispatch(setErrorMessage(fullErrorMessage))
+    return rejectWithValue(errorMessage)
+  }
+})
 
 export interface FetchPreviewFeeResult {
   fee: string

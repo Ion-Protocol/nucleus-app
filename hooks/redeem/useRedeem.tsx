@@ -92,6 +92,13 @@ export const useRedeem = () => {
   const networkId = useSelector(selectNetworkId) // Id of chain user is connected to
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
+  const renderCount = useRef(0)
+
+  useEffect(() => {
+    renderCount.current += 1
+    console.log(`useRedeem hook rendered ${renderCount.current} times`)
+  })
+
   const getStepId = useCallback(
     (stepType: RedeemStepType): number => {
       const steps = createSteps(isBridgeRequired)

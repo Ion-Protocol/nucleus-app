@@ -71,4 +71,7 @@ export const atomicQueueApi = createApi({
   }),
 })
 
-export const { useUpdateAtomicRequestMutation } = atomicQueueApi
+export const {
+  endpoints: { updateAtomicRequest },
+  useUpdateAtomicRequestMutation,
+} = atomicQueueApi
