@@ -1,8 +1,8 @@
 import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react'
 
 import { discordUrl, hardcodedApy } from '@/config/constants'
-import { useGetRewardsAPYQuery } from '@/store/api/incentivesApi'
 import { useAppSelector } from '@/store/hooks'
+import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
 import {
   selectContractAddressByName,
   selectNetworkAssetConfig,
@@ -20,7 +20,7 @@ import RewardsAndPoints from '@/components/NetworkAsset/NetworkAssetTitle/Reward
 import Tvl from '@/components/NetworkAsset/NetworkAssetTitle/Tvl'
 import RewardsAndHistory from '@/components/NetworkAsset/RewardsAndHistory'
 import Paused from '@/pages/tokens/[tokens]/paused'
-import { useGetDefaultYieldAPYQuery } from '@/store/api/nucleusBackendApi'
+import { useGetDefaultYieldAPYQuery } from '@/store/slices/nucleusBackendApi'
 import { Address } from 'viem'
 
 export default function Token() {

@@ -3,8 +3,8 @@ import { wagmiConfig } from '@/config/wagmi'
 import Chainlink from '@/contracts/Chainlink.json'
 import { RootState } from '@/store'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { readContract } from '@wagmi/core'
 import { Abi } from 'viem'
+import { readContract } from 'wagmi/actions'
 import { setErrorMessage } from '../status'
 
 export interface FetchRateResult {

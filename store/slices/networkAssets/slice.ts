@@ -12,11 +12,26 @@ const networkAssetsSlice = createSlice({
     setSourceChain: (state, action) => {
       state.sourceChain = action.payload
     },
+    setRedeemSourceChain: (state, action: PayloadAction<ChainKey>) => {
+      state.redeemSourceChain = action.payload
+    },
+    clearRedeemSourceChain: (state) => {
+      state.redeemSourceChain = null
+    },
+    setRedeemDestinationChain: (state, action: PayloadAction<ChainKey>) => {
+      state.redeemDestinationChain = action.payload
+    },
+    resetRedeemDestinationChain: (state) => {
+      state.redeemDestinationChain = ChainKey.ETHEREUM
+    },
     resetSourceChain: (state) => {
       state.sourceChain = ChainKey.ETHEREUM
     },
     setSelectedSourceToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
       state.selectedSourceToken = action.payload.tokenKey
+    },
+    setSelectedRedeemSourceToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
+      state.selectedRedeemSourceToken = action.payload.tokenKey
     },
     clearSelectedSourceToken: (state) => {
       state.selectedSourceToken = null
@@ -36,7 +51,20 @@ const networkAssetsSlice = createSlice({
     clearDepositAmount: (state) => {
       state.depositAmount = ''
     },
+    setRedeemAmount: (state, action) => {
+      state.redeemAmount = sanitizeDepositInput(action.payload, state.redeemAmount)
+    },
+    clearRedeemAmount: (state) => {
+      state.redeemAmount = ''
+    },
+    setReceiveAmount: (state, action) => {
+      state.receiveAmount = action.payload
+    },
+    setSelectedReceiveToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
+      state.selectedReceiveToken = action.payload.tokenKey
+    },
     setDepositAmountDebounceComplete: () => {}, // only used as an action to trigger a side effect
+    setRedeemAmountDebounceComplete: () => {}, // only used as an action to trigger a side effect
     setSolanaAddress: (state, action) => {
       state.solanaAddress = action.payload
     },
@@ -52,7 +80,17 @@ export const {
   setDepositAmount,
   setDepositAmountBypassDebounce,
   setDepositAmountDebounceComplete,
+  setRedeemAmountDebounceComplete,
   setSelectedSourceToken,
+  setSelectedReceiveToken,
+  setRedeemAmount,
+  clearRedeemAmount,
+  setRedeemSourceChain,
+  clearRedeemSourceChain,
+  setRedeemDestinationChain,
+  resetRedeemDestinationChain,
+  setSelectedRedeemSourceToken,
+  setReceiveAmount,
   setSourceChain,
   setSolanaAddress,
 } = networkAssetsSlice.actions
