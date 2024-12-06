@@ -54,9 +54,29 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: seiExplorerBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.SEI,
+    sourceRedemptionChains: {
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
+      },
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
@@ -90,6 +110,32 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       ],
     },
+    redeem: {
+      redemptionSourceChain: ChainKey.SEI,
+      redemptionSourceChains: {
+        [ChainKey.SEI]: {
+          chain: ChainKey.SEI,
+          explorerBaseUrl: seiExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.SSETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 30101,
+      wantTokens: {
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
   },
   [TokenKey.FETH]: {
     token: tokensConfig[TokenKey.FETH],
@@ -104,8 +150,24 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceRedemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',
@@ -141,6 +203,28 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.FETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.FORM,
+      layerZeroChainSelector: 0,
+      wantTokens: {
+        [ChainKey.FORM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
   },
   [TokenKey.RARIETH]: {
     token: tokensConfig[TokenKey.RARIETH],
@@ -148,6 +232,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       'Connect your wallet, select your deposit asset, and mint the Rari Default Asset to earn while you explore the Rari ecosystem',
     chain: ChainKey.RARI,
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
+    comingSoon: false,
+    redeemComingSoon: true,
+    isExternal: false,
     isNewDeployment: true,
     partnerUrl: 'https://app.rari.capital/earn/rarieth',
     deployedOn: ChainKey.RARI,
@@ -161,9 +248,29 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: rariExplorerBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.RARI,
+    sourceRedemptionChains: {
+      [ChainKey.RARI]: {
+        chain: ChainKey.RARI,
+        explorerBaseUrl: rariExplorerBaseUrl,
+      },
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
       [ChainKey.RARI]: [TokenKey.WETH],
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
@@ -180,6 +287,32 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.RARI,
+      redemptionSourceChains: {
+        [ChainKey.RARI]: {
+          chain: ChainKey.RARI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.RARIETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 30235,
+      wantTokens: {
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
   },
   [TokenKey.UNIFIETH]: {
     token: tokensConfig[TokenKey.UNIFIETH],
@@ -198,8 +331,28 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.SEI,
+    sourceRedemptionChains: {
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
+      },
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x08eb2eccdf6ebd7aba601791f23ec5b5f68a1d53',
@@ -215,35 +368,33 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.UNIFI,
+      redemptionSourceChains: {
+        [ChainKey.UNIFI]: {
+          chain: ChainKey.UNIFI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.UNIFIETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 111111, // placeholder
+      wantTokens: {
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
   },
-  // ! commented out as Seiyan ETH was leading to confusion with SSETH. Will Delete after we're sure we are not going to list
-  // [TokenKey.SEIYANETH]: {
-  //   token: tokensConfig[TokenKey.SEIYANETH],
-  //   description: '',
-  //   comingSoon: false,
-  //   isExternal: true,
-  //   partnerUrl: 'https://seiyaneth.com/',
-  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
-  //   chain: ChainKey.SEI,
-  //   deployedOn: ChainKey.SEI,
-  //   sourceChains: {
-  //     [ChainKey.ETHEREUM]: {
-  //       chain: ChainKey.ETHEREUM,
-  //       explorerBaseUrl: etherscanBaseUrl,
-  //     },
-  //   },
-  //   sourceTokens: {
-  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-  //   },
-  //   contracts: {
-  //     teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
-  //     accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
-  //     boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
-  //   },
-  //   receiveOn: ChainKey.ETHEREUM,
-  //   points: [],
-  //   apys: {},
-  // },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
@@ -260,8 +411,24 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceRedemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x685aDb4797fb38D4Fc4a69750aa048B398160429',
@@ -282,6 +449,28 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.EARNETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.SWELL,
+      layerZeroChainSelector: 0,
+      wantTokens: {
+        [ChainKey.SWELL]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
   },
   [TokenKey.TETH]: {
     token: tokensConfig[TokenKey.TETH],
@@ -298,8 +487,24 @@ const mainnetNetworkAssets: NetworkAssets = {
         explorerBaseUrl: etherscanBaseUrl,
       },
     },
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceRedemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
+    redemptionChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    wantTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf',
@@ -309,6 +514,28 @@ const mainnetNetworkAssets: NetworkAssets = {
     receiveOn: ChainKey.ETHEREUM,
     points: [],
     apys: {},
+    redeem: {
+      redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.TETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ECLIPSE,
+      layerZeroChainSelector: 30101,
+      wantTokens: {
+        [ChainKey.ECLIPSE]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+      },
+    },
   },
 }
 

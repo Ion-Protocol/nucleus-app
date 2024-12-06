@@ -1,22 +1,8 @@
-import {
-  Text,
-  Button,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Textarea,
-  Checkbox,
-} from '@chakra-ui/react'
-import { TermsModalConnector } from './connector'
-import { Terms } from '@/components/config/Terms'
-import { TermsIcon } from '../../icons/Terms'
 import { terms } from '@/components/config/terms'
-import { FullTermsIcon } from '../../FullTermsIcon'
+import { Button, Checkbox, Flex, Modal, ModalContent, ModalFooter, ModalOverlay, Text } from '@chakra-ui/react'
 import { useState } from 'react'
+import { FullTermsIcon } from '../../FullTermsIcon'
+import { TermsModalConnector } from './connector'
 
 function TermsModal({ isOpen, onAccept }: TermsModalConnector.Props) {
   const [isTermsAccepted, setIsTermsAccepted] = useState(false)

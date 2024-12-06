@@ -22,6 +22,7 @@ const mapState = (state: RootState, ownProps: TokenInputOwnProps) => {
   const inputValue = selectDepositAmount(state)
   const tokenKeys = selectSourceTokens(state)
   const tokens = tokenKeys.map((key) => tokensConfig[key])
+
   const selectedTokenKey = selectSourceTokenKey(state) || tokenKeys[0] || null
   const selectedToken = tokensConfig[selectedTokenKey]
   const formattedTokenBalance = selectFormattedTokenBalance(state, selectedChainKey, selectedTokenKey)
