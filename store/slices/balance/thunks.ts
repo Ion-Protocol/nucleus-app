@@ -63,7 +63,6 @@ export const fetchAllTokenBalances = createAsyncThunk<
       const chainKeys = Object.keys(token.addresses)
       for (const chainKey of chainKeys) {
         const chain = chainsConfig[chainKey as ChainKey]
-        console.log('chain', chain)
         const tokenAddress = token.addresses[chainKey as ChainKey]
         if (!tokenAddress || tokenAddress === '0x') continue
         tokenBalanceParamItems.push({

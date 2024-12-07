@@ -28,7 +28,7 @@ import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { RedeemConfig } from '@/types/Redeem'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
 import { calculateRedeemDeadline } from '@/utils/time'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
 import RedeemChainSelect from './RedeemChainSelect'
@@ -37,13 +37,6 @@ import RedeemTokenInput from './RedeemTokenInput'
 interface RedeemProps extends ChakraProps {}
 
 export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
-  const renderCount = useRef(0)
-
-  useEffect(() => {
-    renderCount.current += 1
-    console.log(`redeem component rendered ${renderCount.current} times`)
-  })
-
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
   /**
    ******************************************************************************

@@ -229,14 +229,6 @@ export const useRedeem = () => {
       try {
         dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
         const { previewFeeAsBigInt, layerZeroChainSelector, bridgeData, tellerContractAddress } = redeemWithBridgeData
-        console.log('Bridge parameters:', {
-          shareAmount: redeemAmount,
-          bridgeData: bridgeData,
-          contractAddress: tellerContractAddress,
-          chainId: redemptionSourceChainId,
-          fee: previewFeeAsBigInt,
-        })
-
         if (!previewFeeAsBigInt) {
           throw new Error('Bridge fee is undefined')
         }
@@ -304,23 +296,9 @@ export const useRedeem = () => {
       }
     }
 
-    console.log('chainId', networkId)
-    console.log('destinationChainId', destinationChainId)
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
-    // if (networkId !== destinationChainId) {
-    //   console.log('Switching to destination chain for approval:', {
-    //     from: networkId,
-    //     to: destinationChainId,
-    //   })
-    //   await switchToChain(destinationChainId)
-
-    //   // Verify chain switch was successful
-    //   if (networkId !== destinationChainId) {
-    //     throw new Error(`Failed to switch to destination chain ${destinationChainId}`)
-    //   }
-    // }
     await switchToChain(destinationChainId)
     // Then wait a short moment for the chain switch to take effect
     await new Promise((resolve) => setTimeout(resolve, 500))
@@ -405,15 +383,6 @@ export const useRedeem = () => {
       //     resolve('0x123...')
       //   }, 2000) // 2 second delay
       // })
-
-      console.log('Transaction response:', {
-        hash: updateAtomicRequestTxHash,
-        env: process.env.NODE_ENV,
-        timestamp: new Date().toISOString(),
-      })
-
-      console.log('updateAtomicRequestTxHash in hook:', updateAtomicRequestTxHash)
-
       const atomicRequestReceipt = await queryAtomicRequestReceipt({ hash: updateAtomicRequestTxHash })
 
       if (atomicRequestReceipt.isError) {
