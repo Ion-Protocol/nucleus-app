@@ -86,7 +86,6 @@ export const tellerApi = createApi({
             chainId: chainId,
             value: fee,
           })
-          console.log('Bridge results:', hash, typeof hash)
           return { data: hash }
         } catch (err) {
           const error = err as WriteContractErrorType | WaitForTransactionReceiptErrorType
