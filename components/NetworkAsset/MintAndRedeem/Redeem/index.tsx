@@ -25,6 +25,7 @@ import {
   selectRedemptionSourceChainKey,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
+import { ChainKey } from '@/types/ChainKey'
 import { RedeemConfig } from '@/types/Redeem'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
 import { calculateRedeemDeadline } from '@/utils/time'
@@ -57,6 +58,12 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const sourceExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey as ChainKey]?.explorerBaseUrl
+  const destinationExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey as ChainKey]?.explorerBaseUrl
+  console.log('sourceExplorerBaseUrl', sourceExplorerBaseUrl)
+  console.log('destinationExplorerBaseUrl', destinationExplorerBaseUrl)
 
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
@@ -105,7 +112,9 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       redemptionSourceChainKey &&
       destinationChainKey &&
       accountantAddress &&
-      tellerContractAddress
+      tellerContractAddress &&
+      sourceExplorerBaseUrl &&
+      destinationExplorerBaseUrl
   )
 
   const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
@@ -139,6 +148,10 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
     }
     if (!tokenRateInQuote?.rateInQuoteSafe) {
       console.error('Token rate in quote is not set')
+      return
+    }
+    if (!sourceExplorerBaseUrl || !destinationExplorerBaseUrl) {
+      console.error('Source or destination explorer base URL is not set')
       return
     }
     // Apply 0.2% fee to the rateInQuoteSafe
@@ -183,6 +196,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
         redemptionSourceChainId,
         destinationChainId,
         redeemWithBridgeData,
+        sourceExplorerBaseUrl,
+        destinationExplorerBaseUrl,
       })
     } else {
       handleRedeem({
@@ -195,6 +210,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
         isBridgeRequired,
         redemptionSourceChainId,
         destinationChainId,
+        sourceExplorerBaseUrl,
+        destinationExplorerBaseUrl,
       })
     }
   }

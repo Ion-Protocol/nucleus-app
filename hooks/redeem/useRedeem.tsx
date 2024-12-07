@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 
-import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
+import { atomicQueueContractAddress } from '@/config/constants'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
 import { selectNetworkId } from '@/store/slices/chain'
 import { useApproveMutation } from '@/store/slices/erc20Api'
@@ -52,6 +52,8 @@ type BaseRedeemData = {
   wantTokenAddress: Address
   redemptionSourceChainId: number
   destinationChainId: number
+  sourceExplorerBaseUrl?: string
+  destinationExplorerBaseUrl?: string
   atomicRequestData: {
     atomicRequestArgs: AtomicRequestArgs
     atomicRequestOptions: AtomicRequestOptions
@@ -186,6 +188,8 @@ export const useRedeem = () => {
       allowance,
       atomicRequestData,
       sharesTokenAddress,
+      sourceExplorerBaseUrl,
+      destinationExplorerBaseUrl,
     } = data
 
     dispatch(setTitle('Redeem Status'))
@@ -274,12 +278,12 @@ export const useRedeem = () => {
         if (bridgeReceipt.isError) {
           throw new Error(`Bridge Receipt Error: ${bridgeReceipt.error}`)
         }
-
+        console.log('sourceExplorerBaseUrl', sourceExplorerBaseUrl)
         dispatch(
           setDialogStep({
             stepId: bridgeStepId,
             newState: 'completed',
-            link: `${seiExplorerBaseUrl}tx/${bridgeReceipt.data?.transactionHash}`,
+            link: `${sourceExplorerBaseUrl}/tx/${bridgeReceipt.data?.transactionHash}`,
           })
         )
       } catch (error) {
@@ -330,7 +334,7 @@ export const useRedeem = () => {
             setDialogStep({
               stepId: approveStepId,
               newState: 'completed',
-              link: `${etherscanBaseUrl}tx/${approvalReceipt.data?.transactionHash}`,
+              link: `${destinationExplorerBaseUrl}/tx/${approvalReceipt.data?.transactionHash}`,
             })
           )
         }
@@ -388,13 +392,14 @@ export const useRedeem = () => {
       if (atomicRequestReceipt.isError) {
         throw new Error(`Atomic Request Error: ${atomicRequestReceipt.error}`)
       }
+      console.log('destinationExplorerBaseUrl', destinationExplorerBaseUrl)
 
       if (updateAtomicRequestTxHash) {
         dispatch(
           setDialogStep({
             stepId: requestStepId,
             newState: 'completed',
-            link: `${etherscanBaseUrl}tx/${atomicRequestReceipt.data?.transactionHash}`,
+            link: `${destinationExplorerBaseUrl}/tx/${atomicRequestReceipt.data?.transactionHash}`,
           })
         )
         dispatch(
