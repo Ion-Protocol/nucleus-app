@@ -56,7 +56,6 @@ export const atomicQueueApi = createApi({
             ],
             chainId,
           })
-          console.log('Atomic queue hash:', hash)
           return { data: hash }
         } catch (err) {
           const error = serialize(err)

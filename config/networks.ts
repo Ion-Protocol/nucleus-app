@@ -4,6 +4,7 @@ import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
 import { etherscanBaseUrl, layerZeroBaseUrl, rariExplorerBaseUrl, seiExplorerBaseUrl } from './constants'
+import { rari } from './tenderly'
 import { tokensConfig } from './tokens'
 
 const MANUALLY_PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
@@ -12,6 +13,7 @@ export enum NetworkKey {
   MAINNET = 'mainnet',
   TENDERLY_MAINNET = 'tenderly_mainnet',
   SEI = 'sei',
+  RARI = 'rari',
 }
 
 export interface NetworkConfig {
@@ -117,7 +119,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.SSETH,
@@ -125,7 +127,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
@@ -226,20 +228,24 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.RARIETH]: {
     token: tokensConfig[TokenKey.RARIETH],
-    description: '',
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Rari Default Asset to earn while you explore the Rari ecosystem',
+    chain: ChainKey.RARI,
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
     comingSoon: false,
     redeemComingSoon: true,
     isExternal: false,
     isNewDeployment: true,
     partnerUrl: 'https://app.rari.capital/earn/rarieth',
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
-    chain: ChainKey.RARI,
-    layerZeroChainSelector: 30235,
     deployedOn: ChainKey.RARI,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: etherscanBaseUrl,
+      },
+      [ChainKey.RARI]: {
+        chain: ChainKey.RARI,
+        explorerBaseUrl: rariExplorerBaseUrl,
       },
     },
     defaultRedemptionChain: ChainKey.RARI,
@@ -261,6 +267,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.RARI]: [TokenKey.WETH],
     },
     wantTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
@@ -270,6 +277,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
       boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
+    layerZeroChainSelector: 30235,
     receiveOn: ChainKey.RARI,
     points: [
       {
@@ -288,7 +296,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.RARIETH,
@@ -296,11 +304,11 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
-      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      layerZeroChainSelector: 30235,
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
+      layerZeroChainSelector: 30101,
       wantTokens: {
         [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
       },
@@ -387,34 +395,6 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
   },
-  // ! commented out as Seiyan ETH was leading to confusion with SSETH. Will Delete after we're sure we are not going to list
-  // [TokenKey.SEIYANETH]: {
-  //   token: tokensConfig[TokenKey.SEIYANETH],
-  //   description: '',
-  //   comingSoon: false,
-  //   isExternal: true,
-  //   partnerUrl: 'https://seiyaneth.com/',
-  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SEIYANETH),
-  //   chain: ChainKey.SEI,
-  //   deployedOn: ChainKey.SEI,
-  //   sourceChains: {
-  //     [ChainKey.ETHEREUM]: {
-  //       chain: ChainKey.ETHEREUM,
-  //       explorerBaseUrl: etherscanBaseUrl,
-  //     },
-  //   },
-  //   sourceTokens: {
-  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-  //   },
-  //   contracts: {
-  //     teller: '0xB52C7d88F0514796877B04cF945E56cC4C66CD05',
-  //     accountant: '0x24152894Decc7384b05E8907D6aDAdD82c176499',
-  //     boringVault: '0x9fAaEA2CDd810b21594E54309DC847842Ae301Ce',
-  //   },
-  //   receiveOn: ChainKey.ETHEREUM,
-  //   points: [],
-  //   apys: {},
-  // },
   [TokenKey.EARNETH]: {
     token: tokensConfig[TokenKey.EARNETH],
     description:
@@ -573,6 +553,11 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.SEI]: {
     id: sei.id,
     name: 'Sei',
+    assets: mainnetNetworkAssets,
+  },
+  [NetworkKey.RARI]: {
+    id: rari.id,
+    name: 'Rari',
     assets: mainnetNetworkAssets,
   },
 }

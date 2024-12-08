@@ -44,8 +44,11 @@ export const rari = {
   id: 1380012617,
   name: 'Rari',
   iconUrl: '/assets/svgs/rari.svg',
-  // network: 'Rari',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  nativeCurrency: {
+    name: 'Ether',
+    symbol: 'ETH',
+    decimals: 18,
+  },
   rpcUrls: {
     public: { http: ['https://rari.calderachain.xyz/infra-partner-http'] },
     default: { http: ['https://rari.calderachain.xyz/infra-partner-http'] },

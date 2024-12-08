@@ -1,4 +1,6 @@
 import { balanceOf } from '@/api/contracts/erc20/balanceOf'
+import { getSolanaBalance } from '@/api/utils/getSolanaBalance'
+import { chainsConfig } from '@/config/chains'
 import { tokensConfig } from '@/config/tokens'
 import { wagmiConfig } from '@/config/wagmi'
 import { RootState } from '@/store'
@@ -7,10 +9,8 @@ import { TokenKey } from '@/types/TokenKey'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getBalance } from 'wagmi/actions'
 import { selectAddress } from '../account'
-import { setErrorMessage } from '../status'
-import { chainsConfig } from '@/config/chains'
 import { selectSolanaAddress } from '../networkAssets'
-import { getSolanaBalance } from '@/api/utils/getSolanaBalance'
+import { setErrorMessage } from '../status'
 
 type Balances = Record<TokenKey, Record<ChainKey, string | null>>
 export interface fetchAllTokenBalancesResult {
