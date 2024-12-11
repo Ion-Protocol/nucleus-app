@@ -426,7 +426,7 @@ export const selectExplorerBaseUrl = (state: RootState) => {
 export const selectSourceChainId = (state: RootState): number | null => {
   const sourceChainKey = selectSourceChainKey(state)
   const chain = chainsConfig[sourceChainKey as ChainKey]
-  return chain.id || null
+  return chain && chain.id ? chain.id : null
 }
 
 // DO NOT memoize: Direct lookup; returns a value from configuration.
@@ -577,6 +577,7 @@ export const selectInputError = createSelector(
 
     if (shouldIgnoreBalance) return null
     if (!selectedTokenKey) return null
+    if (!chainKeyFromChainSelector) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
     const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))

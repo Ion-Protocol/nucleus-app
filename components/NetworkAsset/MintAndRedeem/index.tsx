@@ -9,7 +9,6 @@ import { Redeem } from './Redeem'
 export function MintAndRedeem() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
-  console.log('rari', networkAssetConfig?.redeemComingSoon)
 
   return (
     <Flex w="660px" border="1px solid" borderColor="border" bg="backgroundSecondary" borderRadius="8px" py={6} px={6}>

@@ -22,6 +22,7 @@ export interface NetworkAsset {
   isNewDeployment?: boolean
   partnerUrl?: string
   manuallyPaused?: boolean
+  defaultMintChain: ChainKey
   sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   defaultRedemptionChain: ChainKey
   sourceRedemptionChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>

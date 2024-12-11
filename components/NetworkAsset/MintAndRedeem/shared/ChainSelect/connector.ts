@@ -6,6 +6,7 @@ import {
   selectSourceChains,
   setSourceChain,
 } from '@/store/slices/networkAssets'
+import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
@@ -13,9 +14,10 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
 
   let selectedChainKey = selectSourceChainKey(state)
 
+  const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const selectableChains = selectSourceChains(state)
-  const selectedChainName = chainsConfig[selectedChainKey].name
+  const selectedChainName = selectedChainKey ? chainsConfig[selectedChainKey].name : ''
   const chainKeyOfNetworkAsset = networkAssetConfig?.receiveOn
   const chainNameOfNetworkAsset = chainKeyOfNetworkAsset ? chainsConfig[chainKeyOfNetworkAsset].name : ''
 
@@ -28,6 +30,7 @@ const mapState = (state: RootState, ownProps: ChainSelectOwnProps) => {
   }
 
   return {
+    networkAssetFromRoute,
     chains: selectableChains,
     selectedChainKey,
     placeholder,

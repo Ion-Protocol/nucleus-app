@@ -1,9 +1,13 @@
 import { ChainIcon } from '@/components/config/chainIcons'
+import { selectNetworkAssetConfig, setSourceChain } from '@/store/slices/networkAssets'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { ChainSelectConnector } from './connector'
 
 function ChainSelect({
+  networkAssetFromRoute,
   chains,
   onChange,
   selectedChainKey,
@@ -12,6 +16,13 @@ function ChainSelect({
   isActive,
   role,
 }: ChainSelectConnector.Props) {
+  const dispatch = useDispatch()
+  const networkAssetConfig = useSelector(selectNetworkAssetConfig)
+  useEffect(() => {
+    if (role === 'source') {
+      dispatch(setSourceChain(networkAssetConfig?.defaultMintChain))
+    }
+  }, [dispatch, networkAssetConfig?.defaultMintChain, role, networkAssetFromRoute])
   return (
     <Menu matchWidth>
       <MenuButton
