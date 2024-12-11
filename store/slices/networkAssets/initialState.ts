@@ -68,7 +68,7 @@ export type NetworkAssetsState = {
   // Justification for storing in global state:
   // 1. The value is used in multiple components
   // 2. The value is used in a thunk
-  sourceChain: ChainKey
+  sourceChain: ChainKey | null
 
   // The redemption source chain is the chain that the user selects in the drop down menu on the redeem page
   // ---
@@ -191,7 +191,7 @@ export const initialState: NetworkAssetsState = {
   },
 
   // Source chain
-  sourceChain: ChainKey.ETHEREUM,
+  sourceChain: null,
 
   // Redemption source chain
   redeemSourceChain: null,

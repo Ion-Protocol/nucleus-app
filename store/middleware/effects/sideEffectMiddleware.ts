@@ -4,18 +4,17 @@ import { fetchAllTokenBalances } from '@/store/slices/balance'
 import {
   clearDepositAmount,
   clearPreviewFee,
-  clearSelectedSourceToken,
   clearRedeemAmount,
   clearRedeemSourceChain,
+  clearSelectedSourceToken,
   resetRedeemDestinationChain,
-  resetSourceChain,
   selectNetworkAssetConfig,
   selectSolanaAddressError,
   setSelectedSourceToken,
   setSolanaAddress,
   setSourceChain,
 } from '@/store/slices/networkAssets'
-import { fetchPreviewFee, fetchTokenRateInQuote } from '@/store/slices/networkAssets/thunks'
+import { fetchPreviewFee } from '@/store/slices/networkAssets/thunks'
 import { setQuery } from '@/store/slices/router'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
@@ -43,7 +42,7 @@ export const sideEffectMiddleware: Middleware =
       dispatch(clearPreviewFee())
       dispatch(clearDepositAmount())
       dispatch(clearSelectedSourceToken())
-      dispatch(resetSourceChain())
+      // dispatch(resetSourceChain())
 
       // Clear redeem-related state
       dispatch(clearRedeemAmount())
