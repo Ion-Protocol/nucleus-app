@@ -577,6 +577,7 @@ export const selectInputError = createSelector(
 
     if (shouldIgnoreBalance) return null
     if (!selectedTokenKey) return null
+    if (!chainKeyFromChainSelector) return null
     const tokenBalance = balances[selectedTokenKey]?.[chainKeyFromChainSelector]
     if (!tokenBalance) return null
     const tokenBalanceAsNumber = parseFloat(bigIntToNumberAsString(BigInt(tokenBalance), { maximumFractionDigits: 18 }))
