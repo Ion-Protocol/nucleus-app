@@ -4,19 +4,18 @@ import { fetchAllTokenBalances } from '@/store/slices/balance'
 import {
   clearDepositAmount,
   clearPreviewFee,
-  clearSelectedSourceToken,
   clearRedeemAmount,
   clearRedeemSourceChain,
+  clearSelectedSourceToken,
   resetRedeemDestinationChain,
-  resetSourceChain,
   selectNetworkAssetConfig,
   selectSolanaAddressError,
   setSelectedSourceToken,
   setSolanaAddress,
   setSourceChain,
 } from '@/store/slices/networkAssets'
-import { fetchPreviewFee, fetchTokenRateInQuote } from '@/store/slices/networkAssets/thunks'
-import { setQuery } from '@/store/slices/router'
+import { fetchPreviewFee } from '@/store/slices/networkAssets/thunks'
+import { setPath, setQuery } from '@/store/slices/router'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { Middleware } from '@reduxjs/toolkit'
@@ -43,7 +42,6 @@ export const sideEffectMiddleware: Middleware =
       dispatch(clearPreviewFee())
       dispatch(clearDepositAmount())
       dispatch(clearSelectedSourceToken())
-      dispatch(resetSourceChain())
 
       // Clear redeem-related state
       dispatch(clearRedeemAmount())
@@ -67,6 +65,15 @@ export const sideEffectMiddleware: Middleware =
       if (firstToken) {
         dispatch(setSelectedSourceToken({ tokenKey: firstToken as TokenKey }))
       }
+    }
+
+    if (setPath.match(action)) {
+      const chainConfig = selectNetworkAssetConfig(state)
+      const defaultMintChain = chainConfig?.defaultMintChain
+      if (!defaultMintChain) {
+        return
+      }
+      dispatch(setSourceChain(defaultMintChain))
     }
 
     // Side effects for solana address change. Updates all token balances when

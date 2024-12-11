@@ -4,6 +4,7 @@ import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakr
 import { ChainSelectConnector } from './connector'
 
 function ChainSelect({
+  networkAssetFromRoute,
   chains,
   onChange,
   selectedChainKey,
