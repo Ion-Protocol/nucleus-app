@@ -120,7 +120,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.SSETH,
@@ -128,7 +128,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
@@ -299,7 +299,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.RARIETH,
@@ -307,11 +307,11 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
-      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      layerZeroChainSelector: 30235,
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
+      layerZeroChainSelector: 30101,
       wantTokens: {
         [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
       },
