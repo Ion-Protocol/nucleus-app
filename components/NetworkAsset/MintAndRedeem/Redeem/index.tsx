@@ -56,9 +56,7 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   const sourceExplorerBaseUrl = useSelector(selectWithdrawalSourceExplorerBaseUrl)
-  console.log('redemptionSourceExplorerBaseUrl', sourceExplorerBaseUrl)
   const destinationExplorerBaseUrl = useSelector(selectWithdrawalDestinationExplorerBaseUrl)
-  console.log('redemptionDestinationExplorerBaseUrl', destinationExplorerBaseUrl)
 
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 

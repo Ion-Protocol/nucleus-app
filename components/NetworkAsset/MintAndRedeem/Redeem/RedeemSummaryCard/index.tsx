@@ -16,16 +16,23 @@ import { useSelector } from 'react-redux'
 import { ChainIcon } from '@/components/config/chainIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { tokensConfig } from '@/config/tokens'
-import { useRedeemSelectors } from '@/hooks/redeem/useRedeemSelectors'
+import { useRedeemData } from '@/hooks/redeem/useRedeemData'
 import {
   selectIsBridgeRequired,
   selectNetworkAssetConfig,
   selectReceiveTokenKey,
   selectReceiveTokens,
+  selectRedeemAmount,
+  selectRedeemAmountAsBigInt,
+  selectRedemptionDestinationChainKey,
+  selectRedemptionSourceChainKey,
+  selectWithdrawalFee,
 } from '@/store/slices/networkAssets/selectors'
 import { ChainKey } from '@/types/ChainKey'
+import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { capitalizeFirstLetter } from '@/utils/string'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
+import { formatUnits } from 'viem'
 import { RedeemSummaryCopy } from '../RedeemSummary'
 
 export type RedeemSummaryCardProps = {
@@ -39,32 +46,44 @@ export type RedeemSummaryCardProps = {
 }
 
 const RedeemSummaryCard = () => {
-  const {
-    redeemAmount,
-    redeemAmountAsBigInt,
-    tellerContractAddress,
-    redemptionSourceChainId,
-    userAddress,
-    layerZeroChainSelector,
-    redeemBridgeData,
-    redeemAmountTruncated,
-    receiveAmountTruncated,
-    receiveAmountFormattedFull,
-    formattedTokenRateWithFee,
-    formattedTokenRateWithFeeFull,
-    redemptionSourceChainKey,
-    destinationChainKey,
-    previewFee,
-    tokenRateInQuoteSafeQuery,
-    withdrawalFee,
-  } = useRedeemSelectors()
-  const { data: tokenRateInQuoteSafe } = tokenRateInQuoteSafeQuery
+  const { tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData()
+
+  const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
+
+  const withdrawalFee = useSelector(selectWithdrawalFee)
+
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
   const tokenKeys = useSelector(selectReceiveTokens)
   const receiveTokenKey = useSelector(selectReceiveTokenKey) || tokenKeys[0]
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
   const sharesTokenKey = networkAssetConfig?.token.name
+
+  const redeemAmount = useSelector(selectRedeemAmount)
+  const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
+
+  // Calculate redeem amount using rate
+  const receiveAmountAsBigInt =
+    rateInQuoteWithFee > 0 ? (redeemAmountAsBigInt * rateInQuoteWithFee) / WAD.bigint : redeemAmountAsBigInt
+
+  // Format the amount for display
+  const formattedTokenRateWithFee = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
+  const formattedTokenRateWithFeeFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
+
+  const decimalAmountForPrecisionCheck = parseFloat(formatUnits(receiveAmountAsBigInt, 18))
+  const redeemAmountTruncated = bigIntToNumberAsString(redeemAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  })
+  const receiveAmountTruncated = bigIntToNumberAsString(receiveAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 4,
+  })
+  const receiveAmountFormattedFull = bigIntToNumberAsString(receiveAmountAsBigInt, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: decimalAmountForPrecisionCheck < 1 ? 18 : 8,
+  })
 
   return (
     <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm">
@@ -131,8 +150,8 @@ const RedeemSummaryCard = () => {
                 <SummaryRow
                   label={RedeemSummaryCopy.exchangeRate.label}
                   tooltip={RedeemSummaryCopy.exchangeRate.tooltip}
-                  value={`${tokenRateInQuoteSafe?.truncatedRateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
-                  fullValue={`${tokenRateInQuoteSafe?.rateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  value={`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  fullValue={`${tokenRateInQuote?.rateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
                 />
                 <SummaryRow
                   label={RedeemSummaryCopy.withdrawFee.label}
