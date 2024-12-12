@@ -4,8 +4,8 @@ import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { useAllowanceQuery } from '@/store/slices/erc20Api'
 import {
   selectContractAddressByName,
+  selectIsBridgeRequired,
   selectRedeemBridgeData,
-  selectRedeemLayerZeroChainSelector,
   selectWithdrawalFee,
 } from '@/store/slices/networkAssets/selectors'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
@@ -17,7 +17,7 @@ import { Address } from 'viem'
 export const useRedeemData = (config: RedeemConfig) => {
   const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
   const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
-  const layerZeroChainSelector = useSelector((state: RootState) => selectRedeemLayerZeroChainSelector(state))
+  const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
   const {
     userAddress,
@@ -78,11 +78,7 @@ export const useRedeemData = (config: RedeemConfig) => {
     },
     {
       skip:
-        !redeemBridgeData ||
-        !tellerContractAddress ||
-        !redemptionSourceChainId ||
-        !redeemAmount ||
-        layerZeroChainSelector === 0,
+        !redeemBridgeData || !tellerContractAddress || !redemptionSourceChainId || !redeemAmount || !isBridgeRequired,
     }
   )
 

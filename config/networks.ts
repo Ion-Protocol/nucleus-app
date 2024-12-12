@@ -226,7 +226,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       withdrawalChain: ChainKey.FORM,

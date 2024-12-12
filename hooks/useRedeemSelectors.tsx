@@ -23,6 +23,7 @@ import {
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { calculateRedeemDeadline } from '@/utils/time'
+import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address, formatUnits } from 'viem'
 
@@ -123,13 +124,13 @@ export const useRedeemSelectors = () => {
         !tellerContractAddress ||
         !redemptionSourceChainId ||
         !redeemAmountAsBigInt ||
-        layerZeroChainSelector === 0,
+        !isBridgeRequired,
     }
   )
 
-  // Calculate rate with 0.02% fee
+  // Calculate rate with the chain fee fee
   const rateInQuoteWithFee = tokenRateInQuoteSafeQuery.data?.rateInQuoteSafe
-    ? (BigInt(tokenRateInQuoteSafeQuery.data.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
+    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuoteSafeQuery.data.rateInQuoteSafe), withdrawalFee)
     : BigInt(0)
 
   const formattedTokenRateWithFee = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })

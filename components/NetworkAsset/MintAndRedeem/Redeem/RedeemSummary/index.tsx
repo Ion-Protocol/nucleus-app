@@ -5,12 +5,15 @@ import { Address } from 'viem'
 
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { nativeAddress } from '@/config/constants'
 import { selectAddress } from '@/store/slices/account/'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
-import { selectRedeemAmountAsBigInt, selectWithdrawalFee } from '@/store/slices/networkAssets/selectors'
-import { BridgeData, useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
+import {
+  selectRedeemAmountAsBigInt,
+  selectRedeemBridgeData,
+  selectWithdrawalFee,
+} from '@/store/slices/networkAssets/selectors'
+import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { RedeemSummaryConnector } from './connector'
@@ -53,18 +56,10 @@ function RedeemSummary({
   receiveAssetAddress,
   chainId,
   bridgeFromChainId,
-  layerZeroChainSelector,
 }: RedeemSummaryConnector.Props) {
   const userAddress = useSelector(selectAddress)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
-
-  const previewFeeBridgeData: BridgeData = {
-    chainSelector: layerZeroChainSelector,
-    destinationChainReceiver: userAddress!,
-    bridgeFeeToken: nativeAddress,
-    messageGas: BigInt(100000),
-    data: '0x',
-  }
+  const bridgeData = useSelector(selectRedeemBridgeData)
 
   const {
     data: previewFee,
@@ -75,11 +70,11 @@ function RedeemSummary({
   } = useGetPreviewFeeQuery(
     {
       shareAmount: redeemAmountAsBigInt,
-      bridgeData: previewFeeBridgeData,
+      bridgeData: bridgeData!,
       contractAddress: tellerAddress!,
       chainId: bridgeFromChainId!,
     },
-    { skip: !userAddress || layerZeroChainSelector === 0 || !redeemAmountAsBigInt }
+    { skip: !userAddress || !redeemAmountAsBigInt || !isBridgeRequired || !bridgeData }
   )
 
   const { data: tokenPrice, isSuccess: tokenPriceSuccess } = useGetTokenPriceQuery('sei-network')
@@ -99,6 +94,7 @@ function RedeemSummary({
   const formattedPriceFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
 
   const formattedPreviewFee = previewFee?.feeAsString && tokenPrice ? Number(previewFee.feeAsString) * tokenPrice : 0
+  console.log('formattedPreviewFee', formattedPreviewFee)
 
   return (
     <Accordion allowToggle>
