@@ -1,36 +1,36 @@
 import { atomicQueueContractAddress } from '@/config/constants'
 import { RootState } from '@/store'
+import { selectAddress } from '@/store/slices/account'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { useAllowanceQuery } from '@/store/slices/erc20Api'
 import {
   selectContractAddressByName,
+  selectDestinationChainId,
   selectIsBridgeRequired,
+  selectRedeemAmountAsBigInt,
   selectRedeemBridgeData,
+  selectRedemptionSourceChainId,
+  selectWantAssetAddress,
   selectWithdrawalFee,
 } from '@/store/slices/networkAssets/selectors'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
-import { RedeemConfig } from '@/types/Redeem'
 import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
 
-export const useRedeemData = (config: RedeemConfig) => {
-  const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
-  const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
-  const isBridgeRequired = useSelector(selectIsBridgeRequired)
+export const useRedeemData = () => {
+  // Selectors that apply to multiple query hooks
+  const userAddress = useSelector(selectAddress)
 
-  const {
-    userAddress,
-    sharesTokenAddress,
-    wantTokenAddress,
-    destinationChainId,
-    redemptionSourceChainId,
-    redeemAmount,
-  } = config
+  // Token Allowance Query Selectors
+  const sharesTokenAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'boringVault'))
+  const destinationChainId = useSelector(selectDestinationChainId) // Destination for want asset
 
+  // Token Allowance Query Hook
+  // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
   const { data: allowance } = useAllowanceQuery(
     {
-      tokenAddress: sharesTokenAddress as `0x${string}`,
+      tokenAddress: sharesTokenAddress!,
       spenderAddress: atomicQueueContractAddress,
       userAddress: userAddress!,
       chainId: destinationChainId!,
@@ -40,6 +40,12 @@ export const useRedeemData = (config: RedeemConfig) => {
     }
   )
 
+  // Token Rate in Quote Selectors
+  const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
+  const wantTokenAddress = useSelector(selectWantAssetAddress)
+
+  // Token Rate in Quote Query Hook
+  // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
   const {
     data: tokenRateInQuote,
     isLoading: isTokenRateInQuoteLoading,
@@ -56,13 +62,21 @@ export const useRedeemData = (config: RedeemConfig) => {
     }
   )
 
+  // Apply Fee to Token Rate in Quote
   const withdrawalFee = useSelector(selectWithdrawalFee)
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
     ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawalFee)
     : BigInt(0)
 
+  // Bridge Preview Fee Selectors. Note: Only applies to withdrawal with Bridge
+  const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
+  const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
+  const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId) // Id of chain where redemption starts
   const redeemBridgeData = useSelector(selectRedeemBridgeData)
+  const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
+  // Preview Fee Query Hook. Note: Only applies to withdrawal with Bridge
+  // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
   const {
     data: previewFee,
     isLoading: isPreviewFeeLoading,

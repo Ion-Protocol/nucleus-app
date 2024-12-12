@@ -4,7 +4,6 @@ import RedeemSummary from './RedeemSummary'
 
 import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { atomicQueueContractAddress } from '@/config/constants'
-import { tokensConfig } from '@/config/tokens'
 import { useRedeemData } from '@/hooks/redeem/useRedeemData'
 import { RootState } from '@/store'
 import { selectAddress } from '@/store/slices/account'
@@ -23,10 +22,10 @@ import {
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
+  selectWantAssetAddress,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { ChainKey } from '@/types/ChainKey'
-import { RedeemConfig } from '@/types/Redeem'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
 import { calculateRedeemDeadline } from '@/utils/time'
 import React from 'react'
@@ -117,24 +116,9 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const sharesTokenKey = networkAssetConfig?.token.key
 
   const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
+  const wantTokenAddress = useSelector(selectWantAssetAddress)
 
-  const wantTokenAddress = effectiveWantTokenKey
-    ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey!]
-    : null
-  // Build config object
-  const config: RedeemConfig = {
-    userAddress: userAddress!,
-    redeemAmount,
-    sharesTokenAddress: sharesTokenAddress as Address,
-    wantTokenAddress: wantTokenAddress as Address,
-    destinationChainId: destinationChainId!,
-    redemptionSourceChainId: redemptionSourceChainId!,
-    isBridgeRequired,
-    bridgeData: bridgeData!,
-    deadline: BigInt(calculateRedeemDeadline()),
-  }
-
-  const { allowance, tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData(config)
+  const { allowance, tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData()
   const { handleRedeem, isLoading } = useRedeem()
 
   const handleRedeemClick = async () => {

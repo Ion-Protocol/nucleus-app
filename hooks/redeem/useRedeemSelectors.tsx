@@ -1,4 +1,3 @@
-import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { selectAddress } from '@/store/slices/account'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
@@ -18,6 +17,7 @@ import {
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
+  selectWantAssetAddress,
   selectWithdrawalFee,
 } from '@/store/slices/networkAssets'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
@@ -78,9 +78,7 @@ export const useRedeemSelectors = () => {
 
   const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
 
-  const wantTokenAddress = effectiveWantTokenKey
-    ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey!]
-    : null
+  const wantTokenAddress = useSelector(selectWantAssetAddress)
 
   const isValid = Boolean(
     redeemAmountAsBigInt > BigInt(0) &&

@@ -791,6 +791,14 @@ export const selectRedeemBridgeData = createSelector(
 )
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWantAssetAddress = (state: RootState) => {
+  const wantTokenKey = selectReceiveTokenKey(state)
+  const destinationChainKey = selectRedemptionDestinationChainKey(state)
+  if (!wantTokenKey || !destinationChainKey) return null
+  return tokensConfig[wantTokenKey]?.addresses[destinationChainKey as ChainKey]
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectWithdrawalFee = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   if (!networkAssetConfig) {

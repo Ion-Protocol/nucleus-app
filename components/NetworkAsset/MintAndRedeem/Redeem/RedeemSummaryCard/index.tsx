@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux'
 import { ChainIcon } from '@/components/config/chainIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { tokensConfig } from '@/config/tokens'
-import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
+import { useRedeemSelectors } from '@/hooks/redeem/useRedeemSelectors'
 import {
   selectIsBridgeRequired,
   selectNetworkAssetConfig,
