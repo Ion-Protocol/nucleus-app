@@ -15,7 +15,6 @@ import {
   selectIsBridgeRequired,
   selectNetworkAssetConfig,
   selectReceiveTokenKey,
-  selectReceiveTokens,
   selectRedeemAmountAsBigInt,
   selectRedeemBridgeData,
   selectRedeemLayerZeroChainSelector,
@@ -23,9 +22,10 @@ import {
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
   selectWantAssetAddress,
+  selectWithdrawalDestinationExplorerBaseUrl,
+  selectWithdrawalSourceExplorerBaseUrl,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
-import { ChainKey } from '@/types/ChainKey'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
 import { calculateRedeemDeadline } from '@/utils/time'
 import React from 'react'
@@ -55,10 +55,10 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
-  const sourceExplorerBaseUrl =
-    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey as ChainKey]?.explorerBaseUrl
-  const destinationExplorerBaseUrl =
-    networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey as ChainKey]?.explorerBaseUrl
+  const sourceExplorerBaseUrl = useSelector(selectWithdrawalSourceExplorerBaseUrl)
+  console.log('redemptionSourceExplorerBaseUrl', sourceExplorerBaseUrl)
+  const destinationExplorerBaseUrl = useSelector(selectWithdrawalDestinationExplorerBaseUrl)
+  console.log('redemptionDestinationExplorerBaseUrl', destinationExplorerBaseUrl)
 
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
@@ -74,8 +74,9 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
    * Selectors for the redeem amount, the accountant address, the teller contract address,
    * the layer zero chain selector, and the token keys
    */
+  const sharesTokenAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'boringVault'))
   const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
-  const tokenKeys = useSelector(selectReceiveTokens)
+  const wantTokenAddress = useSelector(selectWantAssetAddress)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
   /**
@@ -109,14 +110,10 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       accountantAddress &&
       tellerContractAddress &&
       sourceExplorerBaseUrl &&
-      destinationExplorerBaseUrl
+      destinationExplorerBaseUrl &&
+      wantTokenAddress &&
+      sharesTokenAddress
   )
-
-  const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
-  const sharesTokenKey = networkAssetConfig?.token.key
-
-  const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
-  const wantTokenAddress = useSelector(selectWantAssetAddress)
 
   const { allowance, tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData()
   const { handleRedeem, isLoading } = useRedeem()

@@ -813,6 +813,22 @@ export const selectWithdrawalFeeAsBigInt = (state: RootState): bigint => {
   return withdrawalFee ? BigInt(withdrawalFee * WAD.number) : BigInt(0)
 }
 
+export const selectWithdrawalSourceExplorerBaseUrl = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const redemptionSourceChainKey = selectRedemptionSourceChainKey(state)
+  const withdrawalSourceExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey as ChainKey]?.explorerBaseUrl
+  return withdrawalSourceExplorerBaseUrl
+}
+
+export const selectWithdrawalDestinationExplorerBaseUrl = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
+  const withdrawalDestinationExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionDestinationChains[redemptionDestinationChainKey as ChainKey]?.explorerBaseUrl
+  return withdrawalDestinationExplorerBaseUrl
+}
+
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////
 

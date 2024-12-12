@@ -218,7 +218,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.FETH,

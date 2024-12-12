@@ -18,17 +18,17 @@ import {
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
   selectWantAssetAddress,
+  selectWithdrawalDestinationExplorerBaseUrl,
   selectWithdrawalFee,
+  selectWithdrawalSourceExplorerBaseUrl,
 } from '@/store/slices/networkAssets'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
-import { calculateRedeemDeadline } from '@/utils/time'
 import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address, formatUnits } from 'viem'
 
 export const useRedeemSelectors = () => {
-  const deadline = calculateRedeemDeadline() // default value in function is 3 days
   const userAddress = useSelector(selectAddress)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
 
@@ -41,10 +41,12 @@ export const useRedeemSelectors = () => {
   const withdrawalFee = useSelector(selectWithdrawalFee)
 
   // Explorer URLs
-  const redemptionSourceExplorerBaseUrl =
-    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey!]?.explorerBaseUrl
-  const redemptionDestinationExplorerBaseUrl =
-    networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey!]?.explorerBaseUrl
+
+  const redemptionSourceExplorerBaseUrl = useSelector(selectWithdrawalSourceExplorerBaseUrl)
+  console.log('redemptionSourceExplorerBaseUrl', redemptionSourceExplorerBaseUrl)
+
+  const redemptionDestinationExplorerBaseUrl = useSelector(selectWithdrawalDestinationExplorerBaseUrl)
+  console.log('redemptionDestinationExplorerBaseUrl', redemptionDestinationExplorerBaseUrl)
 
   // Bridge and Contract Related
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
@@ -73,7 +75,7 @@ export const useRedeemSelectors = () => {
   const hasExcessDestinationBalance =
     destinationTokenBalance && sourceTokenBalance && BigInt(destinationTokenBalance) > redeemAmountAsBigInt
 
-  const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
+  const sharesTokenAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'boringVault'))
   const sharesTokenKey = networkAssetConfig?.token.key
 
   const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
