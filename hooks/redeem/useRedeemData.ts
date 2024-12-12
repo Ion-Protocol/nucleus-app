@@ -6,27 +6,26 @@ import {
   selectContractAddressByName,
   selectRedeemBridgeData,
   selectRedeemLayerZeroChainSelector,
+  selectWithdrawalFee,
 } from '@/store/slices/networkAssets/selectors'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { RedeemConfig } from '@/types/Redeem'
+import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
-import { useAccount } from 'wagmi'
 
 export const useRedeemData = (config: RedeemConfig) => {
-  const { address: userAddress } = useAccount()
-
   const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
   const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
   const layerZeroChainSelector = useSelector((state: RootState) => selectRedeemLayerZeroChainSelector(state))
 
   const {
+    userAddress,
     sharesTokenAddress,
     wantTokenAddress,
     destinationChainId,
     redemptionSourceChainId,
     redeemAmount,
-    bridgeData,
   } = config
 
   const { data: allowance } = useAllowanceQuery(
@@ -57,6 +56,11 @@ export const useRedeemData = (config: RedeemConfig) => {
     }
   )
 
+  const withdrawalFee = useSelector(selectWithdrawalFee)
+  const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
+    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawalFee)
+    : BigInt(0)
+
   const redeemBridgeData = useSelector(selectRedeemBridgeData)
 
   const {
@@ -81,39 +85,12 @@ export const useRedeemData = (config: RedeemConfig) => {
         layerZeroChainSelector === 0,
     }
   )
-  //   WAGMI Hooks as fallback for refactoring
-  // Allowance check
-  //     const { data: allowance } = useReadContract({
-  //       address: sharesTokenAddress,
-  //       abi: erc20Abi,
-  //       functionName: 'allowance',
-  //       args: [userAddress!, atomicQueueContractAddress as `0x${string}`],
-  //       chainId: destinationChainId,
-  //     },
-  //   )
-
-  //     // Rate in quote
-  //     const { data: tokenRateInQuote } = useReadContract({
-  //       address: accountantAddress as `0x${string}`,
-  //       abi: AccountantWithRateProvidersAbi,
-  //       functionName: 'getRateInQuoteSafe',
-  //       args: [wantTokenAddress],
-  //       chainId: destinationChainId,
-  //     })
-
-  //     // Preview fee
-  //     const { data: previewFee } = useReadContract({
-  //       address: tellerContractAddress as `0x${string}`,
-  //       abi: tellerABI,
-  //       functionName: 'previewFee',
-  //       args: [redeemAmount, bridgeData],
-  //       chainId: redemptionSourceChainId,
-  //       enabled: Boolean(bridgeData && tellerContractAddress),
-  //     })
 
   return {
     allowance,
     tokenRateInQuote,
+    rateInQuoteWithFee,
+    withdrawalFee,
     previewFee,
   }
 }

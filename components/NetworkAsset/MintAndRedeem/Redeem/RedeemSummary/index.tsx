@@ -9,9 +9,10 @@ import { nativeAddress } from '@/config/constants'
 import { selectAddress } from '@/store/slices/account/'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
-import { selectRedeemAmountAsBigInt } from '@/store/slices/networkAssets/selectors'
+import { selectRedeemAmountAsBigInt, selectWithdrawalFee } from '@/store/slices/networkAssets/selectors'
 import { BridgeData, useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
+import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { RedeemSummaryConnector } from './connector'
 
 // TODO: Move to a better place? or componentize the dropdown?
@@ -88,8 +89,10 @@ function RedeemSummary({
     chainId: chainId!,
   })
 
+  const withdrawalFee = useSelector(selectWithdrawalFee)
+
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
+    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawalFee)
     : BigInt(0)
 
   const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
@@ -175,7 +178,7 @@ function RedeemSummary({
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
                 <Text textAlign="right" variant="paragraph" color="disabledText">
-                  0.2%
+                  {withdrawalFee}%
                 </Text>
               </IonSkeleton>
             </Flex>

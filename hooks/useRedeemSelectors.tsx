@@ -18,6 +18,7 @@ import {
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
+  selectWithdrawalFee,
 } from '@/store/slices/networkAssets'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
@@ -27,7 +28,6 @@ import { Address, formatUnits } from 'viem'
 
 export const useRedeemSelectors = () => {
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
-  const fee = 0
   const userAddress = useSelector(selectAddress)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
 
@@ -37,6 +37,7 @@ export const useRedeemSelectors = () => {
   const destinationChainId = useSelector(selectDestinationChainId)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const withdrawalFee = useSelector(selectWithdrawalFee)
 
   // Explorer URLs
   const redemptionSourceExplorerBaseUrl =
@@ -187,6 +188,7 @@ export const useRedeemSelectors = () => {
     sharesTokenKey,
     effectiveWantTokenKey,
     wantTokenAddress,
+    withdrawalFee,
     isValid,
   }
 }

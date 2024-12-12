@@ -41,10 +41,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
   /**
    ******************************************************************************
-   * Selectors
-   * Note maybe should happen outside of this hook.
-   * Data can be checked and transformed also allowing for disable of button
-   * and transformation of data to be displayed in the modal.
+   * Selectors to validate data before submit
+   * Room for cleanup
    ******************************************************************************
    */
   const userAddress = useSelector(selectAddress)
@@ -62,8 +60,6 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
     networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey as ChainKey]?.explorerBaseUrl
   const destinationExplorerBaseUrl =
     networkAssetConfig?.redeem.redemptionDestinationChains[destinationChainKey as ChainKey]?.explorerBaseUrl
-  console.log('sourceExplorerBaseUrl', sourceExplorerBaseUrl)
-  console.log('destinationExplorerBaseUrl', destinationExplorerBaseUrl)
 
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
@@ -138,7 +134,7 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
     deadline: BigInt(calculateRedeemDeadline()),
   }
 
-  const { allowance, tokenRateInQuote, previewFee } = useRedeemData(config)
+  const { allowance, tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData(config)
   const { handleRedeem, isLoading } = useRedeem()
 
   const handleRedeemClick = async () => {
@@ -154,8 +150,6 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       console.error('Source or destination explorer base URL is not set')
       return
     }
-    // Apply 0.2% fee to the rateInQuoteSafe
-    const rateInQuoteWithFee = (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
 
     const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
       deadline,
@@ -175,7 +169,6 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
 
     if (isBridgeRequired) {
       if (!previewFee?.fee || !bridgeData || !tellerContractAddress) {
-        console.error('Preview fee is not set')
         return
       }
       const redeemWithBridgeData = {
