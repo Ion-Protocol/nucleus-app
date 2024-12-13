@@ -11,16 +11,16 @@ export interface Order {
   created_log_index: number
   created_transaction_index: number
   created_block_number: string
-  ending_log_index: number
-  ending_transaction_index: number
-  ending_block_number: string
-  status: 'pending' | 'completed' | 'cancelled'
+  ending_log_index: number | null
+  ending_transaction_index: number | null
+  ending_block_number: string | null
+  status: 'pending' | 'fulfilled' | 'cancelled'
   queue_address: string
   chain_id: number
   offer_amount_spent: string
   want_amount_rec: string
   created_transaction_hash: string
-  ending_transaction_hash: string
+  ending_transaction_hash: string | null
 }
 
 export interface PaginatedResponse {

@@ -1,5 +1,7 @@
 import { Order } from '@/types/Order'
-import { Badge } from '@chakra-ui/react'
+import { capitalizeFirstLetter } from '@/utils/string'
+import { Flex } from '@chakra-ui/react'
+import { Dot } from 'lucide-react'
 
 interface StatusBadgeProps {
   status: Order['status']
@@ -8,9 +10,14 @@ interface StatusBadgeProps {
 export function StatusBadge({ status }: StatusBadgeProps) {
   const colorScheme = {
     pending: 'yellow',
-    completed: 'green',
+    fulfilled: 'green',
     cancelled: 'red',
   }[status]
 
-  return <Badge colorScheme={colorScheme}>{status}</Badge>
+  return (
+    <Flex alignItems={'center'}>
+      <Dot strokeWidth={4} color={colorScheme} />
+      {capitalizeFirstLetter(status)}
+    </Flex>
+  )
 }

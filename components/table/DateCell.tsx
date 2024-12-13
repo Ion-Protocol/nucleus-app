@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, fromUnixTime } from 'date-fns'
 
 interface DateCellProps {
   date: string
@@ -7,5 +7,5 @@ interface DateCellProps {
 
 export function DateCell({ date, emptyValue = '-' }: DateCellProps) {
   if (!date) return <>{emptyValue}</>
-  return <>{format(new Date(date), 'PPpp')}</>
+  return <>{format(fromUnixTime(Number(date)), 'PP')}</>
 }

@@ -12,6 +12,9 @@ export function SortableHeader<T>({ column, children }: SortableHeaderProps<T>) 
   return (
     <Button
       variant="ghost"
+      _hover={'none'}
+      fontSize={'inherit'}
+      color={'inherit'}
       onClick={() => column.toggleSorting()}
       rightIcon={
         column.getIsSorted() === 'asc' ? (
