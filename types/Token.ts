@@ -8,4 +8,5 @@ export interface Token {
   symbol: string
   addresses: Partial<Record<ChainKey, string>> // TODO: Should update to Address type
   rateOracles?: Partial<Record<ChainKey, string>> // For getting the token/usd rate for that token on that chain
+  coinGeckoId?: string
 }

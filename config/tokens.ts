@@ -12,6 +12,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       [ChainKey.RARI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     },
+    coinGeckoId: 'ethereum',
   },
   [TokenKey.WETH]: {
     key: TokenKey.WETH,
@@ -130,6 +131,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
       [ChainKey.ETHEREUM]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
     },
+    coinGeckoId: 'sei-network',
   },
   [TokenKey.TETH]: {
     key: TokenKey.TETH,

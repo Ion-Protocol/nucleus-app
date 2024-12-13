@@ -41,64 +41,9 @@ const defaultEthVaultAssets = [
   TokenKey.PZETH,
 ]
 
+// TODO: Break into two types. Internal and External where mint and redeem take place in the Nucleus app or a partners app respectively
 const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.SSETH]: {
-    token: tokensConfig[TokenKey.SSETH],
-    description:
-      'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
-    chain: ChainKey.SEI,
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SSETH),
-    showRewardsAndHistory: true,
-    deployedOn: ChainKey.SEI,
-    sourceChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-      [ChainKey.SEI]: {
-        chain: ChainKey.SEI,
-        explorerBaseUrl: seiExplorerBaseUrl,
-      },
-    },
-    defaultMintChain: ChainKey.ETHEREUM,
-    defaultRedemptionChain: ChainKey.SEI,
-    sourceRedemptionChains: {
-      [ChainKey.SEI]: {
-        chain: ChainKey.SEI,
-        explorerBaseUrl: seiExplorerBaseUrl,
-      },
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
-    redemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
-    sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-      [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
-    },
-    wantTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
-    },
-    contracts: {
-      teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
-      accountant: '0x6035832F65b0cf20064681505b73A6dE307a04cB',
-      boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
-    },
-    layerZeroChainSelector: 30280,
-    receiveOn: ChainKey.SEI,
-    points: [
-      {
-        key: PointSystemKey.NUCLEUS,
-        name: 'Nucleus',
-        pointsMultiplier: 2,
-      },
-    ],
     apys: {
       [TokenKey.ISEI]: [
         {
@@ -117,8 +62,37 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       ],
     },
+    chain: ChainKey.SEI,
+    contracts: {
+      teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
+      accountant: '0x6035832F65b0cf20064681505b73A6dE307a04cB',
+      boringVault: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.SEI,
+    deployedOn: ChainKey.SEI,
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
+    layerZeroChainSelector: 30280,
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SSETH),
+    nativeCurrency: tokensConfig[TokenKey.SEI],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
     redeem: {
-      withdrawalFee: 0.02,
+      layerZeroChainSelector: 30101,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.SSETH,
       redemptionSourceChain: ChainKey.SEI,
       redemptionSourceChains: {
         [ChainKey.SEI]: {
@@ -130,60 +104,44 @@ const mainnetNetworkAssets: NetworkAssets = {
           explorerBaseUrl: etherscanBaseUrl,
         },
       },
-      redemptionSourceAsset: TokenKey.SSETH,
-      redemptionDestinationChain: ChainKey.ETHEREUM,
-      redemptionDestinationChains: {
-        [ChainKey.ETHEREUM]: {
-          chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: etherscanBaseUrl,
-        },
-      },
-      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      layerZeroChainSelector: 30101,
       wantTokens: {
         [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
       },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      withdrawalFee: 0.02,
     },
-  },
-  [TokenKey.FETH]: {
-    token: tokensConfig[TokenKey.FETH],
-    description:
-      'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
-    chain: ChainKey.FORM,
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
-    deployedOn: ChainKey.ETHEREUM,
+    receiveOn: ChainKey.SEI,
+    showRewardsAndHistory: true,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: etherscanBaseUrl,
-      },
-    },
-    defaultMintChain: ChainKey.ETHEREUM,
-    defaultRedemptionChain: ChainKey.ETHEREUM,
-    sourceRedemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
         explorerBaseUrl: layerZeroBaseUrl,
       },
-    },
-    redemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+        explorerBaseUrl: seiExplorerBaseUrl,
       },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
-    wantTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
-    },
+    token: tokensConfig[TokenKey.SSETH],
+  },
+  [TokenKey.FETH]: {
+    apys: {},
+    chain: ChainKey.FORM,
     contracts: {
       teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',
       accountant: '0x8ca1d13De3039142186aA57656Adbe0fD2620D2B',
       boringVault: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
     },
-    receiveOn: ChainKey.ETHEREUM,
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.ETHEREUM,
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
     points: [
       {
         key: PointSystemKey.FORM,
@@ -211,7 +169,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 1,
       },
     ],
-    apys: {},
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,
@@ -232,64 +189,41 @@ const mainnetNetworkAssets: NetworkAssets = {
       withdrawalChain: ChainKey.FORM,
       layerZeroChainSelector: 0,
       wantTokens: {
-        [ChainKey.FORM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
       },
     },
-  },
-  [TokenKey.RARIETH]: {
-    token: tokensConfig[TokenKey.RARIETH],
-    description:
-      'Connect your wallet, select your deposit asset, and mint the Rari Default Asset to earn while you explore the Rari ecosystem',
-    chain: ChainKey.RARI,
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
-    comingSoon: false,
-    redeemComingSoon: true,
-    isExternal: false,
-    isNewDeployment: true,
-    partnerUrl: 'https://app.rari.capital/earn/rarieth',
-    deployedOn: ChainKey.RARI,
+    receiveOn: ChainKey.ETHEREUM,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: etherscanBaseUrl,
       },
-      [ChainKey.RARI]: {
-        chain: ChainKey.RARI,
-        explorerBaseUrl: rariExplorerBaseUrl,
-      },
-    },
-    defaultMintChain: ChainKey.RARI,
-    defaultRedemptionChain: ChainKey.RARI,
-    sourceRedemptionChains: {
-      [ChainKey.RARI]: {
-        chain: ChainKey.RARI,
-        explorerBaseUrl: rariExplorerBaseUrl,
-      },
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
-    redemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-      [ChainKey.RARI]: [TokenKey.WETH],
+      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
-    wantTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
-    },
+    token: tokensConfig[TokenKey.FETH],
+  },
+  [TokenKey.RARIETH]: {
+    apys: {},
+    chain: ChainKey.RARI,
+    comingSoon: false,
     contracts: {
       teller: '0x5CcE6CB6B4b62C020f0CFCDB95FCdf6Ca706bE88',
       accountant: '0x3C2BE29D430686D00276A70acE51C6DC035ed6a1',
       boringVault: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },
+    defaultMintChain: ChainKey.RARI,
+    defaultRedemptionChain: ChainKey.RARI,
+    deployedOn: ChainKey.RARI,
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Rari Default Asset to earn while you explore the Rari ecosystem',
+    isExternal: false,
+    isNewDeployment: true,
     layerZeroChainSelector: 30235,
-    receiveOn: ChainKey.RARI,
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.RARIETH),
+    nativeCurrency: tokensConfig[TokenKey.ETH],
+    partnerUrl: 'https://app.rari.capital/earn/rarieth',
     points: [
       {
         key: PointSystemKey.NUCLEUS,
@@ -297,10 +231,17 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
     ],
-    apys: {},
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      layerZeroChainSelector: 30101,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
       redemptionSourceChain: ChainKey.RARI,
+      redemptionSourceAsset: TokenKey.RARIETH,
       redemptionSourceChains: {
         [ChainKey.RARI]: {
           chain: ChainKey.RARI,
@@ -311,22 +252,32 @@ const mainnetNetworkAssets: NetworkAssets = {
           explorerBaseUrl: etherscanBaseUrl,
         },
       },
-      redemptionSourceAsset: TokenKey.RARIETH,
-      redemptionDestinationChain: ChainKey.ETHEREUM,
-      redemptionDestinationChains: {
-        [ChainKey.ETHEREUM]: {
-          chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: etherscanBaseUrl,
-        },
-      },
-      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
-      layerZeroChainSelector: 30101,
       wantTokens: {
         [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
       },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
+      withdrawalFee: defaultWithdrawalFee,
     },
+    receiveOn: ChainKey.RARI,
+    redeemComingSoon: true,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+      [ChainKey.RARI]: {
+        chain: ChainKey.RARI,
+        explorerBaseUrl: rariExplorerBaseUrl,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.RARI]: [TokenKey.WETH],
+    },
+    token: tokensConfig[TokenKey.RARIETH],
   },
   [TokenKey.UNIFIETH]: {
+    apys: {},
     token: tokensConfig[TokenKey.UNIFIETH],
     description: '',
     comingSoon: false,
@@ -345,27 +296,8 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
-    sourceRedemptionChains: {
-      [ChainKey.SEI]: {
-        chain: ChainKey.SEI,
-        explorerBaseUrl: seiExplorerBaseUrl,
-      },
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
-    redemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-    },
-    wantTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x08eb2eccdf6ebd7aba601791f23ec5b5f68a1d53',
@@ -380,7 +312,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
     ],
-    apys: {},
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.UNIFI,
@@ -410,6 +341,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
   },
   [TokenKey.EARNETH]: {
+    apys: {},
     token: tokensConfig[TokenKey.EARNETH],
     description:
       'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
@@ -427,23 +359,8 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
-    sourceRedemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
-    redemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-    },
-    wantTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x685aDb4797fb38D4Fc4a69750aa048B398160429',
@@ -463,7 +380,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 3,
       },
     ],
-    apys: {},
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,
@@ -489,6 +405,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
   },
   [TokenKey.TETH]: {
+    apys: {},
     token: tokensConfig[TokenKey.TETH],
     description: '',
     comingSoon: false,
@@ -505,23 +422,8 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
-    sourceRedemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
-    redemptionChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: layerZeroBaseUrl,
-      },
-    },
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
-    },
-    wantTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
     },
     contracts: {
       teller: '0x6Ae187EacF40ebd1e571a655dB92A1f47452E0Bf',
@@ -530,7 +432,6 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     receiveOn: ChainKey.ETHEREUM,
     points: [],
-    apys: {},
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,

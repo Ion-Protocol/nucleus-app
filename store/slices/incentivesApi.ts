@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { nucleusApiBaseUrl } from '@/config/constants'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
 
 interface IncentivesAPYParams {
