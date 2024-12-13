@@ -11,18 +11,10 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useSelector } from 'react-redux'
 
 import { ChainIcon } from '@/components/config/chainIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { tokensConfig } from '@/config/tokens'
-import { useRedeemSelectors } from '@/hooks/useRedeemSelectors'
-import {
-  selectIsBridgeRequired,
-  selectNetworkAssetConfig,
-  selectReceiveTokenKey,
-  selectReceiveTokens,
-} from '@/store/slices/networkAssets/selectors'
+import { useRedeemSummaryData } from '@/hooks/redeem/useRedeemSummaryData'
 import { ChainKey } from '@/types/ChainKey'
 import { capitalizeFirstLetter } from '@/utils/string'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
@@ -40,31 +32,24 @@ export type RedeemSummaryCardProps = {
 
 const RedeemSummaryCard = () => {
   const {
+    useGetTokenRateInQuote,
+    usePreviewFee,
+    withdrawalDestinationChainKey,
+    redemptionSourceChainKey,
+    withdrawalFee,
+    isBridgeRequired,
+    receiveToken,
+    sharesTokenKey,
+    nativeAsset,
     redeemAmount,
-    redeemAmountAsBigInt,
-    tellerContractAddress,
-    redemptionSourceChainId,
-    userAddress,
-    layerZeroChainSelector,
-    redeemBridgeData,
+    formattedTokenRateWithFee,
+    formattedTokenRateWithFeeFull,
     redeemAmountTruncated,
     receiveAmountTruncated,
     receiveAmountFormattedFull,
-    formattedTokenRateWithFee,
-    formattedTokenRateWithFeeFull,
-    redemptionSourceChainKey,
-    destinationChainKey,
-    previewFee,
-    tokenRateInQuoteSafeQuery,
-    withdrawalFee,
-  } = useRedeemSelectors()
-  const { data: tokenRateInQuoteSafe } = tokenRateInQuoteSafeQuery
-  const networkAssetConfig = useSelector(selectNetworkAssetConfig)
-  const isBridgeRequired = useSelector(selectIsBridgeRequired)
-  const tokenKeys = useSelector(selectReceiveTokens)
-  const receiveTokenKey = useSelector(selectReceiveTokenKey) || tokenKeys[0]
-  const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
-  const sharesTokenKey = networkAssetConfig?.token.name
+  } = useRedeemSummaryData()
+  const { data: tokenRateInQuote } = useGetTokenRateInQuote
+  const { data: previewFee } = usePreviewFee
 
   return (
     <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm">
@@ -102,25 +87,25 @@ const RedeemSummaryCard = () => {
                 />
                 <SummaryRow
                   label={`Receive on`}
-                  chainKey={destinationChainKey ? destinationChainKey : undefined}
-                  value={`${receiveAmountTruncated} ${receiveToken?.name}`}
-                  fullValue={`${receiveAmountFormattedFull} ${receiveToken?.name}`}
+                  chainKey={withdrawalDestinationChainKey ? withdrawalDestinationChainKey : undefined}
+                  value={`${receiveAmountTruncated} ${receiveToken?.symbol}`}
+                  fullValue={`${receiveAmountFormattedFull} ${receiveToken?.symbol}`}
                   darkTextValue
                 />
                 {isBridgeRequired && (
                   <SummaryRow
                     label={RedeemSummaryCopy.bridgeFee.label}
                     tooltip={RedeemSummaryCopy.bridgeFee.tooltip}
-                    value={`${previewFee?.truncatedFeeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
-                    fullValue={`${previewFee?.feeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
+                    value={`${previewFee?.truncatedFeeAsString} ${nativeAsset?.symbol}`}
+                    fullValue={`${previewFee?.feeAsString} ${nativeAsset?.symbol}`}
                     darkTextValue
                   />
                 )}
                 <SummaryRow
                   label={RedeemSummaryCopy.redemptionPrice.label}
                   tooltip={RedeemSummaryCopy.redemptionPrice.tooltip}
-                  value={`${formattedTokenRateWithFee} ${receiveToken?.name} / ${sharesTokenKey}`}
-                  fullValue={`${formattedTokenRateWithFeeFull} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  value={`${formattedTokenRateWithFee} ${receiveToken?.symbol} / ${sharesTokenKey}`}
+                  fullValue={`${formattedTokenRateWithFeeFull} ${receiveToken?.symbol} / ${sharesTokenKey}`}
                   darkTextValue
                   showDropdownIcon
                 />
@@ -131,8 +116,8 @@ const RedeemSummaryCard = () => {
                 <SummaryRow
                   label={RedeemSummaryCopy.exchangeRate.label}
                   tooltip={RedeemSummaryCopy.exchangeRate.tooltip}
-                  value={`${tokenRateInQuoteSafe?.truncatedRateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
-                  fullValue={`${tokenRateInQuoteSafe?.rateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  value={`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  fullValue={`${tokenRateInQuote?.rateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
                 />
                 <SummaryRow
                   label={RedeemSummaryCopy.withdrawFee.label}
