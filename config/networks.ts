@@ -3,7 +3,13 @@ import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
-import { etherscanBaseUrl, layerZeroBaseUrl, rariExplorerBaseUrl, seiExplorerBaseUrl } from './constants'
+import {
+  defaultWithdrawalFee,
+  etherscanBaseUrl,
+  layerZeroBaseUrl,
+  rariExplorerBaseUrl,
+  seiExplorerBaseUrl,
+} from './constants'
 import { rari } from './tenderly'
 import { tokensConfig } from './tokens'
 
@@ -112,6 +118,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       ],
     },
     redeem: {
+      withdrawalFee: 0.02,
       redemptionSourceChain: ChainKey.SEI,
       redemptionSourceChains: {
         [ChainKey.SEI]: {
@@ -206,6 +213,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
     redeem: {
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -218,7 +226,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: layerZeroBaseUrl,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       withdrawalChain: ChainKey.FORM,
@@ -291,6 +299,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
     redeem: {
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.RARI,
       redemptionSourceChains: {
         [ChainKey.RARI]: {
@@ -373,6 +382,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
     redeem: {
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.UNIFI,
       redemptionSourceChains: {
         [ChainKey.UNIFI]: {
@@ -455,6 +465,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     apys: {},
     redeem: {
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -521,6 +532,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     points: [],
     apys: {},
     redeem: {
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {

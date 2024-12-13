@@ -1,6 +1,6 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { Chain, chainsConfig } from '@/config/chains'
-import { hardcodedApy, nativeAddress } from '@/config/constants'
+import { defaultWithdrawalFee, hardcodedApy, nativeAddress } from '@/config/constants'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
@@ -9,7 +9,7 @@ import { NetworkAsset } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { RewardsTableData } from '@/types/RewardsTableData'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { convertToUsd } from '@/utils/currency'
 import { isValidSolanaAddress } from '@/utils/misc'
 import { abbreviateNumber, convertToDecimals, hasMoreThanNSignificantDigits, numberToPercent } from '@/utils/number'
@@ -662,12 +662,6 @@ export const selectWalletHasEnoughBalance = (state: RootState) => {
 // Preview Fee
 /////////////////////////////////////////////////////////////////////
 
-// DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectIsWithdrawal = (state: RootState): boolean => {
-  const redeemAmount = selectRedeemAmount(state)
-  return redeemAmount.trim().length > 0
-}
-
 // DO NOT memoize: Simple state access; should be a plain function.
 export const selectPreviewFee = (state: RootState): string | null => state.networkAssets.previewFee.data
 
@@ -778,7 +772,7 @@ export const selectDepositBridgeData = createSelector(
 )
 
 /////////////////////////////////////////////////////////////////////
-// Redeem Selectors
+// Withdrawal Selectors
 /////////////////////////////////////////////////////////////////////
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
@@ -795,6 +789,21 @@ export const selectRedeemBridgeData = createSelector(
     }
   }
 )
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWithdrawalFee = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) {
+    return defaultWithdrawalFee
+  }
+  return networkAssetConfig.redeem.withdrawalFee
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWithdrawalFeeAsBigInt = (state: RootState): bigint => {
+  const withdrawalFee = selectWithdrawalFee(state)
+  return withdrawalFee ? BigInt(withdrawalFee * WAD.number) : BigInt(0)
+}
 
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////

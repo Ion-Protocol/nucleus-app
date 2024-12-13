@@ -18,16 +18,17 @@ import {
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
+  selectWithdrawalFee,
 } from '@/store/slices/networkAssets'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { calculateRedeemDeadline } from '@/utils/time'
+import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address, formatUnits } from 'viem'
 
 export const useRedeemSelectors = () => {
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
-  const fee = 0
   const userAddress = useSelector(selectAddress)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
 
@@ -37,6 +38,7 @@ export const useRedeemSelectors = () => {
   const destinationChainId = useSelector(selectDestinationChainId)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const withdrawalFee = useSelector(selectWithdrawalFee)
 
   // Explorer URLs
   const redemptionSourceExplorerBaseUrl =
@@ -122,13 +124,13 @@ export const useRedeemSelectors = () => {
         !tellerContractAddress ||
         !redemptionSourceChainId ||
         !redeemAmountAsBigInt ||
-        layerZeroChainSelector === 0,
+        !isBridgeRequired,
     }
   )
 
-  // Calculate rate with 0.02% fee
+  // Calculate rate with the chain fee fee
   const rateInQuoteWithFee = tokenRateInQuoteSafeQuery.data?.rateInQuoteSafe
-    ? (BigInt(tokenRateInQuoteSafeQuery.data.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
+    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuoteSafeQuery.data.rateInQuoteSafe), withdrawalFee)
     : BigInt(0)
 
   const formattedTokenRateWithFee = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
@@ -187,6 +189,7 @@ export const useRedeemSelectors = () => {
     sharesTokenKey,
     effectiveWantTokenKey,
     wantTokenAddress,
+    withdrawalFee,
     isValid,
   }
 }

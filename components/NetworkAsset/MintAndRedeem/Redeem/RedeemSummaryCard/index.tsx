@@ -56,6 +56,7 @@ const RedeemSummaryCard = () => {
     destinationChainKey,
     previewFee,
     tokenRateInQuoteSafeQuery,
+    withdrawalFee,
   } = useRedeemSelectors()
   const { data: tokenRateInQuoteSafe } = tokenRateInQuoteSafeQuery
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
@@ -136,7 +137,7 @@ const RedeemSummaryCard = () => {
                 <SummaryRow
                   label={RedeemSummaryCopy.withdrawFee.label}
                   tooltip={RedeemSummaryCopy.withdrawFee.tooltip}
-                  value={'0.2%'}
+                  value={`${withdrawalFee}%`}
                 />
                 <SummaryRow
                   label={RedeemSummaryCopy.deadline.label}
