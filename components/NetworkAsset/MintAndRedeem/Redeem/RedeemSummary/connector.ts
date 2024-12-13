@@ -1,19 +1,19 @@
 import { ConnectedProps, connect } from 'react-redux'
 
-import { RootState } from '@/store'
 import { tokensConfig } from '@/config/tokens'
+import { RootState } from '@/store'
 
 import {
-  selectTokenRateInQuoteLoading,
-  selectNetworkAssetConfig,
-  selectReceiveTokens,
-  selectReceiveTokenKey,
   selectContractAddressByName,
-  selectTokenAddressByTokenKey,
-  selectSourceChainId,
+  selectDestinationChainId,
+  selectIsBridgeRequired,
+  selectNetworkAssetConfig,
+  selectReceiveTokenKey,
+  selectReceiveTokens,
   selectRedeemLayerZeroChainSelector,
   selectRedemptionSourceChainId,
-  selectIsBridgeRequired,
+  selectTokenRateInQuoteLoading,
+  selectWantAssetAddress,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 
@@ -23,14 +23,17 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const networkAssetFromRoute = selectNetworkAssetFromRoute(state)
   const tokenKeys = selectReceiveTokens(state)
   const receiveTokenKey = selectReceiveTokenKey(state) || tokenKeys[0] || null
+  console.log('receiveTokenKey', receiveTokenKey)
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
+  console.log('receiveToken', receiveToken)
 
   // used for useGetRateInQuoteSafeQuery hook
   const redeemLayerZeroChainSelector = selectRedeemLayerZeroChainSelector(state)
   const accountantAddress = selectContractAddressByName(state, 'accountant')
   const tellerAddress = selectContractAddressByName(state, 'teller')
-  const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)
-  const chainId = selectSourceChainId(state)
+  const wantAssetAddress = selectWantAssetAddress(state)
+  console.log('receiveAssetAddress in connector:', wantAssetAddress)
+  const chainId = selectDestinationChainId(state)
   const bridgeFromChainId = selectRedemptionSourceChainId(state)
   const isBridgeRequired = selectIsBridgeRequired(state)
 
@@ -41,7 +44,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   return {
     accountantAddress,
     tellerAddress,
-    receiveAssetAddress,
+    wantAssetAddress,
     chainId,
     bridgeFromChainId,
     nativeTokenForBridgeFee,

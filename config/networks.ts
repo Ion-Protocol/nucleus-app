@@ -259,7 +259,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       withdrawalFee: defaultWithdrawalFee,
     },
     receiveOn: ChainKey.RARI,
-    redeemComingSoon: true,
+    redeemComingSoon: false,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,

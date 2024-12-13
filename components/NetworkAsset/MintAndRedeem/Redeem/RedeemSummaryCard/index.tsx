@@ -11,28 +11,13 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useSelector } from 'react-redux'
 
 import { ChainIcon } from '@/components/config/chainIcons'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { tokensConfig } from '@/config/tokens'
-import { useRedeemData } from '@/hooks/redeem/useRedeemData'
-import {
-  selectIsBridgeRequired,
-  selectNetworkAssetConfig,
-  selectReceiveTokenKey,
-  selectReceiveTokens,
-  selectRedeemAmount,
-  selectRedeemAmountAsBigInt,
-  selectRedemptionDestinationChainKey,
-  selectRedemptionSourceChainKey,
-  selectWithdrawalFee,
-} from '@/store/slices/networkAssets/selectors'
+import { useRedeemSummaryData } from '@/hooks/redeem/useRedeemSummaryData'
 import { ChainKey } from '@/types/ChainKey'
-import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { capitalizeFirstLetter } from '@/utils/string'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
-import { formatUnits } from 'viem'
 import { RedeemSummaryCopy } from '../RedeemSummary'
 
 export type RedeemSummaryCardProps = {
@@ -46,44 +31,25 @@ export type RedeemSummaryCardProps = {
 }
 
 const RedeemSummaryCard = () => {
-  const { tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData()
-
-  const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
-  const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
-
-  const withdrawalFee = useSelector(selectWithdrawalFee)
-
-  const networkAssetConfig = useSelector(selectNetworkAssetConfig)
-  const isBridgeRequired = useSelector(selectIsBridgeRequired)
-  const tokenKeys = useSelector(selectReceiveTokens)
-  const receiveTokenKey = useSelector(selectReceiveTokenKey) || tokenKeys[0]
-  const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
-  const sharesTokenKey = networkAssetConfig?.token.name
-
-  const redeemAmount = useSelector(selectRedeemAmount)
-  const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
-
-  // Calculate redeem amount using rate
-  const receiveAmountAsBigInt =
-    rateInQuoteWithFee > 0 ? (redeemAmountAsBigInt * rateInQuoteWithFee) / WAD.bigint : redeemAmountAsBigInt
-
-  // Format the amount for display
-  const formattedTokenRateWithFee = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
-  const formattedTokenRateWithFeeFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
-
-  const decimalAmountForPrecisionCheck = parseFloat(formatUnits(receiveAmountAsBigInt, 18))
-  const redeemAmountTruncated = bigIntToNumberAsString(redeemAmountAsBigInt, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
-  })
-  const receiveAmountTruncated = bigIntToNumberAsString(receiveAmountAsBigInt, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
-  })
-  const receiveAmountFormattedFull = bigIntToNumberAsString(receiveAmountAsBigInt, {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: decimalAmountForPrecisionCheck < 1 ? 18 : 8,
-  })
+  const {
+    useGetTokenRateInQuote,
+    usePreviewFee,
+    withdrawalDestinationChainKey,
+    redemptionSourceChainKey,
+    withdrawalFee,
+    isBridgeRequired,
+    receiveToken,
+    sharesTokenKey,
+    nativeAsset,
+    redeemAmount,
+    formattedTokenRateWithFee,
+    formattedTokenRateWithFeeFull,
+    redeemAmountTruncated,
+    receiveAmountTruncated,
+    receiveAmountFormattedFull,
+  } = useRedeemSummaryData()
+  const { data: tokenRateInQuote } = useGetTokenRateInQuote
+  const { data: previewFee } = usePreviewFee
 
   return (
     <Box p={6} bg={'successDialogSummary'} borderRadius="lg" boxShadow="sm">
@@ -121,25 +87,25 @@ const RedeemSummaryCard = () => {
                 />
                 <SummaryRow
                   label={`Receive on`}
-                  chainKey={destinationChainKey ? destinationChainKey : undefined}
-                  value={`${receiveAmountTruncated} ${receiveToken?.name}`}
-                  fullValue={`${receiveAmountFormattedFull} ${receiveToken?.name}`}
+                  chainKey={withdrawalDestinationChainKey ? withdrawalDestinationChainKey : undefined}
+                  value={`${receiveAmountTruncated} ${receiveToken?.symbol}`}
+                  fullValue={`${receiveAmountFormattedFull} ${receiveToken?.symbol}`}
                   darkTextValue
                 />
                 {isBridgeRequired && (
                   <SummaryRow
                     label={RedeemSummaryCopy.bridgeFee.label}
                     tooltip={RedeemSummaryCopy.bridgeFee.tooltip}
-                    value={`${previewFee?.truncatedFeeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
-                    fullValue={`${previewFee?.feeAsString} ${capitalizeFirstLetter(redemptionSourceChainKey!)}`}
+                    value={`${previewFee?.truncatedFeeAsString} ${nativeAsset?.symbol}`}
+                    fullValue={`${previewFee?.feeAsString} ${nativeAsset?.symbol}`}
                     darkTextValue
                   />
                 )}
                 <SummaryRow
                   label={RedeemSummaryCopy.redemptionPrice.label}
                   tooltip={RedeemSummaryCopy.redemptionPrice.tooltip}
-                  value={`${formattedTokenRateWithFee} ${receiveToken?.name} / ${sharesTokenKey}`}
-                  fullValue={`${formattedTokenRateWithFeeFull} ${receiveToken?.name} / ${sharesTokenKey}`}
+                  value={`${formattedTokenRateWithFee} ${receiveToken?.symbol} / ${sharesTokenKey}`}
+                  fullValue={`${formattedTokenRateWithFeeFull} ${receiveToken?.symbol} / ${sharesTokenKey}`}
                   darkTextValue
                   showDropdownIcon
                 />

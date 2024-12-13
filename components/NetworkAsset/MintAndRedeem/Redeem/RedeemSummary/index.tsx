@@ -1,21 +1,9 @@
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Flex, Text } from '@chakra-ui/react'
-import { useSelector } from 'react-redux'
-import { Address } from 'viem'
 
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
-import { selectAddress } from '@/store/slices/account/'
-import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
-import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
-import {
-  selectRedeemAmountAsBigInt,
-  selectRedeemBridgeData,
-  selectWithdrawalFee,
-} from '@/store/slices/networkAssets/selectors'
-import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
-import { bigIntToNumberAsString } from '@/utils/bigint'
-import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
+import { useRedeemSummaryData } from '@/hooks/redeem/useRedeemSummaryData'
 import { RedeemSummaryConnector } from './connector'
 
 // TODO: Move to a better place? or componentize the dropdown?
@@ -49,51 +37,31 @@ export const RedeemSummaryCopy = {
 function RedeemSummary({
   accountantAddress,
   tellerAddress,
-  receiveToken,
   networkAssetName,
-  isBridgeRequired,
-  nativeTokenForBridgeFee,
-  receiveAssetAddress,
+  wantAssetAddress,
   chainId,
   bridgeFromChainId,
 }: RedeemSummaryConnector.Props) {
-  const userAddress = useSelector(selectAddress)
-  const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
-  const bridgeData = useSelector(selectRedeemBridgeData)
-
   const {
-    data: previewFee,
-    isSuccess: isPreviewFeeSuccess,
-    isLoading: isPreviewFeeLoading,
-    isError: isPreviewFeeError,
-    error: previewFeeError,
-  } = useGetPreviewFeeQuery(
-    {
-      shareAmount: redeemAmountAsBigInt,
-      bridgeData: bridgeData!,
-      contractAddress: tellerAddress!,
-      chainId: bridgeFromChainId!,
-    },
-    { skip: !userAddress || !redeemAmountAsBigInt || !isBridgeRequired || !bridgeData }
-  )
-
-  const { data: tokenPrice, isSuccess: tokenPriceSuccess } = useGetTokenPriceQuery('sei-network')
-  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery({
-    quote: receiveAssetAddress! as Address,
-    contractAddress: accountantAddress!,
-    chainId: chainId!,
-  })
-
-  const withdrawalFee = useSelector(selectWithdrawalFee)
-
-  const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawalFee)
-    : BigInt(0)
-
-  const formattedPrice = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 4 })
-  const formattedPriceFull = bigIntToNumberAsString(rateInQuoteWithFee, { maximumFractionDigits: 18 })
-
-  const formattedPreviewFee = previewFee?.feeAsString && tokenPrice ? Number(previewFee.feeAsString) * tokenPrice : 0
+    useGetTokenRateInQuote,
+    usePreviewFee,
+    withdrawalDestinationChainKey,
+    redemptionSourceChainKey,
+    redeemAmountAsBigInt,
+    withdrawalFee,
+    isBridgeRequired,
+    receiveToken,
+    nativeAsset,
+    formattedTokenRateWithFee,
+    formattedTokenRateWithFeeFull,
+    formattedPreviewFee,
+  } = useRedeemSummaryData()
+  const { data: previewFee, isLoading: isPreviewFeeLoading } = usePreviewFee
+  console.log('chainId', chainId)
+  console.log('receiveAssetAddress', wantAssetAddress)
+  console.log('accountantAddress', accountantAddress)
+  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess, status } = useGetTokenRateInQuote
+  console.log('tokenRateInQuote Status:', status)
 
   return (
     <Accordion allowToggle>
@@ -110,10 +78,10 @@ function RedeemSummary({
                   </IonTooltip>
                 </Flex>
                 <IonSkeleton minW="75px" isLoaded={!isPreviewFeeLoading}>
-                  <IonTooltip label={`${previewFee?.feeAsString} ${nativeTokenForBridgeFee?.toUpperCase()}`}>
+                  <IonTooltip label={redeemAmountAsBigInt ? `${previewFee?.feeAsString} ${nativeAsset?.symbol}` : '0'}>
                     <Text textAlign="right" variant="paragraph">
-                      {formattedPreviewFee
-                        ? `${previewFee?.truncatedFeeAsString} ${nativeTokenForBridgeFee?.toUpperCase()} (≈ ${formattedPreviewFee.toFixed(4)} USD)`
+                      {redeemAmountAsBigInt
+                        ? `${previewFee?.truncatedFeeAsString} ${nativeAsset?.symbol} (≈ ${formattedPreviewFee.toFixed(4)} USD)`
                         : '0'}
                     </Text>
                   </IonTooltip>
@@ -129,9 +97,9 @@ function RedeemSummary({
               </Flex>
               <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
                 <Flex align="center">
-                  <IonTooltip label={formattedPriceFull}>
+                  <IonTooltip label={formattedTokenRateWithFeeFull}>
                     <Text textAlign="right" variant="paragraph">
-                      {`${formattedPrice} ${receiveToken} / ${networkAssetName}`}
+                      {`${formattedTokenRateWithFee} ${receiveToken.symbol} / ${networkAssetName}`}
                     </Text>
                   </IonTooltip>
                   <AccordionIcon />
@@ -156,7 +124,7 @@ function RedeemSummary({
               <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
                 <IonTooltip label={tokenRateInQuote?.rateInQuoteSafeAsString}>
                   <Text textAlign="right" variant="paragraph" color="disabledText">
-                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken} / ${networkAssetName}`}
+                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken.symbol} / ${networkAssetName}`}
                   </Text>
                 </IonTooltip>
               </IonSkeleton>

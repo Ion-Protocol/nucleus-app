@@ -490,6 +490,12 @@ export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKe
   return tokensConfig[tokenKey]?.addresses[sourceChainKey as ChainKey]
 }
 
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectRedemptionTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKey) => {
+  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
+  return tokensConfig[tokenKey]?.addresses[redemptionDestinationChainKey as ChainKey]
+}
+
 // SHOULD memoize: Returns a new array; memoization avoids returning new references.
 export const selectReceiveTokens = createSelector(
   [selectNetworkAssetConfig, selectRedemptionDestinationChainKey],
@@ -511,6 +517,12 @@ export const selectReceiveTokenKey = (state: RootState): TokenKey | null => {
   )
 }
 
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectNativeAsset = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const coinGeckoAssetId = networkAssetConfig?.nativeCurrency
+  return coinGeckoAssetId
+}
 /////////////////////////////////////////////////////////////////////
 // Deposit amount input
 /////////////////////////////////////////////////////////////////////

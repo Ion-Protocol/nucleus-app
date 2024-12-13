@@ -28,7 +28,7 @@ export const useRedeemData = () => {
 
   // Token Allowance Query Hook
   // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
-  const { data: allowance } = useAllowanceQuery(
+  const useAllowance = useAllowanceQuery(
     {
       tokenAddress: sharesTokenAddress!,
       spenderAddress: atomicQueueContractAddress,
@@ -46,12 +46,7 @@ export const useRedeemData = () => {
 
   // Token Rate in Quote Query Hook
   // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
-  const {
-    data: tokenRateInQuote,
-    isLoading: isTokenRateInQuoteLoading,
-    isError: isTokenRateInQuoteError,
-    error: tokenRateInQuoteError,
-  } = useGetRateInQuoteSafeQuery(
+  const useGetTokenRateInQuote = useGetRateInQuoteSafeQuery(
     {
       quote: wantTokenAddress as Address,
       contractAddress: accountantAddress!,
@@ -64,8 +59,8 @@ export const useRedeemData = () => {
 
   // Apply Fee to Token Rate in Quote
   const withdrawalFee = useSelector(selectWithdrawalFee)
-  const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawalFee)
+  const rateInQuoteWithFee = useGetTokenRateInQuote.data?.rateInQuoteSafe
+    ? applyWithdrawalFeeReduction(BigInt(useGetTokenRateInQuote.data?.rateInQuoteSafe), withdrawalFee)
     : BigInt(0)
 
   // Bridge Preview Fee Selectors. Note: Only applies to withdrawal with Bridge
@@ -77,13 +72,7 @@ export const useRedeemData = () => {
 
   // Preview Fee Query Hook. Note: Only applies to withdrawal with Bridge
   // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
-  const {
-    data: previewFee,
-    isLoading: isPreviewFeeLoading,
-    isFetching: isPreviewFeeFetching,
-    isError: isPreviewFeeError,
-    error: previewFeeError,
-  } = useGetPreviewFeeQuery(
+  const usePreviewFee = useGetPreviewFeeQuery(
     {
       shareAmount: redeemAmount,
       bridgeData: redeemBridgeData!,
@@ -97,10 +86,10 @@ export const useRedeemData = () => {
   )
 
   return {
-    allowance,
-    tokenRateInQuote,
+    useAllowance,
+    useGetTokenRateInQuote,
     rateInQuoteWithFee,
     withdrawalFee,
-    previewFee,
+    usePreviewFee,
   }
 }

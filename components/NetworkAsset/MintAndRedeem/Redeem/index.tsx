@@ -113,7 +113,10 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       sharesTokenAddress
   )
 
-  const { allowance, tokenRateInQuote, previewFee, rateInQuoteWithFee } = useRedeemData()
+  const { useAllowance, useGetTokenRateInQuote, usePreviewFee, rateInQuoteWithFee } = useRedeemData()
+  const { data: allowance } = useAllowance
+  const { data: tokenRateInQuote } = useGetTokenRateInQuote
+  const { data: previewFee } = usePreviewFee
   const { handleRedeem, isLoading } = useRedeem()
 
   const handleRedeemClick = async () => {

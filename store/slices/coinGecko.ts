@@ -19,6 +19,7 @@ export const coinGeckoApi = createApi({
       return headers
     },
   }),
+  tagTypes: ['Asset'],
   endpoints: (builder) => ({
     getTokenPrice: builder.query<number, string>({
       query: (tokenId) => ({
@@ -28,6 +29,7 @@ export const coinGeckoApi = createApi({
           vs_currencies: 'usd',
         },
       }),
+      providesTags: (results, error, tokenId) => [{ type: 'Asset', id: tokenId }],
       transformResponse: (response: PriceResponse, _meta, tokenId) => {
         return response[tokenId]?.usd
       },

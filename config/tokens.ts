@@ -131,7 +131,6 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
       [ChainKey.ETHEREUM]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
     },
-    coinGeckoId: 'sei-network',
   },
   [TokenKey.TETH]: {
     key: TokenKey.TETH,
@@ -182,6 +181,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     addresses: {
       [ChainKey.ETHEREUM]: '0x',
     },
+    coinGeckoId: 'sei-network',
   },
   [TokenKey.DINERO]: {
     key: TokenKey.DINERO,
