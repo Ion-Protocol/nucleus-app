@@ -34,19 +34,13 @@ export const RedeemSummaryCopy = {
   },
 }
 
-function RedeemSummary({
-  accountantAddress,
-  tellerAddress,
-  networkAssetName,
-  wantAssetAddress,
-  chainId,
-  bridgeFromChainId,
-}: RedeemSummaryConnector.Props) {
+function RedeemSummary({}: RedeemSummaryConnector.Props) {
   const {
     useGetTokenRateInQuote,
     usePreviewFee,
     withdrawalDestinationChainKey,
     redemptionSourceChainKey,
+    sharesTokenKey,
     redeemAmountAsBigInt,
     withdrawalFee,
     isBridgeRequired,
@@ -57,11 +51,7 @@ function RedeemSummary({
     formattedPreviewFee,
   } = useRedeemSummaryData()
   const { data: previewFee, isLoading: isPreviewFeeLoading } = usePreviewFee
-  console.log('chainId', chainId)
-  console.log('receiveAssetAddress', wantAssetAddress)
-  console.log('accountantAddress', accountantAddress)
-  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess, status } = useGetTokenRateInQuote
-  console.log('tokenRateInQuote Status:', status)
+  const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetTokenRateInQuote
 
   return (
     <Accordion allowToggle>
@@ -99,7 +89,7 @@ function RedeemSummary({
                 <Flex align="center">
                   <IonTooltip label={formattedTokenRateWithFeeFull}>
                     <Text textAlign="right" variant="paragraph">
-                      {`${formattedTokenRateWithFee} ${receiveToken.symbol} / ${networkAssetName}`}
+                      {`${formattedTokenRateWithFee} ${receiveToken.symbol} / ${sharesTokenKey}`}
                     </Text>
                   </IonTooltip>
                   <AccordionIcon />
@@ -124,7 +114,7 @@ function RedeemSummary({
               <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
                 <IonTooltip label={tokenRateInQuote?.rateInQuoteSafeAsString}>
                   <Text textAlign="right" variant="paragraph" color="disabledText">
-                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken.symbol} / ${networkAssetName}`}
+                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken.symbol} / ${sharesTokenKey}`}
                   </Text>
                 </IonTooltip>
               </IonSkeleton>
