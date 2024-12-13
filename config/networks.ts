@@ -123,7 +123,16 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.EZETH,
+        TokenKey.WSTETH,
+        TokenKey.APXETH,
+        TokenKey.RSWETH,
+        TokenKey.RSETH,
+        TokenKey.WEETH,
+        TokenKey.SFRXETH,
+      ],
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     token: tokensConfig[TokenKey.SSETH],
@@ -253,7 +262,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
       wantTokens: {
-        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+        [ChainKey.ETHEREUM]: [
+          TokenKey.WETH,
+          TokenKey.EZETH,
+          TokenKey.WSTETH,
+          TokenKey.APXETH,
+          TokenKey.RSWETH,
+          TokenKey.RSETH,
+          TokenKey.WEETH,
+        ],
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
       withdrawalFee: defaultWithdrawalFee,
@@ -271,7 +288,15 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.EZETH,
+        TokenKey.WSTETH,
+        TokenKey.APXETH,
+        TokenKey.RSWETH,
+        TokenKey.RSETH,
+        TokenKey.WEETH,
+      ],
       [ChainKey.RARI]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.RARIETH],
