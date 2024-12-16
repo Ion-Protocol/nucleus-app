@@ -29,6 +29,12 @@ export const nucleusBackendApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: nucleusBackendBaseUrl,
     mode: 'cors',
+    // prepareHeaders: (headers) => {
+    //   headers.set('Access-Control-Allow-Origin', '*')
+    //   headers.set('Access-Control-Allow-Methods', 'GET')
+    //   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    //   return headers
+    // },
   }),
   endpoints: (builder) => ({
     // Keep the original single query endpoint

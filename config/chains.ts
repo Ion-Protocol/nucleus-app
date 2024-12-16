@@ -5,6 +5,7 @@ import { rari } from './tenderly'
 export interface Chain {
   name: string
   id?: number | null
+  nativeCurrency?: { name: string; symbol: string; decimals: number }
   contracts?: {
     merkelClaim?: `0x${string}`
   }

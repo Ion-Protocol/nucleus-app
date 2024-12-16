@@ -5,49 +5,47 @@ import { PointSystem } from './PointSystem'
 import { Token } from './Token'
 
 export interface TokenApyDataItem {
-  tokenKey: TokenKey
-  startDate: number
-  endDate: number
   distribution: number // Token distribution within the time range in USD
+  endDate: number
+  startDate: number
+  tokenKey: TokenKey
 }
 
 export interface NetworkAsset {
-  token: Token
-  description: string
+  apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
   chain: ChainKey
-  deployedOn: ChainKey
   comingSoon?: boolean
-  redeemComingSoon?: boolean
+  contracts: Contracts
+  defaultMintChain: ChainKey
+  defaultRedemptionChain: ChainKey
+  deployedOn: ChainKey
+  description: string
   isExternal?: boolean
   isNewDeployment?: boolean
-  partnerUrl?: string
-  manuallyPaused?: boolean
-  sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-  defaultRedemptionChain: ChainKey
-  sourceRedemptionChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-  redemptionChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-  contracts: Contracts
   layerZeroChainSelector?: number
+  manuallyPaused?: boolean
+  nativeCurrency?: Token
+  partnerUrl?: string
+  points: PointSystem[]
+  redeem: {
+    layerZeroChainSelector: number
+    redemptionDestinationChain: ChainKey
+    redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
+    redemptionSourceAsset: TokenKey
+    redemptionSourceChain: ChainKey
+    redemptionSourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
+    wantTokens: Partial<Record<ChainKey, TokenKey[]>>
+    withdrawalChain: ChainKey
+    withdrawalFee: number
+  }
+  receiveOn: ChainKey
+  redeemComingSoon?: boolean
+  showRewardsAndHistory?: boolean
+  sourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
   sourceTokens: Partial<{
     [chain in ChainKey]: TokenKey[]
   }>
-  wantTokens: Partial<{
-    [chain in ChainKey]: TokenKey[]
-  }>
-  receiveOn: ChainKey
-  points: PointSystem[]
-  apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
-  showRewardsAndHistory?: boolean
-  redeem: {
-    redemptionSourceChain: ChainKey
-    redemptionSourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-    redemptionSourceAsset: TokenKey
-    redemptionDestinationChain: ChainKey
-    redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-    withdrawalChain: ChainKey
-    layerZeroChainSelector: number
-    wantTokens: Partial<Record<ChainKey, TokenKey[]>>
-  }
+  token: Token
 }
 
 export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

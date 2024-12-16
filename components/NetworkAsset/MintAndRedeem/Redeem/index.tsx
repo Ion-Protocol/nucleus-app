@@ -4,7 +4,6 @@ import RedeemSummary from './RedeemSummary'
 
 import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { atomicQueueContractAddress } from '@/config/constants'
-import { tokensConfig } from '@/config/tokens'
 import { useRedeemData } from '@/hooks/redeem/useRedeemData'
 import { RootState } from '@/store'
 import { selectAddress } from '@/store/slices/account'
@@ -16,19 +15,20 @@ import {
   selectIsBridgeRequired,
   selectNetworkAssetConfig,
   selectReceiveTokenKey,
-  selectReceiveTokens,
   selectRedeemAmountAsBigInt,
   selectRedeemBridgeData,
   selectRedeemLayerZeroChainSelector,
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
+  selectWantAssetAddress,
+  selectWithdrawalDestinationExplorerBaseUrl,
+  selectWithdrawalSourceExplorerBaseUrl,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
-import { RedeemConfig } from '@/types/Redeem'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
 import { calculateRedeemDeadline } from '@/utils/time'
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
 import RedeemChainSelect from './RedeemChainSelect'
@@ -37,20 +37,11 @@ import RedeemTokenInput from './RedeemTokenInput'
 interface RedeemProps extends ChakraProps {}
 
 export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
-  const renderCount = useRef(0)
-
-  useEffect(() => {
-    renderCount.current += 1
-    console.log(`redeem component rendered ${renderCount.current} times`)
-  })
-
   const deadline = calculateRedeemDeadline() // default value in function is 3 days
   /**
    ******************************************************************************
-   * Selectors
-   * Note maybe should happen outside of this hook.
-   * Data can be checked and transformed also allowing for disable of button
-   * and transformation of data to be displayed in the modal.
+   * Selectors to validate data before submit
+   * Room for cleanup
    ******************************************************************************
    */
   const userAddress = useSelector(selectAddress)
@@ -64,6 +55,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const destinationChainId = useSelector(selectDestinationChainId) // Id of chain where withdrawal will take place
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
   const destinationChainKey = useSelector(selectRedemptionDestinationChainKey)
+  const sourceExplorerBaseUrl = useSelector(selectWithdrawalSourceExplorerBaseUrl)
+  const destinationExplorerBaseUrl = useSelector(selectWithdrawalDestinationExplorerBaseUrl)
 
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
 
@@ -79,8 +72,9 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
    * Selectors for the redeem amount, the accountant address, the teller contract address,
    * the layer zero chain selector, and the token keys
    */
+  const sharesTokenAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'boringVault'))
   const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
-  const tokenKeys = useSelector(selectReceiveTokens)
+  const wantTokenAddress = useSelector(selectWantAssetAddress)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
 
   /**
@@ -112,31 +106,17 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       redemptionSourceChainKey &&
       destinationChainKey &&
       accountantAddress &&
-      tellerContractAddress
+      tellerContractAddress &&
+      sourceExplorerBaseUrl &&
+      destinationExplorerBaseUrl &&
+      wantTokenAddress &&
+      sharesTokenAddress
   )
 
-  const sharesTokenAddress = networkAssetConfig?.token.addresses[redemptionSourceChainKey!]
-  const sharesTokenKey = networkAssetConfig?.token.key
-
-  const effectiveWantTokenKey = wantTokenKey || tokenKeys[0] || null
-
-  const wantTokenAddress = effectiveWantTokenKey
-    ? tokensConfig[effectiveWantTokenKey as keyof typeof tokensConfig].addresses[destinationChainKey!]
-    : null
-  // Build config object
-  const config: RedeemConfig = {
-    userAddress: userAddress!,
-    redeemAmount,
-    sharesTokenAddress: sharesTokenAddress as Address,
-    wantTokenAddress: wantTokenAddress as Address,
-    destinationChainId: destinationChainId!,
-    redemptionSourceChainId: redemptionSourceChainId!,
-    isBridgeRequired,
-    bridgeData: bridgeData!,
-    deadline: BigInt(calculateRedeemDeadline()),
-  }
-
-  const { allowance, tokenRateInQuote, previewFee } = useRedeemData(config)
+  const { useAllowance, useGetTokenRateInQuote, usePreviewFee, rateInQuoteWithFee } = useRedeemData()
+  const { data: allowance } = useAllowance
+  const { data: tokenRateInQuote } = useGetTokenRateInQuote
+  const { data: previewFee } = usePreviewFee
   const { handleRedeem, isLoading } = useRedeem()
 
   const handleRedeemClick = async () => {
@@ -148,8 +128,10 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       console.error('Token rate in quote is not set')
       return
     }
-    // Apply 0.2% fee to the rateInQuoteSafe
-    const rateInQuoteWithFee = (BigInt(tokenRateInQuote.rateInQuoteSafe) * BigInt(9980)) / BigInt(10000)
+    if (!sourceExplorerBaseUrl || !destinationExplorerBaseUrl) {
+      console.error('Source or destination explorer base URL is not set')
+      return
+    }
 
     const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
       deadline,
@@ -169,7 +151,6 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
 
     if (isBridgeRequired) {
       if (!previewFee?.fee || !bridgeData || !tellerContractAddress) {
-        console.error('Preview fee is not set')
         return
       }
       const redeemWithBridgeData = {
@@ -190,6 +171,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
         redemptionSourceChainId,
         destinationChainId,
         redeemWithBridgeData,
+        sourceExplorerBaseUrl,
+        destinationExplorerBaseUrl,
       })
     } else {
       handleRedeem({
@@ -202,6 +185,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
         isBridgeRequired,
         redemptionSourceChainId,
         destinationChainId,
+        sourceExplorerBaseUrl,
+        destinationExplorerBaseUrl,
       })
     }
   }

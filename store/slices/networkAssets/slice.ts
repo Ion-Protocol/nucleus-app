@@ -1,9 +1,9 @@
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
+import { sanitizeDepositInput } from '@/utils/string'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { extraReducers } from './extraReducers'
 import { initialState } from './initialState'
-import { sanitizeDepositInput } from '@/utils/string'
 
 const networkAssetsSlice = createSlice({
   name: 'networkAssets',
@@ -25,7 +25,7 @@ const networkAssetsSlice = createSlice({
       state.redeemDestinationChain = ChainKey.ETHEREUM
     },
     resetSourceChain: (state) => {
-      state.sourceChain = ChainKey.ETHEREUM
+      state.sourceChain = null
     },
     setSelectedSourceToken: (state, action: PayloadAction<{ tokenKey: TokenKey }>) => {
       state.selectedSourceToken = action.payload.tokenKey

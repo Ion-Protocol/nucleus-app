@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Address } from 'viem'
 
-import { atomicQueueContractAddress, etherscanBaseUrl, seiExplorerBaseUrl } from '@/config/constants'
+import { atomicQueueContractAddress } from '@/config/constants'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
 import { selectNetworkId } from '@/store/slices/chain'
 import { useApproveMutation } from '@/store/slices/erc20Api'
@@ -52,6 +52,8 @@ type BaseRedeemData = {
   wantTokenAddress: Address
   redemptionSourceChainId: number
   destinationChainId: number
+  sourceExplorerBaseUrl?: string
+  destinationExplorerBaseUrl?: string
   atomicRequestData: {
     atomicRequestArgs: AtomicRequestArgs
     atomicRequestOptions: AtomicRequestOptions
@@ -186,6 +188,8 @@ export const useRedeem = () => {
       allowance,
       atomicRequestData,
       sharesTokenAddress,
+      sourceExplorerBaseUrl,
+      destinationExplorerBaseUrl,
     } = data
 
     dispatch(setTitle('Redeem Status'))
@@ -229,14 +233,6 @@ export const useRedeem = () => {
       try {
         dispatch(setDialogStep({ stepId: bridgeStepId, newState: 'active' }))
         const { previewFeeAsBigInt, layerZeroChainSelector, bridgeData, tellerContractAddress } = redeemWithBridgeData
-        console.log('Bridge parameters:', {
-          shareAmount: redeemAmount,
-          bridgeData: bridgeData,
-          contractAddress: tellerContractAddress,
-          chainId: redemptionSourceChainId,
-          fee: previewFeeAsBigInt,
-        })
-
         if (!previewFeeAsBigInt) {
           throw new Error('Bridge fee is undefined')
         }
@@ -282,12 +278,12 @@ export const useRedeem = () => {
         if (bridgeReceipt.isError) {
           throw new Error(`Bridge Receipt Error: ${bridgeReceipt.error}`)
         }
-
+        console.log('sourceExplorerBaseUrl', sourceExplorerBaseUrl)
         dispatch(
           setDialogStep({
             stepId: bridgeStepId,
             newState: 'completed',
-            link: `${seiExplorerBaseUrl}tx/${bridgeReceipt.data?.transactionHash}`,
+            link: `${sourceExplorerBaseUrl}/tx/${bridgeReceipt.data?.transactionHash}`,
           })
         )
       } catch (error) {
@@ -304,23 +300,9 @@ export const useRedeem = () => {
       }
     }
 
-    console.log('chainId', networkId)
-    console.log('destinationChainId', destinationChainId)
     //////////////////////////////////////////////////////////////////////////
     // 2. Approve shares token for withdrawal if needed
     //////////////////////////////////////////////////////////////////////////
-    // if (networkId !== destinationChainId) {
-    //   console.log('Switching to destination chain for approval:', {
-    //     from: networkId,
-    //     to: destinationChainId,
-    //   })
-    //   await switchToChain(destinationChainId)
-
-    //   // Verify chain switch was successful
-    //   if (networkId !== destinationChainId) {
-    //     throw new Error(`Failed to switch to destination chain ${destinationChainId}`)
-    //   }
-    // }
     await switchToChain(destinationChainId)
     // Then wait a short moment for the chain switch to take effect
     await new Promise((resolve) => setTimeout(resolve, 500))
@@ -352,7 +334,7 @@ export const useRedeem = () => {
             setDialogStep({
               stepId: approveStepId,
               newState: 'completed',
-              link: `${etherscanBaseUrl}tx/${approvalReceipt.data?.transactionHash}`,
+              link: `${destinationExplorerBaseUrl}/tx/${approvalReceipt.data?.transactionHash}`,
             })
           )
         }
@@ -405,15 +387,6 @@ export const useRedeem = () => {
       //     resolve('0x123...')
       //   }, 2000) // 2 second delay
       // })
-
-      console.log('Transaction response:', {
-        hash: updateAtomicRequestTxHash,
-        env: process.env.NODE_ENV,
-        timestamp: new Date().toISOString(),
-      })
-
-      console.log('updateAtomicRequestTxHash in hook:', updateAtomicRequestTxHash)
-
       const atomicRequestReceipt = await queryAtomicRequestReceipt({ hash: updateAtomicRequestTxHash })
 
       if (atomicRequestReceipt.isError) {
@@ -425,7 +398,7 @@ export const useRedeem = () => {
           setDialogStep({
             stepId: requestStepId,
             newState: 'completed',
-            link: `${etherscanBaseUrl}tx/${atomicRequestReceipt.data?.transactionHash}`,
+            link: `${destinationExplorerBaseUrl}/tx/${atomicRequestReceipt.data?.transactionHash}`,
           })
         )
         dispatch(
