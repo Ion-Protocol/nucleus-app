@@ -1,3 +1,4 @@
+export type OrderStatus = 'all' | 'pending' | 'completed' | 'cancelled'
 export interface Order {
   id: number
   user: string
@@ -14,7 +15,7 @@ export interface Order {
   ending_log_index: number | null
   ending_transaction_index: number | null
   ending_block_number: string | null
-  status: 'pending' | 'fulfilled' | 'cancelled'
+  status: OrderStatus
   queue_address: string
   chain_id: number
   offer_amount_spent: string
