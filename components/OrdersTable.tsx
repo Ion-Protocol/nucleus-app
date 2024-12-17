@@ -1,6 +1,6 @@
 import { Order, PaginatedResponse } from '@/types/Order'
 import { Box, Table, useDisclosure, VStack } from '@chakra-ui/react'
-import { getCoreRowModel, getSortedRowModel, Row, SortingState, useReactTable } from '@tanstack/react-table'
+import { getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
 import React, { useCallback, useState } from 'react'
 import { createOrderColumns } from '../utils/tableColumns'
 import { Pagination } from './table/Pagination'
@@ -11,8 +11,7 @@ import WithdrawDetailsModal from './Withdraw/WithdrawalDetailModal/WithdrawlDeta
 interface OrdersTableProps {
   data: Order[]
   pagination: PaginatedResponse['pagination']
-  onCancelOrder: (orderId: number) => void
-  onRowClick: (row: Row<Order>) => void
+  onCancelOrder: (order: Order) => void
   onPageChange: (page: number) => void
   onPageSizeChange: (pageSize: number) => void
 }

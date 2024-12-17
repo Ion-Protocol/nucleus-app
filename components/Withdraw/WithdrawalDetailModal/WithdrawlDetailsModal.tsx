@@ -52,7 +52,6 @@ const WithdrawDetailsModal = ({
     created_transaction_hash,
     ending_transaction_hash,
   } = order
-  console.table(order)
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey

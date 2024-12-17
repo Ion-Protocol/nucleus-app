@@ -9,7 +9,7 @@ import { StatusBadge } from '../components/table/StatusBadge'
 
 const columnHelper = createColumnHelper<Order>()
 
-export const createOrderColumns = (onCancelOrder: (orderId: number) => void) => [
+export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
   columnHelper.accessor('status', {
     header: 'Status',
     cell: (info) => <StatusBadge status={info.getValue()} />,
@@ -43,7 +43,7 @@ export const createOrderColumns = (onCancelOrder: (orderId: number) => void) => 
           size="sm"
           onClick={(e) => {
             e.stopPropagation()
-            onCancelOrder(info.getValue())
+            onCancelOrder(info.row.original)
           }}
         >
           Cancel

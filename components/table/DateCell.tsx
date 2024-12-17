@@ -6,6 +6,6 @@ interface DateCellProps {
 }
 
 export function DateCell({ date, emptyValue = '-' }: DateCellProps) {
-  if (!date) return <>{emptyValue}</>
+  if (!date || date === '0') return <>{emptyValue}</>
   return <>{format(fromUnixTime(Number(date)), 'PP')}</>
 }

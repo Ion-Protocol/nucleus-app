@@ -1,6 +1,7 @@
 import { Badge, Flex, Heading, Select, Text, useDisclosure } from '@chakra-ui/react'
 
 import OrdersTable from '@/components/OrdersTable'
+import CancelWithdrawDialog from '@/components/Withdraw/CancelWithdrawDialog/CancelWithdrawDialog'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
 import { Order, OrderStatus, PaginatedResponse } from '@/types/Order'
@@ -12,6 +13,7 @@ import { useSelector } from 'react-redux'
 export default function Withdrawals() {
   const userAddress = useSelector(selectAddress)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [selectedOrderToCancel, setSelectedOrderToCancel] = useState<Order | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [status, setStatus] = useState<OrderStatus | 'all'>('all')
@@ -33,21 +35,6 @@ export default function Withdrawals() {
     }
   )
 
-  console.log(orders)
-
-  // In a real application, this would be fetched from an API
-  // const paginatedData: PaginatedResponse = {
-  //   data: mockOrders,
-  //   pagination: {
-  //     currentPage,
-  //     pageSize,
-  //     totalItems: mockOrders.length,
-  //     totalPages: Math.ceil(mockOrders.length / pageSize),
-  //     hasNextPage: currentPage * pageSize < mockOrders.length,
-  //     hasPreviousPage: currentPage > 1,
-  //   },
-  // }
-
   const paginatedData: PaginatedResponse = {
     data: orders?.data || [],
     pagination: orders?.pagination || {
@@ -60,9 +47,9 @@ export default function Withdrawals() {
     },
   }
 
-  const handleCancelOrder = (orderId: number) => {
-    console.log(`Cancelling order ${orderId}`)
-    // Cancel logic here modal here maybe
+  const handleCancelOrder = (order: Order) => {
+    setSelectedOrderToCancel(order)
+    onOpen()
   }
 
   const handleRowClick = (row: Row<Order>) => {
@@ -98,10 +85,10 @@ export default function Withdrawals() {
         data={paginatedData.data}
         pagination={paginatedData.pagination}
         onCancelOrder={handleCancelOrder}
-        onRowClick={handleRowClick}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
       />
+      <CancelWithdrawDialog isOpen={isOpen} onClose={onClose} order={selectedOrderToCancel} />
     </Flex>
   )
 }

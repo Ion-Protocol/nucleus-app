@@ -11,7 +11,7 @@ export function TableBody({ rows, handleRowClick }: TableBodyProps) {
   return (
     <Tbody>
       {rows.map((row) => (
-        <Tr key={row.id} onClick={() => handleRowClick(row.original)}>
+        <Tr key={row.id} onClick={() => handleRowClick(row.original)} _hover={{ cursor: 'pointer' }}>
           {row.getVisibleCells().map((cell) => (
             <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
           ))}
