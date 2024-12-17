@@ -27,7 +27,15 @@ interface RewardsAPYResponse {
 // Define a service using a base URL and expected endpoints
 export const nucleusBackendApi = createApi({
   reducerPath: 'nucleusBackendApi',
-  baseQuery: fetchBaseQuery({ baseUrl: nucleusBackendBaseUrl }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: nucleusBackendBaseUrl,
+    prepareHeaders: (headers) => {
+      headers.set('Access-Control-Allow-Origin', '*')
+      headers.set('Access-Control-Allow-Methods', 'GET')
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+      return headers
+    },
+  }),
   endpoints: (builder) => ({
     // Keep the original single query endpoint
     getDefaultYieldAPY: builder.query<RewardsAPYResponse, RewardsAPYParams>({

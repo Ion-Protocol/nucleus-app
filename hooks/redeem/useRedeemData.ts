@@ -1,37 +1,36 @@
 import { atomicQueueContractAddress } from '@/config/constants'
 import { RootState } from '@/store'
+import { selectAddress } from '@/store/slices/account'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
 import { useAllowanceQuery } from '@/store/slices/erc20Api'
 import {
   selectContractAddressByName,
+  selectDestinationChainId,
+  selectIsBridgeRequired,
+  selectRedeemAmountAsBigInt,
   selectRedeemBridgeData,
-  selectRedeemLayerZeroChainSelector,
+  selectRedemptionSourceChainId,
+  selectWantAssetAddress,
+  selectWithdrawalFee,
 } from '@/store/slices/networkAssets/selectors'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
-import { RedeemConfig } from '@/types/Redeem'
+import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
-import { useAccount } from 'wagmi'
 
-export const useRedeemData = (config: RedeemConfig) => {
-  const { address: userAddress } = useAccount()
+export const useRedeemData = () => {
+  // Selectors that apply to multiple query hooks
+  const userAddress = useSelector(selectAddress)
 
-  const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
-  const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
-  const layerZeroChainSelector = useSelector((state: RootState) => selectRedeemLayerZeroChainSelector(state))
+  // Token Allowance Query Selectors
+  const sharesTokenAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'boringVault'))
+  const destinationChainId = useSelector(selectDestinationChainId) // Destination for want asset
 
-  const {
-    sharesTokenAddress,
-    wantTokenAddress,
-    destinationChainId,
-    redemptionSourceChainId,
-    redeemAmount,
-    bridgeData,
-  } = config
-
-  const { data: allowance } = useAllowanceQuery(
+  // Token Allowance Query Hook
+  // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
+  const useAllowance = useAllowanceQuery(
     {
-      tokenAddress: sharesTokenAddress as `0x${string}`,
+      tokenAddress: sharesTokenAddress!,
       spenderAddress: atomicQueueContractAddress,
       userAddress: userAddress!,
       chainId: destinationChainId!,
@@ -41,12 +40,13 @@ export const useRedeemData = (config: RedeemConfig) => {
     }
   )
 
-  const {
-    data: tokenRateInQuote,
-    isLoading: isTokenRateInQuoteLoading,
-    isError: isTokenRateInQuoteError,
-    error: tokenRateInQuoteError,
-  } = useGetRateInQuoteSafeQuery(
+  // Token Rate in Quote Selectors
+  const accountantAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'accountant'))
+  const wantTokenAddress = useSelector(selectWantAssetAddress)
+
+  // Token Rate in Quote Query Hook
+  // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
+  const useGetTokenRateInQuote = useGetRateInQuoteSafeQuery(
     {
       quote: wantTokenAddress as Address,
       contractAddress: accountantAddress!,
@@ -57,15 +57,22 @@ export const useRedeemData = (config: RedeemConfig) => {
     }
   )
 
-  const redeemBridgeData = useSelector(selectRedeemBridgeData)
+  // Apply Fee to Token Rate in Quote
+  const withdrawalFee = useSelector(selectWithdrawalFee)
+  const rateInQuoteWithFee = useGetTokenRateInQuote.data?.rateInQuoteSafe
+    ? applyWithdrawalFeeReduction(BigInt(useGetTokenRateInQuote.data?.rateInQuoteSafe), withdrawalFee)
+    : BigInt(0)
 
-  const {
-    data: previewFee,
-    isLoading: isPreviewFeeLoading,
-    isFetching: isPreviewFeeFetching,
-    isError: isPreviewFeeError,
-    error: previewFeeError,
-  } = useGetPreviewFeeQuery(
+  // Bridge Preview Fee Selectors. Note: Only applies to withdrawal with Bridge
+  const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
+  const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
+  const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId) // Id of chain where redemption starts
+  const redeemBridgeData = useSelector(selectRedeemBridgeData)
+  const isBridgeRequired = useSelector(selectIsBridgeRequired)
+
+  // Preview Fee Query Hook. Note: Only applies to withdrawal with Bridge
+  // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors
+  const usePreviewFee = useGetPreviewFeeQuery(
     {
       shareAmount: redeemAmount,
       bridgeData: redeemBridgeData!,
@@ -74,46 +81,15 @@ export const useRedeemData = (config: RedeemConfig) => {
     },
     {
       skip:
-        !redeemBridgeData ||
-        !tellerContractAddress ||
-        !redemptionSourceChainId ||
-        !redeemAmount ||
-        layerZeroChainSelector === 0,
+        !redeemBridgeData || !tellerContractAddress || !redemptionSourceChainId || !redeemAmount || !isBridgeRequired,
     }
   )
-  //   WAGMI Hooks as fallback for refactoring
-  // Allowance check
-  //     const { data: allowance } = useReadContract({
-  //       address: sharesTokenAddress,
-  //       abi: erc20Abi,
-  //       functionName: 'allowance',
-  //       args: [userAddress!, atomicQueueContractAddress as `0x${string}`],
-  //       chainId: destinationChainId,
-  //     },
-  //   )
-
-  //     // Rate in quote
-  //     const { data: tokenRateInQuote } = useReadContract({
-  //       address: accountantAddress as `0x${string}`,
-  //       abi: AccountantWithRateProvidersAbi,
-  //       functionName: 'getRateInQuoteSafe',
-  //       args: [wantTokenAddress],
-  //       chainId: destinationChainId,
-  //     })
-
-  //     // Preview fee
-  //     const { data: previewFee } = useReadContract({
-  //       address: tellerContractAddress as `0x${string}`,
-  //       abi: tellerABI,
-  //       functionName: 'previewFee',
-  //       args: [redeemAmount, bridgeData],
-  //       chainId: redemptionSourceChainId,
-  //       enabled: Boolean(bridgeData && tellerContractAddress),
-  //     })
 
   return {
-    allowance,
-    tokenRateInQuote,
-    previewFee,
+    useAllowance,
+    useGetTokenRateInQuote,
+    rateInQuoteWithFee,
+    withdrawalFee,
+    usePreviewFee,
   }
 }

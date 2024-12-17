@@ -392,7 +392,6 @@ export const useRedeem = () => {
       if (atomicRequestReceipt.isError) {
         throw new Error(`Atomic Request Error: ${atomicRequestReceipt.error}`)
       }
-      console.log('destinationExplorerBaseUrl', destinationExplorerBaseUrl)
 
       if (updateAtomicRequestTxHash) {
         dispatch(
