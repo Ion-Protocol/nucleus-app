@@ -1,18 +1,20 @@
-import { Badge, Flex, Heading, Select, Text } from '@chakra-ui/react'
+import { Badge, Flex, Heading, Select, Text, useDisclosure } from '@chakra-ui/react'
 
 import OrdersTable from '@/components/OrdersTable'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
-import { OrderStatus, PaginatedResponse } from '@/types/Order'
+import { Order, OrderStatus, PaginatedResponse } from '@/types/Order'
+import { Row } from '@tanstack/react-table'
 import { ClockArrowUp } from 'lucide-react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 export default function Withdrawals() {
   const userAddress = useSelector(selectAddress)
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
-  const [status, setStatus] = useState<OrderStatus>('all')
+  const [status, setStatus] = useState<OrderStatus | 'all'>('all')
   const {
     data: orders,
     isLoading,
@@ -63,6 +65,10 @@ export default function Withdrawals() {
     // Cancel logic here modal here maybe
   }
 
+  const handleRowClick = (row: Row<Order>) => {
+    console.log(row)
+  }
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
   }
@@ -92,6 +98,7 @@ export default function Withdrawals() {
         data={paginatedData.data}
         pagination={paginatedData.pagination}
         onCancelOrder={handleCancelOrder}
+        onRowClick={handleRowClick}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
       />

@@ -17,7 +17,7 @@ export type WithdrawalParams = {
   user: Address
   vaultAddress?: Address
   chainId?: number
-  status?: OrderStatus
+  status?: OrderStatus | 'all'
   all?: boolean
   page?: number
   limit?: number

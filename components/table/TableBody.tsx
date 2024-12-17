@@ -4,13 +4,14 @@ import { Row, flexRender } from '@tanstack/react-table'
 
 interface TableBodyProps {
   rows: Row<Order>[]
+  handleRowClick: (order: Order) => void
 }
 
-export function TableBody({ rows }: TableBodyProps) {
+export function TableBody({ rows, handleRowClick }: TableBodyProps) {
   return (
     <Tbody>
       {rows.map((row) => (
-        <Tr key={row.id}>
+        <Tr key={row.id} onClick={() => handleRowClick(row.original)}>
           {row.getVisibleCells().map((cell) => (
             <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
           ))}

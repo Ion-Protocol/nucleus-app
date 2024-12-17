@@ -1,3 +1,4 @@
+import { FormattedAmount } from '@/components/table/FormattedAmount'
 import { Order } from '@/types/Order'
 import { Button } from '@chakra-ui/react'
 import { createColumnHelper } from '@tanstack/react-table'
@@ -19,7 +20,7 @@ export const createOrderColumns = (onCancelOrder: (orderId: number) => void) => 
   }),
   columnHelper.accessor('amount', {
     header: ({ column }) => <SortableHeader column={column}>Amount</SortableHeader>,
-    cell: (info) => info.getValue(),
+    cell: (info) => <FormattedAmount amount={info.getValue()} />,
   }),
   columnHelper.accessor('deadline', {
     header: ({ column }) => <SortableHeader column={column}>Deadline</SortableHeader>,
@@ -34,10 +35,17 @@ export const createOrderColumns = (onCancelOrder: (orderId: number) => void) => 
     cell: (info) => <DateCell date={info.getValue()} />,
   }),
   columnHelper.accessor('id', {
-    header: 'Action',
+    header: '',
     cell: (info) =>
       info.row.original.status === 'pending' ? (
-        <Button colorScheme="red" size="sm" onClick={() => onCancelOrder(info.getValue())}>
+        <Button
+          colorScheme="red"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation()
+            onCancelOrder(info.getValue())
+          }}
+        >
           Cancel
         </Button>
       ) : null,

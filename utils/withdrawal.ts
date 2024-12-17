@@ -1,3 +1,5 @@
+import { tokensConfig } from '@/config/tokens'
+import { Address } from 'viem'
 import { WAD } from './bigint'
 
 export const calculateWithdrawalFee = (amount: bigint, feePercentage: number) => {
@@ -21,4 +23,15 @@ export const applyWithdrawalFeeReduction = (amount: bigint, feePercentage: numbe
 
   // Multiply by adjusted basis points and divide by 10000
   return (amount * basisPoints) / BigInt(10000)
+}
+
+const addressToSymbolMap = Object.values(tokensConfig).reduce<Record<string, string>>((map, token) => {
+  Object.entries(token.addresses).forEach(([_, address]) => {
+    map[address.toLowerCase()] = token.symbol
+  })
+  return map
+}, {})
+
+export const getSymbolByAddress = (address: Address) => {
+  return addressToSymbolMap[address.toLowerCase()] || null // Return null if address not found
 }

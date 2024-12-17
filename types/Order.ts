@@ -1,9 +1,11 @@
-export type OrderStatus = 'all' | 'pending' | 'completed' | 'cancelled'
+import { Address } from 'viem'
+
+export type OrderStatus = 'pending' | 'fulfilled' | 'cancelled'
 export interface Order {
   id: number
-  user: string
-  offer_token: string
-  want_token: string
+  user: Address
+  offer_token: Address
+  want_token: Address
   amount: string
   deadline: string
   atomic_price: string
