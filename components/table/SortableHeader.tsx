@@ -13,9 +13,15 @@ export function SortableHeader<T>({ column, children }: SortableHeaderProps<T>) 
     <Button
       variant="ghost"
       _hover={'none'}
+      _active={{ bg: 'transparent' }}
+      padding={0}
+      display={'flex'}
+      justifyContent={'flex-start'}
       fontSize={'inherit'}
       color={'inherit'}
+      fontWeight={'inherit'}
       onClick={() => column.toggleSorting()}
+      marginTop={0}
       rightIcon={
         column.getIsSorted() === 'asc' ? (
           <ArrowUp size={16} />

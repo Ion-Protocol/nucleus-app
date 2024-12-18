@@ -1,3 +1,4 @@
+import { Flex } from '@chakra-ui/react'
 import { format, fromUnixTime } from 'date-fns'
 
 interface DateCellProps {
@@ -7,5 +8,5 @@ interface DateCellProps {
 
 export function DateCell({ date, emptyValue = '-' }: DateCellProps) {
   if (!date || date === '0') return <>{emptyValue}</>
-  return <>{format(fromUnixTime(Number(date)), 'PP')}</>
+  return <Flex>{format(fromUnixTime(Number(date)), 'PP')}</Flex>
 }

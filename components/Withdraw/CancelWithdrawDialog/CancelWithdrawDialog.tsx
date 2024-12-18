@@ -1,6 +1,10 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
+import { atomicQueueContractAddress } from '@/config/constants'
+import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
+import { useWaitForTransactionReceiptQuery } from '@/store/slices/transactionReceiptApt'
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
+import { prepareAtomicRequestData } from '@/utils/atomicRequest'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
@@ -27,6 +31,15 @@ interface CancelWithdrawDialogProps {
 }
 
 function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogProps) {
+  const [updateAtomicRequest, { isLoading, isUninitialized, isError, data }] = useUpdateAtomicRequestMutation()
+  const {
+    data: txReceipt,
+    isLoading: isTxReceiptLoading,
+    isError: isTxReceiptError,
+    isSuccess: isTxReceiptSuccess,
+    isFetching: isTxReceiptFetching,
+    isUninitialized: isTxReceiptUninitialized,
+  } = useWaitForTransactionReceiptQuery({ hash: data! }, { skip: !data })
   const cancelRef = useRef<HTMLButtonElement>(null)
   if (!order) return null
   const {
@@ -51,6 +64,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
     created_transaction_hash,
     ending_transaction_hash,
   } = order
+  console.table(order)
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
@@ -65,9 +79,32 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
   const filledPrice = offerAmountSpentAsNumber / wantAmountRecAsNumber
 
   const handleCancelOrder = () => {
-    console.log('cancel order')
-    console.table(order)
+    const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
+      Number(deadline), // Convert string to number
+      BigInt(atomic_price),
+      BigInt(0), // shares amount set to zero to cancel order
+      offer_token,
+      want_token,
+      atomicQueueContractAddress,
+      1 // destination chain id
+    )
+
+    updateAtomicRequest({
+      atomicRequestArg: atomicRequestArgs,
+      atomicRequestOptions: atomicRequestOptions,
+    })
   }
+
+  console.log('mutation', isLoading, isUninitialized, isError, data)
+  console.log(
+    'tx receipt',
+    isTxReceiptLoading,
+    isTxReceiptFetching,
+    isTxReceiptUninitialized,
+    isTxReceiptError,
+    isTxReceiptSuccess,
+    txReceipt
+  )
 
   return (
     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
@@ -78,11 +115,14 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            <Flex gap={2} justifyContent="center" alignItems="center">
-              <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-              <Text>{getSymbolByAddress(offer_token)}</Text>
-              <ArrowRight />
-              {status === 'pending' && <Text>Pending...</Text>}
+            <Flex direction={'column'} alignItems={'center'}>
+              <Flex gap={2} justifyContent="center" alignItems="center">
+                <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
+                <Text>{getSymbolByAddress(offer_token)}</Text>
+                <ArrowRight />
+                {status === 'pending' && <Text>Pending...</Text>}
+              </Flex>
+              <Text>Are you sure you want to cancel this transaction?</Text>
             </Flex>
             {/* Request */}
             <Heading as="h4" size="md">
@@ -121,7 +161,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
           </AlertDialogBody>
 
           <AlertDialogFooter display="flex" flexDirection="column" gap={2}>
-            <Button onClick={handleCancelOrder} width="100%" colorScheme="red">
+            <Button onClick={handleCancelOrder} width="100%" colorScheme="red" background={'red'}>
               Cancel
             </Button>
             <Button ref={cancelRef} onClick={onClose} width="100%">

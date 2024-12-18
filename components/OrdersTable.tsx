@@ -1,8 +1,12 @@
+import { selectAddress } from '@/store/slices/account'
 import { Order, PaginatedResponse } from '@/types/Order'
-import { Box, Table, useDisclosure, VStack } from '@chakra-ui/react'
+import { Flex, Table, TableContainer, Text, useDisclosure } from '@chakra-ui/react'
 import { getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table'
+import { WalletMinimal } from 'lucide-react'
 import React, { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { createOrderColumns } from '../utils/tableColumns'
+import { ConnectAwareButton } from './shared/ConnectAwareButton'
 import { Pagination } from './table/Pagination'
 import { TableBody } from './table/TableBody'
 import { TableHeader } from './table/TableHeader'
@@ -40,6 +44,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const userAddress = useSelector(selectAddress)
 
   const handleRowClick = useCallback((order: Order) => {
     setSelectedOrder(order)
@@ -47,14 +52,12 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
   }, [])
 
   return (
-    <>
-      <VStack spacing={0} bg="white" borderRadius="md" shadow="sm" gap={2}>
-        <Box w="full" overflowX="auto">
-          <Table variant="simple">
-            <TableHeader headerGroups={table.getHeaderGroups()} />
-            <TableBody rows={table.getRowModel().rows} handleRowClick={handleRowClick} />
-          </Table>
-        </Box>
+    <TableContainer>
+      <Table variant="nucleus" size="sm">
+        <TableHeader headerGroups={table.getHeaderGroups()} />
+        <TableBody rows={table.getRowModel().rows} handleRowClick={handleRowClick} />
+      </Table>
+      {userAddress && (
         <Pagination
           currentPage={pagination.currentPage}
           pageSize={pagination.pageSize}
@@ -65,9 +68,17 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
         />
-      </VStack>
+      )}
+      {!userAddress && (
+        <Flex justifyContent={'center'} height={'10rem'}>
+          <Flex direction={'column'} justifyContent={'center'} alignItems={'center'} gap={3}>
+            <Text>Your wallet is not connected</Text>
+            <ConnectAwareButton leftIcon={<WalletMinimal />} variant={'outline'} />
+          </Flex>
+        </Flex>
+      )}
       <WithdrawDetailsModal isOpen={isOpen} onClose={onClose} order={selectedOrder} />
-    </>
+    </TableContainer>
   )
 }
 

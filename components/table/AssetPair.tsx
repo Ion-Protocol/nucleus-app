@@ -15,7 +15,7 @@ export function AssetPair({ offerToken, wantToken }: AssetPairProps) {
   const wantTokenKey = getSymbolByAddress(wantToken)?.toLowerCase() as TokenKey
   return (
     <Flex alignItems="center" gap={2}>
-      <TokenIcon tokenKey={offerTokenKey} />
+      <TokenIcon height={'32px'} width={'32px'} tokenKey={offerTokenKey} />
       <span>{getSymbolByAddress(offerToken)}</span>
       {/* <ArrowRight />
       <TokenIcon tokenKey={wantTokenKey} />

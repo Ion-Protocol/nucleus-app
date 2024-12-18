@@ -1,57 +1,58 @@
-const colors = {
+export const colorsV2 = {
   // Base neutral colors
-  neutral: {
-    50: '#FFFFFF',
-    100: '#F4F2EA',
-    200: '#E5E0D4',
-    300: '#D6CFC0',
-    400: '#C7BDAC',
-    500: '#B8AC98',
-    600: '#A99A84',
-    700: '#9A8970',
-    800: '#8B775C',
-    900: '#7C6648',
+  neutralV2: {
+    0: '#FFFDFA',
+    50: '#FAF8F4',
+    100: '#F5F2EA',
+    200: '#EDE6D9',
+    300: '#E5DBC8',
+    400: '#DCCFB7',
+    500: '#C7B089',
+    600: '#8B724B',
+    700: '#564429',
+    800: '#302517',
+    900: '#1F180F',
   },
   // Thermic colors (coral/orange)
   thermic: {
-    100: '#FFD4CC',
-    300: '#FF8566',
-    500: '#FF3700',
-    900: '#3D0D00',
+    200: '#FACEB8',
+    400: '#F49B6E',
+    600: '#EBE3D1',
+    800: '#180902',
   },
   // Electron colors (yellow/green)
   electron: {
-    100: '#FFFF99',
-    300: '#F7FF66',
-    500: '#EEFF00',
-    900: '#334D00',
+    200: '#FBFBD0',
+    400: '#F7F79E',
+    600: '#F4F434',
+    800: '#2F2F04',
   },
   // Olivenite colors (green/teal)
   olivenite: {
-    100: '#99C2B3',
-    300: '#66A694',
-    500: '#338975',
-    900: '#003D33',
+    200: '#B4CAC3',
+    400: '#6E988A',
+    600: '#418B72',
+    800: '#151E1B',
   },
   // Crystal colors (blue)
   crystal: {
-    100: '#99CFFF',
-    300: '#66B8FF',
-    500: '#33A0FF',
-    900: '#004785',
+    200: '#E5F3FF',
+    400: '#C2E2FF',
+    600: '#66B6FF',
+    800: '#001B33',
   },
   // Amethyst colors (purple)
   amethyst: {
-    100: '#C299FF',
-    300: '#A366FF',
-    500: '#8533FF',
-    900: '#2B004D',
+    200: '#EAE5FF',
+    400: '#AA99FF',
+    600: '#6751E1',
+    800: '#080033',
   },
   // Graphite colors (blue-grey)
   graphite: {
-    100: '#667B85',
-    300: '#335766',
-    500: '#003347',
-    900: '#001A24',
+    200: '#47626B',
+    400: '#002D3D',
+    600: '#00171F',
+    800: '#000F14',
   },
 }

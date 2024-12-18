@@ -27,7 +27,7 @@ export const applyWithdrawalFeeReduction = (amount: bigint, feePercentage: numbe
 
 const addressToSymbolMap = Object.values(tokensConfig).reduce<Record<string, string>>((map, token) => {
   Object.entries(token.addresses).forEach(([_, address]) => {
-    map[address.toLowerCase()] = token.symbol
+    map[address.toLowerCase()] = token.name
   })
   return map
 }, {})
