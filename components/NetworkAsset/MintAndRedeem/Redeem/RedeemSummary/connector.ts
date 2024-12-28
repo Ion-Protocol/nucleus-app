@@ -1,22 +1,23 @@
 import { ConnectedProps, connect } from 'react-redux'
 
-import { RootState } from '@/store'
 import { tokensConfig } from '@/config/tokens'
+import { RootState } from '@/store'
 
 import {
-  selectTokenRateInQuoteLoading,
-  selectNetworkAssetConfig,
-  selectReceiveTokens,
-  selectReceiveTokenKey,
   selectContractAddressByName,
-  selectTokenAddressByTokenKey,
-  selectSourceChainId,
+  selectDestinationChainId,
+  selectIsBridgeRequired,
+  selectNetworkAssetConfig,
+  selectReceiveTokenKey,
+  selectReceiveTokens,
   selectRedeemLayerZeroChainSelector,
   selectRedemptionSourceChainId,
-  selectIsBridgeRequired,
+  selectTokenRateInQuoteLoading,
+  selectWantAssetAddress,
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 
+// TODO: Delete this at a later date
 const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const nativeTokenForBridgeFee = networkAssetConfig?.chain
@@ -29,8 +30,8 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   const redeemLayerZeroChainSelector = selectRedeemLayerZeroChainSelector(state)
   const accountantAddress = selectContractAddressByName(state, 'accountant')
   const tellerAddress = selectContractAddressByName(state, 'teller')
-  const receiveAssetAddress = selectTokenAddressByTokenKey(state, receiveTokenKey)
-  const chainId = selectSourceChainId(state)
+  const wantAssetAddress = selectWantAssetAddress(state)
+  const chainId = selectDestinationChainId(state)
   const bridgeFromChainId = selectRedemptionSourceChainId(state)
   const isBridgeRequired = selectIsBridgeRequired(state)
 
@@ -41,7 +42,7 @@ const mapState = (state: RootState, ownProps: RedeemSummaryOwnProps) => {
   return {
     accountantAddress,
     tellerAddress,
-    receiveAssetAddress,
+    wantAssetAddress,
     chainId,
     bridgeFromChainId,
     nativeTokenForBridgeFee,

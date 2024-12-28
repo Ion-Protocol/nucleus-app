@@ -1,6 +1,6 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { Chain, chainsConfig } from '@/config/chains'
-import { hardcodedApy, nativeAddress } from '@/config/constants'
+import { defaultWithdrawalFee, hardcodedApy, nativeAddress } from '@/config/constants'
 import { networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
@@ -9,7 +9,7 @@ import { NetworkAsset } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { RewardsTableData } from '@/types/RewardsTableData'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { convertToUsd } from '@/utils/currency'
 import { isValidSolanaAddress } from '@/utils/misc'
 import { abbreviateNumber, convertToDecimals, hasMoreThanNSignificantDigits, numberToPercent } from '@/utils/number'
@@ -490,11 +490,17 @@ export const selectTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKe
   return tokensConfig[tokenKey]?.addresses[sourceChainKey as ChainKey]
 }
 
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectRedemptionTokenAddressByTokenKey = (state: RootState, tokenKey: TokenKey) => {
+  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
+  return tokensConfig[tokenKey]?.addresses[redemptionDestinationChainKey as ChainKey]
+}
+
 // SHOULD memoize: Returns a new array; memoization avoids returning new references.
 export const selectReceiveTokens = createSelector(
-  [selectNetworkAssetConfig, selectSourceChainKey],
-  (chainConfig, sourceChain): TokenKey[] => {
-    return chainConfig?.wantTokens[sourceChain as ChainKey] || []
+  [selectNetworkAssetConfig, selectRedemptionDestinationChainKey],
+  (chainConfig, redemptionDestinationChainKey): TokenKey[] => {
+    return chainConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey] || []
   }
 )
 
@@ -502,11 +508,21 @@ export const selectReceiveTokens = createSelector(
 export const selectReceiveTokenKey = (state: RootState): TokenKey | null => {
   const bridgesState = selectBridgesState(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
-  const sourceChainKey = selectSourceChainKey(state)
+  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
   if (!networkAssetConfig) return null
-  return bridgesState.selectedReceiveToken || networkAssetConfig?.wantTokens[sourceChainKey as ChainKey]?.[0] || null
+  return (
+    bridgesState.selectedReceiveToken ||
+    networkAssetConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[0] ||
+    null
+  )
 }
 
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectNativeAsset = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const coinGeckoAssetId = networkAssetConfig?.nativeCurrency
+  return coinGeckoAssetId
+}
 /////////////////////////////////////////////////////////////////////
 // Deposit amount input
 /////////////////////////////////////////////////////////////////////
@@ -662,12 +678,6 @@ export const selectWalletHasEnoughBalance = (state: RootState) => {
 // Preview Fee
 /////////////////////////////////////////////////////////////////////
 
-// DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectIsWithdrawal = (state: RootState): boolean => {
-  const redeemAmount = selectRedeemAmount(state)
-  return redeemAmount.trim().length > 0
-}
-
 // DO NOT memoize: Simple state access; should be a plain function.
 export const selectPreviewFee = (state: RootState): string | null => state.networkAssets.previewFee.data
 
@@ -778,7 +788,7 @@ export const selectDepositBridgeData = createSelector(
 )
 
 /////////////////////////////////////////////////////////////////////
-// Redeem Selectors
+// Withdrawal Selectors
 /////////////////////////////////////////////////////////////////////
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
@@ -795,6 +805,45 @@ export const selectRedeemBridgeData = createSelector(
     }
   }
 )
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWantAssetAddress = (state: RootState) => {
+  const wantTokenKey = selectReceiveTokenKey(state)
+  const destinationChainKey = selectRedemptionDestinationChainKey(state)
+  if (!wantTokenKey || !destinationChainKey) return null
+  return tokensConfig[wantTokenKey]?.addresses[destinationChainKey as ChainKey]
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWithdrawalFee = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) {
+    return defaultWithdrawalFee
+  }
+  return networkAssetConfig.redeem.withdrawalFee
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectWithdrawalFeeAsBigInt = (state: RootState): bigint => {
+  const withdrawalFee = selectWithdrawalFee(state)
+  return withdrawalFee ? BigInt(withdrawalFee * WAD.number) : BigInt(0)
+}
+
+export const selectWithdrawalSourceExplorerBaseUrl = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const redemptionSourceChainKey = selectRedemptionSourceChainKey(state)
+  const withdrawalSourceExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionSourceChains[redemptionSourceChainKey as ChainKey]?.explorerBaseUrl
+  return withdrawalSourceExplorerBaseUrl
+}
+
+export const selectWithdrawalDestinationExplorerBaseUrl = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
+  const withdrawalDestinationExplorerBaseUrl =
+    networkAssetConfig?.redeem.redemptionDestinationChains[redemptionDestinationChainKey as ChainKey]?.explorerBaseUrl
+  return withdrawalDestinationExplorerBaseUrl
+}
 
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////

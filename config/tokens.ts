@@ -12,6 +12,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       [ChainKey.RARI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     },
+    coinGeckoId: 'ethereum',
   },
   [TokenKey.WETH]: {
     key: TokenKey.WETH,
@@ -180,6 +181,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     addresses: {
       [ChainKey.ETHEREUM]: '0x',
     },
+    coinGeckoId: 'sei-network',
   },
   [TokenKey.DINERO]: {
     key: TokenKey.DINERO,
