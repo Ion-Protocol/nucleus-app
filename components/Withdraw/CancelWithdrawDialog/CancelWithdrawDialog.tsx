@@ -5,7 +5,6 @@ import { useWaitForTransactionReceiptQuery } from '@/store/slices/transactionRec
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
-import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   AlertDialog,
@@ -16,13 +15,12 @@ import {
   AlertDialogOverlay,
   Button,
   Flex,
-  Heading,
   Text,
 } from '@chakra-ui/react'
-import { format, fromUnixTime } from 'date-fns'
 import { ArrowRight } from 'lucide-react'
 import { useRef } from 'react'
 import { formatUnits } from 'viem'
+import RequestDetails from '../WithdrawalDetailModal/RequestDetails'
 
 interface CancelWithdrawDialogProps {
   isOpen: boolean
@@ -113,53 +111,28 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
             Cancel Withdrawal
           </AlertDialogHeader>
-
-          <AlertDialogBody>
-            <Flex direction={'column'} alignItems={'center'}>
-              <Flex gap={2} justifyContent="center" alignItems="center">
-                <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-                <Text>{getSymbolByAddress(offer_token)}</Text>
-                <ArrowRight />
-                {status === 'pending' && <Text>Pending...</Text>}
+          {isUninitialized && (
+            <AlertDialogBody>
+              <Flex direction={'column'} alignItems={'center'}>
+                <Flex gap={2} justifyContent="center" alignItems="center">
+                  <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
+                  <Text>{getSymbolByAddress(offer_token)}</Text>
+                  <ArrowRight />
+                  {status === 'pending' && <Text>Pending...</Text>}
+                </Flex>
+                <Text>Are you sure you want to cancel this transaction?</Text>
               </Flex>
-              <Text>Are you sure you want to cancel this transaction?</Text>
-            </Flex>
-            {/* Request */}
-            <Heading as="h4" size="md">
-              Request
-            </Heading>
-            <Flex direction="column" gap={2} border="1px solid" borderColor="gray.200" p={4} borderRadius="md">
-              <Flex justifyContent="space-between">
-                <Text>To Redeem</Text>
-                <Text>
-                  {bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })}{' '}
-                  {getSymbolByAddress(offer_token)}
-                </Text>
-              </Flex>
-              <Flex justifyContent="space-between">
-                <Text>Minimum Price</Text>
-                <Text>{`${minimumPrice} ${getSymbolByAddress(want_token)}/${getSymbolByAddress(offer_token)}`}</Text>
-              </Flex>
-              <Flex justifyContent="space-between">
-                <Text>Receive at least</Text>
-                <Text>
-                  {`
-                ${bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })} 
-                ${getSymbolByAddress(want_token)}
-                `}
-                </Text>
-              </Flex>
-              <Flex justifyContent="space-between">
-                <Text>Deadline</Text>
-                <Text>{format(fromUnixTime(Number(deadline)), 'PPpp')}</Text>
-              </Flex>
-              <Flex justifyContent="space-between">
-                <Text>Created at</Text>
-                <Text>{format(fromUnixTime(Number(created_timestamp)), 'PPpp')}</Text>
-              </Flex>
-            </Flex>
-          </AlertDialogBody>
-
+              {/* Request */}
+              <RequestDetails
+                amount={amount}
+                offerToken={offer_token}
+                wantToken={want_token}
+                deadline={deadline}
+                createdTimestamp={created_timestamp}
+                minimumPrice={minimumPrice}
+              />
+            </AlertDialogBody>
+          )}
           <AlertDialogFooter display="flex" flexDirection="column" gap={2}>
             <Button onClick={handleCancelOrder} width="100%" colorScheme="red" background={'red'}>
               Cancel

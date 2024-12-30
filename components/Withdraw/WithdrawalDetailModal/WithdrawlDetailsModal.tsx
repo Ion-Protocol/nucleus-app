@@ -2,11 +2,9 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { StatusBadge } from '@/components/table/StatusBadge'
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   Flex,
-  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,9 +14,10 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react'
-import { format, fromUnixTime } from 'date-fns'
 import { ArrowRight, TicketX } from 'lucide-react'
 import { formatUnits } from 'viem'
+import FulfilledDetails from './FulfilledDetails'
+import RequestDetails from './RequestDetails'
 
 const WithdrawDetailsModal = ({
   isOpen,
@@ -85,61 +84,22 @@ const WithdrawDetailsModal = ({
             {status === 'cancelled' && <TicketX />}
           </Flex>
           {/* Request */}
-          <Heading as="h4" size="md">
-            Request
-          </Heading>
-          <Flex direction="column" gap={2} border="1px solid" borderColor="gray.200" p={4} borderRadius="md">
-            <Flex justifyContent="space-between">
-              <Text>To Redeem</Text>
-              <Text>
-                {bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })}{' '}
-                {getSymbolByAddress(offer_token)}
-              </Text>
-            </Flex>
-            <Flex justifyContent="space-between">
-              <Text>Minimum Price</Text>
-              <Text>{`${minimumPrice} ${getSymbolByAddress(want_token)}/${getSymbolByAddress(offer_token)}`}</Text>
-            </Flex>
-            <Flex justifyContent="space-between">
-              <Text>Receive at least</Text>
-              <Text>
-                {`
-                ${bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })} 
-                ${getSymbolByAddress(want_token)}
-                `}
-              </Text>
-            </Flex>
-            <Flex justifyContent="space-between">
-              <Text>Deadline</Text>
-              <Text>{format(fromUnixTime(Number(deadline)), 'PPpp')}</Text>
-            </Flex>
-            <Flex justifyContent="space-between">
-              <Text>Created at</Text>
-              <Text>{format(fromUnixTime(Number(created_timestamp)), 'PPpp')}</Text>
-            </Flex>
-          </Flex>
+          <RequestDetails
+            amount={amount}
+            offerToken={offer_token}
+            wantToken={want_token}
+            deadline={deadline}
+            createdTimestamp={created_timestamp}
+            minimumPrice={minimumPrice}
+          />
           {/* Fulfillment */}
           {status === 'fulfilled' && (
-            <>
-              <Heading as="h4" size="md">
-                Fulfillment
-              </Heading>
-              <Flex direction="column" gap={2} border="1px solid" borderColor="gray.200" p={4} borderRadius="md">
-                <Flex justifyContent="space-between">
-                  <Text>Filled Price</Text>
-                  <Text>{filledPrice}</Text>
-                </Flex>
-                <Flex justifyContent="space-between">
-                  <Text>Received</Text>
-                  <Text>{`${wantAmountRecAsNumber} ${getSymbolByAddress(want_token)}`}</Text>
-                </Flex>
-
-                <Flex justifyContent="space-between">
-                  <Text>Filled at</Text>
-                  <Text>{format(fromUnixTime(Number(ending_timestamp)), 'PPpp')}</Text>
-                </Flex>
-              </Flex>
-            </>
+            <FulfilledDetails
+              filledPrice={filledPrice}
+              wantToken={want_token}
+              wantAmountRecAsNumber={wantAmountRecAsNumber}
+              endingTimestamp={ending_timestamp}
+            />
           )}
         </ModalBody>
         <ModalFooter fontSize="sm" display="flex" justifyContent="space-between">
