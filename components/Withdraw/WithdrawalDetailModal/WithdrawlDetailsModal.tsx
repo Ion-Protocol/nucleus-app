@@ -15,7 +15,7 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react'
-import { ArrowRight, TicketX } from 'lucide-react'
+import { ArrowRight, Ban, Box } from 'lucide-react'
 import { formatUnits } from 'viem'
 import FulfilledDetails from './FulfilledDetails'
 import RequestDetails from './RequestDetails'
@@ -67,12 +67,12 @@ const WithdrawDetailsModal = ({
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent borderRadius="2xl" fontFamily="diatype">
-        <ModalHeader pt={6} fontSize="xl" fontWeight="medium">
+      <ModalContent borderRadius="2xl" fontFamily="diatype" bg="bg.white">
+        <ModalHeader pt={6} fontSize="xl" fontWeight="medium" color="element.main">
           Withdraw Transaction
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody display="flex" flexDirection="column" gap={6}>
+        <ModalBody display="flex" flexDirection="column" gap={6} color="element.main">
           <Flex gap={4} justifyContent="center" alignItems="center">
             <Flex gap={2}>
               <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
@@ -85,18 +85,25 @@ const WithdrawDetailsModal = ({
             {status === 'fulfilled' && (
               <Flex gap={2}>
                 <TokenIcon fontSize="24px" tokenKey={wantTokenKey} />
-                <Text fontSize="xl" fontFamily="ppformula">{` ${bigIntToNumberAsString(BigInt(want_amount_rec), {
-                  decimals: 18,
-                  maximumFractionDigits: 2,
-                })} ${getSymbolByAddress(want_token)}`}</Text>
+                <Text fontSize="xl" color="element.main" fontFamily="ppformula">{` ${bigIntToNumberAsString(
+                  BigInt(want_amount_rec),
+                  {
+                    decimals: 18,
+                    maximumFractionDigits: 2,
+                  }
+                )} ${getSymbolByAddress(want_token)}`}</Text>
               </Flex>
             )}
             {status === 'pending' && (
-              <Text fontSize="xl" fontFamily="ppformula" color="neutral.800">
+              <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">
                 Pending...
               </Text>
             )}
-            {status === 'cancelled' && <TicketX />}
+            {status === 'cancelled' && (
+              <Box color="element.subdued">
+                <Ban size={24} strokeWidth={1.5} />
+              </Box>
+            )}
           </Flex>
           <Flex direction="column" gap={6}>
             {/* Request */}

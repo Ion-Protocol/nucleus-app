@@ -25,7 +25,7 @@ const RequestDetails = ({
 }: RequestDetailsProps) => {
   return (
     <Flex direction="column" gap={2}>
-      <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular">
+      <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular" color="element.main">
         Request
       </Heading>
       <Flex
@@ -33,29 +33,31 @@ const RequestDetails = ({
         direction="column"
         gap={2}
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="stroke.light"
         p={3}
         borderRadius="md"
       >
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             To Redeem
           </Text>
-          <Text fontSize="md">
+          <Text fontSize="md" color="element.lighter">
             {`${bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })} ${getSymbolByAddress(offerToken)}`}
           </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Minimum Price
           </Text>
-          <Text fontSize="md">{`${minimumPrice.toFixed(4)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}</Text>
+          <Text fontSize="md" color="element.lighter">
+            {`${minimumPrice.toFixed(4)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}
+          </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Receive at least
           </Text>
-          <Text fontSize="md">
+          <Text fontSize="md" color="element.lighter">
             {`
                 ${receiveAtLeast.toFixed(2)} 
                 ${getSymbolByAddress(wantToken)}
@@ -63,16 +65,20 @@ const RequestDetails = ({
           </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Deadline
           </Text>
-          <Text fontSize="md">{format(fromUnixTime(Number(deadline)), 'PPpp')}</Text>
+          <Text fontSize="md" color="element.lighter">
+            {format(fromUnixTime(Number(deadline)), 'PPpp')}
+          </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Created at
           </Text>
-          <Text fontSize="md">{format(fromUnixTime(Number(createdTimestamp)), 'PPpp')}</Text>
+          <Text fontSize="md" color="element.lighter">
+            {format(fromUnixTime(Number(createdTimestamp)), 'PPpp')}
+          </Text>
         </Flex>
       </Flex>
     </Flex>

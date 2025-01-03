@@ -106,10 +106,10 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
   )
 
   return (
-    <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+    <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} closeOnOverlayClick={false}>
       <AlertDialogOverlay>
-        <AlertDialogContent>
-          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+        <AlertDialogContent borderRadius="2xl" bg="bg.white">
+          <AlertDialogHeader fontFamily="diatype" pt={6} fontSize="xl" fontWeight="medium">
             Cancel Withdrawal
           </AlertDialogHeader>
           {isUninitialized && (
@@ -123,12 +123,12 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
                   })} ${getSymbolByAddress(offer_token)}`}</Text>
                   <ArrowRight size={16} strokeWidth={1.5} />
                   {status === 'pending' && (
-                    <Text fontSize="xl" fontFamily="ppformula" color="neutral.800">
+                    <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">
                       Pending...
                     </Text>
                   )}
                 </Flex>
-                <Text fontSize="xl" color="neutral.800" fontFamily="diatype" textAlign="center">
+                <Text fontSize="xl" color="element.subdued" fontFamily="diatype" textAlign="center">
                   Are you sure you want to cancel this transaction?
                 </Text>
               </Flex>
@@ -162,7 +162,8 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
               onClick={onClose}
               fontFamily="diatype"
               fontWeight="normal"
-              color="neutral.800"
+              color="element.subdued"
+              _hover={{ background: 'bg.secondary' }}
               width="100%"
               variant="ghost"
               rightIcon={<Undo2 size={16} strokeWidth={1.5} />}

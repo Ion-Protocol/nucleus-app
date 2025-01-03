@@ -7,12 +7,12 @@ export const components = {
   Divider: DividerStyles,
   Text: TextStyles,
   Table: {
+    // TODO: move to Table.ts and account for dark mode
     variants: {
       nucleus: {
         table: {
           borderCollapse: 'separate',
           borderSpacing: '0',
-          bg: 'white',
           fontFamily: 'diatype',
         },
         th: {
@@ -23,6 +23,8 @@ export const components = {
           borderTop: '1px solid',
           borderBottom: '1px solid',
           borderColor: 'neutral.600',
+          paddingTop: '0',
+          paddingBottom: '0',
         },
         tbody: {
           tr: {
@@ -30,6 +32,7 @@ export const components = {
               borderTop: '1px solid',
               borderColor: 'neutral.400',
               height: '5rem',
+              bg: 'bg.white',
             },
             '&:hover': {
               td: {

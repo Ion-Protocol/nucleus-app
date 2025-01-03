@@ -18,28 +18,34 @@ const FulfilledDetails = ({
 }) => {
   return (
     <Flex direction="column" gap={2}>
-      <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular">
+      <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular" color="element.main">
         Fulfillment
       </Heading>
-      <Flex direction="column" gap={2} border="1px solid" borderColor="gray.200" p={4} borderRadius="md">
+      <Flex direction="column" gap={2} border="1px solid" borderColor="stroke.light" p={4} borderRadius="md">
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Filled Price
           </Text>
-          <Text fontSize="md">{`${filledPrice.toFixed(3)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}</Text>
+          <Text fontSize="md" color="element.lighter">
+            {`${filledPrice.toFixed(3)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}
+          </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Received
           </Text>
-          <Text fontSize="md">{`${wantAmountRecAsNumber.toFixed(2)} ${getSymbolByAddress(wantToken)}`}</Text>
+          <Text fontSize="md" color="element.lighter">
+            {`${wantAmountRecAsNumber.toFixed(2)} ${getSymbolByAddress(wantToken)}`}
+          </Text>
         </Flex>
 
         <Flex justifyContent="space-between">
-          <Text fontSize="md" color="neutral.800">
+          <Text fontSize="md" color="element.subdued">
             Filled at
           </Text>
-          <Text fontSize="md">{format(fromUnixTime(Number(endingTimestamp)), 'PPpp')}</Text>
+          <Text fontSize="md" color="element.lighter">
+            {format(fromUnixTime(Number(endingTimestamp)), 'PPpp')}
+          </Text>
         </Flex>
       </Flex>
     </Flex>

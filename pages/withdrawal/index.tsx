@@ -5,7 +5,6 @@ import CancelWithdrawDialog from '@/components/Withdraw/CancelWithdrawDialog/Can
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
 import { Order, OrderStatus } from '@/types/Order'
-import { Row } from '@tanstack/react-table'
 import { ClockArrowUp } from 'lucide-react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -33,37 +32,13 @@ export default function Withdrawals() {
   )
   console.table(orders)
 
-  // const paginatedData: PaginatedResponse = {
-  //   data: orders?.data || [],
-  //   pagination: orders?.pagination || {
-  //     currentPage: 1,
-  //     pageSize: 10,
-  //     totalItems: 0,
-  //     totalPages: 1,
-  //     hasNextPage: false,
-  //     hasPreviousPage: false,
-  //   },
-  // }
-
   const handleCancelOrder = (order: Order) => {
     setSelectedOrderToCancel(order)
     onOpen()
   }
 
-  const handleRowClick = (row: Row<Order>) => {
-    console.log(row)
-  }
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-  }
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    setPageSize(newPageSize)
-    setCurrentPage(1)
-  }
   return (
-    <Flex p={9} direction="column" pb="150px" bg={'white'}>
+    <Flex p={9} direction="column" pb="150px" bg={'bg.white'}>
       {/* TODO: Heading styles should be in the theme */}
       <Flex direction={'column'} gap={6}>
         <Heading as={'h1'} fontFamily={'var(--font-ppformula)'} fontSize={'1.5rem'} fontWeight={'medium'}>
@@ -88,7 +63,7 @@ export default function Withdrawals() {
         </Tabs> */}
         <Badge
           fontSize={'small'}
-          fontFamily={'var(--font-ppformula)'}
+          fontFamily="diatype"
           fontWeight={'normal'}
           lineHeight={'1.125rem'}
           textTransform={'none'}
@@ -98,7 +73,8 @@ export default function Withdrawals() {
           paddingX={2}
           paddingY={1}
           gap={1}
-          bg={'backgroundSecondary'}
+          bg={'bg.secondary'}
+          color={'element.lighter'}
           borderRadius={'.5rem'}
           width={'fit-content'}
         >
