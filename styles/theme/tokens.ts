@@ -208,5 +208,92 @@ export const semanticTokens = {
         _dark: 'darkMode.800',
       },
     },
+    // start v2 colors
+    bg: {
+      white: {
+        default: 'nucleus-neutral.0',
+        _dark: 'nucleus-neutral.0',
+      },
+      main: {
+        default: 'nucleus-neutral.50',
+        _dark: 'nucleus-neutral.50',
+      },
+      secondary: {
+        default: 'nucleus-neutral.100',
+        _dark: 'nucleus-neutral.100',
+      },
+      tertiary: {
+        default: 'nucleus-neutral.200',
+        _dark: 'nucleus-neutral.200',
+      },
+      quaternary: {
+        default: 'nucleus-neutral.300',
+        _dark: 'nucleus-neutral.300',
+      },
+      'invert-tertiary': {
+        default: 'nucleus-neutral.700',
+        _dark: 'nucleus-neutral.700',
+      },
+      'invert-secondary': {
+        default: 'nucleus-neutral.800',
+        _dark: 'nucleus-neutral.800',
+      },
+      'invert-primary': {
+        default: 'nucleus-neutral.900',
+        _dark: 'nucleus-neutral.900',
+      },
+    },
+    element: {
+      darker: {
+        default: 'nucleus-neutral.900',
+        _dark: 'nucleus-neutral.900',
+      },
+      main: {
+        default: 'nucleus-neutral.800',
+        _dark: 'nucleus-neutral.800',
+      },
+      lighter: {
+        default: 'nucleus-neutral.700',
+        _dark: 'nucleus-neutral.700',
+      },
+      subdued: {
+        default: 'nucleus-neutral.600',
+        _dark: 'nucleus-neutral.600',
+      },
+      disabled: {
+        default: 'nucleus-neutral.400',
+        _dark: 'nucleus-neutral.400',
+      },
+      'invert-secondary': {
+        default: 'nucleus-neutral.100',
+        _dark: 'nucleus-neutral.100',
+      },
+      'invert-primary': {
+        default: 'nucleus-neutral.50',
+        _dark: 'nucleus-neutral.50',
+      },
+    },
+    stroke: {
+      darker: {
+        default: 'nucleus-neutral.400',
+        _dark: 'nucleus-neutral.400',
+      },
+      main: {
+        default: 'nucleus-neutral.300',
+        _dark: 'nucleus-neutral.300',
+      },
+      light: {
+        default: 'nucleus-neutral.200',
+        _dark: 'nucleus-neutral.200',
+      },
+      lighter: {
+        default: 'nucleus-neutral.100',
+        _dark: 'nucleus-neutral.100',
+      },
+      focus: {
+        default: 'nucleus-neutral.700',
+        _dark: 'nucleus-neutral.700',
+      },
+    },
   },
 }

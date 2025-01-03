@@ -82,6 +82,7 @@ a {
   --font-recklessNeue: 'RecklessNeue', sans-serif;
   --font-recklessNeue-light: 'RecklessNeue Light', sans-serif;
   --font-recklessNeue-bold: 'RecklessNeue Bold', sans-serif;
+  --font-diatype: 'ABC Diatype', sans-serif;
 }
 
 @font-face {
@@ -123,4 +124,16 @@ a {
     url('../public/fonts/RecklessNeue-SemiBold.ttf') format('truetype');
   font-weight: bold;
   font-style: bold;
+}
+
+@font-face {
+  font-family: 'ABC Diatype';
+  src:
+    local('ABC Diatype Regular'),
+    local('ABCDiatype-Regular'),
+    url('../public/fonts/Diatype/ABCDiatype-Regular-Trial.woff2') format('woff2'),
+    url('../public/fonts/Diatype/ABCDiatype-Regular-Trial.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
