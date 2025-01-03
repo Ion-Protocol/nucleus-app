@@ -13,6 +13,7 @@ export const components = {
           borderCollapse: 'separate',
           borderSpacing: '0',
           bg: 'white',
+          fontFamily: 'diatype',
         },
         th: {
           color: 'neutral.800',
@@ -31,7 +32,9 @@ export const components = {
               height: '5rem',
             },
             '&:hover': {
-              bg: 'neutral.500',
+              td: {
+                bg: 'neutral.200',
+              },
             },
             '&:first-of-type': {
               td: {
@@ -49,7 +52,6 @@ export const components = {
         td: {
           fontSize: 'normal',
           fontWeight: 'normal',
-          lineHeight: '20px',
           textAlign: 'center',
           bg: 'white',
         },

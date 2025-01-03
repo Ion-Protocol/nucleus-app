@@ -1,24 +1,12 @@
-import {
-  Badge,
-  Button,
-  Flex,
-  Heading,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  Select,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Badge, Flex, Heading, useDisclosure } from '@chakra-ui/react'
 
 import OrdersTable from '@/components/OrdersTable'
 import CancelWithdrawDialog from '@/components/Withdraw/CancelWithdrawDialog/CancelWithdrawDialog'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
-import { Order, OrderStatus, PaginatedResponse } from '@/types/Order'
+import { Order, OrderStatus } from '@/types/Order'
 import { Row } from '@tanstack/react-table'
-import { ChevronDown, ClockArrowUp } from 'lucide-react'
+import { ClockArrowUp } from 'lucide-react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -38,26 +26,24 @@ export default function Withdrawals() {
   } = useWithdrawalOrdersByUserQuery(
     {
       user: userAddress!,
-      page: currentPage,
-      limit: pageSize,
-      status: status,
     },
     {
       skip: !userAddress,
     }
   )
+  console.table(orders)
 
-  const paginatedData: PaginatedResponse = {
-    data: orders?.data || [],
-    pagination: orders?.pagination || {
-      currentPage: 1,
-      pageSize: 10,
-      totalItems: 0,
-      totalPages: 1,
-      hasNextPage: false,
-      hasPreviousPage: false,
-    },
-  }
+  // const paginatedData: PaginatedResponse = {
+  //   data: orders?.data || [],
+  //   pagination: orders?.pagination || {
+  //     currentPage: 1,
+  //     pageSize: 10,
+  //     totalItems: 0,
+  //     totalPages: 1,
+  //     hasNextPage: false,
+  //     hasPreviousPage: false,
+  //   },
+  // }
 
   const handleCancelOrder = (order: Order) => {
     setSelectedOrderToCancel(order)
@@ -120,33 +106,7 @@ export default function Withdrawals() {
           Withdrawal Activity
         </Badge>
       </Flex>
-      <Flex justifyContent={'flex-end'}>
-        <Select width={'8rem'} value={status} onChange={(e) => setStatus(e.target.value as OrderStatus)}>
-          <option value="all">by Status</option>
-          <option value="fulfilled">fulfilled</option>
-          <option value="pending">pending</option>
-          <option value="cancelled">cancelled</option>
-        </Select>
-        <Menu closeOnSelect={false}>
-          <MenuButton as={Button} variant="ghost" rightIcon={<ChevronDown />}>
-            by Status
-          </MenuButton>
-          <MenuList minWidth="240px">
-            <MenuOptionGroup type="radio">
-              <MenuItemOption value="fulfilled">Filled</MenuItemOption>
-              <MenuItemOption value="pending">Pending</MenuItemOption>
-              <MenuItemOption value="cancelled">Cancelled</MenuItemOption>
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
-      </Flex>
-      <OrdersTable
-        data={paginatedData.data}
-        pagination={paginatedData.pagination}
-        onCancelOrder={handleCancelOrder}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
-      />
+      <OrdersTable data={orders || []} onCancelOrder={handleCancelOrder} />
       <CancelWithdrawDialog isOpen={isOpen} onClose={onClose} order={selectedOrderToCancel} />
     </Flex>
   )

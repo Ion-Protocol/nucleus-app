@@ -1,10 +1,10 @@
 import { FormattedAmount } from '@/components/table/FormattedAmount'
+import { SortableHeader } from '@/components/table/SortableHeader'
 import { Order } from '@/types/Order'
 import { Button } from '@chakra-ui/react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { AssetPair } from '../components/table/AssetPair'
 import { DateCell } from '../components/table/DateCell'
-import { SortableHeader } from '../components/table/SortableHeader'
 import { StatusBadge } from '../components/table/StatusBadge'
 
 const columnHelper = createColumnHelper<Order>()
@@ -12,10 +12,11 @@ const columnHelper = createColumnHelper<Order>()
 export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
   columnHelper.accessor('status', {
     header: 'Status',
-    cell: (info) => <StatusBadge status={info.getValue()} />,
+    cell: (info) => <StatusBadge status={Number(info.row.original.amount) === 0 ? 'cancelled' : info.getValue()} />,
   }),
   columnHelper.accessor('offer_token', {
     header: 'Asset',
+    filterFn: 'arrIncludesSome',
     cell: (info) => <AssetPair offerToken={info.getValue()} wantToken={info.row.original.want_token} />,
   }),
   columnHelper.accessor('amount', {

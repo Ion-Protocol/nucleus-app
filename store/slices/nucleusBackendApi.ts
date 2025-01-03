@@ -1,5 +1,5 @@
 import { nucleusBackendBaseUrl } from '@/config/constants'
-import { OrderStatus, PaginatedResponse } from '@/types/Order'
+import { Order, OrderStatus } from '@/types/Order'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
 
@@ -47,8 +47,8 @@ export const nucleusBackendApi = createApi({
         return `v1/vaults/apy?${params.toString()}`
       },
     }),
-    withdrawalOrdersByUser: builder.query<PaginatedResponse, WithdrawalParams>({
-      query: ({ user, vaultAddress, chainId, status = 'all', all, page, limit }) => {
+    withdrawalOrdersByUser: builder.query<Order[], WithdrawalParams>({
+      query: ({ user, vaultAddress, chainId, status = 'all', all = true, page, limit }) => {
         const params = new URLSearchParams()
         params.append('user', user)
         if (vaultAddress) params.append('vault_address', vaultAddress)

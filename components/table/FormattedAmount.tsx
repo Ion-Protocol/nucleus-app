@@ -1,5 +1,5 @@
+import { bigIntToNumberAsString } from '@/utils/bigint'
 import { Flex } from '@chakra-ui/react'
-import { formatUnits } from 'viem'
 
 interface FormattedAmountProps {
   amount: string
@@ -9,7 +9,7 @@ interface FormattedAmountProps {
 export function FormattedAmount({ amount, decimals = 18 }: FormattedAmountProps) {
   return (
     <Flex>
-      <span>{formatUnits(BigInt(amount), decimals)}</span>
+      <span>{bigIntToNumberAsString(BigInt(amount), { decimals, maximumFractionDigits: 4 })}</span>
       {/* <Text>
         <EqualIcon />
         {amount}
