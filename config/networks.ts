@@ -108,7 +108,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      withdrawalFee: 0.02,
+      withdrawalFee: defaultWithdrawalFee,
     },
     receiveOn: ChainKey.SEI,
     showRewardsAndHistory: true,
