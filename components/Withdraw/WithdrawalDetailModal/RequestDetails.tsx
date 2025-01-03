@@ -9,6 +9,7 @@ interface RequestDetailsProps {
   offerToken: Address
   wantToken: Address
   minimumPrice: number
+  receiveAtLeast: number
   deadline: string
   createdTimestamp: string
 }
@@ -18,45 +19,63 @@ const RequestDetails = ({
   offerToken,
   wantToken,
   minimumPrice,
+  receiveAtLeast,
   deadline,
   createdTimestamp,
 }: RequestDetailsProps) => {
   return (
-    <>
-      <Heading as="h4" size="md">
+    <Flex direction="column" gap={2}>
+      <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular">
         Request
       </Heading>
-      <Flex direction="column" gap={2} border="1px solid" borderColor="gray.200" p={4} borderRadius="md">
+      <Flex
+        fontFamily="diatype"
+        direction="column"
+        gap={2}
+        border="1px solid"
+        borderColor="gray.200"
+        p={3}
+        borderRadius="md"
+      >
         <Flex justifyContent="space-between">
-          <Text>To Redeem</Text>
-          <Text>
-            {bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })}{' '}
-            {getSymbolByAddress(offerToken)}
+          <Text fontSize="md" color="neutral.800">
+            To Redeem
+          </Text>
+          <Text fontSize="md">
+            {`${bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })} ${getSymbolByAddress(offerToken)}`}
           </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text>Minimum Price</Text>
-          <Text>{`${minimumPrice} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}</Text>
+          <Text fontSize="md" color="neutral.800">
+            Minimum Price
+          </Text>
+          <Text fontSize="md">{`${minimumPrice.toFixed(4)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}</Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text>Receive at least</Text>
-          <Text>
+          <Text fontSize="md" color="neutral.800">
+            Receive at least
+          </Text>
+          <Text fontSize="md">
             {`
-                ${bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 8 })} 
+                ${receiveAtLeast.toFixed(2)} 
                 ${getSymbolByAddress(wantToken)}
                 `}
           </Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text>Deadline</Text>
-          <Text>{format(fromUnixTime(Number(deadline)), 'PPpp')}</Text>
+          <Text fontSize="md" color="neutral.800">
+            Deadline
+          </Text>
+          <Text fontSize="md">{format(fromUnixTime(Number(deadline)), 'PPpp')}</Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text>Created at</Text>
-          <Text>{format(fromUnixTime(Number(createdTimestamp)), 'PPpp')}</Text>
+          <Text fontSize="md" color="neutral.800">
+            Created at
+          </Text>
+          <Text fontSize="md">{format(fromUnixTime(Number(createdTimestamp)), 'PPpp')}</Text>
         </Flex>
       </Flex>
-    </>
+    </Flex>
   )
 }
 

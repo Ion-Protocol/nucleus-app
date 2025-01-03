@@ -2,6 +2,7 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { StatusBadge } from '@/components/table/StatusBadge'
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
+import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   Flex,
@@ -66,44 +67,64 @@ const WithdrawDetailsModal = ({
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Withdraw Transaction</ModalHeader>
+      <ModalContent borderRadius="2xl" fontFamily="diatype">
+        <ModalHeader pt={6} fontSize="xl" fontWeight="medium">
+          Withdraw Transaction
+        </ModalHeader>
         <ModalCloseButton />
-        <ModalBody display="flex" flexDirection="column" gap={2}>
-          <Flex gap={2} justifyContent="center" alignItems="center">
-            <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-            <Text>{getSymbolByAddress(offer_token)}</Text>
-            <ArrowRight />
+        <ModalBody display="flex" flexDirection="column" gap={6}>
+          <Flex gap={4} justifyContent="center" alignItems="center">
+            <Flex gap={2}>
+              <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
+              <Text fontSize="xl" fontFamily="ppformula">{`${bigIntToNumberAsString(BigInt(offer_amount_spent), {
+                decimals: 18,
+                maximumFractionDigits: 2,
+              })} ${getSymbolByAddress(offer_token)}`}</Text>
+            </Flex>
+            <ArrowRight size={16} strokeWidth={1.5} />
             {status === 'fulfilled' && (
-              <>
+              <Flex gap={2}>
                 <TokenIcon fontSize="24px" tokenKey={wantTokenKey} />
-                <Text>{getSymbolByAddress(want_token)}</Text>
-              </>
+                <Text fontSize="xl" fontFamily="ppformula">{` ${bigIntToNumberAsString(BigInt(want_amount_rec), {
+                  decimals: 18,
+                  maximumFractionDigits: 2,
+                })} ${getSymbolByAddress(want_token)}`}</Text>
+              </Flex>
             )}
-            {status === 'pending' && <Text>Pending...</Text>}
+            {status === 'pending' && (
+              <Text fontSize="xl" fontFamily="ppformula" color="neutral.800">
+                Pending...
+              </Text>
+            )}
             {status === 'cancelled' && <TicketX />}
           </Flex>
-          {/* Request */}
-          <RequestDetails
-            amount={amount}
-            offerToken={offer_token}
-            wantToken={want_token}
-            deadline={deadline}
-            createdTimestamp={created_timestamp}
-            minimumPrice={minimumPrice}
-          />
-          {/* Fulfillment */}
-          {status === 'fulfilled' && (
-            <FulfilledDetails
-              filledPrice={filledPrice}
+          <Flex direction="column" gap={6}>
+            {/* Request */}
+            <RequestDetails
+              amount={amount}
+              offerToken={offer_token}
               wantToken={want_token}
-              wantAmountRecAsNumber={wantAmountRecAsNumber}
-              endingTimestamp={ending_timestamp}
+              deadline={deadline}
+              receiveAtLeast={minimumPrice}
+              createdTimestamp={created_timestamp}
+              minimumPrice={atomicPriceAsNumber}
             />
-          )}
+            {/* Fulfillment */}
+            {status === 'fulfilled' && (
+              <FulfilledDetails
+                filledPrice={filledPrice}
+                offerToken={offer_token}
+                wantToken={want_token}
+                wantAmountRecAsNumber={wantAmountRecAsNumber}
+                endingTimestamp={ending_timestamp}
+              />
+            )}
+          </Flex>
         </ModalBody>
-        <ModalFooter fontSize="sm" display="flex" justifyContent="space-between">
-          <Text fontSize={'inherit'}>Status</Text>
+        <ModalFooter fontSize="md" display="flex" justifyContent="space-between" paddingBottom={8}>
+          <Text fontSize={'inherit'} color="neutral.800">
+            Status
+          </Text>
           <StatusBadge status={status} />
         </ModalFooter>
       </ModalContent>

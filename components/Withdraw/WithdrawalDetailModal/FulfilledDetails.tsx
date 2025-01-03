@@ -6,35 +6,43 @@ import { Address } from 'viem'
 const FulfilledDetails = ({
   filledPrice,
   wantAmountRecAsNumber,
+  offerToken,
   wantToken,
   endingTimestamp,
 }: {
   filledPrice: number
   wantAmountRecAsNumber: number
+  offerToken: Address
   wantToken: Address
   endingTimestamp: string
 }) => {
   return (
-    <>
-      <Heading as="h4" size="md">
+    <Flex direction="column" gap={2}>
+      <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular">
         Fulfillment
       </Heading>
       <Flex direction="column" gap={2} border="1px solid" borderColor="gray.200" p={4} borderRadius="md">
         <Flex justifyContent="space-between">
-          <Text>Filled Price</Text>
-          <Text>{filledPrice}</Text>
+          <Text fontSize="md" color="neutral.800">
+            Filled Price
+          </Text>
+          <Text fontSize="md">{`${filledPrice.toFixed(3)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}</Text>
         </Flex>
         <Flex justifyContent="space-between">
-          <Text>Received</Text>
-          <Text>{`${wantAmountRecAsNumber} ${getSymbolByAddress(wantToken)}`}</Text>
+          <Text fontSize="md" color="neutral.800">
+            Received
+          </Text>
+          <Text fontSize="md">{`${wantAmountRecAsNumber.toFixed(2)} ${getSymbolByAddress(wantToken)}`}</Text>
         </Flex>
 
         <Flex justifyContent="space-between">
-          <Text>Filled at</Text>
-          <Text>{format(fromUnixTime(Number(endingTimestamp)), 'PPpp')}</Text>
+          <Text fontSize="md" color="neutral.800">
+            Filled at
+          </Text>
+          <Text fontSize="md">{format(fromUnixTime(Number(endingTimestamp)), 'PPpp')}</Text>
         </Flex>
       </Flex>
-    </>
+    </Flex>
   )
 }
 

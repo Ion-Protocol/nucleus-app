@@ -5,6 +5,7 @@ import { useWaitForTransactionReceiptQuery } from '@/store/slices/transactionRec
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
+import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   AlertDialog,
@@ -17,7 +18,7 @@ import {
   Flex,
   Text,
 } from '@chakra-ui/react'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Undo2 } from 'lucide-react'
 import { useRef } from 'react'
 import { formatUnits } from 'viem'
 import RequestDetails from '../WithdrawalDetailModal/RequestDetails'
@@ -116,11 +117,20 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
               <Flex direction={'column'} alignItems={'center'}>
                 <Flex gap={2} justifyContent="center" alignItems="center">
                   <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-                  <Text>{getSymbolByAddress(offer_token)}</Text>
-                  <ArrowRight />
-                  {status === 'pending' && <Text>Pending...</Text>}
+                  <Text fontSize="xl" fontFamily="ppformula">{`${bigIntToNumberAsString(BigInt(offer_amount_spent), {
+                    decimals: 18,
+                    maximumFractionDigits: 2,
+                  })} ${getSymbolByAddress(offer_token)}`}</Text>
+                  <ArrowRight size={16} strokeWidth={1.5} />
+                  {status === 'pending' && (
+                    <Text fontSize="xl" fontFamily="ppformula" color="neutral.800">
+                      Pending...
+                    </Text>
+                  )}
                 </Flex>
-                <Text>Are you sure you want to cancel this transaction?</Text>
+                <Text fontSize="xl" color="neutral.800" fontFamily="diatype" textAlign="center">
+                  Are you sure you want to cancel this transaction?
+                </Text>
               </Flex>
               {/* Request */}
               <RequestDetails
@@ -129,15 +139,34 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
                 wantToken={want_token}
                 deadline={deadline}
                 createdTimestamp={created_timestamp}
-                minimumPrice={minimumPrice}
+                minimumPrice={atomicPriceAsNumber}
+                receiveAtLeast={minimumPrice}
               />
             </AlertDialogBody>
           )}
           <AlertDialogFooter display="flex" flexDirection="column" gap={2}>
-            <Button onClick={handleCancelOrder} width="100%" colorScheme="red" background={'red'}>
+            <Button
+              onClick={handleCancelOrder}
+              fontFamily="diatype"
+              fontWeight="normal"
+              width="100%"
+              colorScheme="red"
+              background={'red.500'}
+              _hover={{ background: 'red.400' }}
+              _active={{ background: 'red.600' }}
+            >
               Cancel
             </Button>
-            <Button ref={cancelRef} onClick={onClose} width="100%">
+            <Button
+              ref={cancelRef}
+              onClick={onClose}
+              fontFamily="diatype"
+              fontWeight="normal"
+              color="neutral.800"
+              width="100%"
+              variant="ghost"
+              rightIcon={<Undo2 size={16} strokeWidth={1.5} />}
+            >
               Go Back
             </Button>
           </AlertDialogFooter>

@@ -18,7 +18,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from '@tanstack/react-table'
 import { ChevronDown, WalletMinimal } from 'lucide-react'
@@ -38,7 +37,6 @@ interface OrdersTableProps {
 }
 
 const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
-  const [sorting, setSorting] = React.useState<SortingState>([])
   const [selectedTokens, setSelectedTokens] = React.useState<string[]>([])
   const columns = React.useMemo(() => createOrderColumns(onCancelOrder), [onCancelOrder])
   const table = useReactTable({
@@ -76,18 +74,6 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
     <TableContainer>
       <Flex gap={2} justifyContent={'flex-end'}>
         <MultiSelectTokenFilter selectedTokens={selectedTokens} onChange={setSelectedTokens} />
-        <Menu closeOnSelect={false}>
-          <MenuButton as={Button} variant="ghost" width={'fit-content'} rightIcon={<ChevronDown />}>
-            by Asset Type
-          </MenuButton>
-          <MenuList minWidth="240px">
-            <MenuOptionGroup type="radio" onChange={(value) => table.getColumn('assetType')?.setFilterValue(value)}>
-              <MenuItemOption value="fulfilled">Filled</MenuItemOption>
-              <MenuItemOption value="pending">Pending</MenuItemOption>
-              <MenuItemOption value="cancelled">Cancelled</MenuItemOption>
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
         <Menu closeOnSelect={false}>
           <MenuButton as={Button} variant="ghost" width={'fit-content'} rightIcon={<ChevronDown />}>
             by Status
