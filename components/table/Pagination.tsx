@@ -31,7 +31,7 @@ export function Pagination({
     <Flex justify="space-between" align="center" w="full" p={4} borderTop="1px" borderColor="gray.200">
       <HStack spacing={3}>
         <Text fontSize="sm" color="gray.600">
-          {`Showing ${pageItems} of ${totalItems} items`}
+          {`${pageItems} of ${totalItems} items`}
         </Text>
       </HStack>
 

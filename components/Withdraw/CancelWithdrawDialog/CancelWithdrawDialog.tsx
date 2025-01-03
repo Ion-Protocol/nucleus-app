@@ -1,5 +1,6 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { atomicQueueContractAddress } from '@/config/constants'
+import { useChainManagement } from '@/hooks/useChainManagement'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
 import { useWaitForTransactionReceiptQuery } from '@/store/slices/transactionReceiptApt'
 import { Order } from '@/types/Order'
@@ -26,11 +27,14 @@ import RequestDetails from '../WithdrawalDetailModal/RequestDetails'
 interface CancelWithdrawDialogProps {
   isOpen: boolean
   onClose: () => void
-  order: Order | null
+  order: Order
 }
 
 function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogProps) {
-  const [updateAtomicRequest, { isLoading, isUninitialized, isError, data }] = useUpdateAtomicRequestMutation()
+  const [updateAtomicRequest, { isLoading, isUninitialized, isError, error, data }] = useUpdateAtomicRequestMutation({
+    fixedCacheKey: 'cancel-withdraw',
+  })
+  const { switchToChain } = useChainManagement()
   const {
     data: txReceipt,
     isLoading: isTxReceiptLoading,
@@ -78,6 +82,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
   const filledPrice = offerAmountSpentAsNumber / wantAmountRecAsNumber
 
   const handleCancelOrder = () => {
+    switchToChain(chain_id)
     const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
       Number(deadline), // Convert string to number
       BigInt(atomic_price),
@@ -94,7 +99,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
     })
   }
 
-  console.log('mutation', isLoading, isUninitialized, isError, data)
+  console.log('mutation', isLoading, isUninitialized, isError, data, error)
   console.log(
     'tx receipt',
     isTxReceiptLoading,

@@ -41,7 +41,7 @@ export default function Withdrawals() {
     <Flex p={9} direction="column" pb="150px" bg={'bg.white'}>
       {/* TODO: Heading styles should be in the theme */}
       <Flex direction={'column'} gap={6}>
-        <Heading as={'h1'} fontFamily={'var(--font-ppformula)'} fontSize={'1.5rem'} fontWeight={'medium'}>
+        <Heading as={'h1'} fontFamily={'ppformula'} fontSize={'1.5rem'} fontWeight={'medium'}>
           Withdrawal
         </Heading>
         {/* ! Need to update to tabs when other tab is added. It doesn't make sense right now*/}
@@ -83,7 +83,7 @@ export default function Withdrawals() {
         </Badge>
       </Flex>
       <OrdersTable data={orders || []} onCancelOrder={handleCancelOrder} />
-      <CancelWithdrawDialog isOpen={isOpen} onClose={onClose} order={selectedOrderToCancel} />
+      <CancelWithdrawDialog isOpen={isOpen} onClose={onClose} order={selectedOrderToCancel!} />
     </Flex>
   )
 }
