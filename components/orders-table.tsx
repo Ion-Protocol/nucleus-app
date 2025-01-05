@@ -18,7 +18,7 @@ import { MultiSelectFilter } from './table/MultiSelectFilter'
 import { Pagination } from './table/Pagination'
 import { TableBody } from './table/TableBody'
 import { TableHeader } from './table/TableHeader'
-import WithdrawDetailsModal from './Withdraw/WithdrawalDetailModal/WithdrawlDetailsModal'
+import WithdrawDetailsModal from './Withdraw/WithdrawalDetailModal/withdraw-detail-modal'
 
 const tokenValues: Address[] = [
   '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',

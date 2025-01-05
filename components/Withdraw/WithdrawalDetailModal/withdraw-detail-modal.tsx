@@ -17,8 +17,8 @@ import {
 } from '@chakra-ui/react'
 import { ArrowRight, Ban, Box } from 'lucide-react'
 import { formatUnits } from 'viem'
-import FulfilledDetails from './FulfilledDetails'
-import RequestDetails from './RequestDetails'
+import FulfilledDetails from './withdraw-fulfilled-details'
+import RequestDetails from './withdraw-request-details'
 
 const WithdrawDetailsModal = ({
   isOpen,

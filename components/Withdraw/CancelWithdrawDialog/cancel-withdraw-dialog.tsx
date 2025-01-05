@@ -1,5 +1,6 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
-import { LottieWrapper } from '@/components/global/LottieWrapper'
+import { TxAnimationWrapper } from '@/components/global/tx-animation-wrapper'
+import TxSteps, { Step } from '@/components/global/tx-steps'
 import { atomicQueueContractAddress } from '@/config/constants'
 import { useChainManagement } from '@/hooks/useChainManagement'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
@@ -23,13 +24,28 @@ import {
 import { ArrowRight, Undo2 } from 'lucide-react'
 import { useRef } from 'react'
 import { formatUnits } from 'viem'
-import RequestDetails from '../WithdrawalDetailModal/RequestDetails'
+import RequestDetails from '../WithdrawalDetailModal/withdraw-request-details'
 
 interface CancelWithdrawDialogProps {
   isOpen: boolean
   onClose: () => void
   order: Order
 }
+
+const mockTxSteps = [
+  {
+    title: 'Awaiting wallet signature',
+    status: 'success',
+  },
+  {
+    title: 'Pending Confirmation',
+    status: 'pending',
+  },
+  {
+    title: 'Transaction Completed',
+    status: 'idle',
+  },
+] as Step[]
 
 function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogProps) {
   const [updateAtomicRequest, { isLoading, isUninitialized, isError, error, data }] = useUpdateAtomicRequestMutation({
@@ -148,7 +164,8 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
                 minimumPrice={atomicPriceAsNumber}
                 receiveAtLeast={minimumPrice}
               />
-              <LottieWrapper src="/assets/animations/atom-collider-loader-light.json" loop autoplay />
+              <TxAnimationWrapper status="error" loop autoplay />
+              <TxSteps steps={mockTxSteps} />
             </AlertDialogBody>
           )}
           <AlertDialogFooter display="flex" flexDirection="column" gap={2}>

@@ -1,7 +1,7 @@
 import { Badge, Flex, Heading, useDisclosure } from '@chakra-ui/react'
 
-import OrdersTable from '@/components/OrdersTable'
-import CancelWithdrawDialog from '@/components/Withdraw/CancelWithdrawDialog/CancelWithdrawDialog'
+import OrdersTable from '@/components/orders-table'
+import CancelWithdrawDialog from '@/components/Withdraw/CancelWithdrawDialog/cancel-withdraw-dialog'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
 import { Order, OrderStatus } from '@/types/Order'
