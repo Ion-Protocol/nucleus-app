@@ -244,9 +244,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       layerZeroChainSelector: 30101,
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {
-        [ChainKey.ETHEREUM]: {
-          chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: etherscanBaseUrl,
+        [ChainKey.RARI]: {
+          chain: ChainKey.RARI,
+          explorerBaseUrl: rariExplorerBaseUrl,
         },
       },
       redemptionSourceChain: ChainKey.RARI,
@@ -255,10 +255,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.RARI]: {
           chain: ChainKey.RARI,
           explorerBaseUrl: rariExplorerBaseUrl,
-        },
-        [ChainKey.ETHEREUM]: {
-          chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       wantTokens: {
@@ -278,10 +274,6 @@ const mainnetNetworkAssets: NetworkAssets = {
     receiveOn: ChainKey.RARI,
     redeemComingSoon: false,
     sourceChains: {
-      [ChainKey.ETHEREUM]: {
-        chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: etherscanBaseUrl,
-      },
       [ChainKey.RARI]: {
         chain: ChainKey.RARI,
         explorerBaseUrl: rariExplorerBaseUrl,
