@@ -1,4 +1,5 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
+import { LottieWrapper } from '@/components/global/LottieWrapper'
 import { atomicQueueContractAddress } from '@/config/constants'
 import { useChainManagement } from '@/hooks/useChainManagement'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
@@ -113,12 +114,12 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
   return (
     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} closeOnOverlayClick={false}>
       <AlertDialogOverlay>
-        <AlertDialogContent borderRadius="2xl" bg="bg.white">
+        <AlertDialogContent borderRadius="2xl" bg="bg.white" minWidth={'452px'}>
           <AlertDialogHeader fontFamily="diatype" pt={6} fontSize="xl" fontWeight="medium">
             Cancel Withdrawal
           </AlertDialogHeader>
           {isUninitialized && (
-            <AlertDialogBody>
+            <AlertDialogBody overflow="hidden" display="flex" flexDirection="column" gap={4}>
               <Flex direction={'column'} alignItems={'center'}>
                 <Flex gap={2} justifyContent="center" alignItems="center">
                   <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
@@ -147,6 +148,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
                 minimumPrice={atomicPriceAsNumber}
                 receiveAtLeast={minimumPrice}
               />
+              <LottieWrapper src="/assets/animations/atom-collider-loader-light.json" loop autoplay />
             </AlertDialogBody>
           )}
           <AlertDialogFooter display="flex" flexDirection="column" gap={2}>

@@ -1,6 +1,6 @@
 import { Order } from '@/types/Order'
 import { capitalizeFirstLetter } from '@/utils/string'
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, Icon, Text } from '@chakra-ui/react'
 import { Dot } from 'lucide-react'
 
 interface StatusBadgeProps {
@@ -9,14 +9,14 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   const colorScheme = {
-    pending: 'yellow',
-    fulfilled: 'green',
-    cancelled: 'red',
+    pending: 'thermic.400',
+    fulfilled: 'olivenite.400',
+    cancelled: 'thermic.600',
   }[status]
 
   return (
     <Flex alignItems={'center'}>
-      <Dot strokeWidth={4} color={colorScheme} />
+      <Icon as={Dot} boxSize={6} strokeWidth={6} color={colorScheme} />
       <Text fontSize={'inherit'}>{capitalizeFirstLetter(status)}</Text>
     </Flex>
   )

@@ -31,11 +31,24 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
   }),
   columnHelper.accessor('created_timestamp', {
     header: ({ column }) => <SortableHeader column={column}>Created At</SortableHeader>,
-    cell: (info) => <DateCell date={info.getValue()} />,
+    cell: (info) => (
+      <DateCell
+        date={info.getValue()}
+        txHash={info.row.original.created_transaction_hash}
+        vaultAddress={info.row.original.offer_token}
+      />
+    ),
   }),
   columnHelper.accessor('ending_timestamp', {
     header: ({ column }) => <SortableHeader column={column}>Filled At</SortableHeader>,
-    cell: (info) => <DateCell showLeftArrow={true} date={info.getValue()} />,
+    cell: (info) => (
+      <DateCell
+        date={info.getValue()}
+        txHash={info.row.original.ending_transaction_hash}
+        vaultAddress={info.row.original.offer_token}
+        showLeftArrow={true}
+      />
+    ),
   }),
   columnHelper.accessor('id', {
     header: '',

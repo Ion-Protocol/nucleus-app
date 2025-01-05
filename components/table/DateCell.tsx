@@ -1,13 +1,13 @@
-import { Flex, Link, Text } from '@chakra-ui/react'
+import { Flex, Icon, Link, Text } from '@chakra-ui/react'
 import { format, fromUnixTime } from 'date-fns'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowRight, SquareArrowOutUpRight } from 'lucide-react'
 
 interface DateCellProps {
   date: string
   showLeftArrow?: boolean
   emptyValue?: string
-  txHash?: string
-  vaultAddress?: string
+  txHash?: string | null
+  vaultAddress?: string | null
 }
 
 export function DateCell({
@@ -19,20 +19,27 @@ export function DateCell({
 }: DateCellProps) {
   return (
     <Flex alignItems="center" gap={4}>
-      {showLeftArrow && <ArrowRight size={16} strokeWidth={1.5} />}
+      {showLeftArrow && <Icon as={ArrowRight} color="element.subdued" />}
       {!date || date === '0' ? (
-        <Text fontSize="md" color="neutral.800">
+        <Text fontSize="md" color="element.subdued">
           {emptyValue}
         </Text>
       ) : (
-        <Text fontSize="md" color="">
-          {format(fromUnixTime(Number(date)), 'PP')}
-        </Text>
-      )}
-      {txHash && vaultAddress && (
-        <Link href={`https://etherscan.io/tx/${txHash}`} target="_blank">
-          <ArrowUpRight size={16} />
-        </Link>
+        <Flex alignItems="top" gap={2}>
+          <Text color="element.main" fontSize="md" fontFamily="diatype">
+            {format(fromUnixTime(Number(date)), 'd MMMM yyyy')}
+          </Text>
+          {txHash && vaultAddress && (
+            <Link
+              href={`https://etherscan.io/tx/${txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="element.lighter"
+            >
+              <Icon as={SquareArrowOutUpRight} boxSize={4} color="element.lighter" />
+            </Link>
+          )}
+        </Flex>
       )}
     </Flex>
   )
