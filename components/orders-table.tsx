@@ -1,5 +1,6 @@
 import { selectAddress } from '@/store/slices/account'
 import { Order } from '@/types/Order'
+import { TokenKey } from '@/types/TokenKey'
 import { Button, Flex, Table, TableContainer, Text, useDisclosure } from '@chakra-ui/react'
 import {
   getCoreRowModel,
@@ -14,20 +15,27 @@ import { useSelector } from 'react-redux'
 import { Address } from 'viem'
 import { createOrderColumns } from '../utils/tableColumns'
 import { ConnectAwareButton } from './shared/ConnectAwareButton'
-import { MultiSelectFilter } from './table/MultiSelectFilter'
-import { Pagination } from './table/Pagination'
-import { TableBody } from './table/TableBody'
-import { TableHeader } from './table/TableHeader'
+import { MultiSelectFilter } from './table/multi-select-filter'
+import { TableBody } from './table/table-body'
+import { TableHeader } from './table/table-header'
+import { Pagination } from './table/table-pagination'
 import WithdrawDetailsModal from './Withdraw/WithdrawalDetailModal/withdraw-detail-modal'
 
-const tokenValues: Address[] = [
-  '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
-  '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
-  '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
-  '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
-  '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
-  '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
-]
+const tokenValuesMapping: Partial<Record<TokenKey, Address>> = {
+  [TokenKey.SSETH]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
+  [TokenKey.FETH]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+  [TokenKey.RARIETH]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
+  [TokenKey.UNIFIETH]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
+  [TokenKey.EARNETH]: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
+  [TokenKey.TETH]: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+}
+
+const statusValuesMapping: Record<string, string> = {
+  Filled: 'fulfilled',
+  Pending: 'pending',
+  Expired: 'cancelled',
+}
+
 interface OrdersTableProps {
   data: Order[]
   onCancelOrder: (order: Order) => void
@@ -80,7 +88,6 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
   return (
     <TableContainer>
       <Flex gap={2} justifyContent={'flex-end'} alignItems={'baseline'} pb={3}>
-        {/* <MultiSelectTokenFilter selectedTokens={selectedTokens} onChange={setSelectedTokens} /> */}
         {(selectedTokens.length > 0 || selectedStatus.length > 0) && (
           <Button
             color="element.subdued"
@@ -98,14 +105,10 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
         <MultiSelectFilter
           title="By Asset Type"
           onChange={setSelectedTokens}
-          options={tokenValues}
+          options={tokenValuesMapping}
           isAssetFilter={true}
         />
-        <MultiSelectFilter
-          title="By Status"
-          onChange={setSelectedStatus}
-          options={['fulfilled', 'pending', 'cancelled']}
-        />
+        <MultiSelectFilter title="By Status" onChange={setSelectedStatus} options={statusValuesMapping} />
       </Flex>
       <Table variant="nucleus">
         <TableHeader headerGroups={table.getHeaderGroups()} />

@@ -1,12 +1,12 @@
-import { FormattedAmount } from '@/components/table/FormattedAmount'
-import { SortableHeader } from '@/components/table/SortableHeader'
+import { FormattedAmount } from '@/components/table/formatted-amount'
+import { SortableHeader } from '@/components/table/sortable-header'
 import { Order } from '@/types/Order'
 import { Box, Button } from '@chakra-ui/react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { X } from 'lucide-react'
-import { AssetPair } from '../components/table/AssetPair'
-import { DateCell } from '../components/table/DateCell'
-import { StatusBadge } from '../components/table/StatusBadge'
+import { AssetPair } from '../components/table/asset-pair'
+import { DateCell } from '../components/table/date-cell'
+import { StatusBadge } from '../components/table/status-badge'
 
 const columnHelper = createColumnHelper<Order>()
 

@@ -25,14 +25,16 @@ import { TokenIcon } from '../config/tokenIcons'
 interface MultiSelectFilterProps {
   title: string
   onChange: (values: string[]) => void
-  options: string[]
+  options: Record<string, string>
   isAssetFilter?: boolean
 }
 
 export const MultiSelectFilter = ({ title, options, onChange, isAssetFilter }: MultiSelectFilterProps) => {
   const [searchQuery, setSearchQuery] = React.useState('')
 
-  const filteredValues = options.filter((value) => value.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredValues = Object.entries(options).filter(([key, value]) =>
+    key.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <Popover placement="bottom-end">
@@ -82,10 +84,10 @@ export const MultiSelectFilter = ({ title, options, onChange, isAssetFilter }: M
               )}
               <PopoverBody display="flex" flexDirection="column" padding={2}>
                 <CheckboxGroup onChange={onChange} colorScheme="blackAlpha">
-                  {filteredValues.map((option) => (
+                  {filteredValues.map(([key, value]) => (
                     <Checkbox
-                      key={option}
-                      value={option}
+                      key={key}
+                      value={value}
                       fontFamily="diatype"
                       fontWeight="normal"
                       borderRadius="lg"
@@ -99,12 +101,12 @@ export const MultiSelectFilter = ({ title, options, onChange, isAssetFilter }: M
                           <TokenIcon
                             height={'16px'}
                             width={'16px'}
-                            tokenKey={getSymbolByAddress(option as Address)?.toLowerCase() as TokenKey}
+                            tokenKey={getSymbolByAddress(value as Address)?.toLowerCase() as TokenKey}
                           />
-                          <span>{getSymbolByAddress(option as Address)}</span>
+                          <span>{getSymbolByAddress(value as Address)}</span>
                         </Flex>
                       ) : (
-                        capitalizeFirstLetter(option)
+                        capitalizeFirstLetter(value)
                       )}
                     </Checkbox>
                   ))}

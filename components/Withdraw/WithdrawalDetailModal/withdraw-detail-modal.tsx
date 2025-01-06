@@ -1,5 +1,5 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
-import { StatusBadge } from '@/components/table/StatusBadge'
+import { StatusBadge } from '@/components/table/status-badge'
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumberAsString } from '@/utils/bigint'
