@@ -1,6 +1,6 @@
-import { TokenIcon } from '@/components/config/tokenIcons'
 import { TxAnimationWrapper } from '@/components/global/tx-animation-wrapper'
-import TxSteps, { Step } from '@/components/global/tx-steps'
+import ErrorCodeBlock from '@/components/global/tx-dialog/error-code-block'
+import TxSteps from '@/components/global/tx-steps'
 import { atomicQueueContractAddress } from '@/config/constants'
 import { useChainManagement } from '@/hooks/useChainManagement'
 import { useUpdateAtomicRequestMutation } from '@/store/slices/atomicQueueApi'
@@ -8,7 +8,6 @@ import { useWaitForTransactionReceiptQuery } from '@/store/slices/transactionRec
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
-import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   AlertDialog,
@@ -19,12 +18,14 @@ import {
   AlertDialogOverlay,
   Button,
   Flex,
+  Heading,
+  Link,
   Text,
 } from '@chakra-ui/react'
-import { ArrowRight, Undo2 } from 'lucide-react'
-import { useRef } from 'react'
+import { Eye, EyeOff, Undo2 } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { formatUnits } from 'viem'
-import RequestDetails from '../WithdrawalDetailModal/withdraw-request-details'
+import CancelWithdrawDialogBody from './cancel-withdraw-dialog-body'
 
 interface CancelWithdrawDialogProps {
   isOpen: boolean
@@ -32,35 +33,36 @@ interface CancelWithdrawDialogProps {
   order: Order
 }
 
-const mockTxSteps = [
-  {
-    title: 'Awaiting wallet signature',
-    status: 'success',
-  },
-  {
-    title: 'Pending Confirmation',
-    status: 'pending',
-  },
-  {
-    title: 'Transaction Completed',
-    status: 'idle',
-  },
-] as Step[]
-
 function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogProps) {
-  const [updateAtomicRequest, { isLoading, isUninitialized, isError, error, data }] = useUpdateAtomicRequestMutation({
+  // TODO: Update to use TansStack Query moving forward
+  const [
+    updateAtomicRequest,
+    {
+      error: cancelMutationError,
+      data: cancelMutationData,
+      isLoading: isCancelMutationLoading,
+      isUninitialized,
+      isError: isCancelMutationError,
+      isSuccess: isCancelMutationSuccess,
+      status: cancelMutationStatus,
+    },
+  ] = useUpdateAtomicRequestMutation({
     fixedCacheKey: 'cancel-withdraw',
   })
   const { switchToChain } = useChainManagement()
+  // TODO: Update to use TansStack Query moving forward
   const {
     data: txReceipt,
+    error: txReceiptError,
+    status: txReceiptStatus,
     isLoading: isTxReceiptLoading,
     isError: isTxReceiptError,
     isSuccess: isTxReceiptSuccess,
     isFetching: isTxReceiptFetching,
     isUninitialized: isTxReceiptUninitialized,
-  } = useWaitForTransactionReceiptQuery({ hash: data! }, { skip: !data })
+  } = useWaitForTransactionReceiptQuery({ hash: cancelMutationData! }, { skip: !cancelMutationData })
   const cancelRef = useRef<HTMLButtonElement>(null)
+  const [isFullErrorDisplayed, setIsFullErrorDisplayed] = useState(false)
   if (!order) return null
   const {
     amount,
@@ -87,6 +89,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
   console.table(order)
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
+  // * We might need this to display what the want token was
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
   // Request Data
   const atomicPriceAsNumber = Number(formatUnits(BigInt(atomic_price), 18))
@@ -116,7 +119,14 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
     })
   }
 
-  console.log('mutation', isLoading, isUninitialized, isError, data, error)
+  console.log(
+    'mutation',
+    isCancelMutationLoading,
+    isUninitialized,
+    isCancelMutationError,
+    cancelMutationData,
+    cancelMutationError
+  )
   console.log(
     'tx receipt',
     isTxReceiptLoading,
@@ -127,73 +137,140 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
     txReceipt
   )
 
+  const handleToggleDisplayFullError = () => {
+    setIsFullErrorDisplayed(!isFullErrorDisplayed)
+  }
+
   return (
-    <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose} closeOnOverlayClick={false}>
+    <AlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+      closeOnOverlayClick={false}
+      isCentered
+    >
       <AlertDialogOverlay>
         <AlertDialogContent borderRadius="2xl" bg="bg.white" minWidth={'452px'}>
           <AlertDialogHeader fontFamily="diatype" pt={6} fontSize="xl" fontWeight="medium">
             Cancel Withdrawal
           </AlertDialogHeader>
           {isUninitialized && (
-            <AlertDialogBody overflow="hidden" display="flex" flexDirection="column" gap={4}>
-              <Flex direction={'column'} alignItems={'center'}>
-                <Flex gap={2} justifyContent="center" alignItems="center">
-                  <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-                  <Text fontSize="xl" fontFamily="ppformula">{`${bigIntToNumberAsString(BigInt(offer_amount_spent), {
-                    decimals: 18,
-                    maximumFractionDigits: 2,
-                  })} ${getSymbolByAddress(offer_token)}`}</Text>
-                  <ArrowRight size={16} strokeWidth={1.5} />
-                  {status === 'pending' && (
-                    <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">
-                      Pending...
-                    </Text>
-                  )}
-                </Flex>
-                <Text fontSize="xl" color="element.subdued" fontFamily="diatype" textAlign="center">
-                  Are you sure you want to cancel this transaction?
-                </Text>
-              </Flex>
-              {/* Request */}
-              <RequestDetails
-                amount={amount}
-                offerToken={offer_token}
-                wantToken={want_token}
+            <>
+              <CancelWithdrawDialogBody
+                offerTokenKey={offerTokenKey}
+                offer_amount_spent={offer_amount_spent}
+                offer_token={offer_token}
+                want_token={want_token}
                 deadline={deadline}
-                createdTimestamp={created_timestamp}
-                minimumPrice={atomicPriceAsNumber}
-                receiveAtLeast={minimumPrice}
+                created_timestamp={created_timestamp}
+                atomicPriceAsNumber={atomicPriceAsNumber}
+                minimumPrice={minimumPrice}
+                amount={amount}
+                status={status}
               />
-              <TxAnimationWrapper status="error" loop autoplay />
-              <TxSteps steps={mockTxSteps} />
+            </>
+          )}
+          {!isUninitialized && (
+            <AlertDialogBody display="flex" flexDirection="column" gap={6}>
+              {!isFullErrorDisplayed && (
+                <TxAnimationWrapper
+                  isError={isCancelMutationError || isTxReceiptError}
+                  isLoading={isCancelMutationLoading || isTxReceiptLoading}
+                  isSuccess={isCancelMutationSuccess || isTxReceiptSuccess}
+                  loop
+                  autoplay
+                />
+              )}
+              {!isCancelMutationError && !isTxReceiptError && (
+                <TxSteps
+                  steps={[
+                    { title: 'Awaiting wallet signature', status: cancelMutationStatus },
+                    { title: 'Pending Confirmation', status: txReceiptStatus },
+                  ]}
+                />
+              )}
+              {(isCancelMutationError || isTxReceiptError) && (
+                <Flex flexDirection="column" alignItems="center" gap={4}>
+                  {!isFullErrorDisplayed && (
+                    <>
+                      <Heading as="h1" fontFamily="ppformula" fontSize="2xl" fontWeight="medium">
+                        Transaction Error
+                      </Heading>
+                      <Text
+                        fontFamily="diatype"
+                        fontSize="xl"
+                        fontWeight="normal"
+                        textAlign="center"
+                        color="element.main"
+                      >
+                        If this is unexpected, please reach out to the team through the{' '}
+                        <Link textDecoration="underline" href="https://discord.gg/dmt">
+                          discord
+                        </Link>{' '}
+                        support ticket.
+                      </Text>
+                    </>
+                  )}
+                  {isFullErrorDisplayed && (
+                    <ErrorCodeBlock
+                      error={isCancelMutationError ? (cancelMutationError as string) : (txReceiptError as string)}
+                    />
+                  )}
+                  <Button
+                    fontFamily="diatype"
+                    fontWeight="normal"
+                    variant="link"
+                    color="crystal.600"
+                    onClick={handleToggleDisplayFullError}
+                    rightIcon={
+                      isFullErrorDisplayed ? (
+                        <EyeOff size={18} strokeWidth={1.5} />
+                      ) : (
+                        <Eye size={18} strokeWidth={1.5} />
+                      )
+                    }
+                  >
+                    {isFullErrorDisplayed ? 'Hide Details' : 'Expand for details'}
+                  </Button>
+                </Flex>
+              )}
             </AlertDialogBody>
           )}
           <AlertDialogFooter display="flex" flexDirection="column" gap={2}>
-            <Button
-              onClick={handleCancelOrder}
-              fontFamily="diatype"
-              fontWeight="normal"
-              width="100%"
-              colorScheme="red"
-              background={'red.500'}
-              _hover={{ background: 'red.400' }}
-              _active={{ background: 'red.600' }}
-            >
-              Cancel
-            </Button>
-            <Button
-              ref={cancelRef}
-              onClick={onClose}
-              fontFamily="diatype"
-              fontWeight="normal"
-              color="element.subdued"
-              _hover={{ background: 'bg.secondary' }}
-              width="100%"
-              variant="ghost"
-              rightIcon={<Undo2 size={16} strokeWidth={1.5} />}
-            >
-              Go Back
-            </Button>
+            {isUninitialized && (
+              <>
+                <Button
+                  onClick={handleCancelOrder}
+                  fontFamily="diatype"
+                  fontWeight="normal"
+                  width="100%"
+                  colorScheme="red"
+                  background={'red.500'}
+                  _hover={{ background: 'red.400' }}
+                  _active={{ background: 'red.600' }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  ref={cancelRef}
+                  onClick={onClose}
+                  fontFamily="diatype"
+                  fontWeight="normal"
+                  color="element.subdued"
+                  _hover={{ background: 'bg.secondary' }}
+                  width="100%"
+                  variant="ghost"
+                  rightIcon={<Undo2 size={16} strokeWidth={1.5} />}
+                >
+                  Go Back
+                </Button>
+              </>
+            )}
+            {(isCancelMutationError || isTxReceiptError || isTxReceiptSuccess) && (
+              <Button onClick={onClose} fontFamily="diatype" fontWeight="normal" width="100%">
+                Close
+              </Button>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialogOverlay>

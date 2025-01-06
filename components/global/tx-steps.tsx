@@ -1,12 +1,16 @@
 import { Box, Flex, Icon, IconProps, Text } from '@chakra-ui/react'
+import { QueryStatus } from '@reduxjs/toolkit/query'
 import { CircleX, Hourglass, MailCheck } from 'lucide-react'
 import Loader from './Loader'
+
+// import { MutationStatus, QueryStatus } from '@tanstack/react-query'
 
 type StepStatus = 'idle' | 'pending' | 'success' | 'error'
 
 export interface Step {
   title: string
-  status: StepStatus
+  // status?: QueryStatus | MutationStatus
+  status?: QueryStatus
   isIdle?: boolean
   isPending?: boolean
   isCompleted?: boolean
@@ -16,12 +20,19 @@ export interface Step {
 interface TxStepsProps {
   steps: Step[]
 }
+// TODO: Use when updating to TanStack Query
+// const StepIcons = {
+//   idle: (props: IconProps) => <Icon as={Hourglass} {...props} />,
+//   pending: (props: IconProps) => <Loader variant="secondary" {...props} />,
+//   success: (props: IconProps) => <Icon as={MailCheck} {...props} />,
+//   error: (props: IconProps) => <Icon as={CircleX} {...props} />,
+// }
 
 const StepIcons = {
-  idle: (props: IconProps) => <Icon as={Hourglass} {...props} />,
-  pending: (props: IconProps) => <Loader variant="secondary" {...props} />,
-  success: (props: IconProps) => <Icon as={MailCheck} {...props} />,
-  error: (props: IconProps) => <Icon as={CircleX} {...props} />,
+  [QueryStatus.uninitialized]: (props: IconProps) => <Icon as={Hourglass} {...props} />,
+  [QueryStatus.pending]: (props: IconProps) => <Loader variant="secondary" {...props} />,
+  [QueryStatus.fulfilled]: (props: IconProps) => <Icon as={MailCheck} {...props} />,
+  [QueryStatus.rejected]: (props: IconProps) => <Icon as={CircleX} {...props} />,
 }
 
 const TxSteps = ({ steps }: TxStepsProps) => {
@@ -36,14 +47,16 @@ const TxSteps = ({ steps }: TxStepsProps) => {
               alignItems="center"
               justifyContent="center"
               borderRadius="50%"
-              bg={step.status === 'success' ? 'bg.invert-tertiary' : 'bg.tertiary'}
+              bg={step.status && step.status === QueryStatus.fulfilled ? 'bg.invert-tertiary' : 'bg.tertiary'}
               padding="4"
               boxSize={2}
             >
               <Icon
-                as={StepIcons[step.status]}
+                as={StepIcons[step.status || QueryStatus.uninitialized]}
                 boxSize={5}
-                color={step.status === 'success' ? 'element.invert-secondary' : 'element.subdued'}
+                color={
+                  step.status && step.status === QueryStatus.fulfilled ? 'element.invert-secondary' : 'element.subdued'
+                }
               />
             </Box>
             {lastStep !== step && (
@@ -52,7 +65,7 @@ const TxSteps = ({ steps }: TxStepsProps) => {
                 h={6}
                 top={8}
                 position="absolute"
-                bg={step.status === 'success' ? 'bg.invert-tertiary' : 'bg.tertiary'}
+                bg={step.status && step.status === QueryStatus.fulfilled ? 'bg.invert-tertiary' : 'bg.tertiary'}
               />
             )}
           </Box>

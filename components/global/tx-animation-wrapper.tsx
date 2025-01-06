@@ -5,18 +5,22 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 export const TxAnimationWrapper = ({
   loop,
   autoplay,
-  status,
+  isLoading,
+  isSuccess,
+  isError,
   tokenKey,
   amount,
 }: {
   loop: boolean
   autoplay: boolean
-  status: 'loading' | 'success' | 'error'
+  isLoading: boolean
+  isSuccess: boolean
+  isError: boolean
   tokenKey?: TokenKey
   amount?: string
 }) => {
   const { colorMode } = useColorMode()
-  if (status === 'loading') {
+  if (isLoading) {
     return (
       <Flex
         direction={'column'}
@@ -48,7 +52,7 @@ export const TxAnimationWrapper = ({
       </Flex>
     )
   }
-  if (status === 'success') {
+  if (isSuccess) {
     return (
       <Flex
         direction={'column'}
@@ -74,7 +78,7 @@ export const TxAnimationWrapper = ({
       </Flex>
     )
   }
-  if (status === 'error') {
+  if (isError) {
     return (
       <Flex
         direction={'column'}
