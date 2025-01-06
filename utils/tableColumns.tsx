@@ -44,6 +44,8 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
     cell: (info) => (
       <DateCell
         date={info.getValue()}
+        isCancelled={info.row.original.status === 'cancelled' || info.row.original.amount === '0'}
+        isPending={!info.getValue() || info.getValue() === '0'}
         txHash={info.row.original.ending_transaction_hash}
         vaultAddress={info.row.original.offer_token}
         showLeftArrow={true}
@@ -59,7 +61,7 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
           fontFamily="diatype"
           variant="outline"
           fontWeight="normal"
-          bg="white"
+          bg="bg.white"
           border="1px solid"
           borderColor="neutral.600"
           width="90px"

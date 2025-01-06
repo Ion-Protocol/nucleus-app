@@ -5,14 +5,16 @@ import { ArrowRight, SquareArrowOutUpRight } from 'lucide-react'
 interface DateCellProps {
   date: string
   showLeftArrow?: boolean
-  emptyValue?: string
   txHash?: string | null
   vaultAddress?: string | null
+  isCancelled?: boolean
+  isPending?: boolean
 }
 
 export function DateCell({
   date,
-  emptyValue = 'Pending...',
+  isCancelled = false,
+  isPending = false,
   txHash,
   vaultAddress,
   showLeftArrow = false,
@@ -20,9 +22,9 @@ export function DateCell({
   return (
     <Flex alignItems="center" gap={4}>
       {showLeftArrow && <Icon as={ArrowRight} color="element.subdued" />}
-      {!date || date === '0' ? (
+      {isPending || isCancelled ? (
         <Text fontSize="md" color="element.subdued">
-          {emptyValue}
+          {isPending ? 'Pending...' : 'Expired...'}
         </Text>
       ) : (
         <Flex alignItems="top" gap={2}>
@@ -31,6 +33,8 @@ export function DateCell({
           </Text>
           {txHash && vaultAddress && (
             <Link
+              onClick={(e) => e.stopPropagation()}
+              isExternal
               href={`https://etherscan.io/tx/${txHash}`}
               target="_blank"
               rel="noopener noreferrer"
