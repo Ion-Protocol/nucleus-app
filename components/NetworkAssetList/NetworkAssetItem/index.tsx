@@ -33,9 +33,12 @@ function NetworkAssetItem({
   shouldShowMessageForLargeNetApy,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
+  // Skipping for now to prevent errors
+  // TODO: Figure out why this was only called for SSETH
   const { data: rewardsResponse } = useGetRewardsAPYQuery(
     { vaultAddress: boringVaultAddress as Address },
-    { skip: !boringVaultAddress || networkAssetKey !== TokenKey.SSETH }
+    // { skip: true }
+    { skip: !boringVaultAddress || networkAssetKey === TokenKey.SSETH }
   )
   const {
     data: boringVaultApy,

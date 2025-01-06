@@ -509,7 +509,8 @@ export const selectReceiveTokenKey = (state: RootState): TokenKey | null => {
   const bridgesState = selectBridgesState(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
-  if (!networkAssetConfig) return null
+  const tokenKeys = selectReceiveTokens(state)
+  if (!networkAssetConfig) return tokenKeys[0]
   return (
     bridgesState.selectedReceiveToken ||
     networkAssetConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[0] ||

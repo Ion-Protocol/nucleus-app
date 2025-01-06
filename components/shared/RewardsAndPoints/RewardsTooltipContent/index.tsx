@@ -22,9 +22,12 @@ export function RewardsTooltipContent({
   shouldShowMessageForLargeNetApy,
   tokenKey,
 }: RewardsTooltipContentConnector.Props) {
+  // Skipping for now to prevent errors
+  // TODO: Figure out why this was only called for SSETH
   const { data: rewardsResponse } = useGetRewardsAPYQuery(
     { vaultAddress: boringVaultAddress as Address },
-    { skip: !boringVaultAddress || tokenKey !== TokenKey.SSETH }
+    { skip: true }
+    // { skip: !boringVaultAddress }
   )
   const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
   const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
@@ -47,13 +50,6 @@ export function RewardsTooltipContent({
 
   return (
     <Flex direction="column" p={3} gap={3}>
-      <Flex align="center" gap={2}>
-        <InfoIcon color="text" fontSize="12px" />
-        <Text variant="smallParagraph" color="text">
-          This vault earns additional incentives
-        </Text>
-      </Flex>
-
       {/* Default Yield */}
       <Flex direction="column">
         <Flex align="center" gap={2}>
@@ -76,49 +72,6 @@ export function RewardsTooltipContent({
           </Text>
         </Flex>
       </Flex>
-
-      {/* Token Incentives */}
-      {processedTokenIncentives.length > 0 && (
-        <>
-          <Divider borderColor="borderLight" />
-
-          <Flex direction="column">
-            <Flex align="center" gap={2}>
-              <Text variant="smallParagraph" color="textSecondary">
-                Token Incentives
-              </Text>
-              <IonTooltip label="Your rewards are calculated using a daily snapshot, and claims are made available each week until the end of the incentives campaign.APYs are calculated as (APY = Annualized Incentives Value / Current TVL)">
-                <InfoOutlineIcon fontSize="12px" color="infoIcon" />
-              </IonTooltip>
-            </Flex>
-            {processedTokenIncentives.map((tokenIncentive) => (
-              <Flex key={tokenIncentive.tokenKey} align="center" justify="space-between" mt={1}>
-                <Flex gap={2}>
-                  <TokenIcon tokenKey={tokenIncentive.tokenKey} fontSize="20px" />
-                  {tokenIncentive.etherscanUrl ? (
-                    <Link
-                      href={tokenIncentive.etherscanUrl}
-                      isExternal
-                      style={{ textDecoration: 'underline', textUnderlineOffset: '3px' }}
-                    >
-                      <Text variant="smallParagraph" color="text">
-                        {tokenIncentive.name}
-                      </Text>
-                    </Link>
-                  ) : (
-                    <Text variant="smallParagraph" color="text">
-                      {tokenIncentive.name}
-                    </Text>
-                  )}
-                </Flex>
-                <Text variant="smallParagraph" color="text">
-                  {tokenIncentive.formattedApy}
-                </Text>
-              </Flex>
-            ))}
-          </Flex>
-        </>
-      )}
 
       <Divider borderColor="borderLight" />
 
