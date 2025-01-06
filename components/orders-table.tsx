@@ -1,7 +1,7 @@
 import { selectAddress } from '@/store/slices/account'
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
-import { Button, Flex, Table, TableContainer, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, Flex, Link, Table, TableContainer, Text, useDisclosure } from '@chakra-ui/react'
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -10,6 +10,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { WalletMinimal } from 'lucide-react'
+import NextLink from 'next/link'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
@@ -19,6 +20,7 @@ import { MultiSelectFilter } from './table/multi-select-filter'
 import { TableBody } from './table/table-body'
 import { TableHeader } from './table/table-header'
 import { Pagination } from './table/table-pagination'
+import CancelWithdrawDialog from './Withdraw/CancelWithdrawDialog/cancel-withdraw-dialog'
 import WithdrawDetailsModal from './Withdraw/WithdrawalDetailModal/withdraw-detail-modal'
 
 const tokenValuesMapping: Partial<Record<TokenKey, Address>> = {
@@ -38,16 +40,27 @@ const statusValuesMapping: Record<string, string> = {
 
 interface OrdersTableProps {
   data: Order[]
-  onCancelOrder: (order: Order) => void
 }
 
-const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
+const OrdersTable: React.FC<OrdersTableProps> = ({ data }) => {
   const [selectedTokens, setSelectedTokens] = React.useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = React.useState<string[]>([])
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
-  const columns = React.useMemo(() => createOrderColumns(onCancelOrder), [onCancelOrder])
+  const [selectedOrderToCancel, setSelectedOrderToCancel] = useState<Order | null>(null)
+  const { isOpen: isDetailsOpen, onOpen: onDetailsOpen, onClose: onDetailsClose } = useDisclosure()
+  const { isOpen: isCancelOpen, onOpen: onCancelOpen, onClose: onCancelClose } = useDisclosure()
+
+  const handleCancelOrder = useCallback(
+    (order: Order) => {
+      setSelectedOrderToCancel(order)
+      onCancelOpen()
+    },
+    [onCancelOpen]
+  )
+
+  const columns = React.useMemo(() => createOrderColumns(handleCancelOrder), [handleCancelOrder])
   const table = useReactTable({
-    debugTable: true,
+    debugTable: false,
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -56,15 +69,14 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
     getPaginationRowModel: getPaginationRowModel(),
   })
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const userAddress = useSelector(selectAddress)
 
   const handleRowClick = useCallback(
     (order: Order) => {
       setSelectedOrder(order)
-      onOpen()
+      onDetailsOpen()
     },
-    [onOpen]
+    [onDetailsOpen]
   )
 
   const handleClearFilters = () => {
@@ -134,7 +146,22 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, onCancelOrder }) => {
           </Flex>
         </Flex>
       )}
-      <WithdrawDetailsModal isOpen={isOpen} onClose={onClose} order={selectedOrder} />
+      {!data.length && (
+        <Flex justifyContent={'center'} height={'10rem'}>
+          <Flex direction={'column'} justifyContent={'center'} alignItems={'center'} gap={3}>
+            <Text fontFamily="diatype" fontSize="sm" color="element.subdued">
+              You haven&apos;t made any withdrawals yet
+            </Text>
+            <Link as={NextLink} href="/dashboard" _hover={{ textDecoration: 'none' }}>
+              <Button variant={'outline'} fontWeight="normal">
+                Deposit Now
+              </Button>
+            </Link>
+          </Flex>
+        </Flex>
+      )}
+      <WithdrawDetailsModal isOpen={isDetailsOpen} onClose={onDetailsClose} order={selectedOrder} />
+      <CancelWithdrawDialog isOpen={isCancelOpen} onClose={onCancelClose} order={selectedOrderToCancel!} />
     </TableContainer>
   )
 }

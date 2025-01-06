@@ -1,10 +1,9 @@
 import { Badge, Flex, Heading, useDisclosure } from '@chakra-ui/react'
 
 import OrdersTable from '@/components/orders-table'
-import CancelWithdrawDialog from '@/components/Withdraw/CancelWithdrawDialog/cancel-withdraw-dialog'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
-import { Order, OrderStatus } from '@/types/Order'
+import { OrderStatus } from '@/types/Order'
 import { ClockArrowUp } from 'lucide-react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -12,7 +11,6 @@ import { useSelector } from 'react-redux'
 export default function Withdrawals() {
   const userAddress = useSelector(selectAddress)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [selectedOrderToCancel, setSelectedOrderToCancel] = useState<Order | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [status, setStatus] = useState<OrderStatus | 'all'>('all')
@@ -30,12 +28,6 @@ export default function Withdrawals() {
       skip: !userAddress,
     }
   )
-  console.table(orders)
-
-  const handleCancelOrder = (order: Order) => {
-    setSelectedOrderToCancel(order)
-    onOpen()
-  }
 
   return (
     <Flex p={9} direction="column" pb="150px" bg={'bg.white'}>
@@ -82,8 +74,7 @@ export default function Withdrawals() {
           Withdrawal Activity
         </Badge>
       </Flex>
-      <OrdersTable data={orders || []} onCancelOrder={handleCancelOrder} />
-      <CancelWithdrawDialog isOpen={isOpen} onClose={onClose} order={selectedOrderToCancel!} />
+      <OrdersTable data={orders || []} />
     </Flex>
   )
 }

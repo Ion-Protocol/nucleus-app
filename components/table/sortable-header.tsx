@@ -12,7 +12,7 @@ export function SortableHeader<T>({ column, children }: SortableHeaderProps<T>) 
   return (
     <Button
       variant="ghost"
-      _hover={'none'}
+      _hover={{ bg: 'none' }}
       _active={{ bg: 'transparent' }}
       padding={0}
       display={'flex'}

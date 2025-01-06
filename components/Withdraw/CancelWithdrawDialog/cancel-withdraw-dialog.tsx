@@ -1,3 +1,4 @@
+import { TokenIcon } from '@/components/config/tokenIcons'
 import { TxAnimationWrapper } from '@/components/global/tx-animation-wrapper'
 import ErrorCodeBlock from '@/components/global/tx-dialog/error-code-block'
 import TxSteps from '@/components/global/tx-steps'
@@ -8,6 +9,7 @@ import { useWaitForTransactionReceiptQuery } from '@/store/slices/transactionRec
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
 import { prepareAtomicRequestData } from '@/utils/atomicRequest'
+import { bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   AlertDialog,
@@ -19,10 +21,11 @@ import {
   Button,
   Flex,
   Heading,
+  Icon,
   Link,
   Text,
 } from '@chakra-ui/react'
-import { Eye, EyeOff, Undo2 } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Minus, Undo2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { formatUnits } from 'viem'
 import CancelWithdrawDialogBody from './cancel-withdraw-dialog-body'
@@ -110,7 +113,7 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
       offer_token,
       want_token,
       atomicQueueContractAddress,
-      1 // destination chain id
+      chain_id // destination chain id
     )
 
     updateAtomicRequest({
@@ -181,13 +184,32 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
                   autoplay
                 />
               )}
-              {!isCancelMutationError && !isTxReceiptError && (
+              {!isCancelMutationError && !isTxReceiptError && !isTxReceiptSuccess && (
                 <TxSteps
                   steps={[
                     { title: 'Awaiting wallet signature', status: cancelMutationStatus },
                     { title: 'Pending Confirmation', status: txReceiptStatus },
                   ]}
                 />
+              )}
+              {isTxReceiptSuccess && (
+                <Flex flexDirection="column" alignItems="center" gap={4}>
+                  <Flex gap={2} justifyContent="center" alignItems="center">
+                    <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
+                    <Text as="h1" fontFamily="ppformula" fontSize="xl" fontWeight="medium">{`${bigIntToNumberAsString(
+                      BigInt(amount),
+                      {
+                        decimals: 18,
+                        maximumFractionDigits: 2,
+                      }
+                    )} ${getSymbolByAddress(offer_token)}`}</Text>
+                    <Icon as={ArrowRight} size={16} color="element.subdued" strokeWidth={1.5} />
+                    <Icon as={Minus} size={20} color="element.main" strokeWidth={1} />
+                  </Flex>
+                  <Text fontFamily="diatype" fontSize="xl" fontWeight="normal" textAlign="center" color="element.main">
+                    Transaction cancelled with success.
+                  </Text>
+                </Flex>
               )}
               {(isCancelMutationError || isTxReceiptError) && (
                 <Flex flexDirection="column" alignItems="center" gap={4}>
