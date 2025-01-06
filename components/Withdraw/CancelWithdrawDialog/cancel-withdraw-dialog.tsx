@@ -204,7 +204,12 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
                         color="element.main"
                       >
                         If this is unexpected, please reach out to the team through the{' '}
-                        <Link textDecoration="underline" href="https://discord.gg/dmt">
+                        <Link
+                          textDecoration="underline"
+                          isExternal
+                          href="https://discord.gg/wPRjEwa4xw"
+                          color="element.main"
+                        >
                           discord
                         </Link>{' '}
                         support ticket.
