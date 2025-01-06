@@ -16,6 +16,7 @@ import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
 import { useSelector } from 'react-redux'
 import { formatUnits } from 'viem'
 import { useRedeemData } from './useRedeemData'
+import { useAppSelector } from '@/store/hooks'
 
 export const useRedeemSummaryData = () => {
   const { useGetTokenRateInQuote, usePreviewFee, rateInQuoteWithFee } = useRedeemData()
@@ -33,7 +34,7 @@ export const useRedeemSummaryData = () => {
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
   const tokenKeys = useSelector(selectReceiveTokens)
-  const receiveTokenKey = useSelector(selectReceiveTokenKey) || tokenKeys[0]
+  const receiveTokenKey = useAppSelector(selectReceiveTokenKey)
   const receiveToken = tokensConfig[receiveTokenKey as keyof typeof tokensConfig]
   const sharesTokenKey = networkAssetConfig?.token.name
 
