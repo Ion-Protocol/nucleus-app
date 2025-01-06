@@ -30,13 +30,13 @@ export function Pagination({
   return (
     <Flex justify="space-between" align="center" w="full" p={4} borderTop="1px" borderColor="gray.200">
       <HStack spacing={3}>
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="element.main">
           {`${pageItems} of ${totalItems} items`}
         </Text>
       </HStack>
 
       <HStack spacing={1}>
-        <Text fontSize="sm" color="gray.600">
+        <Text fontSize="sm" color="element.main">
           Page {currentPage} / {totalPages}
         </Text>
         <IconButton

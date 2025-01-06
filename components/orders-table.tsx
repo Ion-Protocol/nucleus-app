@@ -32,7 +32,7 @@ const tokenValuesMapping: Partial<Record<TokenKey, Address>> = {
   [TokenKey.TETH]: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
 }
 
-const statusValuesMapping: Record<string, string> = {
+export const statusValuesMapping: Record<string, string> = {
   Filled: 'fulfilled',
   Pending: 'pending',
   Expired: 'cancelled',
@@ -40,9 +40,10 @@ const statusValuesMapping: Record<string, string> = {
 
 interface OrdersTableProps {
   data: Order[]
+  refetch: () => void
 }
 
-const OrdersTable: React.FC<OrdersTableProps> = ({ data }) => {
+const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
   const [selectedTokens, setSelectedTokens] = React.useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = React.useState<string[]>([])
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
@@ -57,6 +58,12 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data }) => {
     },
     [onCancelOpen]
   )
+
+  const handleCancelClose = () => {
+    onCancelClose()
+    setSelectedOrderToCancel(null)
+    refetch()
+  }
 
   const columns = React.useMemo(() => createOrderColumns(handleCancelOrder), [handleCancelOrder])
   const table = useReactTable({
@@ -161,7 +168,9 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data }) => {
         </Flex>
       )}
       <WithdrawDetailsModal isOpen={isDetailsOpen} onClose={onDetailsClose} order={selectedOrder} />
-      <CancelWithdrawDialog isOpen={isCancelOpen} onClose={onCancelClose} order={selectedOrderToCancel!} />
+      {selectedOrderToCancel && (
+        <CancelWithdrawDialog isOpen={isCancelOpen} onClose={handleCancelClose} order={selectedOrderToCancel} />
+      )}
     </TableContainer>
   )
 }

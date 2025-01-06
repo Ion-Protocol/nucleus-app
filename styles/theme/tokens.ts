@@ -212,15 +212,15 @@ export const semanticTokens = {
     bg: {
       white: {
         default: 'nucleus-neutral.0',
-        _dark: 'nucleus-neutral.0',
+        _dark: 'nucleus-neutral.900',
       },
       main: {
         default: 'nucleus-neutral.50',
-        _dark: 'nucleus-neutral.50',
+        _dark: 'nucleus-neutral.800',
       },
       secondary: {
         default: 'nucleus-neutral.100',
-        _dark: 'nucleus-neutral.100',
+        _dark: 'nucleus-neutral.700',
       },
       tertiary: {
         default: 'nucleus-neutral.200',
@@ -246,19 +246,19 @@ export const semanticTokens = {
     element: {
       darker: {
         default: 'nucleus-neutral.900',
-        _dark: 'nucleus-neutral.900',
+        _dark: 'nucleus-neutral.50',
       },
       main: {
         default: 'nucleus-neutral.800',
-        _dark: 'nucleus-neutral.800',
+        _dark: 'nucleus-neutral.100',
       },
       lighter: {
         default: 'nucleus-neutral.700',
-        _dark: 'nucleus-neutral.700',
+        _dark: 'nucleus-neutral.100',
       },
       subdued: {
         default: 'nucleus-neutral.600',
-        _dark: 'nucleus-neutral.600',
+        _dark: 'nucleus-neutral.500',
       },
       disabled: {
         default: 'nucleus-neutral.400',

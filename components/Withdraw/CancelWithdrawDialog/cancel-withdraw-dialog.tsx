@@ -37,37 +37,8 @@ interface CancelWithdrawDialogProps {
 }
 
 function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogProps) {
-  // TODO: Update to use TansStack Query moving forward
-  const [
-    updateAtomicRequest,
-    {
-      error: cancelMutationError,
-      data: cancelMutationData,
-      isLoading: isCancelMutationLoading,
-      isUninitialized,
-      isError: isCancelMutationError,
-      isSuccess: isCancelMutationSuccess,
-      status: cancelMutationStatus,
-    },
-  ] = useUpdateAtomicRequestMutation({
-    fixedCacheKey: 'cancel-withdraw',
-  })
-  const { switchToChain } = useChainManagement()
-  // TODO: Update to use TansStack Query moving forward
   const {
-    data: txReceipt,
-    error: txReceiptError,
-    status: txReceiptStatus,
-    isLoading: isTxReceiptLoading,
-    isError: isTxReceiptError,
-    isSuccess: isTxReceiptSuccess,
-    isFetching: isTxReceiptFetching,
-    isUninitialized: isTxReceiptUninitialized,
-  } = useWaitForTransactionReceiptQuery({ hash: cancelMutationData! }, { skip: !cancelMutationData })
-  const cancelRef = useRef<HTMLButtonElement>(null)
-  const [isFullErrorDisplayed, setIsFullErrorDisplayed] = useState(false)
-  if (!order) return null
-  const {
+    id,
     amount,
     status,
     offer_token,
@@ -89,6 +60,36 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
     created_transaction_hash,
     ending_transaction_hash,
   } = order
+  // TODO: Update to use TansStack Query moving forward
+  const [
+    updateAtomicRequest,
+    {
+      error: cancelMutationError,
+      data: cancelMutationData,
+      isLoading: isCancelMutationLoading,
+      isUninitialized,
+      isError: isCancelMutationError,
+      isSuccess: isCancelMutationSuccess,
+      status: cancelMutationStatus,
+    },
+  ] = useUpdateAtomicRequestMutation({
+    fixedCacheKey: `cancel-withdraw-${id}`,
+  })
+  const { switchToChain } = useChainManagement()
+  // TODO: Update to use TansStack Query moving forward
+  const {
+    data: txReceipt,
+    error: txReceiptError,
+    status: txReceiptStatus,
+    isLoading: isTxReceiptLoading,
+    isError: isTxReceiptError,
+    isSuccess: isTxReceiptSuccess,
+    isFetching: isTxReceiptFetching,
+    isUninitialized: isTxReceiptUninitialized,
+  } = useWaitForTransactionReceiptQuery({ hash: cancelMutationData! }, { skip: !cancelMutationData })
+  const cancelRef = useRef<HTMLButtonElement>(null)
+  const [isFullErrorDisplayed, setIsFullErrorDisplayed] = useState(false)
+
   console.table(order)
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey

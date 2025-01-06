@@ -16,7 +16,7 @@ export const components = {
           fontFamily: 'diatype',
         },
         th: {
-          color: 'neutral.800',
+          color: 'element.subdued',
           fontWeight: 'normal',
           textTransform: 'none',
           fontSize: 'sm',
@@ -36,7 +36,7 @@ export const components = {
             },
             '&:hover': {
               td: {
-                bg: 'neutral.200',
+                bg: 'bg.main',
               },
             },
             '&:first-of-type': {

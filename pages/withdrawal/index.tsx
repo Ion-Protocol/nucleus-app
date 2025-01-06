@@ -1,21 +1,19 @@
-import { Badge, Flex, Heading, useDisclosure } from '@chakra-ui/react'
+import { Badge, Flex, Heading } from '@chakra-ui/react'
 
 import OrdersTable from '@/components/orders-table'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
-import { OrderStatus } from '@/types/Order'
 import { ClockArrowUp } from 'lucide-react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 export default function Withdrawals() {
   const userAddress = useSelector(selectAddress)
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
-  const [status, setStatus] = useState<OrderStatus | 'all'>('all')
   const {
     data: orders,
+    refetch,
     isLoading,
     isError,
     isSuccess,
@@ -74,7 +72,7 @@ export default function Withdrawals() {
           Withdrawal Activity
         </Badge>
       </Flex>
-      <OrdersTable data={orders || []} />
+      <OrdersTable data={orders || []} refetch={refetch} />
     </Flex>
   )
 }
