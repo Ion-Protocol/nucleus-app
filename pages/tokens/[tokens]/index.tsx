@@ -1,8 +1,7 @@
-import { Button, Flex, Heading, Image, Text } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 
-import { discordUrl, hardcodedApy } from '@/config/constants'
+import { hardcodedApy } from '@/config/constants'
 import { useAppSelector } from '@/store/hooks'
-import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
 import {
   selectContractAddressByName,
   selectNetworkAssetConfig,
@@ -10,7 +9,6 @@ import {
 } from '@/store/slices/networkAssets'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { TokenKey } from '@/types/TokenKey'
-import { abbreviateNumber } from '@/utils/number'
 import { useColorMode } from '@chakra-ui/react'
 
 import { MintAndRedeem } from '@/components/NetworkAsset/MintAndRedeem'
@@ -30,27 +28,11 @@ export default function Token() {
   const networkAssetFromRoute = useAppSelector(selectNetworkAssetFromRoute)
   const boringVaultAddress = useAppSelector((state) => selectContractAddressByName(state, 'boringVault'))
 
-  const {
-    data: rewardsResponse,
-    isSuccess: isRewardsAPYSuccess,
-    isLoading: isRewardsAPYLoading,
-    isError: isRewardsAPYError,
-    error: rewardsAPYError,
-  } = useGetRewardsAPYQuery(
-    { vaultAddress: boringVaultAddress! },
-    { skip: !boringVaultAddress || networkAssetFromRoute !== TokenKey.SSETH }
-  )
-
   const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
 
   const vaultAssetApy = boringVaultApy?.apy ? boringVaultApy.apy : hardcodedApy
 
-  const tvl =
-    networkAssetFromRoute !== TokenKey.SSETH && rewardsResponse ? abbreviateNumber(rewardsResponse?.TVL) : undefined
-  const apy =
-    networkAssetFromRoute === TokenKey.SSETH && rewardsResponse
-      ? `${(rewardsResponse?.APY + vaultAssetApy).toFixed(2)}%`
-      : `${vaultAssetApy.toFixed(2)}%`
+  const apy = networkAssetFromRoute === TokenKey.SSETH ? `${vaultAssetApy.toFixed(2)}%` : ''
 
   if (isNetworkAssetPaused) {
     return <Paused />
@@ -67,7 +49,7 @@ export default function Token() {
         {/* TVL */}
         <Flex gap={6}>
           <Tvl />
-          <Apy apy={apy} loading={isRewardsAPYLoading} />
+          <Apy apy={apy} loading={false} />
           <RewardsAndPoints />
         </Flex>
 

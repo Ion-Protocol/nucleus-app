@@ -22,9 +22,12 @@ export function RewardsTooltipContent({
   shouldShowMessageForLargeNetApy,
   tokenKey,
 }: RewardsTooltipContentConnector.Props) {
+  // Skipping for now to prevent errors
+  // TODO: Figure out why this was only called for SSETH
   const { data: rewardsResponse } = useGetRewardsAPYQuery(
     { vaultAddress: boringVaultAddress as Address },
-    { skip: !boringVaultAddress || tokenKey !== TokenKey.SSETH }
+    { skip: true }
+    // { skip: !boringVaultAddress }
   )
   const { data: boringVaultApy } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
   const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
