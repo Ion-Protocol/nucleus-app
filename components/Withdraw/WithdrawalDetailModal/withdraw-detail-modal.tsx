@@ -57,8 +57,8 @@ const WithdrawDetailsModal = ({
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
   // Request Data
   const atomicPriceAsNumber = Number(formatUnits(BigInt(atomic_price), 18))
-  const amountAsNumber = Number(formatUnits(BigInt(amount), 18))
-  const minimumPrice = atomicPriceAsNumber * amountAsNumber
+  const minimumPrice = Number(formatUnits(BigInt(amount), 18))
+  const receiveAtLeast = atomicPriceAsNumber * minimumPrice
 
   // Fulfillment Data
   const offerAmountSpentAsNumber = Number(formatUnits(BigInt(offer_amount_spent), 18))
@@ -112,9 +112,9 @@ const WithdrawDetailsModal = ({
               offerToken={offer_token}
               wantToken={want_token}
               deadline={deadline}
-              receiveAtLeast={minimumPrice}
+              receiveAtLeast={receiveAtLeast}
               createdTimestamp={created_timestamp}
-              minimumPrice={atomicPriceAsNumber}
+              minimumPrice={minimumPrice}
             />
             {/* Fulfillment */}
             {status === 'fulfilled' && (

@@ -42,9 +42,6 @@ function NetworkAssetItem({
     isLoading: isBoringVaultApyLoading,
     isError: isBoringVaultApyError,
   } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
-  if (networkAssetKey === TokenKey.SSETH) {
-    console.log('boringVaultApy', boringVaultApy)
-  }
 
   const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
   const totalApy =
