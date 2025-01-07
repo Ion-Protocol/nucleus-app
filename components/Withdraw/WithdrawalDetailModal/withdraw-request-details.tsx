@@ -1,4 +1,5 @@
 import { bigIntToNumberAsString } from '@/utils/bigint'
+import { formatWithSignificantDecimals } from '@/utils/number'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import { Flex, Heading, Text } from '@chakra-ui/react'
 import { format, fromUnixTime } from 'date-fns'
@@ -23,6 +24,11 @@ const RequestDetails = ({
   deadline,
   createdTimestamp,
 }: RequestDetailsProps) => {
+  const formattedAmount = formatWithSignificantDecimals(
+    bigIntToNumberAsString(BigInt(amount), { minimumFractionDigits: 0, maximumFractionDigits: 18 })
+  )
+  const formattedReceiveAtLeast = formatWithSignificantDecimals(receiveAtLeast)
+  console.log('formattedReceiveAtLeast', formattedReceiveAtLeast)
   return (
     <Flex direction="column" gap={2}>
       <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular" color="element.main">
@@ -58,10 +64,7 @@ const RequestDetails = ({
             Receive at least
           </Text>
           <Text fontSize="md" color="element.lighter">
-            {`
-                ${receiveAtLeast.toFixed(2)} 
-                ${getSymbolByAddress(wantToken)}
-                `}
+            {`${formatWithSignificantDecimals(receiveAtLeast)} ${getSymbolByAddress(wantToken)}`}
           </Text>
         </Flex>
         <Flex justifyContent="space-between">

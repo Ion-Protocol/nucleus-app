@@ -58,6 +58,36 @@ export function convertToDecimals(input: string, decimals: number = 18): string 
   return whole + decimalPadded
 }
 
+export const formatWithSignificantDecimals = (value: number | string, significantDigits: number = 2): string => {
+  // Convert string input to number if needed
+  const numValue = typeof value === 'string' ? parseFloat(value) : value
+
+  // Handle NaN and invalid inputs
+  if (isNaN(numValue)) return '0'
+
+  // Handle zero value
+  if (numValue === 0) return '0'
+
+  // Convert to string and remove scientific notation
+  const str = numValue.toFixed(20)
+
+  // Split into integer and decimal parts
+  const [integer, decimal] = str.split('.')
+
+  if (!decimal) return integer
+
+  // Find the first non-zero digit
+  const firstNonZeroIndex = decimal.split('').findIndex((digit) => digit !== '0')
+
+  if (firstNonZeroIndex === -1) return integer
+
+  // Keep the leading zeros plus specified number of significant digits after the first non-zero digit
+  const significantPart = decimal.substring(0, firstNonZeroIndex + significantDigits)
+
+  // Return formatted number
+  return `${integer}.${significantPart}`
+}
+
 export function convertFromDecimals(input: string, decimals: number = 18): string {
   if (parseFloat(input) === 0) {
     return '0'
