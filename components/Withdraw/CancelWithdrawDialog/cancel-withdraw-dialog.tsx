@@ -27,7 +27,6 @@ import {
 } from '@chakra-ui/react'
 import { ArrowRight, Eye, EyeOff, Minus, Undo2 } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { formatUnits } from 'viem'
 import CancelWithdrawDialogBody from './cancel-withdraw-dialog-body'
 
 interface CancelWithdrawDialogProps {
@@ -95,15 +94,6 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   // * We might need this to display what the want token was
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
-  // Request Data
-  const atomicPriceAsNumber = Number(formatUnits(BigInt(atomic_price), 18))
-  const amountAsNumber = Number(formatUnits(BigInt(amount), 18))
-  const minimumPrice = atomicPriceAsNumber * amountAsNumber
-
-  // Fulfillment Data
-  const offerAmountSpentAsNumber = Number(formatUnits(BigInt(offer_amount_spent), 18))
-  const wantAmountRecAsNumber = Number(formatUnits(BigInt(want_amount_rec), 18))
-  const filledPrice = offerAmountSpentAsNumber / wantAmountRecAsNumber
 
   const handleCancelOrder = () => {
     switchToChain(chain_id)
@@ -161,15 +151,14 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
           {isUninitialized && (
             <>
               <CancelWithdrawDialogBody
-                offerTokenKey={offerTokenKey}
+                amount={amount}
+                atomic_price={atomic_price}
+                created_timestamp={created_timestamp}
+                created_transaction_hash={created_transaction_hash}
+                deadline={deadline}
                 offer_amount_spent={offer_amount_spent}
                 offer_token={offer_token}
                 want_token={want_token}
-                deadline={deadline}
-                created_timestamp={created_timestamp}
-                atomicPriceAsNumber={atomicPriceAsNumber}
-                minimumPrice={minimumPrice}
-                amount={amount}
                 status={status}
               />
             </>

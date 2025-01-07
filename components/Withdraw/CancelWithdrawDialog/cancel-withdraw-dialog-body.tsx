@@ -8,29 +8,28 @@ import { Address } from 'viem'
 import RequestDetails from '../WithdrawalDetailModal/withdraw-request-details'
 
 interface CancelWithdrawDialogBodyProps {
-  offerTokenKey: TokenKey
   offer_amount_spent: string
   offer_token: Address
   want_token: Address
   deadline: string
   created_timestamp: string
-  atomicPriceAsNumber: number
-  minimumPrice: number
+  created_transaction_hash: string
+  atomic_price: string
   amount: string
   status: string
 }
 const CancelWithdrawDialogBody = ({
-  offerTokenKey,
   offer_amount_spent,
   offer_token,
   want_token,
   deadline,
   created_timestamp,
-  atomicPriceAsNumber,
-  minimumPrice,
+  created_transaction_hash,
+  atomic_price,
   amount,
   status,
 }: CancelWithdrawDialogBodyProps) => {
+  const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   return (
     <AlertDialogBody overflow="hidden" display="flex" flexDirection="column" gap={4}>
       <Flex direction={'column'} alignItems={'center'}>
@@ -58,8 +57,8 @@ const CancelWithdrawDialogBody = ({
         wantToken={want_token}
         deadline={deadline}
         createdTimestamp={created_timestamp}
-        minimumPrice={atomicPriceAsNumber}
-        receiveAtLeast={minimumPrice}
+        createdAtTxHash={created_transaction_hash}
+        atomicPrice={atomic_price}
       />
     </AlertDialogBody>
   )

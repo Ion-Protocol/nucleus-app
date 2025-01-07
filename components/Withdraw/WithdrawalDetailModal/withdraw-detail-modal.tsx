@@ -16,7 +16,6 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { ArrowRight, Ban, Box } from 'lucide-react'
-import { formatUnits } from 'viem'
 import FulfilledDetails from './withdraw-fulfilled-details'
 import RequestDetails from './withdraw-request-details'
 
@@ -52,18 +51,11 @@ const WithdrawDetailsModal = ({
     created_transaction_hash,
     ending_transaction_hash,
   } = order
+  console.table(order)
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
-  // Request Data
-  const atomicPriceAsNumber = Number(formatUnits(BigInt(atomic_price), 18))
-  const minimumPrice = Number(formatUnits(BigInt(amount), 18))
-  const receiveAtLeast = atomicPriceAsNumber * minimumPrice
 
-  // Fulfillment Data
-  const offerAmountSpentAsNumber = Number(formatUnits(BigInt(offer_amount_spent), 18))
-  const wantAmountRecAsNumber = Number(formatUnits(BigInt(want_amount_rec), 18))
-  const filledPrice = offerAmountSpentAsNumber / wantAmountRecAsNumber
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
@@ -109,21 +101,22 @@ const WithdrawDetailsModal = ({
             {/* Request */}
             <RequestDetails
               amount={amount}
+              atomicPrice={atomic_price}
               offerToken={offer_token}
               wantToken={want_token}
               deadline={deadline}
-              receiveAtLeast={receiveAtLeast}
               createdTimestamp={created_timestamp}
-              minimumPrice={minimumPrice}
+              createdAtTxHash={created_transaction_hash}
             />
             {/* Fulfillment */}
             {status === 'fulfilled' && (
               <FulfilledDetails
-                filledPrice={filledPrice}
                 offerToken={offer_token}
+                offerAmountSpent={offer_amount_spent}
                 wantToken={want_token}
-                wantAmountRecAsNumber={wantAmountRecAsNumber}
+                wantAmountRec={want_amount_rec}
                 endingTimestamp={ending_timestamp}
+                filledAtTxHash={ending_transaction_hash}
               />
             )}
           </Flex>

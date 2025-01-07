@@ -1,4 +1,5 @@
-import { bigIntToNumberAsString } from '@/utils/bigint'
+import { bigIntToNumber } from '@/utils/bigint'
+import { formatWithSignificantDecimals } from '@/utils/number'
 import { Flex } from '@chakra-ui/react'
 
 interface FormattedAmountProps {
@@ -7,9 +8,11 @@ interface FormattedAmountProps {
 }
 
 export function FormattedAmount({ amount, decimals = 18 }: FormattedAmountProps) {
+  const amountAsNumber = bigIntToNumber(BigInt(amount), { decimals })
+  const formattedAmountWithSignificantDecimals = formatWithSignificantDecimals(amountAsNumber)
   return (
     <Flex>
-      <span>{bigIntToNumberAsString(BigInt(amount), { decimals, maximumFractionDigits: 4 })}</span>
+      <span>{formattedAmountWithSignificantDecimals}</span>
       {/* <Text>
         <EqualIcon />
         {amount}
