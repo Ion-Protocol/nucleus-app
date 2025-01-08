@@ -25,7 +25,8 @@ export const components = {
           borderColor: 'neutral.600',
           paddingTop: '0',
           paddingBottom: '0',
-          px: 4,
+          paddingX: 4,
+          paddingY: 3,
         },
         tbody: {
           tr: {

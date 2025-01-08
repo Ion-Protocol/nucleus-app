@@ -69,8 +69,9 @@ function NetworkAssetItem({
       overflow="hidden"
       cursor={disabled ? 'not-allowed' : 'pointer'}
       transition="transform 0.1s ease, box-shadow 0.1s ease"
+      bg="backgroundSecondary"
       _hover={{
-        bg: disabled ? 'default' : 'backgroundSecondary',
+        bg: disabled ? 'default' : 'hoverSecondary',
       }}
       _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
