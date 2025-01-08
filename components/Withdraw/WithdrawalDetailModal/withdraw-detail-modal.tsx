@@ -2,7 +2,7 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { StatusBadge } from '@/components/table/status-badge'
 import { Order } from '@/types/Order'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumberAsString } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   Flex,
@@ -55,6 +55,22 @@ const WithdrawDetailsModal = ({
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
+  const headerThreshold = 0.01
+  const displayAmount =
+    bigIntToNumber(BigInt(amount), { decimals: 18 }) < headerThreshold
+      ? '< 0.01'
+      : bigIntToNumberAsString(BigInt(offer_amount_spent), {
+          decimals: 18,
+          maximumFractionDigits: 2,
+        })
+
+  const displayWantAmountRec =
+    bigIntToNumber(BigInt(want_amount_rec), { decimals: 18 }) < headerThreshold
+      ? '< 0.01'
+      : bigIntToNumberAsString(BigInt(want_amount_rec), {
+          decimals: 18,
+          maximumFractionDigits: 2,
+        })
 
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
@@ -68,22 +84,17 @@ const WithdrawDetailsModal = ({
           <Flex gap={4} justifyContent="center" alignItems="center">
             <Flex gap={2}>
               <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-              <Text fontSize="xl" fontFamily="ppformula">{`${bigIntToNumberAsString(BigInt(offer_amount_spent), {
-                decimals: 18,
-                maximumFractionDigits: 2,
-              })} ${getSymbolByAddress(offer_token)}`}</Text>
+              <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${getSymbolByAddress(offer_token)}`}</Text>
             </Flex>
             <ArrowRight size={16} strokeWidth={1.5} />
             {status === 'fulfilled' && (
               <Flex gap={2}>
                 <TokenIcon fontSize="24px" tokenKey={wantTokenKey} />
-                <Text fontSize="xl" color="element.main" fontFamily="ppformula">{` ${bigIntToNumberAsString(
-                  BigInt(want_amount_rec),
-                  {
-                    decimals: 18,
-                    maximumFractionDigits: 2,
-                  }
-                )} ${getSymbolByAddress(want_token)}`}</Text>
+                <Text
+                  fontSize="xl"
+                  color="element.main"
+                  fontFamily="ppformula"
+                >{`${displayWantAmountRec} ${getSymbolByAddress(want_token)}`}</Text>
               </Flex>
             )}
             {status === 'pending' && (
@@ -93,7 +104,7 @@ const WithdrawDetailsModal = ({
             )}
             {status === 'cancelled' && (
               <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">
-                Canceled
+                Cancelled
               </Text>
             )}
           </Flex>

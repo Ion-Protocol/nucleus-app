@@ -22,7 +22,7 @@ export function DateCell({ date, status, txHash, vaultAddress, showLeftArrow = f
       )}
       {status === 'cancelled' && (
         <Text fontSize="md" color="element.subdued">
-          Canceled
+          Cancelled
         </Text>
       )}
       {/* Uncomment when status is updated */}

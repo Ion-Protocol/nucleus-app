@@ -11,7 +11,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   const colorScheme = {
     pending: 'thermic.400',
     fulfilled: 'olivenite.400',
-    cancelled: 'thermic.600',
+    cancelled: 'button.error.bg',
   }[status]
 
   return (

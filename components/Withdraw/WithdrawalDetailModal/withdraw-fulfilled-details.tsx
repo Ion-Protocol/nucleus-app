@@ -1,3 +1,4 @@
+import { IonTooltip } from '@/components/shared/IonTooltip'
 import { bigIntToNumber } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import { Flex, Heading, Icon, Link, Text } from '@chakra-ui/react'
@@ -20,10 +21,14 @@ const FulfilledDetails = ({
   wantToken: Address
   endingTimestamp: string
 }) => {
+  const displayThreshold = 0.0001
   const wantAmountRecAsNumber = bigIntToNumber(BigInt(wantAmountRec), { decimals: 18 })
-  const offerAmountSpentAsNumber = bigIntToNumber(BigInt(offerAmountSpent), { decimals: 18 })
+  const wantAmountRecDisplayAmount =
+    wantAmountRecAsNumber < displayThreshold ? '< 0.0001' : wantAmountRecAsNumber.toFixed(4)
 
+  const offerAmountSpentAsNumber = bigIntToNumber(BigInt(offerAmountSpent), { decimals: 18 })
   const filledPrice = wantAmountRecAsNumber / offerAmountSpentAsNumber
+
   return (
     <Flex direction="column" gap={2}>
       <Heading as="h4" fontSize="lg" fontFamily="diatype" fontWeight="regular" color="element.main">
@@ -34,17 +39,21 @@ const FulfilledDetails = ({
           <Text fontSize="md" color="element.subdued">
             Filled Price
           </Text>
-          <Text fontSize="md" color="element.lighter">
-            {`${filledPrice} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}
-          </Text>
+          <IonTooltip label={filledPrice}>
+            <Text fontSize="md" color="element.lighter">
+              {`${filledPrice.toFixed(4)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}
+            </Text>
+          </IonTooltip>
         </Flex>
         <Flex justifyContent="space-between">
           <Text fontSize="md" color="element.subdued">
             Received
           </Text>
-          <Text fontSize="md" color="element.lighter">
-            {`${wantAmountRecAsNumber} ${getSymbolByAddress(wantToken)}`}
-          </Text>
+          <IonTooltip label={wantAmountRecAsNumber}>
+            <Text fontSize="md" color="element.lighter">
+              {`${wantAmountRecDisplayAmount} ${getSymbolByAddress(wantToken)}`}
+            </Text>
+          </IonTooltip>
         </Flex>
 
         <Flex justifyContent="space-between">

@@ -1,4 +1,5 @@
-import { bigIntToNumber } from '@/utils/bigint'
+import { IonTooltip } from '@/components/shared/IonTooltip'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import { Flex, Heading, Icon, Link, Text } from '@chakra-ui/react'
 import { format, fromUnixTime } from 'date-fns'
@@ -24,11 +25,20 @@ const RequestDetails = ({
   createdTimestamp,
   createdAtTxHash,
 }: RequestDetailsProps) => {
-  // Request Data
+  const displayThreshold = 0.0001
+  const fullAmount = bigIntToNumber(BigInt(amount), { decimals: 18 })
+  const displayAmount =
+    fullAmount < displayThreshold
+      ? '< 0.0001'
+      : bigIntToNumberAsString(BigInt(amount), {
+          decimals: 18,
+          maximumFractionDigits: 4,
+        })
 
   const withdrawalAmount = bigIntToNumber(BigInt(amount), { decimals: 18 })
   const minimumPrice = bigIntToNumber(BigInt(atomicPrice), { decimals: 18 })
   const receiveAtLeast = withdrawalAmount * minimumPrice
+  const receiveAtLeastDisplayAmount = receiveAtLeast < displayThreshold ? '< 0.0001' : receiveAtLeast.toFixed(4)
 
   return (
     <Flex direction="column" gap={2}>
@@ -48,25 +58,31 @@ const RequestDetails = ({
           <Text fontSize="md" color="element.subdued">
             To Redeem
           </Text>
-          <Text fontSize="md" color="element.lighter">
-            {`${withdrawalAmount} ${getSymbolByAddress(offerToken)}`}
-          </Text>
+          <IonTooltip label={fullAmount}>
+            <Text fontSize="md" color="element.lighter">
+              {`${displayAmount} ${getSymbolByAddress(offerToken)}`}
+            </Text>
+          </IonTooltip>
         </Flex>
         <Flex justifyContent="space-between">
           <Text fontSize="md" color="element.subdued">
             Minimum Price
           </Text>
-          <Text fontSize="md" color="element.lighter">
-            {`${minimumPrice} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}
-          </Text>
+          <IonTooltip label={minimumPrice}>
+            <Text fontSize="md" color="element.lighter">
+              {`${minimumPrice.toFixed(4)} ${getSymbolByAddress(wantToken)}/${getSymbolByAddress(offerToken)}`}
+            </Text>
+          </IonTooltip>
         </Flex>
         <Flex justifyContent="space-between">
           <Text fontSize="md" color="element.subdued">
             Receive at least
           </Text>
-          <Text fontSize="md" color="element.lighter">
-            {`${receiveAtLeast} ${getSymbolByAddress(wantToken)}`}
-          </Text>
+          <IonTooltip label={receiveAtLeast}>
+            <Text fontSize="md" color="element.lighter">
+              {`${receiveAtLeastDisplayAmount} ${getSymbolByAddress(wantToken)}`}
+            </Text>
+          </IonTooltip>
         </Flex>
         <Flex justifyContent="space-between">
           <Text fontSize="md" color="element.subdued">
@@ -84,6 +100,7 @@ const RequestDetails = ({
             <Text fontSize="md" color="element.lighter">
               {format(fromUnixTime(Number(createdTimestamp)), 'PPpp')}
             </Text>
+            {/* TODO: update with lookup function to get explorer base url */}
             <Link
               isExternal
               href={`https://etherscan.io/tx/${createdAtTxHash}`}

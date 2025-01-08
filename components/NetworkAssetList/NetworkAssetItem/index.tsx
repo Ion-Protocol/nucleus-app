@@ -71,7 +71,7 @@ function NetworkAssetItem({
       transition="transform 0.1s ease, box-shadow 0.1s ease"
       bg="backgroundSecondary"
       _hover={{
-        bg: disabled ? 'default' : 'hoverSecondary',
+        bg: disabled ? 'default' : 'hover',
       }}
       _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
