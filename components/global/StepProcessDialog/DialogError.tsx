@@ -17,9 +17,7 @@ const DialogError = () => {
         width={180}
         height={180}
         fetchPriority={undefined}
-        src={
-          colorMode === 'light' ? '/assets/images/nucleus-error-light.webp' : '/assets/images/nucleus-error-dark.webp'
-        }
+        src={colorMode === 'light' ? '/assets/images/nucleus-error-light.png' : '/assets/images/nucleus-error-dark.png'}
       />
       <Flex>
         <Heading fontSize={'bigParagraph'} textAlign={'center'}>
