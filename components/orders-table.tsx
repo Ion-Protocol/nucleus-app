@@ -44,6 +44,10 @@ interface OrdersTableProps {
 }
 
 const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
+  const [pagination, setPagination] = useState({
+    pageIndex: 0, //initial page index
+    pageSize: 5, //default page size
+  })
   const [selectedTokens, setSelectedTokens] = React.useState<string[]>([])
   const [selectedStatus, setSelectedStatus] = React.useState<string[]>([])
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
@@ -74,6 +78,10 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      pagination,
+    },
+    onPaginationChange: setPagination,
   })
 
   const userAddress = useSelector(selectAddress)

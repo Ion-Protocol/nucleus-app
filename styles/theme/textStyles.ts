@@ -26,22 +26,22 @@ export const textStyles = {
   paragraph: {
     fontSize: '15px',
     fontWeight: 'normal',
-    fontFamily: 'var(--font-recklessNeue)',
+    fontFamily: 'var(--font-diatype)',
   },
   paragraphBold: {
     fontSize: '15px',
     fontWeight: 'bold',
-    fontFamily: 'var(--font-recklessNeue)',
+    fontFamily: 'var(--font-diatype)',
   },
   bigParagraphBold: {
     fontSize: '22px',
     fontWeight: 'bold',
-    fontFamily: 'var(--font-recklessNeue)',
+    fontFamily: 'var(--font-diatype)',
   },
   smallParagraph: {
     fontSize: '12px',
     fontWeight: 'normal',
-    fontFamily: 'var(--font-recklessNeue)',
+    fontFamily: 'var(--font-diatype)',
   },
   smallTag: {
     fontSize: '10px',
