@@ -44,24 +44,7 @@ const defaultEthVaultAssets = [
 // TODO: Break into two types. Internal and External where mint and redeem take place in the Nucleus app or a partners app respectively
 const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.SSETH]: {
-    apys: {
-      [TokenKey.ISEI]: [
-        {
-          tokenKey: TokenKey.ISEI,
-          startDate: 1726199999000, // 9/12/24 11:59:59pm EST
-          endDate: 1734065999000, // 12/12/24 11:59:59pm EST
-          distribution: 62_500, // $62,500
-        },
-      ],
-      [TokenKey.DINERO]: [
-        {
-          tokenKey: TokenKey.DINERO,
-          startDate: 1726199999000, // 9/12/24 11:59:59pm EST
-          endDate: 1734065999000, // 12/12/24 11:59:59pm EST
-          distribution: 62_500, // $62,500
-        },
-      ],
-    },
+    apys: {},
     chain: ChainKey.SEI,
     contracts: {
       teller: '0x97D0B97A9FA017f8aD2565a5c6AED5745f3918b9',
@@ -399,11 +382,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         name: 'Nucleus',
         pointsMultiplier: 3,
       },
-      {
-        key: PointSystemKey.SWELL,
-        name: 'Swell',
-        pointsMultiplier: 3,
-      },
     ],
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
@@ -456,7 +434,13 @@ const mainnetNetworkAssets: NetworkAssets = {
       boringVault: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
     },
     receiveOn: ChainKey.ETHEREUM,
-    points: [],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 1,
+      },
+    ],
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.ETHEREUM,

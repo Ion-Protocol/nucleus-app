@@ -83,6 +83,7 @@ function NetworkAssetItem({
           <Text variant="bigParagraph" color="disabledText">
             {chainName}
           </Text>
+          {isExternal && <ExternalLinkIcon color="disabledText" fontSize="16px" />}
         </Flex>
 
         {!comingSoon ? (
@@ -110,29 +111,13 @@ function NetworkAssetItem({
                 </IonSkeleton>
               </Flex>
             </Flex>
-            {isExternal ? (
-              <Flex gap={1}>
-                <Text
-                  fontSize="14px"
-                  variant="link"
-                  display="flex"
-                  fontFamily="var(--font-ppformula)"
-                  gap={1}
-                  textDecoration="underline"
-                  textUnderlineOffset={2}
-                >
-                  {`Mint on ${chainName}`} <ExternalLinkIcon fontSize="16px" />
-                </Text>
-              </Flex>
-            ) : (
-              <Flex direction="column" gap={1} w="fit-content">
-                {/* Rewards */}
-                <Text variant="smallParagraph">Rewards</Text>
-                <RewardsTooltip tokenKey={networkAssetKey}>
-                  <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
-                </RewardsTooltip>
-              </Flex>
-            )}
+            <Flex direction="column" gap={1} w="fit-content">
+              {/* Rewards */}
+              <Text variant="smallParagraph">Rewards</Text>
+              <RewardsTooltip tokenKey={networkAssetKey}>
+                <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
+              </RewardsTooltip>
+            </Flex>
           </>
         ) : (
           <Flex mb={6}>
