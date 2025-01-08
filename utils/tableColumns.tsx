@@ -14,7 +14,7 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
   columnHelper.accessor('status', {
     header: 'Status',
     filterFn: 'arrIncludesSome',
-    cell: (info) => <StatusBadge status={Number(info.row.original.amount) === 0 ? 'cancelled' : info.getValue()} />,
+    cell: (info) => <StatusBadge status={info.getValue()} />,
   }),
   columnHelper.accessor('offer_token', {
     header: 'Asset',

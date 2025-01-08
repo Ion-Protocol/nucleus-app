@@ -27,6 +27,9 @@ export default function Withdrawals() {
     }
   )
 
+  // ! Try to move this logic into the table
+  const filteredData = orders ? orders.filter((row) => Number(row.amount) !== 0) : []
+
   return (
     <Flex p={8} direction="column" pb="150px" bg={'bg.white'}>
       {/* TODO: Heading styles should be in the theme */}
@@ -72,7 +75,7 @@ export default function Withdrawals() {
           Withdrawal Activity
         </Badge>
       </Flex>
-      <OrdersTable data={orders || []} refetch={refetch} />
+      <OrdersTable data={filteredData} refetch={refetch} />
     </Flex>
   )
 }

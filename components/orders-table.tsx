@@ -98,6 +98,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
   const handleClearFilters = () => {
     setSelectedTokens([])
     setSelectedStatus([])
+    table.resetColumnFilters
   }
 
   useEffect(() => {
