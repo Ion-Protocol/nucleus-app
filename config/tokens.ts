@@ -160,7 +160,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
   },
   [TokenKey.UNIFIETH]: {
     key: TokenKey.UNIFIETH,
-    name: 'UniFiETH',
+    name: 'unifiETH',
     symbol: 'UNIFIETH',
     addresses: {
       [ChainKey.UNIFI]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
