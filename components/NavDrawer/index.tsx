@@ -18,8 +18,8 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
   return (
     <Flex
       direction="column"
-      minW="300px"
-      maxW="300px"
+      minW="240px"
+      maxW="240px"
       borderRight="1px solid"
       borderColor="border"
       p={6}

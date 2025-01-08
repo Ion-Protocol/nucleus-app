@@ -28,7 +28,7 @@ export default function Withdrawals() {
   )
 
   return (
-    <Flex p={9} direction="column" pb="150px" bg={'bg.white'}>
+    <Flex p={8} direction="column" pb="150px" bg={'bg.white'}>
       {/* TODO: Heading styles should be in the theme */}
       <Flex direction={'column'} gap={6}>
         <Heading as={'h1'} fontFamily={'ppformula'} fontSize={'1.5rem'} fontWeight={'medium'}>

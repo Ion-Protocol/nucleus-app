@@ -25,6 +25,7 @@ export const components = {
           borderColor: 'neutral.600',
           paddingTop: '0',
           paddingBottom: '0',
+          px: 4,
         },
         tbody: {
           tr: {
@@ -57,6 +58,9 @@ export const components = {
           fontWeight: 'normal',
           textAlign: 'center',
           bg: 'white',
+          maxHeight: '5rem',
+          minHeight: '5rem',
+          p: 2,
         },
       },
     },
