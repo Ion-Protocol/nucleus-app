@@ -44,8 +44,7 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
     cell: (info) => (
       <DateCell
         date={info.getValue()}
-        isCancelled={info.row.original.status === 'cancelled' || info.row.original.amount === '0'}
-        isPending={!info.getValue() || info.getValue() === '0'}
+        status={info.row.original.status}
         txHash={info.row.original.ending_transaction_hash}
         vaultAddress={info.row.original.offer_token}
         showLeftArrow={true}

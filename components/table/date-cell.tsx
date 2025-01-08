@@ -31,7 +31,7 @@ export function DateCell({ date, status, txHash, vaultAddress, showLeftArrow = f
           Expired...
         </Text>
       )} */}
-      {status === 'fulfilled' && (
+      {status !== 'pending' && status !== 'cancelled' && (
         <Flex alignItems="top" gap={2}>
           <Text color="element.main" fontSize="md" fontFamily="diatype">
             {format(fromUnixTime(Number(date)), 'd MMMM yyyy')}
