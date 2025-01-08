@@ -252,42 +252,6 @@ export const colors = {
       '800': '#218358',
       '900': '#193b2d',
     },
-    graphite: {
-      '200': '#47626b',
-      '400': '#002d3d',
-      '600': '#00171f',
-      '800': '#000f14',
-    },
-    thermic: {
-      '200': '#faceb8',
-      '400': '#f49b6e',
-      '600': '#f0793d',
-      '800': '#180902',
-    },
-    electron: {
-      '200': '#fbfbd0',
-      '400': '#f7f79e',
-      '600': '#f4f434',
-      '800': '#2f2f04',
-    },
-    olivenite: {
-      '200': '#b4cac3',
-      '400': '#6e988a',
-      '600': '#418b72',
-      '800': '#151e1b',
-    },
-    crystal: {
-      '200': '#e5f3ff',
-      '400': '#c2e2ff',
-      '600': '#1a92ff',
-      '800': '#001b33',
-    },
-    amethyst: {
-      '200': '#eae5ff',
-      '400': '#aa99ff',
-      '600': '#6751e1',
-      '800': '#080033',
-    },
   },
   // Dark Color Palette (dark mode) - TODO: These colors are not updated to the values in Figma yet. Hoping I don't have to do it manually.
   dark: {
@@ -395,6 +359,8 @@ export const colors = {
       '800': '#218358',
       '900': '#193b2d',
     },
+  },
+  web: {
     graphite: {
       '200': '#47626b',
       '400': '#002d3d',

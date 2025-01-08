@@ -213,49 +213,49 @@ export const semanticTokens = {
       primary: {
         bg: {
           default: 'bg.invert-primary',
-          _dark: 'bg.invert-primary',
+          _dark: 'dark.violet.200',
         },
         'bg-hover': {
           default: 'bg.invert-secondary',
-          _dark: 'bg.invert-secondary',
+          _dark: 'dark.violet.100',
         },
         'bg-active': {
           default: 'bg.invert-tertiary',
-          _dark: 'bg.invert-tertiary',
+          _dark: 'dark.violet.50',
         },
         'bg-disabled': {
           default: 'bg.quarternary',
-          _dark: 'bg.quarternary',
+          _dark: 'bg.tertiary',
         },
         stroke: {
           default: 'stroke.main',
-          _dark: 'stroke.main',
+          _dark: 'dark.violet.500',
         },
         element: {
           default: 'element.invert-primary',
-          _dark: 'element.invert-primary',
+          _dark: 'dark.element.darker',
         },
         'element-disabled': {
           default: 'element.invert-primary',
-          _dark: 'element.invert-primary',
+          _dark: 'dark.element.subdued',
         },
       },
       'mint-primary': {
         'stroke-hover': {
-          default: '#ffffff',
-          _dark: '#ffffff',
+          default: 'transparent',
+          _dark: 'transparent',
         },
         bg: {
           default: 'bg.invert-secondary',
-          _dark: 'bg.invert-secondary',
+          _dark: 'dark.violet.200',
         },
         'bg-hover': {
           default: 'bg.invert-primary',
-          _dark: 'bg.invert-primary',
+          _dark: 'dark.violet.100',
         },
         'bg-active': {
           default: 'bg.invert-tertiary',
-          _dark: 'bg.invert-tertiary',
+          _dark: 'dark.violet.300',
         },
         stroke: {
           default: 'stroke.main',
@@ -263,17 +263,17 @@ export const semanticTokens = {
         },
         element: {
           default: 'element.invert-secondary',
-          _dark: 'element.invert-secondary',
+          _dark: 'dark.violet.0',
         },
         'element-hover': {
           default: 'element.invert-primary',
-          _dark: 'element.invert-primary',
+          _dark: 'dark.violet.0',
         },
       },
       'mint-secondary': {
         'stroke-hover': {
-          default: '#ffffff',
-          _dark: '#ffffff',
+          default: 'transparent',
+          _dark: 'transparent',
         },
         bg: {
           default: 'bg.main',
@@ -281,11 +281,11 @@ export const semanticTokens = {
         },
         'bg-hover': {
           default: 'bg.invert-secondary',
-          _dark: 'bg.invert-secondary',
+          _dark: 'dark.violet.200',
         },
         'bg-active': {
           default: 'bg.invert-tertiary',
-          _dark: 'bg.invert-tertiary',
+          _dark: 'dark.violet.100',
         },
         stroke: {
           default: 'stroke.main',
@@ -297,44 +297,44 @@ export const semanticTokens = {
         },
         'element-hover': {
           default: 'element.invert-primary',
-          _dark: 'element.invert-primary',
+          _dark: 'dark.violet.0',
         },
       },
       error: {
         bg: {
-          default: 'colors.red.600',
-          _dark: 'colors.red.600',
+          default: 'light.red.600',
+          _dark: 'dark.red.200',
         },
         'bg-hover': {
-          default: 'colors.red.500',
-          _dark: 'colors.red.500',
+          default: 'light.red.500',
+          _dark: 'dark.red.400',
         },
         'bg-disabled': {
-          default: 'colors.red.0',
-          _dark: 'colors.red.0',
+          default: 'light.red.0',
+          _dark: 'dark.red.800',
         },
         'stroke-active': {
-          default: 'colors.red.600',
-          _dark: 'colors.red.600',
+          default: 'light.red.600',
+          _dark: 'dark.red.200',
         },
         element: {
-          default: 'colors.base.white',
-          _dark: 'colors.base.white',
+          default: 'base.white',
+          _dark: 'base.white',
         },
         'element-active': {
-          default: 'colors.red.600',
-          _dark: 'colors.red.600',
+          default: 'light.red.600',
+          _dark: 'dark.red.200',
         },
         'element-disabled': {
-          default: 'colors.red.300',
-          _dark: 'colors.red.300',
+          default: 'light.red.300',
+          _dark: 'dark.red.500',
         },
       },
     },
     checkbox: {
       'stroke-active': {
-        default: '#ffffff',
-        _dark: '#ffffff',
+        default: 'transparent',
+        _dark: 'element.subdued',
       },
       bg: {
         default: 'bg.main',
@@ -342,7 +342,7 @@ export const semanticTokens = {
       },
       'bg-active': {
         default: 'bg.invert-primary',
-        _dark: 'bg.invert-primary',
+        _dark: 'bg.main',
       },
       stroke: {
         default: 'stroke.darker',
@@ -354,71 +354,71 @@ export const semanticTokens = {
       },
       'element-hover': {
         default: 'element.disabled',
-        _dark: 'element.disabled',
+        _dark: 'stroke.darker',
       },
       'element-active': {
         default: 'element.invert-primary',
-        _dark: 'element.invert-primary',
+        _dark: 'element.main',
       },
     },
     tag: {
       rewards: {
         stroke: {
           default: '#ffffff',
-          _dark: '#ffffff',
+          _dark: 'dark.blue.600',
         },
         bg: {
-          default: 'colors.blue.50',
-          _dark: 'colors.blue.50',
+          default: 'light.blue.50',
+          _dark: 'dark.blue.800',
         },
         element: {
-          default: 'colors.blue.600',
-          _dark: 'colors.blue.600',
+          default: 'light.blue.600',
+          _dark: 'dark.blue.100',
         },
       },
       apy: {
         stroke: {
           default: '#ffffff',
-          _dark: '#ffffff',
+          _dark: 'dark.violet.600',
         },
         bg: {
-          default: 'colors.violet.100',
-          _dark: 'colors.violet.100',
+          default: 'light.violet.100',
+          _dark: 'dark.violet.800',
         },
         element: {
-          default: 'colors.violet.600',
-          _dark: 'colors.violet.600',
+          default: 'light.violet.600',
+          _dark: 'dark.violet.100',
         },
       },
       info: {
         live: {
           stroke: {
-            default: 'colors.green.600',
-            _dark: 'colors.green.600',
+            default: 'light.green.600',
+            _dark: 'dark.green.500',
           },
           element: {
-            default: 'colors.green.600',
-            _dark: 'colors.green.600',
+            default: 'light.green.600',
+            _dark: 'dark.green.100',
           },
         },
         boosted: {
           stroke: {
-            default: 'colors.orange.600',
-            _dark: 'colors.orange.600',
+            default: 'light.orange.600',
+            _dark: 'dark.orange.500',
           },
           element: {
-            default: 'colors.orange.600',
-            _dark: 'colors.orange.600',
+            default: 'light.orange.600',
+            _dark: 'dark.orange.100',
           },
         },
         soon: {
           stroke: {
-            default: 'colors.choc.200',
-            _dark: 'colors.choc.200',
+            default: 'light.choc.500',
+            _dark: 'dark.choc.200',
           },
           element: {
-            default: 'colors.choc.200',
-            _dark: 'colors.choc.200',
+            default: 'light.choc.200',
+            _dark: 'dark.choc.300',
           },
         },
       },
@@ -441,106 +441,106 @@ export const semanticTokens = {
         _dark: 'web.olivenite.400',
       },
       neutral: {
-        default: 'colors.neutral.200',
-        _dark: 'colors.neutral.200',
+        default: 'light.neutral.200',
+        _dark: 'dark.neutral.300',
       },
       'stroke-primary': {
         default: 'element.main',
-        _dark: 'element.main',
+        _dark: 'element.disabled',
       },
       'stroke-secondary': {
         default: 'element.subdued',
-        _dark: 'element.subdued',
+        _dark: 'element.disabled',
       },
     },
     bg: {
       white: {
         default: 'light.neutral.0',
-        _dark: 'dark.neutral.900',
+        _dark: 'dark.choc.900',
       },
       main: {
         default: 'light.neutral.50',
-        _dark: 'dark.neutral.800',
+        _dark: 'dark.choc.800',
       },
       secondary: {
         default: 'light.neutral.100',
-        _dark: 'dark.neutral.700',
+        _dark: 'dark.choc.700',
       },
       tertiary: {
         default: 'light.neutral.200',
-        _dark: 'dark.neutral.200',
+        _dark: 'dark.choc.600',
       },
       quaternary: {
         default: 'light.neutral.300',
-        _dark: 'dark.neutral.300',
+        _dark: 'dark.choc.500',
       },
       'invert-tertiary': {
         default: 'light.neutral.700',
-        _dark: 'dark.neutral.700',
+        _dark: 'dark.choc.200',
       },
       'invert-secondary': {
         default: 'light.neutral.800',
-        _dark: 'dark.neutral.800',
+        _dark: 'dark.choc.100',
       },
       'invert-primary': {
         default: 'light.neutral.900',
-        _dark: 'dark.neutral.900',
+        _dark: 'dark.choc.50',
       },
     },
     element: {
       darker: {
         default: 'light.neutral.900',
-        _dark: 'dark.neutral.50',
+        _dark: 'dark.choc.0',
       },
       main: {
         default: 'light.neutral.800',
-        _dark: 'dark.neutral.100',
+        _dark: 'dark.choc.50',
       },
       lighter: {
         default: 'light.neutral.700',
-        _dark: 'dark.neutral.100',
+        _dark: 'dark.choc.100',
       },
       subdued: {
         default: 'light.neutral.600',
-        _dark: 'dark.neutral.500',
+        _dark: 'dark.choc.200',
       },
       disabled: {
         default: 'light.neutral.400',
-        _dark: 'dark.neutral.400',
+        _dark: 'dark.choc.500',
       },
       'invert-secondary': {
         default: 'light.neutral.100',
-        _dark: 'dark.neutral.100',
+        _dark: 'dark.choc.800',
       },
       'invert-primary': {
         default: 'light.neutral.50',
-        _dark: 'dark.neutral.50',
+        _dark: 'dark.choc.900',
       },
       violet: {
         default: 'light.violet.600',
-        _dark: 'dark.violet.600',
+        _dark: 'dark.violet.100',
       },
     },
     stroke: {
       darker: {
         default: 'light.neutral.400',
-        _dark: 'dark.neutral.400',
+        _dark: 'dark.choc.500',
       },
       main: {
         default: 'light.neutral.300',
-        _dark: 'dark.neutral.300',
+        _dark: 'dark.choc.600',
       },
       light: {
         default: 'light.neutral.200',
-        _dark: 'dark.neutral.200',
+        _dark: 'dark.choc.700',
       },
       lighter: {
         default: 'light.neutral.100',
-        _dark: 'dark.neutral.100',
+        _dark: 'dark.choc.800',
       },
       focus: {
         default: 'light.neutral.700',
-        _dark: 'dark.neutral.700',
+        _dark: 'dark.choc.200',
       },
       badge: {
         default: 'bg.white',

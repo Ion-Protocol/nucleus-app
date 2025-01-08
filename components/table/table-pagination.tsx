@@ -28,7 +28,7 @@ export function Pagination({
   onNextPage,
 }: PaginationProps) {
   return (
-    <Flex justify="space-between" align="center" w="full" p={4} borderTop="1px" borderColor="gray.200">
+    <Flex justify="space-between" align="center" w="full" p={4} borderTop="1px" borderColor="stroke.main">
       <HStack spacing={3}>
         <Text fontSize="sm" color="element.main">
           {`${pageItems} of ${totalItems} items`}

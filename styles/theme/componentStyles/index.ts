@@ -22,7 +22,7 @@ export const components = {
           fontSize: 'sm',
           borderTop: '1px solid',
           borderBottom: '1px solid',
-          borderColor: 'neutral.600',
+          borderColor: 'stroke.main',
           paddingTop: '0',
           paddingBottom: '0',
           paddingX: 4,
@@ -32,7 +32,7 @@ export const components = {
           tr: {
             td: {
               borderTop: '1px solid',
-              borderColor: 'neutral.400',
+              borderColor: 'stroke.lighter',
               height: '5rem',
               bg: 'bg.white',
             },
@@ -48,8 +48,8 @@ export const components = {
             },
             '&:last-of-type': {
               td: {
-                borderBottom: '1px solid',
-                borderColor: 'neutral.400',
+                // borderBottomColor: 'stroke.main',
+                // borderColor: 'stroke.main',
               },
             },
           },
