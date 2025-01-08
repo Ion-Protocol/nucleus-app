@@ -1,6 +1,6 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { TokenKey } from '@/types/TokenKey'
-import { bigIntToNumberAsString } from '@/utils/bigint'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import { AlertDialogBody, Flex, Text } from '@chakra-ui/react'
 import { ArrowRight } from 'lucide-react'
@@ -29,16 +29,21 @@ const CancelWithdrawDialogBody = ({
   amount,
   status,
 }: CancelWithdrawDialogBodyProps) => {
+  const headerThreshold = 0.01
+  const displayAmount =
+    bigIntToNumber(BigInt(amount), { decimals: 18 }) < headerThreshold
+      ? '< 0.01'
+      : bigIntToNumberAsString(BigInt(offer_amount_spent), {
+          decimals: 18,
+          maximumFractionDigits: 2,
+        })
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   return (
     <AlertDialogBody overflow="hidden" display="flex" flexDirection="column" gap={4}>
       <Flex direction={'column'} alignItems={'center'}>
         <Flex gap={2} justifyContent="center" alignItems="center">
           <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-          <Text fontSize="xl" fontFamily="ppformula">{`${bigIntToNumberAsString(BigInt(offer_amount_spent), {
-            decimals: 18,
-            maximumFractionDigits: 2,
-          })} ${getSymbolByAddress(offer_token)}`}</Text>
+          <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${getSymbolByAddress(offer_token)}`}</Text>
           <ArrowRight size={16} strokeWidth={1.5} />
           {status === 'pending' && (
             <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">

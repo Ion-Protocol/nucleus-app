@@ -1,7 +1,7 @@
 import { FormattedAmount } from '@/components/table/formatted-amount'
 import { SortableHeader } from '@/components/table/sortable-header'
 import { Order } from '@/types/Order'
-import { Box, Button } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { X } from 'lucide-react'
 import { AssetPair } from '../components/table/asset-pair'
@@ -53,31 +53,32 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
   }),
   columnHelper.accessor('id', {
     header: '',
-    cell: (info) =>
-      info.row.original.status === 'pending' ? (
-        // TODO: V2 theme rollout - remove custom style overrides
-        <Button
-          fontFamily="diatype"
-          variant="outline"
-          fontWeight="normal"
-          bg="bg.white"
-          border="1px solid"
-          borderColor="neutral.600"
-          width="90px"
-          px={3}
-          py={4}
-          iconSpacing={1}
-          size="sm"
-          leftIcon={<X size={16} strokeWidth={1.5} />}
-          onClick={(e) => {
-            e.stopPropagation()
-            onCancelOrder(info.row.original)
-          }}
-        >
-          Cancel
-        </Button>
-      ) : (
-        <Box width="90px" />
-      ),
+    cell: (info) => (
+      // info.row.original.status === 'pending' ? (
+      // TODO: V2 theme rollout - remove custom style overrides
+      <Button
+        fontFamily="diatype"
+        variant="outline"
+        fontWeight="normal"
+        bg="bg.white"
+        border="1px solid"
+        borderColor="neutral.600"
+        width="90px"
+        px={3}
+        py={4}
+        iconSpacing={1}
+        size="sm"
+        leftIcon={<X size={16} strokeWidth={1.5} />}
+        onClick={(e) => {
+          e.stopPropagation()
+          onCancelOrder(info.row.original)
+        }}
+      >
+        Cancel
+      </Button>
+    ),
+    // ) : (
+    //   <Box width="90px" />
+    // ),
   }),
 ]

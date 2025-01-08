@@ -167,6 +167,9 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
             <AlertDialogBody display="flex" flexDirection="column" gap={6}>
               {!isFullErrorDisplayed && (
                 <TxAnimationWrapper
+                  amount={amount}
+                  offerToken={offer_token}
+                  offerTokenKey={offerTokenKey}
                   isError={isCancelMutationError || isTxReceiptError}
                   isLoading={isCancelMutationLoading || isTxReceiptLoading}
                   isSuccess={isCancelMutationSuccess || isTxReceiptSuccess}

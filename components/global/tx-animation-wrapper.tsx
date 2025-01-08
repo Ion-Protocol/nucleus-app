@@ -1,6 +1,10 @@
 import { TokenKey } from '@/types/TokenKey'
+import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
+import { getSymbolByAddress } from '@/utils/withdrawal'
 import { AspectRatio, Box, Flex, Grid, Text, useColorMode } from '@chakra-ui/react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
+import { Address } from 'viem'
+import { TokenIcon } from '../config/tokenIcons'
 
 export const TxAnimationWrapper = ({
   loop,
@@ -8,7 +12,8 @@ export const TxAnimationWrapper = ({
   isLoading,
   isSuccess,
   isError,
-  tokenKey,
+  offerTokenKey,
+  offerToken,
   amount,
 }: {
   loop: boolean
@@ -16,10 +21,21 @@ export const TxAnimationWrapper = ({
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
-  tokenKey?: TokenKey
-  amount?: string
+  offerTokenKey: TokenKey
+  offerToken: Address
+  amount: string
 }) => {
   const { colorMode } = useColorMode()
+  const displayThreshold = 0.0001
+  const fullAmount = bigIntToNumber(BigInt(amount), { decimals: 18 })
+  const displayAmount =
+    fullAmount < displayThreshold
+      ? '< 0.0001'
+      : bigIntToNumberAsString(BigInt(amount), {
+          decimals: 18,
+          maximumFractionDigits: 4,
+        })
+
   if (isLoading) {
     return (
       <Flex
@@ -43,9 +59,8 @@ export const TxAnimationWrapper = ({
           </AspectRatio>
           <Box gridColumn={'1'} gridRow={'1'} placeContent="end" zIndex={'1'}>
             <Flex alignItems="center" justifyContent="center" gap="2">
-              <Text fontSize={'sm'} fontWeight={'medium'}>
-                0.02 ssETH
-              </Text>
+              <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
+              <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${getSymbolByAddress(offerToken)}`}</Text>
             </Flex>
           </Box>
         </Grid>
