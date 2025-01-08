@@ -1,6 +1,6 @@
 import { Address } from 'viem'
 
-export type OrderStatus = 'pending' | 'fulfilled' | 'cancelled'
+export type OrderStatus = 'pending' | 'fulfilled' | 'cancelled' | 'expired'
 export interface Order {
   id: number
   user: Address

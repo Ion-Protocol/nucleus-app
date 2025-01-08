@@ -26,12 +26,12 @@ export function DateCell({ date, status, txHash, vaultAddress, showLeftArrow = f
         </Text>
       )}
       {/* Uncomment when status is updated */}
-      {/* {status === 'expired' && (
+      {status === 'expired' && (
         <Text fontSize="md" color="element.subdued">
-          Expired...
+          Expired
         </Text>
-      )} */}
-      {status !== 'pending' && status !== 'cancelled' && (
+      )}
+      {status !== 'pending' && status !== 'cancelled' && status !== 'expired' && (
         <Flex alignItems="top" gap={2}>
           <Text color="element.main" fontSize="md" fontFamily="diatype">
             {format(fromUnixTime(Number(date)), 'd MMMM yyyy')}

@@ -35,7 +35,8 @@ const tokenValuesMapping: Partial<Record<TokenKey, Address>> = {
 export const statusValuesMapping: Record<string, string> = {
   Filled: 'fulfilled',
   Pending: 'pending',
-  Expired: 'cancelled',
+  Expired: 'expired',
+  Cancelled: 'cancelled',
 }
 
 interface OrdersTableProps {

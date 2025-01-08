@@ -12,6 +12,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
     pending: 'thermic.400',
     fulfilled: 'olivenite.400',
     cancelled: 'button.error.bg',
+    expired: 'stroke.darker',
   }[status]
 
   return (
