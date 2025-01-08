@@ -1,3 +1,4 @@
+import { OrderStatus } from '@/types/Order'
 import { Flex, Icon, Link, Text } from '@chakra-ui/react'
 import { format, fromUnixTime } from 'date-fns'
 import { ArrowRight, SquareArrowOutUpRight } from 'lucide-react'
@@ -7,26 +8,30 @@ interface DateCellProps {
   showLeftArrow?: boolean
   txHash?: string | null
   vaultAddress?: string | null
-  isCancelled?: boolean
-  isPending?: boolean
+  status?: OrderStatus
 }
 
-export function DateCell({
-  date,
-  isCancelled = false,
-  isPending = false,
-  txHash,
-  vaultAddress,
-  showLeftArrow = false,
-}: DateCellProps) {
+export function DateCell({ date, status, txHash, vaultAddress, showLeftArrow = false }: DateCellProps) {
   return (
     <Flex alignItems="center" gap={4}>
       {showLeftArrow && <Icon as={ArrowRight} color="element.subdued" />}
-      {isPending || isCancelled ? (
+      {status === 'pending' && (
         <Text fontSize="md" color="element.subdued">
-          {isPending ? 'Pending...' : 'Expired...'}
+          Pending...
         </Text>
-      ) : (
+      )}
+      {status === 'cancelled' && (
+        <Text fontSize="md" color="element.subdued">
+          Canceled
+        </Text>
+      )}
+      {/* Uncomment when status is updated */}
+      {/* {status === 'expired' && (
+        <Text fontSize="md" color="element.subdued">
+          Expired...
+        </Text>
+      )} */}
+      {status === 'fulfilled' && (
         <Flex alignItems="top" gap={2}>
           <Text color="element.main" fontSize="md" fontFamily="diatype">
             {format(fromUnixTime(Number(date)), 'd MMMM yyyy')}

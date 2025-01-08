@@ -15,7 +15,7 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react'
-import { ArrowRight, Ban, Box } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import FulfilledDetails from './withdraw-fulfilled-details'
 import RequestDetails from './withdraw-request-details'
 
@@ -92,9 +92,9 @@ const WithdrawDetailsModal = ({
               </Text>
             )}
             {status === 'cancelled' && (
-              <Box color="element.subdued">
-                <Ban size={24} strokeWidth={1.5} />
-              </Box>
+              <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">
+                Canceled
+              </Text>
             )}
           </Flex>
           <Flex direction="column" gap={6}>

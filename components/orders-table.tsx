@@ -143,6 +143,8 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
       </Table>
       {userAddress && (
         <Pagination
+          pageSize={pagination.pageSize}
+          pageIndex={pagination.pageIndex + 1}
           currentPage={table.getState().pagination.pageIndex + 1}
           pageItems={table.getRowModel().rows.length.toLocaleString()}
           totalItems={table.getRowCount().toLocaleString()}

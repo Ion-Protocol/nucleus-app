@@ -3,7 +3,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface PaginationProps {
   currentPage: number
-  pageSize?: number
+  pageSize: number
+  pageIndex: number
   pageItems: string
   totalItems: string
   totalPages: number
@@ -18,6 +19,8 @@ interface PaginationProps {
 const PAGE_SIZE_OPTIONS = [10, 20, 30, 50]
 
 export function Pagination({
+  pageSize,
+  pageIndex,
   currentPage,
   pageItems,
   totalItems,
@@ -31,7 +34,7 @@ export function Pagination({
     <Flex justify="space-between" align="center" w="full" p={4} borderTop="1px" borderColor="stroke.main">
       <HStack spacing={3}>
         <Text fontSize="sm" color="element.main">
-          {`${pageItems} of ${totalItems} items`}
+          {`${pageSize * pageIndex} of ${totalItems} items`}
         </Text>
       </HStack>
 
