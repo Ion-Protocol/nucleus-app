@@ -78,7 +78,7 @@ export default function Withdrawals() {
           Withdrawal Activity
         </Badge>
       </Flex>
-      <OrdersTable data={filteredData} refetch={refetch} />
+      <OrdersTable data={filteredData} refetch={refetch} isLoading={isLoading} isError={isError} />
     </Flex>
   )
 }
