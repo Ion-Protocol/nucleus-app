@@ -41,10 +41,12 @@ export const statusValuesMapping: Record<string, string> = {
 
 interface OrdersTableProps {
   data: Order[]
+  isLoading: boolean
+  isError: boolean
   refetch: () => void
 }
 
-const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
+const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch, isLoading }) => {
   const [pagination, setPagination] = useState({
     pageIndex: 0, //initial page index
     pageSize: 5, //default page size
@@ -98,7 +100,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
   const handleClearFilters = () => {
     setSelectedTokens([])
     setSelectedStatus([])
-    table.resetColumnFilters
+    table.resetColumnFilters()
   }
 
   useEffect(() => {
@@ -136,12 +138,23 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch }) => {
           onChange={setSelectedTokens}
           options={tokenValuesMapping}
           isAssetFilter={true}
+          selectedValues={selectedTokens}
         />
-        <MultiSelectFilter title="By Status" onChange={setSelectedStatus} options={statusValuesMapping} />
+        <MultiSelectFilter
+          title="By Status"
+          onChange={setSelectedStatus}
+          options={statusValuesMapping}
+          selectedValues={selectedStatus}
+        />
       </Flex>
       <Table variant="nucleus">
         <TableHeader headerGroups={table.getHeaderGroups()} />
-        <TableBody rows={table.getRowModel().rows} handleRowClick={handleRowClick} />
+        <TableBody
+          isLoading={isLoading}
+          table={table}
+          rows={table.getRowModel().rows}
+          handleRowClick={handleRowClick}
+        />
       </Table>
       {userAddress && (
         <Pagination

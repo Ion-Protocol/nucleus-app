@@ -66,4 +66,44 @@ export const components = {
       },
     },
   },
+  Checkbox: {
+    variants: {
+      nucleus: {
+        control: {
+          borderRadius: '1.333px',
+          border: '0.667px solid',
+          borderColor: 'checkbox.stroke',
+          background: 'checkbox.bg',
+          _checked: {
+            bg: 'checkbox.bg-active',
+            borderColor: 'checkbox.stroke-active',
+            _dark: {
+              bg: 'checkbox.bg-active',
+              borderColor: 'checkbox.stroke-active',
+            },
+            _hover: {
+              bg: 'checkbox.bg-active',
+              borderColor: 'checkbox.stroke-active',
+              _dark: {
+                bg: 'checkbox.bg-active',
+                borderColor: 'checkbox.stroke-active',
+              },
+            },
+          },
+          _hover: {
+            borderColor: 'checkbox.stroke',
+            _dark: {
+              borderColor: 'checkbox.stroke',
+            },
+          },
+          _focus: {
+            boxShadow: 'none',
+          },
+        },
+        icon: {
+          color: 'checkbox.element-active',
+        },
+      },
+    },
+  },
 }

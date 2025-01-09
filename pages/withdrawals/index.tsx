@@ -24,8 +24,9 @@ export default function Withdrawals() {
     },
     {
       skip: !userAddress,
-      pollingInterval: 3000,
+      pollingInterval: 2000,
       skipPollingIfUnfocused: true,
+      refetchOnMountOrArgChange: true,
     }
   )
 
@@ -77,7 +78,7 @@ export default function Withdrawals() {
           Withdrawal Activity
         </Badge>
       </Flex>
-      <OrdersTable data={filteredData} refetch={refetch} />
+      <OrdersTable data={filteredData} refetch={refetch} isLoading={isLoading} isError={isError} />
     </Flex>
   )
 }

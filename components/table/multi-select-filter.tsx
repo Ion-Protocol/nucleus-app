@@ -27,18 +27,29 @@ interface MultiSelectFilterProps {
   onChange: (values: string[]) => void
   options: Record<string, string>
   isAssetFilter?: boolean
+  selectedValues: string[]
 }
 
-export const MultiSelectFilter = ({ title, options, onChange, isAssetFilter }: MultiSelectFilterProps) => {
+export const MultiSelectFilter = ({
+  title,
+  options,
+  onChange,
+  isAssetFilter,
+  selectedValues,
+}: MultiSelectFilterProps) => {
   const [searchQuery, setSearchQuery] = React.useState('')
 
-  const filteredValues = Object.entries(options).filter(([key, value]) =>
+  const filteredValues = Object.entries(options).filter(([key]) =>
     key.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
+  const handleCheckboxChange = (values: string[]) => {
+    onChange(values)
+  }
+
   return (
     <Popover placement="bottom-end">
-      {({ isOpen, onClose }) => (
+      {({ isOpen }) => (
         <>
           <PopoverTrigger>
             <Button
@@ -83,11 +94,12 @@ export const MultiSelectFilter = ({ title, options, onChange, isAssetFilter }: M
                 </Box>
               )}
               <PopoverBody display="flex" flexDirection="column" padding={2}>
-                <CheckboxGroup onChange={onChange} colorScheme="blackAlpha">
+                <CheckboxGroup value={selectedValues} onChange={handleCheckboxChange}>
                   {filteredValues.map(([key, value]) => (
                     <Checkbox
                       key={key}
                       value={value}
+                      variant="nucleus"
                       fontFamily="diatype"
                       fontWeight="normal"
                       borderRadius="lg"
@@ -106,7 +118,7 @@ export const MultiSelectFilter = ({ title, options, onChange, isAssetFilter }: M
                           <span>{getSymbolByAddress(value as Address)}</span>
                         </Flex>
                       ) : (
-                        capitalizeFirstLetter(value)
+                        capitalizeFirstLetter(key)
                       )}
                     </Checkbox>
                   ))}
