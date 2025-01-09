@@ -44,7 +44,7 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
               />
             ))}
           </NavCollapse>
-          <NavItem title="Withdrawal" href="/withdrawal" leftIcon={<CircleArrowRight />} />
+          <NavItem title="Withdrawals" href="/withdrawals" leftIcon={<CircleArrowRight />} />
           <NavItem title="Portfolio" href="/portfolio" leftIcon={<PortfolioIcon />} disabled comingSoon />
         </Flex>
       </Flex>

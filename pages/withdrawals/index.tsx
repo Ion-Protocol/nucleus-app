@@ -24,8 +24,9 @@ export default function Withdrawals() {
     },
     {
       skip: !userAddress,
-      pollingInterval: 3000,
+      pollingInterval: 2000,
       skipPollingIfUnfocused: true,
+      refetchOnMountOrArgChange: true,
     }
   )
 
