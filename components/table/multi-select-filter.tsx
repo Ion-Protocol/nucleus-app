@@ -99,7 +99,7 @@ export const MultiSelectFilter = ({
                     <Checkbox
                       key={key}
                       value={value}
-                      colorScheme="blackAlpha"
+                      variant="nucleus"
                       fontFamily="diatype"
                       fontWeight="normal"
                       borderRadius="lg"
