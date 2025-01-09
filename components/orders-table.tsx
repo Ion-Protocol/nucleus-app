@@ -100,7 +100,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch, isLoading }) =
   const handleClearFilters = () => {
     setSelectedTokens([])
     setSelectedStatus([])
-    table.resetColumnFilters
+    table.resetColumnFilters()
   }
 
   useEffect(() => {
@@ -138,8 +138,14 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch, isLoading }) =
           onChange={setSelectedTokens}
           options={tokenValuesMapping}
           isAssetFilter={true}
+          selectedValues={selectedTokens}
         />
-        <MultiSelectFilter title="By Status" onChange={setSelectedStatus} options={statusValuesMapping} />
+        <MultiSelectFilter
+          title="By Status"
+          onChange={setSelectedStatus}
+          options={statusValuesMapping}
+          selectedValues={selectedStatus}
+        />
       </Flex>
       <Table variant="nucleus">
         <TableHeader headerGroups={table.getHeaderGroups()} />
