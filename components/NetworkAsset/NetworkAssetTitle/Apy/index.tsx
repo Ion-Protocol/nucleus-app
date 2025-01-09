@@ -1,7 +1,7 @@
-import { Flex, Text } from '@chakra-ui/react'
-import { ApyConnector } from './connector'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { Flex, Text } from '@chakra-ui/react'
+import { ApyConnector } from './connector'
 
 function Apy({
   formattedNetApy,
@@ -21,6 +21,7 @@ function Apy({
       gap={3}
       align="center"
       w="100%"
+      bg="backgroundSecondary"
     >
       <Text variant="paragraph">APY</Text>
       <IonSkeleton isLoaded={!loading}>

@@ -10,7 +10,7 @@ import { serialize } from 'wagmi'
 
 export const transactionReceiptApi = createApi({
   reducerPath: 'TransactionReceiptApi',
-  baseQuery: fakeBaseQuery(),
+  baseQuery: fakeBaseQuery<string>(),
   endpoints: (builder) => ({
     waitForTransactionReceipt: builder.query<WaitForTransactionReceiptReturnType, WaitForTransactionReceiptParameters>({
       queryFn: async ({ hash, ...rest }) => {
@@ -20,8 +20,9 @@ export const transactionReceiptApi = createApi({
             ...rest,
           })
           return { data: results }
-        } catch (error) {
-          return { error: serialize(error) }
+        } catch (err) {
+          const error = serialize(err)
+          return { error: error }
         }
       },
     }),
