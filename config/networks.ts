@@ -181,7 +181,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       withdrawalChain: ChainKey.FORM,
       layerZeroChainSelector: 0,
       wantTokens: {
-        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.SFRXETH, TokenKey.APXETH],
+        [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
       },
     },
     receiveOn: ChainKey.ETHEREUM,
