@@ -1,9 +1,12 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { StatusBadge } from '@/components/table/status-badge'
-import { Order } from '@/types/Order'
+import FulfilledDetails from '@/components/Withdraw/WithdrawalDetailModal/withdraw-fulfilled-details'
+import RequestDetails from '@/components/Withdraw/WithdrawalDetailModal/withdraw-request-details'
+import { tokensConfig } from '@/config/tokens'
+import { TransactionTableDataItem } from '@/store/slices/portfolio/selectors'
+import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
-import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   Flex,
   Modal,
@@ -16,57 +19,48 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { ArrowRight } from 'lucide-react'
-import FulfilledDetails from './withdraw-fulfilled-details'
-import RequestDetails from './withdraw-request-details'
+import { Address, parseEther } from 'viem'
 
-const WithdrawDetailsModal = ({
+export const TransactionDetailsModal = ({
   isOpen,
   onClose,
-  order,
+  transaction,
 }: {
   isOpen: boolean
   onClose: () => void
-  order: Order | null
+  transaction: TransactionTableDataItem | null
 }) => {
-  if (!order) return null
+  if (!transaction) return null
   const {
-    amount,
-    status,
-    offer_token,
-    want_token,
-    atomic_price,
+    activity,
+    sourceAmount,
+    destinationAmount,
+    minimumPrice,
+    receiveAtLeast,
     deadline,
-    created_timestamp,
-    ending_timestamp,
-    created_log_index,
-    created_transaction_index,
-    created_block_number,
-    ending_log_index,
-    ending_transaction_index,
-    ending_block_number,
-    queue_address,
-    chain_id,
-    offer_amount_spent,
-    want_amount_rec,
-    created_transaction_hash,
-    ending_transaction_hash,
-  } = order
+    createdAt,
+    filledPrice,
+    filledAt,
+    table,
+    status,
+  } = transaction
 
-  const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
-  const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
+  const sourceTokenObject = tokensConfig[activity.source.token as TokenKey]
+  const destTokenObject = tokensConfig[activity.destination.token as TokenKey]
+
   const headerThreshold = 0.01
   const displayAmount =
-    bigIntToNumber(BigInt(amount), { decimals: 18 }) < headerThreshold
+    bigIntToNumber(BigInt(sourceAmount), { decimals: 18 }) < headerThreshold
       ? '< 0.01'
-      : bigIntToNumberAsString(BigInt(offer_amount_spent), {
+      : bigIntToNumberAsString(BigInt(sourceAmount), {
           decimals: 18,
           maximumFractionDigits: 2,
         })
 
   const displayWantAmountRec =
-    bigIntToNumber(BigInt(want_amount_rec), { decimals: 18 }) < headerThreshold
+    bigIntToNumber(BigInt(destinationAmount), { decimals: 18 }) < headerThreshold
       ? '< 0.01'
-      : bigIntToNumberAsString(BigInt(want_amount_rec), {
+      : bigIntToNumberAsString(BigInt(destinationAmount), {
           decimals: 18,
           maximumFractionDigits: 2,
         })
@@ -82,18 +76,18 @@ const WithdrawDetailsModal = ({
         <ModalBody display="flex" flexDirection="column" gap={6} color="element.main">
           <Flex gap={4} justifyContent="center" alignItems="center">
             <Flex gap={2}>
-              <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
-              <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${getSymbolByAddress(offer_token)}`}</Text>
+              <TokenIcon fontSize="24px" tokenKey={activity.source.token as TokenKey} />
+              <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${table.sourceToken}`}</Text>
             </Flex>
             <ArrowRight size={16} strokeWidth={1.5} />
             {status === 'fulfilled' && (
               <Flex gap={2}>
-                <TokenIcon fontSize="24px" tokenKey={wantTokenKey} />
+                <TokenIcon fontSize="24px" tokenKey={activity.destination.token as TokenKey} />
                 <Text
                   fontSize="xl"
                   color="element.main"
                   fontFamily="ppformula"
-                >{`${displayWantAmountRec} ${getSymbolByAddress(want_token)}`}</Text>
+                >{`${displayWantAmountRec} ${table.destinationToken}`}</Text>
               </Flex>
             )}
             {status === 'pending' && (
@@ -110,23 +104,23 @@ const WithdrawDetailsModal = ({
           <Flex direction="column" gap={6}>
             {/* Request */}
             <RequestDetails
-              amount={amount}
-              atomicPrice={atomic_price}
-              offerToken={offer_token}
-              wantToken={want_token}
-              deadline={deadline}
-              createdTimestamp={created_timestamp}
-              createdAtTxHash={created_transaction_hash}
+              amount={sourceAmount}
+              atomicPrice={parseEther(minimumPrice.toString()).toString()}
+              offerToken={sourceTokenObject.addresses[ChainKey.ETHEREUM] as Address}
+              wantToken={destTokenObject.addresses[ChainKey.ETHEREUM] as Address}
+              deadline={deadline.toString()}
+              createdTimestamp={createdAt.toString()}
+              createdAtTxHash={'0x0'}
             />
             {/* Fulfillment */}
             {status === 'fulfilled' && (
               <FulfilledDetails
-                offerToken={offer_token}
-                offerAmountSpent={offer_amount_spent}
-                wantToken={want_token}
-                wantAmountRec={want_amount_rec}
-                endingTimestamp={ending_timestamp}
-                filledAtTxHash={ending_transaction_hash}
+                offerToken={sourceTokenObject.addresses[ChainKey.ETHEREUM] as Address}
+                offerAmountSpent={sourceAmount}
+                wantToken={destTokenObject.addresses[ChainKey.ETHEREUM] as Address}
+                wantAmountRec={destinationAmount}
+                endingTimestamp={filledAt.toString()}
+                filledAtTxHash={'0x0'}
               />
             )}
           </Flex>
@@ -141,5 +135,3 @@ const WithdrawDetailsModal = ({
     </Modal>
   )
 }
-
-export default WithdrawDetailsModal

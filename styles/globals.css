@@ -83,6 +83,7 @@ a {
   --font-recklessNeue-light: 'RecklessNeue Light', sans-serif;
   --font-recklessNeue-bold: 'RecklessNeue Bold', sans-serif;
   --font-diatype: 'ABC Diatype', sans-serif;
+  --font-diatype-medium: 'ABC Diatype Medium', sans-serif;
 }
 
 @font-face {
@@ -134,6 +135,18 @@ a {
     url('../public/fonts/Diatype/ABCDiatype-Regular-Trial.woff2') format('woff2'),
     url('../public/fonts/Diatype/ABCDiatype-Regular-Trial.woff') format('woff');
   font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ABC Diatype';
+  src:
+    local('ABC Diatype Medium'),
+    local('ABCDiatype-Medium'),
+    url('../public/fonts/Diatype/ABCDiatype-Medium-Trial.woff2') format('woff2'),
+    url('../public/fonts/Diatype/ABCDiatype-Medium-Trial.woff') format('woff');
+  font-weight: 550;
   font-style: normal;
   font-display: swap;
 }

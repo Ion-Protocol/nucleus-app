@@ -1,9 +1,8 @@
-import { Order } from '@/types/Order'
 import { Th, Thead, Tr } from '@chakra-ui/react'
 import { HeaderGroup, flexRender } from '@tanstack/react-table'
 
 interface TableHeaderProps {
-  headerGroups: HeaderGroup<Order>[]
+  headerGroups: HeaderGroup<any>[]
 }
 
 export function TableHeader({ headerGroups }: TableHeaderProps) {
@@ -12,7 +11,9 @@ export function TableHeader({ headerGroups }: TableHeaderProps) {
       {headerGroups.map((headerGroup) => (
         <Tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => (
-            <Th key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</Th>
+            <Th key={header.id} textAlign="left" pl={3}>
+              {flexRender(header.column.columnDef.header, header.getContext())}
+            </Th>
           ))}
         </Tr>
       ))}
