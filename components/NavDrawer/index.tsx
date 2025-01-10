@@ -1,5 +1,6 @@
 import { discordUrl, docsUrl } from '@/config/constants'
 import { Divider, Flex } from '@chakra-ui/react'
+import { CircleArrowRight } from 'lucide-react'
 import { TokenIcon } from '../config/tokenIcons'
 import { DashboardIcon } from '../shared/icons/Dashboard'
 import { DiscordIcon } from '../shared/icons/Discord'
@@ -17,8 +18,8 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
   return (
     <Flex
       direction="column"
-      minW="300px"
-      maxW="300px"
+      minW="240px"
+      maxW="240px"
       borderRight="1px solid"
       borderColor="border"
       p={6}
@@ -43,6 +44,7 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
               />
             ))}
           </NavCollapse>
+          <NavItem title="Withdrawals" href="/withdrawals" leftIcon={<CircleArrowRight />} />
           <NavItem title="Portfolio" href="/portfolio" leftIcon={<PortfolioIcon />} disabled comingSoon />
         </Flex>
       </Flex>

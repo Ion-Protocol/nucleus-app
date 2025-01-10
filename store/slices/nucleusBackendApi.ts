@@ -1,4 +1,5 @@
 import { nucleusBackendBaseUrl } from '@/config/constants'
+import { Order, OrderStatus } from '@/types/Order'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
 
@@ -8,20 +9,18 @@ interface RewardsAPYParams {
   lookBackDays?: number // API defaults to 7 days if not provided
 }
 
-interface BulkRewardsAPYParams {
-  params: RewardsAPYParams[]
-}
-
-interface BulkRewardsAPYResponse {
-  results: {
-    tokenAddress: Address
-    response: RewardsAPYResponse | null
-    error?: string
-  }[]
-}
-
 interface RewardsAPYResponse {
   apy: number
+}
+
+export type WithdrawalParams = {
+  user: Address
+  vaultAddress?: Address
+  chainId?: number
+  status?: OrderStatus | 'all'
+  all?: boolean
+  page?: number
+  limit?: number
 }
 
 // Define a service using a base URL and expected endpoints
@@ -29,12 +28,13 @@ export const nucleusBackendApi = createApi({
   reducerPath: 'nucleusBackendApi',
   baseQuery: fetchBaseQuery({
     baseUrl: nucleusBackendBaseUrl,
-    prepareHeaders: (headers) => {
-      headers.set('Access-Control-Allow-Origin', '*')
-      headers.set('Access-Control-Allow-Methods', 'GET')
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-      return headers
-    },
+    mode: 'cors',
+    // prepareHeaders: (headers) => {
+    //   headers.set('Access-Control-Allow-Origin', '*')
+    //   headers.set('Access-Control-Allow-Methods', 'GET')
+    //   headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    //   return headers
+    // },
   }),
   endpoints: (builder) => ({
     // Keep the original single query endpoint
@@ -47,7 +47,20 @@ export const nucleusBackendApi = createApi({
         return `v1/vaults/apy?${params.toString()}`
       },
     }),
+    withdrawalOrdersByUser: builder.query<Order[], WithdrawalParams>({
+      query: ({ user, vaultAddress, chainId, status = 'all', all = true, page, limit }) => {
+        const params = new URLSearchParams()
+        params.append('user', user)
+        if (vaultAddress) params.append('vault_address', vaultAddress)
+        if (chainId) params.append('chain_id', chainId.toString())
+        if (status) params.append('status', status)
+        if (all) params.append('all', all.toString())
+        if (page) params.append('page', page.toString())
+        if (limit) params.append('limit', limit.toString())
+        return `v1/protocol/withdrawals?${params.toString()}`
+      },
+    }),
   }),
 })
 
-export const { useGetDefaultYieldAPYQuery } = nucleusBackendApi
+export const { useGetDefaultYieldAPYQuery, useWithdrawalOrdersByUserQuery } = nucleusBackendApi
