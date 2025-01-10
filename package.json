@@ -42,7 +42,8 @@
     "react-dom": "^18",
     "react-redux": "^9.1.2",
     "viem": "^2.21.54",
-    "wagmi": "^2.13.4"
+    "wagmi": "^2.13.4",
+    "recharts": "^2.15.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.0",
