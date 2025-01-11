@@ -34,7 +34,7 @@ export interface NetworkAsset {
     redemptionSourceAsset: TokenKey
     redemptionSourceChain: ChainKey
     redemptionSourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-    wantTokens: Partial<Record<ChainKey, TokenKey[]>>
+    wantTokens: Partial<Record<ChainKey, Partial<Record<TokenKey, { token: Token; withdrawalFee: number }>>>>
     withdrawalChain: ChainKey
     withdrawalFee: number
   }

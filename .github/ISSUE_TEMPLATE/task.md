@@ -4,7 +4,6 @@ about: Describe a new task
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 ## Description
