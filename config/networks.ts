@@ -91,15 +91,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // 0.2%, // Custom fee for WETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: 0.01, // Different fee for SFRXETH
+            withdrawalFee: 0.01, // Custom fee for SFRXETH
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: 0.01, // Different fee for APXETH
+            withdrawalFee: 0.01, // Custom fee for APXETH
           },
         },
       },
@@ -197,15 +197,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // 0.2%, // Custom fee for WETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for SFRXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
@@ -274,31 +274,31 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // 0.2%, // Custom fee for WETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.EZETH]: {
             token: tokensConfig[TokenKey.EZETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for SFRXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.WSTETH]: {
             token: tokensConfig[TokenKey.WSTETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.RSWETH]: {
             token: tokensConfig[TokenKey.RSWETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.RSETH]: {
             token: tokensConfig[TokenKey.RSETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.WEETH]: {
             token: tokensConfig[TokenKey.WEETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
@@ -394,15 +394,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // 0.2%, // Custom fee for WETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for SFRXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
@@ -466,15 +466,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // 0.2%, // Custom fee for WETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for SFRXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
@@ -537,15 +537,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // 0.2%, // Custom fee for WETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for SFRXETH
+            withdrawalFee: defaultWithdrawalFee, /// Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Different fee for APXETH
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
