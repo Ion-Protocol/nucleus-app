@@ -199,12 +199,16 @@ const mainnetNetworkAssets: NetworkAssets = {
             token: tokensConfig[TokenKey.WETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
-          [TokenKey.SFRXETH]: {
-            token: tokensConfig[TokenKey.SFRXETH],
+          [TokenKey.WSTETH]: {
+            token: tokensConfig[TokenKey.WSTETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
-          [TokenKey.APXETH]: {
-            token: tokensConfig[TokenKey.APXETH],
+          [TokenKey.PZETH]: {
+            token: tokensConfig[TokenKey.PZETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+          [TokenKey.EZETH]: {
+            token: tokensConfig[TokenKey.EZETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
