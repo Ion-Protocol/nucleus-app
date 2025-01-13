@@ -500,22 +500,19 @@ export const selectRedemptionTokenAddressByTokenKey = (state: RootState, tokenKe
 export const selectReceiveTokens = createSelector(
   [selectNetworkAssetConfig, selectRedemptionDestinationChainKey],
   (chainConfig, redemptionDestinationChainKey): TokenKey[] => {
-    return chainConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey] || []
+    const wantTokens = chainConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]
+    // Get the keys of the want tokens object instead of the array directly
+    return wantTokens ? (Object.keys(wantTokens) as TokenKey[]) : []
   }
 )
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectReceiveTokenKey = (state: RootState): TokenKey | null => {
+export const selectReceiveTokenKey = (state: RootState): TokenKey => {
   const bridgesState = selectBridgesState(state)
   const networkAssetConfig = selectNetworkAssetConfig(state)
-  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
   const tokenKeys = selectReceiveTokens(state)
   if (!networkAssetConfig) return tokenKeys[0]
-  return (
-    bridgesState.selectedReceiveToken ||
-    networkAssetConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[0] ||
-    null
-  )
+  return bridgesState.selectedReceiveToken || tokenKeys[0]
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
@@ -816,12 +813,15 @@ export const selectWantAssetAddress = (state: RootState) => {
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectWithdrawalFee = (state: RootState) => {
-  const networkAssetConfig = selectNetworkAssetConfig(state)
-  if (!networkAssetConfig) {
-    return defaultWithdrawalFee
-  }
-  return networkAssetConfig.redeem.withdrawalFee
+// Returns withdrawal fee for selected receive token
+export const selectWithdrawalFee = (state: RootState): number => {
+  const chainConfig = selectNetworkAssetConfig(state)
+  const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
+  const receiveTokenKey = selectReceiveTokenKey(state)
+  return (
+    chainConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawalFee ||
+    defaultWithdrawalFee
+  )
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
