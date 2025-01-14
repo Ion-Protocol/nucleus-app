@@ -222,10 +222,6 @@ export const useRedeem = () => {
       //     chain that the user selected, switch it to the source chain.
       //////////////////////////////////////////////////////////////////////////
       if (isBridgeRequired) {
-        console.log('Switching chain for bridge:', {
-          from: networkId,
-          to: redemptionSourceChainId,
-        })
         await switchToChain(redemptionSourceChainId!)
       }
 
@@ -278,7 +274,7 @@ export const useRedeem = () => {
         if (bridgeReceipt.isError) {
           throw new Error(`Bridge Receipt Error: ${bridgeReceipt.error}`)
         }
-        console.log('sourceExplorerBaseUrl', sourceExplorerBaseUrl)
+
         dispatch(
           setDialogStep({
             stepId: bridgeStepId,
