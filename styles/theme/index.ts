@@ -5,14 +5,17 @@ import { components } from './componentStyles'
 import { config } from './config'
 import { styles } from './globalStyles'
 import { textStyles } from './textStyles'
+import { textStylesV2 } from './textStyles-v2'
 import { semanticTokens } from './tokens'
+import { colorsV2 } from './colors-v2'
+import { semanticTokensV2 } from './tokens-v2'
 
 const theme = extendTheme({
   config,
   fonts,
-  colors,
-  semanticTokens,
-  textStyles,
+  colors: { ...colors, ...colorsV2 },
+  semanticTokens: { colors: { ...semanticTokens.colors, ...semanticTokensV2.colors } },
+  textStyles: { ...textStyles, ...textStylesV2 },
   components,
   styles,
 })

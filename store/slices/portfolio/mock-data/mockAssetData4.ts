@@ -1,0 +1,42 @@
+export const mockAssetData = [
+  {
+    asset: 'WBTC',
+    network: 'Ethereum',
+    earningsApy: 1.25,
+    amount: 0.1,
+    usdValue: 2000,
+    rewardCount: 2,
+  },
+  {
+    asset: 'SWBTC',
+    network: 'Ethereum',
+    earningsApy: 2.45,
+    amount: 0.05,
+    usdValue: 1000,
+    rewardCount: 1,
+  },
+  {
+    asset: 'TETH',
+    network: 'Eclipse',
+    earningsApy: 4.2,
+    amount: 1.2,
+    usdValue: 900,
+    rewardCount: 3,
+  },
+  {
+    asset: 'FETH',
+    network: 'Form',
+    earningsApy: 3.5,
+    amount: 0.8,
+    usdValue: 600,
+    rewardCount: 2,
+  },
+  {
+    asset: 'SEI',
+    network: 'Sei',
+    earningsApy: 5.0,
+    amount: 50,
+    usdValue: 50,
+    rewardCount: 5,
+  },
+]
