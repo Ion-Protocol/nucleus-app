@@ -224,11 +224,23 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   }
   const vaultAddress = networkAssetConfig?.contracts.boringVault
   const accountantAddress = networkAssetConfig?.contracts.accountant
-
+  // ! Delete
   const deployedOnChainId = chainsConfig[networkAssetConfig.deployedOn].id
 
+  // Collect chainIds users can deposit into vault from
+  const chainIds = Object.values(networkAssetConfig.sourceChains).map(
+    (sourceChain) => chainsConfig[sourceChain.chain].id
+  )
+  console.log('chainIds', chainIds)
+  // ! Delete
   if (!deployedOnChainId) {
-    const errorMessage = `Chain ${networkAssetConfig.deployedOn} does not have a chain id`
+    const errorMessage = `Chain ${deployedOnChainId} does not properly defined`
+    dispatch(setErrorMessage(errorMessage))
+    return rejectWithValue(errorMessage)
+  }
+
+  if (!chainIds) {
+    const errorMessage = `Chain ${chainIds} does not properly defined`
     dispatch(setErrorMessage(errorMessage))
     return rejectWithValue(errorMessage)
   }
@@ -238,6 +250,35 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   }
 
   try {
+    // Fetch total supply of shares for all chains user can deposit from
+    const promises = chainIds.map((chainId) =>
+      getTotalSupply(vaultAddress, { chainId: chainId! })
+        .then((supply) => ({
+          chainId,
+          supply,
+          status: 'fulfilled',
+        }))
+        .catch((error) => ({
+          chainId,
+          error,
+          status: 'rejected',
+        }))
+    )
+
+    const results = await Promise.allSettled(promises)
+    console.log(results)
+
+    const calculateTotalSupply = results.reduce((total, result) => {
+      // Check if it's a fulfilled result and has a supply
+      if (result.status === 'fulfilled' && 'supply' in result.value) {
+        // Add the supply to our running total
+        return total + result.value.supply
+      }
+      return total
+    }, BigInt(0)) // Start with 0n as BigInt
+
+    console.log('calculatedTotalSupply', calculateTotalSupply)
+    // ! Delete old fetch of TVL
     // Fetch total supply of shares
     const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: deployedOnChainId })
 
@@ -245,7 +286,7 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
 
     // Calculate TVL
-    const tvlInToken = (totalSharesSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
+    const tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
     const tvlAsString = tvlInToken.toString()
 
     return { tvl: tvlAsString, tokenKey }
