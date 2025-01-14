@@ -5,6 +5,7 @@ export const atomicQueueContractAddress = '0xc7287780bfa0C5D2dD74e3e51E238B1cd9B
 export const etherscanBaseUrl = 'https://etherscan.io'
 export const seiExplorerBaseUrl = 'https://seitrace.com'
 export const rariExplorerBaseUrl = 'https://mainnet.explorer.rarichain.org'
+export const swellExplorerBaseURL = 'https://explorer.swellnetwork.io'
 export const layerZeroBaseUrl = 'https://layerzeroscan.com'
 export const eclipseRpcUrl = 'https://mainnetbeta-rpc.eclipse.xyz'
 export const redstoneBaseUrl = 'https://api.redstone.finance/'

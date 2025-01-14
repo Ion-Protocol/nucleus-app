@@ -224,20 +224,11 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   }
   const vaultAddress = networkAssetConfig?.contracts.boringVault
   const accountantAddress = networkAssetConfig?.contracts.accountant
-  // ! Delete
-  const deployedOnChainId = chainsConfig[networkAssetConfig.deployedOn].id
 
   // Collect chainIds users can deposit into vault from
   const chainIds = Object.values(networkAssetConfig.sourceChains).map(
     (sourceChain) => chainsConfig[sourceChain.chain].id
   )
-  console.log('chainIds', chainIds)
-  // ! Delete
-  if (!deployedOnChainId) {
-    const errorMessage = `Chain ${deployedOnChainId} does not properly defined`
-    dispatch(setErrorMessage(errorMessage))
-    return rejectWithValue(errorMessage)
-  }
 
   if (!chainIds) {
     const errorMessage = `Chain ${chainIds} does not properly defined`
@@ -265,22 +256,17 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
         }))
     )
 
-    const results = await Promise.allSettled(promises)
-    console.log(results)
+    // Await for shares results
+    const totalSharesResults = await Promise.allSettled(promises)
 
-    const calculateTotalSupply = results.reduce((total, result) => {
+    const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
-      if (result.status === 'fulfilled' && 'supply' in result.value) {
+      if (sharesResult.status === 'fulfilled' && 'supply' in sharesResult.value) {
         // Add the supply to our running total
-        return total + result.value.supply
+        return total + sharesResult.value.supply
       }
       return total
     }, BigInt(0)) // Start with 0n as BigInt
-
-    console.log('calculatedTotalSupply', calculateTotalSupply)
-    // ! Delete old fetch of TVL
-    // Fetch total supply of shares
-    const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: deployedOnChainId })
 
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
