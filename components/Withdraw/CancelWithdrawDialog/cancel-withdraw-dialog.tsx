@@ -113,24 +113,6 @@ function CancelWithdrawDialog({ isOpen, onClose, order }: CancelWithdrawDialogPr
     })
   }
 
-  console.log(
-    'mutation',
-    isCancelMutationLoading,
-    isUninitialized,
-    isCancelMutationError,
-    cancelMutationData,
-    cancelMutationError
-  )
-  console.log(
-    'tx receipt',
-    isTxReceiptLoading,
-    isTxReceiptFetching,
-    isTxReceiptUninitialized,
-    isTxReceiptError,
-    isTxReceiptSuccess,
-    txReceipt
-  )
-
   const handleToggleDisplayFullError = () => {
     setIsFullErrorDisplayed(!isFullErrorDisplayed)
   }

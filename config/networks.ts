@@ -9,8 +9,9 @@ import {
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
   seiExplorerBaseUrl,
+  swellExplorerBaseURL,
 } from './constants'
-import { rari } from './tenderly'
+import { rari } from './customWagmiChains'
 import { tokensConfig } from './tokens'
 
 const MANUALLY_PAUSED_NETWORK_ASSETS = process.env.NEXT_PUBLIC_PAUSED_NETWORK_ASSETS?.split(',') || []
@@ -427,6 +428,10 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: etherscanBaseUrl,
+      },
+      [ChainKey.SWELL]: {
+        chain: ChainKey.SWELL,
+        explorerBaseUrl: swellExplorerBaseURL,
       },
     },
     defaultMintChain: ChainKey.ETHEREUM,

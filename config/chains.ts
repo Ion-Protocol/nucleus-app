@@ -1,6 +1,6 @@
 import { ChainKey } from '@/types/ChainKey'
 import { mainnet, sei } from 'viem/chains'
-import { rari } from './tenderly'
+import { rari, swellchain } from './customWagmiChains'
 
 export interface Chain {
   name: string
@@ -25,6 +25,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   },
   [ChainKey.SWELL]: {
     name: 'Swell',
+    id: swellchain.id,
   },
   [ChainKey.ECLIPSE]: {
     name: 'Eclipse',
