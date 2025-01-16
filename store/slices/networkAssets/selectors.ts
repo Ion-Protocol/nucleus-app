@@ -111,6 +111,12 @@ export const selectLayerZeroChainSelector = (state: RootState): number => {
   return networkAssetConfig?.layerZeroChainSelector || 0
 }
 
+// DO NOT memoize: Direct lookup; returns a value from configuration.
+export const selectHyperlaneChainSelector = (state: RootState): number => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.hyperlaneChainSelector || 0
+}
+
 export const selectRedeemLayerZeroChainSelector = (state: RootState): number => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   return networkAssetConfig?.redeem.layerZeroChainSelector || 0
@@ -708,6 +714,7 @@ export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
   const inputAmount = selectDepositAmount(state)
   const error = selectInputError(state)
   const layerZeroChainSelector = selectLayerZeroChainSelector(state)
+  const hyperlaneChainSelector = selectHyperlaneChainSelector(state)
   const sourceChainKey = selectSourceChainKey(state)
   const address = selectAddress(state)
 
@@ -715,19 +722,13 @@ export const selectShouldTriggerPreviewFee = (state: RootState): boolean => {
   // Will use the bridge if the source is Ethereum and the network is not deployed on Ethereum
   const bridgingToL2 = sourceChainKey === ChainKey.ETHEREUM && networkAssetConfig?.deployedOn !== ChainKey.ETHEREUM
   const isTeth = networkAssetKey === TokenKey.TETH
-  const hasLayerZeroChainSelector = layerZeroChainSelector !== null
+  // Check if either chain selector is available
+  const hasChainSelector = layerZeroChainSelector !== null || hyperlaneChainSelector !== null
   const isNotEmpty = inputAmount.trim().length > 0
   const isGreaterThanZero = parseFloat(inputAmount) > 0
   const hasNoError = !error
 
-  return (
-    isConnected &&
-    (bridgingToL2 || isTeth) &&
-    hasLayerZeroChainSelector &&
-    isNotEmpty &&
-    isGreaterThanZero &&
-    hasNoError
-  )
+  return isConnected && (bridgingToL2 || isTeth) && hasChainSelector && isNotEmpty && isGreaterThanZero && hasNoError
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -772,11 +773,13 @@ export const selectDepositDisabled = (state: RootState): boolean => {
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectDepositBridgeData = createSelector(
-  [selectLayerZeroChainSelector, selectAddress],
-  (layerZeroChainSelector, userAddress): CrossChainTellerBase.BridgeData | null => {
+  [selectLayerZeroChainSelector, selectHyperlaneChainSelector, selectAddress],
+  (layerZeroChainSelector, hyperlaneChainSelector, userAddress): CrossChainTellerBase.BridgeData | null => {
     if (!userAddress) return null
+    const chainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
+    console.log('chainSelector', chainSelector)
     return {
-      chainSelector: layerZeroChainSelector,
+      chainSelector: chainSelector,
       destinationChainReceiver: userAddress,
       bridgeFeeToken: tokensConfig[TokenKey.ETH].addresses[ChainKey.ETHEREUM] as Address,
       messageGas: 100000,

@@ -1,6 +1,6 @@
 import { AppDispatch } from '@/store'
 import { selectShouldTriggerPreviewFee, setDepositAmountDebounceComplete } from '@/store/slices/networkAssets'
-import { fetchPreviewFee, setDepositAmountMax } from '@/store/slices/networkAssets/thunks'
+import { fetchPreviewFee } from '@/store/slices/networkAssets/thunks'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**
@@ -14,6 +14,7 @@ export const previewFeeMiddleware: Middleware =
     if (setDepositAmountDebounceComplete.match(action)) {
       const state = getState()
       const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
+      console.log('shouldTriggerPreviewFee', shouldTriggerPreviewFee)
       if (shouldTriggerPreviewFee) {
         dispatch(fetchPreviewFee())
       }

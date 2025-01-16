@@ -48,7 +48,7 @@ const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.BOBAETH]: {
     apys: {},
     chain: ChainKey.BOBA,
-    comingSoon: true,
+    comingSoon: false,
     contracts: {
       teller: '0xCd721cd24811013c35fFd4BaeF63F07A600EA8bA',
       accountant: '0x78cba912751dB70CBd77C1111A4d1aDD077AD99A',
@@ -56,7 +56,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
-    deployedOn: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.BOBA,
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     hyperlaneChainSelector: 288, // Hyperlane Domain Identifier
