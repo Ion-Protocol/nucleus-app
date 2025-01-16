@@ -2,7 +2,7 @@ import { NetworkAssets } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
-import { sei } from 'wagmi/chains'
+import { boba, sei } from 'wagmi/chains'
 import {
   bobaExplorerBaseURL,
   defaultWithdrawalFee,
@@ -22,6 +22,7 @@ export enum NetworkKey {
   TENDERLY_MAINNET = 'tenderly_mainnet',
   SEI = 'sei',
   RARI = 'rari',
+  BOBA = 'boba',
 }
 
 export interface NetworkConfig {
@@ -122,10 +123,10 @@ const mainnetNetworkAssets: NetworkAssets = {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: layerZeroBaseUrl,
       },
-      // [ChainKey.BOBA]: {
-      //   chain: ChainKey.BOBA,
-      //   explorerBaseUrl: bobaExplorerBaseURL,
-      // },
+      [ChainKey.BOBA]: {
+        chain: ChainKey.BOBA,
+        explorerBaseUrl: bobaExplorerBaseURL,
+      },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [
@@ -136,7 +137,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         TokenKey.WEETH,
         TokenKey.WSTETH,
       ],
-      // [ChainKey.BOBA]: [TokenKey.WETH],
+      [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
   },
@@ -677,6 +678,11 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.RARI]: {
     id: rari.id,
     name: 'Rari',
+    assets: mainnetNetworkAssets,
+  },
+  [NetworkKey.BOBA]: {
+    id: boba.id,
+    name: 'Boba',
     assets: mainnetNetworkAssets,
   },
 }

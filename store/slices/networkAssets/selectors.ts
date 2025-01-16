@@ -777,7 +777,6 @@ export const selectDepositBridgeData = createSelector(
   (layerZeroChainSelector, hyperlaneChainSelector, userAddress): CrossChainTellerBase.BridgeData | null => {
     if (!userAddress) return null
     const chainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
-    console.log('chainSelector', chainSelector)
     return {
       chainSelector: chainSelector,
       destinationChainReceiver: userAddress,

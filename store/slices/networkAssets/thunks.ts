@@ -613,7 +613,6 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       if (!depositAssetTokenKey || !chainKeyFromSelector) {
         return rejectWithValue('Missing deposit asset token key')
       }
-      console.log('fetch preview fee')
 
       const depositAssetAddress = tokensConfig[depositAssetTokenKey]?.addresses[chainKeyFromSelector]
 
@@ -622,12 +621,6 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
       const hyperlaneChainSelector = chainConfig?.hyperlaneChainSelector
 
-      console.log('Teller', tellerContractAddress)
-      console.log('Accountant', accountantContractAddress)
-      console.log('deposit amount', depositAmount)
-      console.log('chainId', chainId)
-      console.log('userAddress', userAddress)
-      console.log('depositAssetAddress', depositAssetAddress)
       if (
         tellerContractAddress &&
         accountantContractAddress &&
@@ -636,11 +629,10 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
         userAddress &&
         depositAssetAddress
       ) {
-        console.log('in if check')
-        const chainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
-        console.log('chainSelector', chainSelector)
+        //
+        const bridgeSpecificChainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
         const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
-          chainSelector: chainSelector,
+          chainSelector: bridgeSpecificChainSelector,
           destinationChainReceiver: userAddress,
           bridgeFeeToken: nativeAddress,
           messageGas: 100_000,

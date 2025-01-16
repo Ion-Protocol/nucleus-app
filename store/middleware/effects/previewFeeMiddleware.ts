@@ -14,7 +14,6 @@ export const previewFeeMiddleware: Middleware =
     if (setDepositAmountDebounceComplete.match(action)) {
       const state = getState()
       const shouldTriggerPreviewFee = selectShouldTriggerPreviewFee(state)
-      console.log('shouldTriggerPreviewFee', shouldTriggerPreviewFee)
       if (shouldTriggerPreviewFee) {
         dispatch(fetchPreviewFee())
       }
