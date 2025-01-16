@@ -1,11 +1,12 @@
-import { Box, ChakraProps, Flex, Link, Text, useColorMode } from '@chakra-ui/react'
+import { Box, ChakraProps, ComponentWithAs, Flex, Icon, IconProps, Link, Text, useColorMode } from '@chakra-ui/react'
+import { LucideIcon } from 'lucide-react'
 import { useRouter } from 'next/router'
-import React, { ReactElement } from 'react'
+import React from 'react'
 
 interface NavItemProps extends ChakraProps {
   title: string
   href: string
-  leftIcon?: ReactElement
+  leftIcon: ComponentWithAs<'svg', IconProps> | LucideIcon
   disabled?: boolean
   comingSoon?: boolean
   isExternal?: boolean
@@ -23,10 +24,8 @@ export function NavItem({
   ...props
 }: NavItemProps) {
   const router = useRouter()
-  const isSelected = router.asPath === href
+  const isActive = router.asPath === href
   const { colorMode } = useColorMode()
-
-  const iconWithSize = leftIcon ? React.cloneElement(leftIcon, { height: '20px', width: '20px' }) : null
 
   const handleClick = (event: React.MouseEvent) => {
     if (disabled) return
@@ -35,35 +34,52 @@ export function NavItem({
       window.open(partnerUrl, '_blank')
       return
     }
-    if (!isSelected) {
+    if (!isActive) {
       router.push(href)
     }
   }
 
   return (
     <Link
-      _hover={{ textDecoration: 'none' }}
+      display="flex"
+      gap={8}
+      height={'3.5rem'}
+      alignItems="center"
       onClick={handleClick}
       cursor={disabled ? 'not-allowed' : 'pointer'}
       color={disabled ? 'disabledText' : undefined}
+      _hover={{ textDecoration: 'none', bg: 'bg.secondary' }}
       {...props}
     >
       <Flex
-        borderRadius="8px"
         align="center"
-        gap={3}
-        p={2}
-        bg={isSelected ? 'navDrawerSelected' : 'transparent'}
-        border={isSelected ? '1px solid' : '1px solid transparent'}
-        borderColor={isSelected && colorMode === 'light' ? 'border' : 'transparent'}
-        _hover={{
-          bg: disabled ? 'transparent' : 'hover',
-          border: '1px solid',
-          borderColor: colorMode === 'light' ? 'border' : 'transparent',
-        }}
-        _active={{ bg: disabled ? 'transparent' : 'active' }}
+        paddingX="1rem"
+        width="full"
+        gap={2}
+        // bg={isActive ? 'navDrawerSelected' : 'transparent'}
+        // border={isActive ? '1px solid' : '1px solid transparent'}
+        // borderColor={isActive && colorMode === 'light' ? 'border' : 'transparent'}
+        // _hover={{
+        //   bg: disabled ? 'transparent' : 'hover',
+        //   border: '1px solid',
+        //   borderColor: colorMode === 'light' ? 'border' : 'transparent',
+        // }}
+        // _active={{ bg: disabled ? 'transparent' : 'active' }}
       >
-        <Box w="36px">{iconWithSize}</Box>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          h="32px"
+          w="32px"
+          p="16px"
+          bg="bg.active"
+          borderRadius="full"
+          border="solid 1px"
+          borderColor="stroke.darker"
+        >
+          <Icon height={'16px'} width={'16px'} as={leftIcon} />
+        </Box>
         {/* marginTop of 4px is to compensate for some strange font offset */}
         <Text userSelect="none" variant="paragraph" mt="4px">
           {title} {comingSoon && '(coming soon)'}
