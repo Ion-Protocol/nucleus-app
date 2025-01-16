@@ -241,4 +241,14 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0xC49F0Dd98F38C525A7ce15E73E60675456F3a161',
     },
   },
+  [TokenKey.BOBAETH]: {
+    key: TokenKey.BOBAETH,
+    name: 'bobaETH',
+    fullName: 'Boba ETH',
+    symbol: 'bobaETH',
+    addresses: {
+      [ChainKey.BOBA]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+      [ChainKey.ETHEREUM]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+    },
+  },
 }

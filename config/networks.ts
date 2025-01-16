@@ -4,6 +4,7 @@ import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
 import { sei } from 'wagmi/chains'
 import {
+  bobaExplorerBaseURL,
   defaultWithdrawalFee,
   etherscanBaseUrl,
   layerZeroBaseUrl,
@@ -133,6 +134,100 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     token: tokensConfig[TokenKey.SSETH],
+  },
+  [TokenKey.BOBAETH]: {
+    apys: {},
+    chain: ChainKey.BOBA,
+    contracts: {
+      teller: '0xCd721cd24811013c35fFd4BaeF63F07A600EA8bA',
+      accountant: '0x78cba912751dB70CBd77C1111A4d1aDD077AD99A',
+      boringVault: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.BOBA,
+    deployedOn: ChainKey.ETHEREUM,
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
+    layerZeroChainSelector: 288, // Hyperlane Domain Identifier
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.BOBAETH),
+    nativeCurrency: tokensConfig[TokenKey.SEI],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
+    redeem: {
+      layerZeroChainSelector: 1, // Hyperlane Domain Identifier
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.BOBAETH,
+      redemptionSourceChain: ChainKey.BOBA,
+      redemptionSourceChains: {
+        [ChainKey.BOBA]: {
+          chain: ChainKey.BOBA,
+          explorerBaseUrl: bobaExplorerBaseURL,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
+      wantTokens: {
+        [ChainKey.ETHEREUM]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+          [TokenKey.SFRXETH]: {
+            token: tokensConfig[TokenKey.SFRXETH],
+            withdrawalFee: defaultWithdrawalFee, // Custom fee for SFRXETH
+          },
+          [TokenKey.APXETH]: {
+            token: tokensConfig[TokenKey.APXETH],
+            withdrawalFee: defaultWithdrawalFee, // Custom fee for APXETH
+          },
+        },
+        [ChainKey.BOBA]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: 0,
+          },
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      withdrawalFee: defaultWithdrawalFee,
+    },
+    receiveOn: ChainKey.BOBA,
+    showRewardsAndHistory: true,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+      [ChainKey.BOBA]: {
+        chain: ChainKey.BOBA,
+        explorerBaseUrl: bobaExplorerBaseURL,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.APXETH,
+        TokenKey.RSWETH,
+        TokenKey.EZETH,
+        TokenKey.WEETH,
+        TokenKey.WSTETH,
+      ],
+      [ChainKey.BOBA]: [TokenKey.WETH],
+    },
+    token: tokensConfig[TokenKey.BOBAETH],
   },
   [TokenKey.FETH]: {
     apys: {},

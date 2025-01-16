@@ -53,3 +53,27 @@ export const swellchain = {
     },
   },
 } as const satisfies Chain
+
+export const bobanetwork = {
+  id: 288,
+  name: 'Boba Network',
+  iconUrl: '/assets/svgs/boba-network.svg',
+  nativeCurrency: {
+    name: 'Ether',
+    symbol: 'ETH',
+    decimals: 18,
+  },
+  rpcUrls: {
+    public: { http: ['https://boba-ethereum.gateway.tenderly.co'] },
+    default: { http: ['https://gateway.tenderly.co/public/boba-ethereum'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'Bobascan Ecosystem Explorer', url: 'https://bobascan.com' },
+    default: { name: 'Bobascan Ecosystem Explorer', url: 'https://bobascan.com' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    },
+  },
+} as const satisfies Chain

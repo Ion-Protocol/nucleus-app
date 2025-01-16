@@ -1,8 +1,9 @@
 import { SeiIcon } from '@/components/shared/icons/Sei'
 // import SeiIcon from '@/components/shared/icons/Sei_Symbol_Red.svg'
 import { ChainKey } from '@/types/ChainKey'
-import { ChakraProps, IconProps, Icon } from '@chakra-ui/react'
-import React, { SVGAttributes } from 'react'
+import { IconProps } from '@chakra-ui/react'
+import React from 'react'
+import { BobaNetworkIcon } from '../shared/icons/BobaNetwork'
 import { DineroIcon } from '../shared/icons/Dinero'
 import { EclipseIcon } from '../shared/icons/Eclipse'
 import { EthereumIcon } from '../shared/icons/Ethereum'
@@ -19,6 +20,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
   [ChainKey.FORM]: (props) => <FormIcon {...props} />,
   [ChainKey.RARI]: (props) => <RariIcon {...props} />,
+  [ChainKey.BOBA]: (props) => <BobaNetworkIcon {...props} />,
 }
 
 interface ChainIconMapProps extends IconProps {

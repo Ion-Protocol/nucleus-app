@@ -10,6 +10,7 @@ import RariethIcon from '../shared/icons/rarieth.svg'
 import { RswethIcon } from '../shared/icons/Rsweth'
 import { SeiIcon } from '../shared/icons/Sei'
 import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
+import { TokenBobaethIcon } from '../shared/icons/TokenBobaeth'
 import { TokenEarnbtcIcon } from '../shared/icons/TokenEarnbtc'
 import { TokenEarnethIcon } from '../shared/icons/TokenEarneth'
 import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
@@ -36,6 +37,7 @@ function DefaultIcon() {
 
 export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element> = {
   [TokenKey.APXETH]: (props) => <TokenApxethIcon {...props} />,
+  [TokenKey.BOBAETH]: (props) => <TokenBobaethIcon {...props} />,
   [TokenKey.DINERO]: (props) => <DineroIcon {...props} />,
   [TokenKey.EARNBTC]: (props) => <TokenEarnbtcIcon {...props} />,
   [TokenKey.EARNETH]: (props) => <TokenEarnethIcon {...props} />,
