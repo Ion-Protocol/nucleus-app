@@ -70,6 +70,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
     ],
+    redeemComingSoon: true,
     redeem: {
       layerZeroChainSelector: 1, // Hyperlane Domain Identifier
       redemptionDestinationChain: ChainKey.ETHEREUM,
