@@ -138,19 +138,20 @@ const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.BOBAETH]: {
     apys: {},
     chain: ChainKey.BOBA,
+    comingSoon: true,
     contracts: {
       teller: '0xCd721cd24811013c35fFd4BaeF63F07A600EA8bA',
       accountant: '0x78cba912751dB70CBd77C1111A4d1aDD077AD99A',
       boringVault: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
     },
     defaultMintChain: ChainKey.ETHEREUM,
-    defaultRedemptionChain: ChainKey.BOBA,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
     deployedOn: ChainKey.ETHEREUM,
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     layerZeroChainSelector: 288, // Hyperlane Domain Identifier
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.BOBAETH),
-    nativeCurrency: tokensConfig[TokenKey.SEI],
+    nativeCurrency: tokensConfig[TokenKey.ETH],
     points: [
       {
         key: PointSystemKey.NUCLEUS,
@@ -194,12 +195,12 @@ const mainnetNetworkAssets: NetworkAssets = {
             withdrawalFee: defaultWithdrawalFee, // Custom fee for APXETH
           },
         },
-        [ChainKey.BOBA]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: 0,
-          },
-        },
+        // [ChainKey.BOBA]: {
+        //   [TokenKey.WETH]: {
+        //     token: tokensConfig[TokenKey.WETH],
+        //     withdrawalFee: 0,
+        //   },
+        // },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
       withdrawalFee: defaultWithdrawalFee,
@@ -211,10 +212,10 @@ const mainnetNetworkAssets: NetworkAssets = {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: layerZeroBaseUrl,
       },
-      [ChainKey.BOBA]: {
-        chain: ChainKey.BOBA,
-        explorerBaseUrl: bobaExplorerBaseURL,
-      },
+      // [ChainKey.BOBA]: {
+      //   chain: ChainKey.BOBA,
+      //   explorerBaseUrl: bobaExplorerBaseURL,
+      // },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [
@@ -225,7 +226,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         TokenKey.WEETH,
         TokenKey.WSTETH,
       ],
-      [ChainKey.BOBA]: [TokenKey.WETH],
+      // [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
   },

@@ -247,7 +247,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     fullName: 'Boba ETH',
     symbol: 'bobaETH',
     addresses: {
-      [ChainKey.BOBA]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+      // [ChainKey.BOBA]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
       [ChainKey.ETHEREUM]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
     },
   },
