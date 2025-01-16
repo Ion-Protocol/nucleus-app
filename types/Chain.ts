@@ -22,12 +22,14 @@ export interface NetworkAsset {
   description: string
   isExternal?: boolean
   isNewDeployment?: boolean
+  hyperlaneChainSelector?: number
   layerZeroChainSelector?: number
   manuallyPaused?: boolean
   nativeCurrency?: Token
   partnerUrl?: string
   points: PointSystem[]
   redeem: {
+    hyperlaneChainSelector?: number
     layerZeroChainSelector: number
     redemptionDestinationChain: ChainKey
     redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
