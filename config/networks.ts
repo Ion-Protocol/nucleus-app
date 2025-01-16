@@ -2,7 +2,7 @@ import { NetworkAssets } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
-import { sei } from 'wagmi/chains'
+import { boba, sei } from 'wagmi/chains'
 import {
   bobaExplorerBaseURL,
   defaultWithdrawalFee,
@@ -22,6 +22,7 @@ export enum NetworkKey {
   TENDERLY_MAINNET = 'tenderly_mainnet',
   SEI = 'sei',
   RARI = 'rari',
+  BOBA = 'boba',
 }
 
 export interface NetworkConfig {
@@ -48,7 +49,7 @@ const mainnetNetworkAssets: NetworkAssets = {
   [TokenKey.BOBAETH]: {
     apys: {},
     chain: ChainKey.BOBA,
-    comingSoon: true,
+    comingSoon: false,
     contracts: {
       teller: '0xCd721cd24811013c35fFd4BaeF63F07A600EA8bA',
       accountant: '0x78cba912751dB70CBd77C1111A4d1aDD077AD99A',
@@ -56,7 +57,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
-    deployedOn: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.BOBA,
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
     hyperlaneChainSelector: 288, // Hyperlane Domain Identifier
@@ -69,6 +70,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
     ],
+    redeemComingSoon: true,
     redeem: {
       layerZeroChainSelector: 1, // Hyperlane Domain Identifier
       redemptionDestinationChain: ChainKey.ETHEREUM,
@@ -122,10 +124,10 @@ const mainnetNetworkAssets: NetworkAssets = {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: layerZeroBaseUrl,
       },
-      // [ChainKey.BOBA]: {
-      //   chain: ChainKey.BOBA,
-      //   explorerBaseUrl: bobaExplorerBaseURL,
-      // },
+      [ChainKey.BOBA]: {
+        chain: ChainKey.BOBA,
+        explorerBaseUrl: bobaExplorerBaseURL,
+      },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [
@@ -136,7 +138,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         TokenKey.WEETH,
         TokenKey.WSTETH,
       ],
-      // [ChainKey.BOBA]: [TokenKey.WETH],
+      [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
   },
@@ -677,6 +679,11 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.RARI]: {
     id: rari.id,
     name: 'Rari',
+    assets: mainnetNetworkAssets,
+  },
+  [NetworkKey.BOBA]: {
+    id: boba.id,
+    name: 'Boba',
     assets: mainnetNetworkAssets,
   },
 }

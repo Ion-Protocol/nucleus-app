@@ -401,6 +401,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const solanaAddressBytes32 = selectSolanaAddressBytes32(state)
 
       const layerZeroChainSelector = networkAssetConfig?.layerZeroChainSelector
+      const hyperlaneChainSelector = networkAssetConfig?.hyperlaneChainSelector
       const tellerContractAddress = networkAssetConfig?.contracts.teller
       const boringVaultAddress = networkAssetConfig?.contracts.boringVault
       const accountantAddress = networkAssetConfig?.contracts.accountant
@@ -410,6 +411,8 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           ? tokensConfig[depositAssetTokenKey]?.addresses[sourceChain as ChainKey]
           : null
 
+      // Check what kind of chain selector is populated in config to help determine the bridge type
+      const bridgeSpecificChainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
       // This is the functional destination chain, not the receiveOn chain which
       // is more of a user facing property
       const destinationChain = networkAssetConfig?.deployedOn
@@ -523,7 +526,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         if (!depositBridgeData) throw new Error('Missing deposit bridge data')
 
         // Get most up-to-date preview fee
-        if (layerZeroChainSelector && depositBridgeData) {
+        if (bridgeSpecificChainSelector && depositBridgeData) {
           previewFeeAsBigInt = await previewFee(
             { shareAmount: depositAmount, bridgeData: depositBridgeData },
             { contractAddress: tellerContractAddress }
@@ -616,6 +619,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const tellerContractAddress = chainConfig?.contracts.teller
       const accountantContractAddress = chainConfig?.contracts.accountant
       const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
+      const hyperlaneChainSelector = chainConfig?.hyperlaneChainSelector
 
       if (
         tellerContractAddress &&
@@ -625,8 +629,10 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
         userAddress &&
         depositAssetAddress
       ) {
+        //
+        const bridgeSpecificChainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
         const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
-          chainSelector: layerZeroChainSelector,
+          chainSelector: bridgeSpecificChainSelector,
           destinationChainReceiver: userAddress,
           bridgeFeeToken: nativeAddress,
           messageGas: 100_000,
