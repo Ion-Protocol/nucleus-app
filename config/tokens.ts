@@ -22,6 +22,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       [ChainKey.SEI]: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
       [ChainKey.RARI]: '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0',
+      [ChainKey.BOBA]: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
     },
   },
   [TokenKey.WEETH]: {
@@ -239,6 +240,16 @@ export const tokensConfig: Record<TokenKey, Token> = {
       // https://seitrace.com/address/0xC49F0Dd98F38C525A7ce15E73E60675456F3a161?chain=pacific-1&contract=read_proxy&slug=&tab=contract
       // https://docs.redstone.finance/docs/get-started/price-feeds
       [ChainKey.SEI]: '0xC49F0Dd98F38C525A7ce15E73E60675456F3a161',
+    },
+  },
+  [TokenKey.BOBAETH]: {
+    key: TokenKey.BOBAETH,
+    name: 'bobaETH',
+    fullName: 'Boba ETH',
+    symbol: 'bobaETH',
+    addresses: {
+      [ChainKey.BOBA]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+      [ChainKey.ETHEREUM]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
     },
   },
 }

@@ -1,4 +1,5 @@
 export enum ChainKey {
+  BOBA = 'boba',
   ETHEREUM = 'ethereum',
   SEI = 'sei',
   SWELL = 'swell',

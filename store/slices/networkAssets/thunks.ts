@@ -225,10 +225,13 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   const vaultAddress = networkAssetConfig?.contracts.boringVault
   const accountantAddress = networkAssetConfig?.contracts.accountant
 
-  const deployedOnChainId = chainsConfig[networkAssetConfig.deployedOn].id
+  // Collect chainIds users can deposit into vault from
+  const chainIds = Object.values(networkAssetConfig.sourceChains).map(
+    (sourceChain) => chainsConfig[sourceChain.chain].id
+  )
 
-  if (!deployedOnChainId) {
-    const errorMessage = `Chain ${networkAssetConfig.deployedOn} does not have a chain id`
+  if (!chainIds) {
+    const errorMessage = `Chain ${chainIds} does not properly defined`
     dispatch(setErrorMessage(errorMessage))
     return rejectWithValue(errorMessage)
   }
@@ -238,14 +241,38 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   }
 
   try {
-    // Fetch total supply of shares
-    const totalSharesSupply = await getTotalSupply(vaultAddress, { chainId: deployedOnChainId })
+    // Fetch total supply of shares for all chains user can deposit from
+    const promises = chainIds.map((chainId) =>
+      getTotalSupply(vaultAddress, { chainId: chainId! })
+        .then((supply) => ({
+          chainId,
+          supply,
+          status: 'fulfilled',
+        }))
+        .catch((error) => ({
+          chainId,
+          error,
+          status: 'rejected',
+        }))
+    )
+
+    // Await for shares results
+    const totalSharesResults = await Promise.allSettled(promises)
+
+    const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
+      // Check if it's a fulfilled result and has a supply
+      if (sharesResult.status === 'fulfilled' && 'supply' in sharesResult.value) {
+        // Add the supply to our running total
+        return total + sharesResult.value.supply
+      }
+      return total
+    }, BigInt(0)) // Start with 0n as BigInt
 
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
 
     // Calculate TVL
-    const tvlInToken = (totalSharesSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
+    const tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
     const tvlAsString = tvlInToken.toString()
 
     return { tvl: tvlAsString, tokenKey }
@@ -374,6 +401,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
       const solanaAddressBytes32 = selectSolanaAddressBytes32(state)
 
       const layerZeroChainSelector = networkAssetConfig?.layerZeroChainSelector
+      const hyperlaneChainSelector = networkAssetConfig?.hyperlaneChainSelector
       const tellerContractAddress = networkAssetConfig?.contracts.teller
       const boringVaultAddress = networkAssetConfig?.contracts.boringVault
       const accountantAddress = networkAssetConfig?.contracts.accountant
@@ -383,6 +411,8 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
           ? tokensConfig[depositAssetTokenKey]?.addresses[sourceChain as ChainKey]
           : null
 
+      // Check what kind of chain selector is populated in config to help determine the bridge type
+      const bridgeSpecificChainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
       // This is the functional destination chain, not the receiveOn chain which
       // is more of a user facing property
       const destinationChain = networkAssetConfig?.deployedOn
@@ -496,7 +526,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
         if (!depositBridgeData) throw new Error('Missing deposit bridge data')
 
         // Get most up-to-date preview fee
-        if (layerZeroChainSelector && depositBridgeData) {
+        if (bridgeSpecificChainSelector && depositBridgeData) {
           previewFeeAsBigInt = await previewFee(
             { shareAmount: depositAmount, bridgeData: depositBridgeData },
             { contractAddress: tellerContractAddress }
@@ -589,6 +619,7 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
       const tellerContractAddress = chainConfig?.contracts.teller
       const accountantContractAddress = chainConfig?.contracts.accountant
       const layerZeroChainSelector = chainConfig?.layerZeroChainSelector || 0
+      const hyperlaneChainSelector = chainConfig?.hyperlaneChainSelector
 
       if (
         tellerContractAddress &&
@@ -598,8 +629,10 @@ export const fetchPreviewFee = createAsyncThunk<FetchPreviewFeeResult, void, { r
         userAddress &&
         depositAssetAddress
       ) {
+        //
+        const bridgeSpecificChainSelector = hyperlaneChainSelector ? hyperlaneChainSelector : layerZeroChainSelector
         const previewFeeBridgeData: CrossChainTellerBase.BridgeData = {
-          chainSelector: layerZeroChainSelector,
+          chainSelector: bridgeSpecificChainSelector,
           destinationChainReceiver: userAddress,
           bridgeFeeToken: nativeAddress,
           messageGas: 100_000,
