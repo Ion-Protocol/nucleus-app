@@ -59,7 +59,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     defaultRedemptionChain: ChainKey.ETHEREUM,
     deployedOn: ChainKey.BOBA,
     description:
-      'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
+      'Connect your wallet, select your deposit asset, and mint the Boba Default Asset to earn while you explore the Boba ecosystem',
     hyperlaneChainSelector: 288, // Hyperlane Domain Identifier
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.BOBAETH),
     nativeCurrency: tokensConfig[TokenKey.ETH],
@@ -118,7 +118,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       withdrawalFee: defaultWithdrawalFee,
     },
     receiveOn: ChainKey.BOBA,
-    showRewardsAndHistory: true,
+    showRewardsAndHistory: false,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
