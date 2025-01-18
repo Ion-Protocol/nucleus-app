@@ -79,6 +79,10 @@ const mainnetNetworkAssets: NetworkAssets = {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
         },
+        [ChainKey.BOBA]: {
+          chain: ChainKey.BOBA,
+          explorerBaseUrl: bobaExplorerBaseURL,
+        },
       },
       redemptionSourceAsset: TokenKey.BOBAETH,
       redemptionSourceChain: ChainKey.BOBA,
@@ -119,12 +123,12 @@ const mainnetNetworkAssets: NetworkAssets = {
             withdrawalFee: defaultWithdrawalFee,
           },
         },
-        // [ChainKey.BOBA]: {
-        //   [TokenKey.WETH]: {
-        //     token: tokensConfig[TokenKey.WETH],
-        //     withdrawalFee: 0,
-        //   },
-        // },
+        [ChainKey.BOBA]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: 0,
+          },
+        },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
       withdrawalFee: defaultWithdrawalFee,

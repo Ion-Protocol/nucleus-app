@@ -47,11 +47,8 @@ export const selectRedeemSourceChain = (state: RootState) => state.networkAssets
 export const selectRedemptionSourceChainKey = (state: RootState) => state.networkAssets.redeemSourceChain
 
 export const selectRedemptionDestinationChainKey = (state: RootState) => {
-  const networkAssetConfig = selectNetworkAssetConfig(state)
-  if (!networkAssetConfig) {
-    return null
-  }
-  return networkAssetConfig.redeem.redemptionDestinationChain
+  const withdrawalDestinationChainKey = selectBridgesState(state).redeemDestinationChain
+  return withdrawalDestinationChainKey
 }
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
