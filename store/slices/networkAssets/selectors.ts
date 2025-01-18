@@ -122,6 +122,11 @@ export const selectRedeemLayerZeroChainSelector = (state: RootState): number => 
   return networkAssetConfig?.redeem.layerZeroChainSelector || 0
 }
 
+export const selectRedeemHyperlaneChainSelector = (state: RootState): number => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.redeem.hyperlaneChainSelector || 0
+}
+
 // DO NOT memoize: Direct lookup; returns a value from configuration.
 export const selectReceiveOnChain = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
@@ -793,11 +798,12 @@ export const selectDepositBridgeData = createSelector(
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectRedeemBridgeData = createSelector(
-  [selectRedeemLayerZeroChainSelector, selectAddress],
-  (selectRedeemLayerZeroChainSelector, userAddress): BridgeData | null => {
+  [selectRedeemLayerZeroChainSelector, selectRedeemHyperlaneChainSelector, selectAddress],
+  (redeemLayerZeroChainSelector, redeemHyperlaneChainSelector, userAddress): BridgeData | null => {
     if (!userAddress) return null
+    const chainSelector = redeemHyperlaneChainSelector ? redeemHyperlaneChainSelector : redeemLayerZeroChainSelector
     return {
-      chainSelector: selectRedeemLayerZeroChainSelector,
+      chainSelector: chainSelector,
       destinationChainReceiver: userAddress,
       bridgeFeeToken: nativeAddress,
       messageGas: BigInt(100000),

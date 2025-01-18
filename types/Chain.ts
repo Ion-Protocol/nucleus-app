@@ -30,7 +30,7 @@ export interface NetworkAsset {
   points: PointSystem[]
   redeem: {
     hyperlaneChainSelector?: number
-    layerZeroChainSelector: number
+    layerZeroChainSelector?: number
     redemptionDestinationChain: ChainKey
     redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
     redemptionSourceAsset: TokenKey

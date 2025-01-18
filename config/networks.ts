@@ -70,9 +70,9 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
     ],
-    redeemComingSoon: true,
+    redeemComingSoon: false,
     redeem: {
-      layerZeroChainSelector: 1, // Hyperlane Domain Identifier
+      hyperlaneChainSelector: 1, // Hyperlane Domain Identifier
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
@@ -98,13 +98,25 @@ const mainnetNetworkAssets: NetworkAssets = {
             token: tokensConfig[TokenKey.WETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
-          [TokenKey.SFRXETH]: {
-            token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Custom fee for SFRXETH
-          },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Custom fee for APXETH
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.RSWETH]: {
+            token: tokensConfig[TokenKey.RSWETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.EZETH]: {
+            token: tokensConfig[TokenKey.EZETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.WEETH]: {
+            token: tokensConfig[TokenKey.WEETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.WSTETH]: {
+            token: tokensConfig[TokenKey.WSTETH],
+            withdrawalFee: defaultWithdrawalFee,
           },
         },
         // [ChainKey.BOBA]: {
