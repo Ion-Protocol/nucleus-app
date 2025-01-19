@@ -2,8 +2,9 @@ import { NetworkAssets } from '@/types/Chain'
 import { ChainKey } from '@/types/ChainKey'
 import { PointSystemKey } from '@/types/PointSystem'
 import { TokenKey } from '@/types/TokenKey'
-import { sei } from 'wagmi/chains'
+import { boba, sei } from 'wagmi/chains'
 import {
+  bobaExplorerBaseURL,
   defaultWithdrawalFee,
   etherscanBaseUrl,
   layerZeroBaseUrl,
@@ -21,6 +22,7 @@ export enum NetworkKey {
   TENDERLY_MAINNET = 'tenderly_mainnet',
   SEI = 'sei',
   RARI = 'rari',
+  BOBA = 'boba',
 }
 
 export interface NetworkConfig {
@@ -44,6 +46,102 @@ const defaultEthVaultAssets = [
 
 // TODO: Break into two types. Internal and External where mint and redeem take place in the Nucleus app or a partners app respectively
 const mainnetNetworkAssets: NetworkAssets = {
+  [TokenKey.BOBAETH]: {
+    apys: {},
+    chain: ChainKey.BOBA,
+    comingSoon: false,
+    contracts: {
+      teller: '0xCd721cd24811013c35fFd4BaeF63F07A600EA8bA',
+      accountant: '0x78cba912751dB70CBd77C1111A4d1aDD077AD99A',
+      boringVault: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.BOBA,
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Boba Default Asset to earn while you explore the Boba ecosystem',
+    hyperlaneChainSelector: 288, // Hyperlane Domain Identifier
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.BOBAETH),
+    nativeCurrency: tokensConfig[TokenKey.ETH],
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+    ],
+    redeemComingSoon: true,
+    redeem: {
+      layerZeroChainSelector: 1, // Hyperlane Domain Identifier
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.BOBAETH,
+      redemptionSourceChain: ChainKey.BOBA,
+      redemptionSourceChains: {
+        [ChainKey.BOBA]: {
+          chain: ChainKey.BOBA,
+          explorerBaseUrl: bobaExplorerBaseURL,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
+      wantTokens: {
+        [ChainKey.ETHEREUM]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+          [TokenKey.SFRXETH]: {
+            token: tokensConfig[TokenKey.SFRXETH],
+            withdrawalFee: defaultWithdrawalFee, // Custom fee for SFRXETH
+          },
+          [TokenKey.APXETH]: {
+            token: tokensConfig[TokenKey.APXETH],
+            withdrawalFee: defaultWithdrawalFee, // Custom fee for APXETH
+          },
+        },
+        // [ChainKey.BOBA]: {
+        //   [TokenKey.WETH]: {
+        //     token: tokensConfig[TokenKey.WETH],
+        //     withdrawalFee: 0,
+        //   },
+        // },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      withdrawalFee: defaultWithdrawalFee,
+    },
+    receiveOn: ChainKey.BOBA,
+    showRewardsAndHistory: false,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: layerZeroBaseUrl,
+      },
+      [ChainKey.BOBA]: {
+        chain: ChainKey.BOBA,
+        explorerBaseUrl: bobaExplorerBaseURL,
+      },
+    },
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.APXETH,
+        TokenKey.RSWETH,
+        TokenKey.EZETH,
+        TokenKey.WEETH,
+        TokenKey.WSTETH,
+      ],
+      [ChainKey.BOBA]: [TokenKey.WETH],
+    },
+    token: tokensConfig[TokenKey.BOBAETH],
+  },
   [TokenKey.SSETH]: {
     apys: {},
     chain: ChainKey.SEI,
@@ -581,6 +679,11 @@ export const networksConfig: Record<NetworkKey, NetworkConfig> = {
   [NetworkKey.RARI]: {
     id: rari.id,
     name: 'Rari',
+    assets: mainnetNetworkAssets,
+  },
+  [NetworkKey.BOBA]: {
+    id: boba.id,
+    name: 'Boba',
     assets: mainnetNetworkAssets,
   },
 }

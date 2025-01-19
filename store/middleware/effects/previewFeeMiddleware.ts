@@ -1,6 +1,6 @@
 import { AppDispatch } from '@/store'
 import { selectShouldTriggerPreviewFee, setDepositAmountDebounceComplete } from '@/store/slices/networkAssets'
-import { fetchPreviewFee, setDepositAmountMax } from '@/store/slices/networkAssets/thunks'
+import { fetchPreviewFee } from '@/store/slices/networkAssets/thunks'
 import { Middleware } from '@reduxjs/toolkit'
 
 /**

@@ -1,5 +1,6 @@
 export enum TokenKey {
   APXETH = 'apxeth',
+  BOBAETH = 'bobaeth',
   DINERO = 'dinero',
   EARNBTC = 'earnbtc',
   EARNETH = 'earneth',

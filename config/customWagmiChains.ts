@@ -1,5 +1,5 @@
 import type { Chain } from '@funkit/connect'
-import { sei as seiWagmi } from 'wagmi/chains'
+import { boba as bobaWagmi, sei as seiWagmi } from 'wagmi/chains'
 
 export const sei = {
   ...seiWagmi,
@@ -52,4 +52,27 @@ export const swellchain = {
       address: '0xcA11bde05977b3631167028862bE2a173976CA11',
     },
   },
+} as const satisfies Chain
+
+export const bobanetwork = {
+  ...bobaWagmi,
+  iconUrl: '/assets/svgs/boba-network.svg',
+  // nativeCurrency: {
+  //   name: 'Ether',
+  //   symbol: 'ETH',
+  //   decimals: 18,
+  // },
+  // rpcUrls: {
+  //   public: { http: ['https://mainnet.boba.network'] },
+  //   default: { http: ['https://mainnet.boba.network'] },
+  // },
+  // blockExplorers: {
+  //   etherscan: { name: 'Bobascan Ecosystem Explorer', url: 'https://bobascan.com' },
+  //   default: { name: 'Bobascan Ecosystem Explorer', url: 'https://bobascan.com' },
+  // },
+  // contracts: {
+  //   multicall3: {
+  //     address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+  //   },
+  // },
 } as const satisfies Chain
