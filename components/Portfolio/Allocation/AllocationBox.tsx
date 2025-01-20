@@ -38,8 +38,8 @@ export function AllocationBox(props: any) {
   }
 
   const colors = theme.semanticTokens.colors
-  const strokeColor = colorMode === 'dark' ? colors.stroke.main._dark : colors.stroke.main.default
-  const backgroundColor = colorMode === 'dark' ? colors.bg.white._dark : colors.bg.white.default
+  const strokeColor = colorMode === 'dark' ? '#38332e' : '#e5dbc8'
+  const backgroundColor = colorMode === 'dark' ? '#1c1a17' : '#fffdfa'
 
   const token = tokensConfig[asset as TokenKey]
   const chain = chainsConfig[networkName as ChainKey]

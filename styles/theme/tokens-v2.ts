@@ -38,46 +38,6 @@ export const semanticTokensV2 = {
         },
       },
     },
-    stroke: {
-      light: {
-        default: '#F0E7D6',
-        _dark: '#272420',
-      },
-      lighter: {
-        default: '#F8F2E8',
-        _dark: '#231F1A',
-      },
-      main: {
-        default: '#E5DBC8',
-        _dark: '#332E29',
-      },
-      darker: {
-        default: '#DCCFB7',
-        _dark: '#4C453E',
-      },
-    },
-    bg: {
-      main: {
-        default: '#FCF9F3',
-        _dark: '#231F1A',
-      },
-      secondary: {
-        default: '#F8F2E8',
-        _dark: '#272420',
-      },
-      white: {
-        default: '#FFFDFA',
-        _dark: '#1C1A17',
-      },
-      hover: {
-        default: '#302517',
-        _dark: '#E1D9FF',
-      },
-      active: {
-        default: '#564429',
-        _dark: '#EBE4FF',
-      },
-    },
     tag: {
       rewards: {
         bg: {

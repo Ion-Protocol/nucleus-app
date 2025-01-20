@@ -48,6 +48,7 @@ export interface NetworkAsset {
     [chain in ChainKey]: TokenKey[]
   }>
   token: Token
+  protocols: ChainKey[]
 }
 
 export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

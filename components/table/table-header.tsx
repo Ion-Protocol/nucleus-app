@@ -3,15 +3,16 @@ import { HeaderGroup, flexRender } from '@tanstack/react-table'
 
 interface TableHeaderProps {
   headerGroups: HeaderGroup<any>[]
+  bg?: string
 }
 
-export function TableHeader({ headerGroups }: TableHeaderProps) {
+export function TableHeader({ headerGroups, bg }: TableHeaderProps) {
   return (
     <Thead>
       {headerGroups.map((headerGroup) => (
         <Tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => (
-            <Th key={header.id} textAlign="left" pl={3}>
+            <Th key={header.id} textAlign="left" pl={3} bg={bg}>
               {flexRender(header.column.columnDef.header, header.getContext())}
             </Th>
           ))}

@@ -41,8 +41,4 @@ export const colorsV2 = {
     500: '#003347',
     900: '#001A24',
   },
-  element: {
-    green: '#33B074',
-    subdued: '#938980',
-  },
 }

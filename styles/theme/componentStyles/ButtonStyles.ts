@@ -37,10 +37,10 @@ export const ButtonStyles: ComponentStyleConfig = {
       },
     }),
     outline: (props) => ({
-      textStyle: 'button',
-      border: '2px solid',
-      borderColor: 'border',
-      backgroundColor: 'backgroundSecondary',
+      border: '1px solid',
+      borderColor: 'stroke.main',
+      backgroundColor: 'bg.main',
+      fontWeight: 'normal',
     }),
     elevate: (props) => ({
       textStyle: 'button',

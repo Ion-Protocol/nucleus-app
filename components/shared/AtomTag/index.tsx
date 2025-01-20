@@ -1,14 +1,15 @@
-import { Flex, Text, Tag, Tooltip } from '@chakra-ui/react'
-import { AtomIcon } from '../icons/Atom'
+import { Flex, Tag, Text, Tooltip } from '@chakra-ui/react'
 import { PropsWithChildren } from 'react'
-import { AssetTooltip } from '@/components/Portfolio/AssetsTable/AssetTooltip'
+import { AtomIcon } from '../icons/Atom'
 
-interface AtomTagProps extends PropsWithChildren {}
+interface AtomTagProps extends PropsWithChildren {
+  tooltip?: React.ReactNode
+}
 
-export function AtomTag({ children }: AtomTagProps) {
+export function AtomTag({ children, tooltip }: AtomTagProps) {
   return (
     <Tooltip
-      label={<AssetTooltip />}
+      label={tooltip}
       bg="bg.white"
       border="1px solid"
       borderColor="stroke.main"
@@ -21,7 +22,8 @@ export function AtomTag({ children }: AtomTagProps) {
         borderRadius="full"
         bg="tag.rewards.bg"
         color="tag.rewards.element"
-        border="none"
+        border="1px solid"
+        borderColor="tag.rewards.stroke"
         boxShadow="none"
         cursor={'pointer'}
         userSelect="none"

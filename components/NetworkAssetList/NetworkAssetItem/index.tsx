@@ -1,20 +1,26 @@
-import { Button, Flex, Text } from '@chakra-ui/react'
+import { Button, chakra, Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
 import { Address } from 'viem'
 
+import { ChainIcon } from '@/components/config/chainIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
-import { IonSkeleton } from '@/components/shared/IonSkeleton'
-import { IonTooltip } from '@/components/shared/IonTooltip'
-import RewardsIconRow from '@/components/shared/RewardsAndPoints/RewardsIconRow'
-import RewardsTooltip from '@/components/shared/RewardsAndPoints/RewardsTooltip'
-import { hardcodedApy } from '@/config/constants'
+import { AtomTag } from '@/components/shared/AtomTag'
+import { IconWithSubIcon } from '@/components/shared/icon-with-sub-icon'
+import { MintIcon } from '@/components/shared/icons/Mint'
 import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
 import { useGetDefaultYieldAPYQuery } from '@/store/slices/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
-import { numberToPercent } from '@/utils/number'
-import { ExternalLinkIcon } from '@chakra-ui/icons'
+import { ArrowUpRightIcon as LucideArrowUpRightIcon } from 'lucide-react'
 import { YieldBridgeItemConnector } from './connector'
+import { ChainIconRow } from '@/components/shared/chain-icon-row'
+import { NetworkAssetTooltip } from './network-asset-tooltip'
+import { numberToPercent } from '@/utils/number'
+import { hardcodedApy } from '@/config/constants'
+
+// The icon needs to be wrapped in chakra to get the correct styles.
+// Otherwise the custom color will not be applied.
+const ArrowUpRightIcon = chakra(LucideArrowUpRightIcon)
 
 function NetworkAssetItem({
   tvl,
@@ -28,9 +34,10 @@ function NetworkAssetItem({
   disabled,
   tvlLoading,
   formattedNetApy,
-  fullFormattedNetApy,
   netApyLoading,
   shouldShowMessageForLargeNetApy,
+  chainKey,
+  protocols,
 }: YieldBridgeItemConnector.Props) {
   const router = useRouter()
   // Skipping for now to prevent errors
@@ -42,7 +49,7 @@ function NetworkAssetItem({
   )
   const {
     data: boringVaultApy,
-    isLoading: isBoringVaultApyLoading,
+    isLoading,
     isError: isBoringVaultApyError,
   } = useGetDefaultYieldAPYQuery({ tokenAddress: boringVaultAddress as Address })
 
@@ -61,78 +68,86 @@ function NetworkAssetItem({
 
   return (
     <Flex
-      h="190px"
+      direction="column"
+      p={6}
+      w="370px"
+      h="310px"
+      gap={6}
       border="1px solid"
-      borderColor="border"
-      w="330px"
+      borderColor="stroke.light"
       borderRadius="16px"
       overflow="hidden"
       cursor={disabled ? 'not-allowed' : 'pointer'}
-      transition="transform 0.1s ease, box-shadow 0.1s ease"
-      bg="backgroundSecondary"
+      bg="bg.white"
       _hover={{
-        bg: disabled ? 'default' : 'hover',
+        bg: 'bg.main',
       }}
-      _active={{ bg: disabled ? 'default' : 'active' }}
       onClick={handleClick}
     >
-      {/* Title */}
-      <Flex w="225px" direction="column" justify="space-between" pl={6} py={5}>
-        {/* Network Asset Name */}
-        <Flex align="center" gap={3}>
-          <Text variant="bigParagraphBold">{networkAssetName}</Text>
-          <Text variant="bigParagraph" color="disabledText">
-            {chainName}
+      {/* Top Row */}
+      <Flex justify="space-between" w="100%">
+        {/* Asset */}
+        <Flex gap={4}>
+          <IconWithSubIcon
+            icon={<TokenIcon tokenKey={networkAssetKey} />}
+            subIcon={<ChainIcon chainKey={chainKey} />}
+          />
+          <Flex direction="column">
+            <Text variant="body-20-m">{networkAssetName}</Text>
+            <Text variant="body-16" color="element.subdued" mt="-4px">
+              {chainName}
+            </Text>
+          </Flex>
+        </Flex>
+        {isExternal && <ArrowUpRightIcon fontSize="24px" color="element.subdued" />}
+      </Flex>
+
+      {/* Body */}
+      <Flex direction="column" gap={3}>
+        {/* TVL */}
+        <Flex justify="space-between" w="100%">
+          <Text variant="body-16" color="element.subdued">
+            TVL
           </Text>
-          {isExternal && <ExternalLinkIcon color="disabledText" fontSize="16px" />}
+          <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
+          <Text variant="body-16" color="element.lighter">
+            {tvl}
+          </Text>
         </Flex>
 
-        {!comingSoon ? (
-          <>
-            <Flex w="138px" justify="space-between">
-              {/* TVL */}
-              <Flex direction="column">
-                <Text variant="smallParagraph">TVL</Text>
-                <IonSkeleton isLoaded={!tvlLoading} w="100%">
-                  <Text variant="paragraphBold">{tvl}</Text>
-                </IonSkeleton>
-              </Flex>
+        {/* APY */}
+        <Flex justify="space-between" w="100%">
+          <Text variant="body-16" color="element.subdued">
+            APY
+          </Text>
+          <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
+          <Text variant="body-16" color="element.lighter">
+            {totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}
+          </Text>
+        </Flex>
 
-              {/* APY */}
-              <Flex direction="column">
-                <Text variant="smallParagraph">APY</Text>
-                <IonSkeleton isLoaded={!isBoringVaultApyLoading}>
-                  <IonTooltip
-                    label={
-                      shouldShowMessageForLargeNetApy ? `${fullFormattedNetApy} will likely decrease...` : undefined
-                    }
-                  >
-                    <Text variant="paragraphBold">{`${totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}`}</Text>
-                  </IonTooltip>
-                </IonSkeleton>
-              </Flex>
-            </Flex>
-            <Flex direction="column" gap={1} w="fit-content">
-              {/* Rewards */}
-              <Text variant="smallParagraph">Rewards</Text>
-              <RewardsTooltip tokenKey={networkAssetKey}>
-                <RewardsIconRow w="fit-content" tokenKey={networkAssetKey} />
-              </RewardsTooltip>
-            </Flex>
-          </>
-        ) : (
-          <Flex mb={6}>
-            <Button pointerEvents="none">
-              <Text variant="button">COMING SOON</Text>
-            </Button>
-          </Flex>
-        )}
-      </Flex>
+        {/* Benefits */}
+        <Flex justify="space-between" w="100%">
+          <Text variant="body-16" color="element.subdued">
+            Benefits
+          </Text>
+          <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
+          <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={networkAssetKey} />}>12 Rewards</AtomTag>
+        </Flex>
 
-      {/* Logo Section */}
-      <Flex flex={1} position="relative">
-        <TokenIcon tokenKey={networkAssetKey} fontSize="160px" position="absolute" bottom="14px" right="-37px" />
+        {/* Protocols */}
+        <Flex justify="space-between" w="100%">
+          <Text variant="body-16" color="element.subdued">
+            Protocols
+          </Text>
+          <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
+          <ChainIconRow chains={protocols} />
+        </Flex>
       </Flex>
+      {/* Button */}
+      <Button onClick={handleClick} variant="outline" leftIcon={<MintIcon pb="1px" />}>
+        <Text variant="body-16">Mint</Text>
+      </Button>
     </Flex>
   )
 }

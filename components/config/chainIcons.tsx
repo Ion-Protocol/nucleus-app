@@ -1,26 +1,35 @@
-import { SeiIcon } from '@/components/shared/icons/Sei'
 // import SeiIcon from '@/components/shared/icons/Sei_Symbol_Red.svg'
 import { ChainKey } from '@/types/ChainKey'
 import { IconProps } from '@chakra-ui/react'
 import React from 'react'
 import { BobaIcon } from '../shared/icons/Boba'
 import { DineroIcon } from '../shared/icons/Dinero'
-import { EclipseIcon } from '../shared/icons/Eclipse'
+import { EclipseLargeIcon } from '../shared/icons/EclipseLarge'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { FormIcon } from '../shared/icons/Form'
 import { RariIcon } from '../shared/icons/Rari'
-import { SwellChainIcon } from '../shared/icons/SwellChain'
+import { SeiLargeIcon } from '../shared/icons/SeiLarge'
+import { SwellLargeIcon } from '../shared/icons/SwellLarge'
+import { JellyverseIcon } from '../shared/icons/Jellyverse'
+import { OrcaIcon } from '../shared/icons/Orca'
+import { InvariantIcon } from '../shared/icons/Invariant'
+import { SaveNetworkIcon } from '../shared/icons/SaveNetwork'
+import { AstrolIcon } from '../shared/icons/Astrol'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
-  // The SeiIcon is broken and doesn't play with Chakra's Icons
-  [ChainKey.SEI]: (props: IconProps) => <SeiIcon />,
-  [ChainKey.SWELL]: (props) => <SwellChainIcon {...props} />,
-  [ChainKey.ECLIPSE]: (props) => <EclipseIcon {...props} />,
+  [ChainKey.SEI]: (props: IconProps) => <SeiLargeIcon {...props} />,
+  [ChainKey.SWELL]: (props) => <SwellLargeIcon {...props} />,
+  [ChainKey.ECLIPSE]: (props) => <EclipseLargeIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
   [ChainKey.FORM]: (props) => <FormIcon {...props} />,
   [ChainKey.RARI]: (props) => <RariIcon {...props} />,
   [ChainKey.BOBA]: (props) => <BobaIcon {...props} />,
+  [ChainKey.JELLYVERSE]: (props) => <JellyverseIcon {...props} />,
+  [ChainKey.ORCA]: (props) => <OrcaIcon {...props} />,
+  [ChainKey.INVARIANT]: (props) => <InvariantIcon {...props} />,
+  [ChainKey.SAVE]: (props) => <SaveNetworkIcon {...props} />,
+  [ChainKey.ASTROL]: (props) => <AstrolIcon {...props} />,
 }
 
 interface ChainIconMapProps extends IconProps {

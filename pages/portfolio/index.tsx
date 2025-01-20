@@ -1,5 +1,6 @@
 import { Allocation } from '@/components/Portfolio/Allocation'
 import { AssetsTable } from '@/components/Portfolio/AssetsTable'
+import { AssetTooltip } from '@/components/Portfolio/AssetsTable/AssetTooltip'
 import { PerformanceGraph } from '@/components/Portfolio/PerformanceGraph'
 import { PortfolioTab } from '@/components/Portfolio/PortfolioTab'
 import { TransactionTable } from '@/components/Portfolio/TransactionTable'
@@ -32,6 +33,7 @@ import { useState } from 'react'
 export default function Portfolio() {
   const dispatch = useAppDispatch()
   const theme = useTheme()
+  console.log('🚀 ~ Portfolio ~ theme:', theme)
   const { colorMode } = useColorMode()
 
   // State
@@ -72,14 +74,14 @@ export default function Portfolio() {
           title="Total Value"
           body={formattedUserTvl}
           subtext={`+${formattedMonthlyPerformancePercentage} last month`}
-          subtextColor={theme.colors.element.green}
+          subtextColor="tag.info.live.element"
           isLoading={tvlLoading}
         />
         <PortfolioSummaryItem
           title="Avg. Monthly APY"
           body={formattedAvgMonthlyApy}
           subtext={`~${formattedMonthlyApyValueInUsd}`}
-          sideTag={<AtomTag>+{rewardsCount} Rewards</AtomTag>}
+          sideTag={<AtomTag tooltip={<AssetTooltip />}>+{rewardsCount} Rewards</AtomTag>}
           isLoading={avgMonthlyApyLoading}
         />
         <PortfolioSummaryItem

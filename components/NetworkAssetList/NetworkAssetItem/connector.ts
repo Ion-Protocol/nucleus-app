@@ -22,15 +22,16 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
   const networkAssetName = networkAssetConfig?.token.name
   const boringVaultAddress = networkAssetConfig?.contracts.boringVault
   const chainName = networkAssetConfig ? chainsConfig[networkAssetConfig.chain].name : ''
+  const chainKey = networkAssetConfig?.chain
   const comingSoon = networkAssetConfig?.comingSoon || null
   const isExternal = networkAssetConfig?.isExternal || false
   const partnerUrl = networkAssetConfig?.partnerUrl || ''
   const formattedNetApy = selectFormattedNetApy(state, networkAssetKey)
-  const rawNetApy = selectNetApy(state, networkAssetKey)
-  const fullFormattedNetApy = `${numberToPercent(rawNetApy || 0)}%`
 
   const netApyLoading = selectNetApyLoading(state)
   const shouldShowMessageForLargeNetApy = selectShouldShowMessageForLargeNetApy(state, networkAssetKey)
+
+  const protocols = networkAssetConfig?.protocols
 
   return {
     tvl,
@@ -44,9 +45,10 @@ const mapState = (state: RootState, ownProps: YieldBridgeItemOwnProps) => {
     partnerUrl,
     tvlLoading,
     formattedNetApy,
-    fullFormattedNetApy,
     netApyLoading,
     shouldShowMessageForLargeNetApy,
+    chainKey,
+    protocols,
   }
 }
 

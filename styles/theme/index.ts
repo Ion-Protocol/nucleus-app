@@ -14,7 +14,7 @@ const theme = extendTheme({
   config,
   fonts,
   colors: { ...colors, ...colorsV2 },
-  semanticTokens: { colors: { ...semanticTokens.colors, ...semanticTokensV2.colors } },
+  semanticTokens: { colors: { ...semanticTokens.colors } },
   textStyles: { ...textStyles, ...textStylesV2 },
   components,
   styles,

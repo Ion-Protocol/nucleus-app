@@ -16,11 +16,16 @@ interface PerformanceGraphProps {
 export function PerformanceGraph({ selectedTimeRange, onTimeRangeChange }: PerformanceGraphProps) {
   const theme = useTheme()
   const { colorMode } = useColorMode()
-  const colors = theme.semanticTokens.colors
-  const strokeColor = colorMode === 'dark' ? colors.stroke.lighter._dark : colors.stroke.lighter.default
-  const textColor = colorMode === 'dark' ? colors.element.subdued._dark : colors.element.subdued.default
-  const lineColor = colorMode === 'dark' ? colors.green[400]._dark : colors.green[400].default
-  const cursorColor = colorMode === 'dark' ? colors.green[300]._dark : colors.green[300].default
+  const strokeColor =
+    colorMode === 'dark'
+      ? theme.semanticTokens.colors.stroke.lighter._dark
+      : theme.semanticTokens.colors.stroke.lighter.default
+  const textColor =
+    colorMode === 'dark'
+      ? theme.semanticTokens.colors.element.subdued._dark
+      : theme.semanticTokens.colors.element.subdued.default
+  const lineColor = colorMode === 'dark' ? theme.colors.dark.green['400'] : theme.colors.light.green['400']
+  const cursorColor = colorMode === 'dark' ? theme.colors.dark.green['300'] : theme.colors.light.green['300']
   const fillColor = colorMode === 'dark' ? '#27362A' : '#EBFCF1'
 
   // Load the data
