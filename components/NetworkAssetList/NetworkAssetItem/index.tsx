@@ -89,7 +89,7 @@ function NetworkAssetItem({
         {/* Asset */}
         <Flex gap={4}>
           <IconWithSubIcon
-            icon={<TokenIcon tokenKey={networkAssetKey} />}
+            icon={<TokenIcon fontSize="48px" tokenKey={networkAssetKey} />}
             subIcon={<ChainIcon chainKey={chainKey} />}
           />
           <Flex direction="column">
