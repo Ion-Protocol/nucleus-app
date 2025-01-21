@@ -47,11 +47,8 @@ export const selectRedeemSourceChain = (state: RootState) => state.networkAssets
 export const selectRedemptionSourceChainKey = (state: RootState) => state.networkAssets.redeemSourceChain
 
 export const selectRedemptionDestinationChainKey = (state: RootState) => {
-  const networkAssetConfig = selectNetworkAssetConfig(state)
-  if (!networkAssetConfig) {
-    return null
-  }
-  return networkAssetConfig.redeem.redemptionDestinationChain
+  const withdrawalDestinationChainKey = selectBridgesState(state).redeemDestinationChain
+  return withdrawalDestinationChainKey
 }
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
@@ -120,6 +117,11 @@ export const selectHyperlaneChainSelector = (state: RootState): number => {
 export const selectRedeemLayerZeroChainSelector = (state: RootState): number => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   return networkAssetConfig?.redeem.layerZeroChainSelector || 0
+}
+
+export const selectRedeemHyperlaneChainSelector = (state: RootState): number => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.redeem.hyperlaneChainSelector || 0
 }
 
 // DO NOT memoize: Direct lookup; returns a value from configuration.
@@ -793,11 +795,12 @@ export const selectDepositBridgeData = createSelector(
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectRedeemBridgeData = createSelector(
-  [selectRedeemLayerZeroChainSelector, selectAddress],
-  (selectRedeemLayerZeroChainSelector, userAddress): BridgeData | null => {
+  [selectRedeemLayerZeroChainSelector, selectRedeemHyperlaneChainSelector, selectAddress],
+  (redeemLayerZeroChainSelector, redeemHyperlaneChainSelector, userAddress): BridgeData | null => {
     if (!userAddress) return null
+    const chainSelector = redeemHyperlaneChainSelector ? redeemHyperlaneChainSelector : redeemLayerZeroChainSelector
     return {
-      chainSelector: selectRedeemLayerZeroChainSelector,
+      chainSelector: chainSelector,
       destinationChainReceiver: userAddress,
       bridgeFeeToken: nativeAddress,
       messageGas: BigInt(100000),
