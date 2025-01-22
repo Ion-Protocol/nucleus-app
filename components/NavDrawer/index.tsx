@@ -1,16 +1,16 @@
 import { discordUrl, docsUrl } from '@/config/constants'
-import { Divider, Flex } from '@chakra-ui/react'
-import { CircleArrowRight } from 'lucide-react'
-import { DashboardIcon } from '../shared/icons/Dashboard'
-import { DiscordIcon } from '../shared/icons/Discord'
-import { DocsIcon } from '../shared/icons/Docs'
-import { PortfolioIcon } from '../shared/icons/Portfolio'
-import { TermsIcon } from '../shared/icons/Terms'
-import { FooterLink } from './FooterLink'
+import { Divider, Flex, chakra } from '@chakra-ui/react'
+import { BookOpen01, CoinsStacked02, Compass02, File02, LogOut04 } from '@untitled-ui/icons-react'
+import { DiscordOutline } from '../shared/icons/DiscordOutline'
+// import { PortfolioIcon } from '../shared/icons/Portfolio'
+import { NavDrawerConnector } from './connector'
+import GetStarted from './GetStarted'
 import { Logo } from './Logo'
 import { NavItem } from './NavItem'
-import { NavDrawerConnector } from './connector'
 
+export const CompassIcon = chakra(Compass02)
+export const LogOutIcon = chakra(LogOut04)
+export const PortfolioIcon = chakra(CoinsStacked02)
 function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) {
   return (
     <Flex
@@ -24,13 +24,11 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
       bg="bg.main"
     >
       <Flex direction="column" flex={1}>
-        <Flex p="20px">
-          <Logo />
-        </Flex>
-        <Flex direction="column" mt={6} gap={1}>
-          <NavItem title="Dashboard" href="/dashboard" leftIcon={DashboardIcon} />
-          {/* <NavCollapse title="Mint" leftIcon={<NetworkAssetNavIcon />}> */}
-          {/* {networkAssets.map((networkAsset) => (
+        <Logo />
+        <Divider />
+        <NavItem title="Explore" href="/dashboard" leftIcon={CompassIcon} />
+        {/* <NavCollapse title="Mint" leftIcon={<NetworkAssetNavIcon />}> */}
+        {/* {networkAssets.map((networkAsset) => (
               <NavItem
                 key={networkAsset.key}
                 title={networkAsset.token.name}
@@ -42,17 +40,17 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
                 partnerUrl={networkAsset.partnerUrl}
               />
             ))} */}
-          {/* </NavCollapse> */}
-          <NavItem title="Withdrawals" href="/withdrawals" leftIcon={CircleArrowRight} />
-          <NavItem title="Portfolio" href="/portfolio" leftIcon={PortfolioIcon} disabled comingSoon />
-        </Flex>
+        {/* </NavCollapse> */}
+        {/* TODO: Reorder these items when portfolio is implemented */}
+        <NavItem title="Withdrawals" href="/withdrawals" leftIcon={LogOutIcon} />
+        <NavItem title="Portfolio" href="/portfolio" leftIcon={PortfolioIcon} disabled comingSoon />
       </Flex>
       <Divider />
-      <Flex pt={6} direction="column">
-        <FooterLink title="Docs" href={docsUrl} icon={<DocsIcon />} openNewTab />
-        <FooterLink title="Discord" href={discordUrl} icon={<DiscordIcon />} openNewTab />
-        <FooterLink title="Terms & Conditions" onClick={openTermsModal} icon={<TermsIcon />} />
-      </Flex>
+      <GetStarted />
+      <Divider />
+      <NavItem title="Docs" href={docsUrl} leftIcon={BookOpen01} isExternal />
+      <NavItem title="Discord" href={discordUrl} leftIcon={DiscordOutline} isExternal />
+      <NavItem title="Terms & Conditions" onClick={openTermsModal} leftIcon={File02} />
     </Flex>
   )
 }

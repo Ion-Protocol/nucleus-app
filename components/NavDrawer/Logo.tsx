@@ -1,4 +1,4 @@
-import { Flex, Image, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { NucleusLogoIcon } from '../shared/icons/NucleusLogoBlack'
 
@@ -10,9 +10,9 @@ export function Logo() {
   }
 
   return (
-    <Flex alignItems="center" gap={3} onClick={handleClick} cursor="pointer">
-      <NucleusLogoIcon fontSize="28px" />
-      <Text variant="heading2" mt="6px">
+    <Flex height="4rem" p="1.25rem" gap={2} onClick={handleClick} cursor="pointer" alignItems="center">
+      <NucleusLogoIcon fontSize="24px" />
+      <Text variant="heading1" fontSize={'24px'}>
         Nucleus
       </Text>
     </Flex>
