@@ -3,6 +3,8 @@ import {
   Box,
   Flex,
   Icon,
+  List,
+  ListItem,
   Popover,
   PopoverBody,
   PopoverContent,
@@ -70,14 +72,43 @@ const GetStarted = () => {
           <Icon as={ChevronUp} strokeWidth={1} color={'element.subdued'} height={'16px'} width={'16px'} />
         </Flex>
       </PopoverTrigger>
-      <PopoverContent>
-        <PopoverHeader borderBottom={'none'} fontWeight="semibold">
+      <PopoverContent
+        borderRadius={'8px'}
+        w={'360px'}
+        bg={'bg.white'}
+        border={'1px solid stroke.light'}
+        borderColor={'border'}
+        boxShadow={'0px 4px 8px 0px rgba(0, 0, 0, 0.15)'}
+        padding={'1.5rem'}
+      >
+        <Flex gap={1} alignItems="center">
+          <Box h={'6px'} flex={1} bg={'element.subdued'} />
+          <Box h={'6px'} flex={1} bg={'bg.tertiary'} />
+          <Box h={'6px'} flex={1} bg={'bg.tertiary'} />
+        </Flex>
+        <PopoverHeader
+          paddingX={0}
+          paddingTop={6}
+          borderBottom={'none'}
+          fontSize={'xl'}
+          color={'element.main'}
+          fontWeight="semibold"
+        >
           Welcome to Nucleus
         </PopoverHeader>
-        <PopoverBody>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore.
+        <PopoverBody p={0}>
+          <Text fontSize={'md'} color={'element.subdued'}>
+            Gain access to the highest yield possible by following these quick steps:
+          </Text>
+          <List spacing={3} pt={6}>
+            <ListItem>Mint a Native Nucleus Token</ListItem>
+            <ListItem>Explore application strategies</ListItem>
+            <ListItem>Apply tokens in portfolio</ListItem>
+          </List>
         </PopoverBody>
+        <Text fontSize={'sm'} color={'element.subdued'}>
+          I know what I’m doing
+        </Text>
       </PopoverContent>
     </Popover>
   )

@@ -4,7 +4,6 @@ import { BookOpen01, CoinsStacked02, Compass02, File02, LogOut04 } from '@untitl
 import { DiscordOutline } from '../shared/icons/DiscordOutline'
 // import { PortfolioIcon } from '../shared/icons/Portfolio'
 import { NavDrawerConnector } from './connector'
-import GetStarted from './GetStarted'
 import { Logo } from './Logo'
 import { NavItem } from './NavItem'
 
@@ -45,8 +44,9 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
         <NavItem title="Withdrawals" href="/withdrawals" leftIcon={LogOutIcon} />
         <NavItem title="Portfolio" href="/portfolio" leftIcon={PortfolioIcon} disabled comingSoon />
       </Flex>
-      <Divider />
-      <GetStarted />
+      {/* ! Commented out while we build onboarding flow and way to track user progress */}
+      {/* <Divider />
+      <GetStarted /> */}
       <Divider />
       <NavItem title="Docs" href={docsUrl} leftIcon={BookOpen01} isExternal />
       <NavItem title="Discord" href={discordUrl} leftIcon={DiscordOutline} isExternal />
