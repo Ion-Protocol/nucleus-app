@@ -43,7 +43,10 @@ export function useNetworkAssetTableData() {
         asset: networkAssetKey,
         apy: formattedApy,
         chain: networkAssetConfig[networkAssetKey]?.chain,
-        tvl: formattedTvl,
+        tvl: {
+          formatted: formattedTvl,
+          value: tvlInUsdAsNumber,
+        },
         applications: networkAssetConfig[networkAssetKey]?.protocols || [],
       })
     }

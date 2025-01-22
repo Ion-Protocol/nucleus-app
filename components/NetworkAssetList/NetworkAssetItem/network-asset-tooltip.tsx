@@ -1,5 +1,6 @@
 import { PointSystemIcon } from '@/components/config/pointSystemIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
+import { NetApyAnimatedBorder } from '@/components/shared/net-apy-animated-border'
 import { hardcodedApy } from '@/config/constants'
 import { NetworkKey, networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
@@ -74,22 +75,7 @@ export function NetworkAssetTooltip({ networkAssetKey }: NetworkAssetTooltipProp
       </Flex>
 
       {/* Net APY */}
-      <Flex
-        border="1px solid"
-        borderColor="stroke.main"
-        borderRadius="8px"
-        p={2}
-        color="element.violet"
-        justify="space-between"
-      >
-        <Flex align="center" gap={1}>
-          <TelescopeIcon />
-          <Text variant="body-16">Net APY</Text>
-        </Flex>
-        <Text variant="body-16">
-          {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : numberToPercent(hardcodedApy, 2)}
-        </Text>
-      </Flex>
+      <NetApyAnimatedBorder apy={vaultAssetApy ? vaultAssetApy : hardcodedApy} />
     </Flex>
   )
 }

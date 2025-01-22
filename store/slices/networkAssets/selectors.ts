@@ -294,6 +294,28 @@ export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
   return abbreviateNumber(tvlInUsdAsNumber)
 }
 
+export const selectTotalTvl = (state: RootState) => {
+  const tvl = Object.values(state.networkAssets.tvl.data).reduce((acc, curr) => acc + BigInt(curr), BigInt(0))
+  return tvl
+}
+
+export const selectFormattedTotalTvl = (state: RootState) => {
+  const tvl = selectTotalTvl(state)
+  const price = selectUsdPerEthRate(state)
+  const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+  const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+
+  // Format the number as currency in USD
+  const formattedTvlInUsd = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(tvlInUsdAsNumber)
+
+  return formattedTvlInUsd
+}
+
 /////////////////////////////////////////////////////////////////////
 // APY
 /////////////////////////////////////////////////////////////////////

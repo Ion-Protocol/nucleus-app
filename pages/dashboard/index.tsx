@@ -1,6 +1,6 @@
 import NetworkAssetList from '@/components/NetworkAssetList'
 import { useAppSelector } from '@/store/hooks'
-import { selectNetworkCount } from '@/store/slices/networkAssets'
+import { selectFormattedTotalTvl, selectNetworkCount } from '@/store/slices/networkAssets'
 import { useGetTvlQuery } from '@/store/slices/nucleusBackendApi'
 import { Flex, Image, Tag, Text } from '@chakra-ui/react'
 
@@ -9,6 +9,7 @@ export default function Dashboard() {
   const potentialApy = 6.7
 
   const networkCount = useAppSelector(selectNetworkCount)
+  const formattedTotalTvl = useAppSelector(selectFormattedTotalTvl)
 
   const { data: tvlData } = useGetTvlQuery()
 
@@ -23,10 +24,7 @@ export default function Dashboard() {
           </Text>
           <Flex gap="0.25em">
             <Text variant="body-14" color="element.lighter">
-              Mint into any network to passively earn up to {potentialApy}%
-            </Text>
-            <Text variant="body-14" color="element.violet" fontWeight={700}>
-              + Bonus APY
+              Mint a Network Asset and explore exciting applications
             </Text>
           </Flex>
           <Flex mt={4} gap={2}>
@@ -43,14 +41,7 @@ export default function Dashboard() {
             <Tag borderRadius="100px" bg="bg.secondary" px="1em" py="0.5em">
               <Flex gap="0.25em">
                 <Text variant="body-14" color="element.lighter">
-                  {tvlData?.currentTvlInUsd
-                    ? new Intl.NumberFormat('en-US', {
-                        style: 'currency',
-                        currency: 'USD',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                      }).format(tvlData.currentTvlInUsd)
-                    : '$0'}
+                  {formattedTotalTvl}
                 </Text>
                 <Text variant="body-14" color="element.subdued">
                   TVL

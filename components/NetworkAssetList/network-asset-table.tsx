@@ -2,7 +2,13 @@ import { NetworkKey, networksConfig } from '@/config/networks'
 import { DashboardTableDataItem } from '@/types'
 import { TokenKey } from '@/types/TokenKey'
 import { Button, Flex, Table, TableContainer, Text } from '@chakra-ui/react'
-import { createColumnHelper, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 import { useRouter } from 'next/router'
 import { AtomTag } from '../shared/AtomTag'
 import { ChainIconRow } from '../shared/chain-icon-row'
@@ -12,6 +18,7 @@ import { TableHeader } from '../table/table-header'
 import { AssetCell } from './asset-cell'
 import { NetworkAssetTooltip } from './NetworkAssetItem/network-asset-tooltip'
 import { useNetworkAssetTableData } from './useNetworkAssetTableData'
+import { SortableHeader } from '../table/sortable-header'
 
 export function NetworkAssetTable() {
   const router = useRouter()
@@ -33,14 +40,21 @@ export function NetworkAssetTable() {
       cell: (info) => <AssetCell info={info} />,
     }),
     columnHelper.accessor('tvl', {
-      header: 'TVL',
-      cell: (info) => <Text variant="body-16">{info.getValue()}</Text>,
+      header: ({ column }) => <SortableHeader column={column}>TVL</SortableHeader>,
+      cell: (info) => <Text variant="body-16">{info.getValue().formatted}</Text>,
+      sortingFn: (rowA, rowB, columnId) => {
+        const tvlA = (rowA.getValue(columnId) as { value: number }).value
+        const tvlB = (rowB.getValue(columnId) as { value: number }).value
+        return tvlA - tvlB // Ascending sort
+      },
     }),
     columnHelper.accessor('apy', {
-      header: 'APY and Benefits',
+      header: ({ column }) => <SortableHeader column={column}>APY and Benefits</SortableHeader>,
       cell: (info) => (
         <Flex align="center" gap={3}>
-          <Text variant="body-16">{info.getValue()}</Text>
+          <Text variant="body-16" w="3em">
+            {info.getValue()}
+          </Text>
           <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={info.row.original.asset as TokenKey} />}>
             12 Rewards
           </AtomTag>
@@ -69,6 +83,7 @@ export function NetworkAssetTable() {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
   })
 
