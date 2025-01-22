@@ -11,6 +11,7 @@ interface NavItemProps extends ChakraProps {
   comingSoon?: boolean
   isExternal?: boolean
   partnerUrl?: string
+  showEyeIcon?: boolean
   onClick?: () => void
 }
 
@@ -23,6 +24,7 @@ export function NavItem({
   isExternal,
   partnerUrl,
   onClick,
+  showEyeIcon,
   ...props
 }: NavItemProps) {
   const router = useRouter()
@@ -69,7 +71,6 @@ export function NavItem({
           h="32px"
           w="32px"
           p="16px"
-          bg="bg.main"
           borderRadius="full"
           border={isSelected ? 'solid 1px' : 'none'}
           borderColor={isSelected ? 'stroke.darker' : 'stroke.main'}
@@ -78,18 +79,23 @@ export function NavItem({
         >
           <Icon
             as={leftIcon}
-            strokeWidth={1}
+            fontWeight={'light'}
             color={isSelected ? 'element.main' : 'element.subdued'}
             _groupActive={{ color: 'element.main' }}
             height={'16px'}
             width={'16px'}
+            sx={{
+              path: {
+                strokeWidth: '1px',
+              },
+            }}
           />
         </Box>
         <Text userSelect="none" variant="paragraph" _groupActive={{ color: 'element.main' }}>
           {title} {comingSoon && '(coming soon)'}
         </Text>
       </Flex>
-      {isSelected && <Icon as={Eye} color="element.subdued" justifySelf="end" />}
+      {showEyeIcon && <Icon as={Eye} color="element.subdued" justifySelf="end" />}
       {isExternal && <Icon as={ArrowUpRight} color="element.subdued" justifySelf="end" />}
     </Link>
   )

@@ -108,7 +108,16 @@ const RequestDetails = ({
               rel="noopener noreferrer"
               color="element.lighter"
             >
-              <Icon as={LinkExternal02} boxSize={4} color="element.lighter" />
+              <Icon
+                as={LinkExternal02}
+                boxSize={4}
+                color="element.lighter"
+                sx={{
+                  path: {
+                    strokeWidth: '1px',
+                  },
+                }}
+              />
             </Link>
           </Flex>
         </Flex>

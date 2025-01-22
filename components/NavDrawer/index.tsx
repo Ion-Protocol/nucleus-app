@@ -21,6 +21,10 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
       borderColor="stroke.main"
       justify="space-between"
       bg="bg.main"
+      bgImage="url('/assets/images/navbar-texture-bg.webp')"
+      bgSize="100% 100%"
+      bgPosition="center"
+      bgRepeat="no-repeat"
     >
       <Flex direction="column" flex={1}>
         <Logo />

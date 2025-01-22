@@ -45,7 +45,16 @@ export function DateCell({ date, status, txHash, vaultAddress, showLeftArrow = f
               rel="noopener noreferrer"
               color="element.lighter"
             >
-              <Icon as={LinkExternal02} fontSize={16} color="element.lighter" />
+              <Icon
+                as={LinkExternal02}
+                fontSize={16}
+                color="element.lighter"
+                sx={{
+                  path: {
+                    strokeWidth: '1px',
+                  },
+                }}
+              />
             </Link>
           )}
         </Flex>
