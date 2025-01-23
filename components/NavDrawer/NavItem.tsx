@@ -71,6 +71,7 @@ export function NavItem({
           h="32px"
           w="32px"
           p="16px"
+          bg={isSelected ? 'bg.main' : 'transparent'}
           borderRadius="full"
           border={isSelected ? 'solid 1px' : 'none'}
           borderColor={isSelected ? 'stroke.darker' : 'stroke.main'}

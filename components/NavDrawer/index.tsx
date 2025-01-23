@@ -1,5 +1,5 @@
 import { discordUrl, docsUrl } from '@/config/constants'
-import { Divider, Flex, chakra } from '@chakra-ui/react'
+import { Divider, Flex, chakra, useColorMode } from '@chakra-ui/react'
 import { BookOpen01, CoinsStacked02, Compass02, File02, LogOut04 } from '@untitled-ui/icons-react'
 import { DiscordOutline } from '../shared/icons/DiscordOutline'
 // import { PortfolioIcon } from '../shared/icons/Portfolio'
@@ -11,6 +11,8 @@ export const CompassIcon = chakra(Compass02)
 export const LogOutIcon = chakra(LogOut04)
 export const PortfolioIcon = chakra(CoinsStacked02)
 function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) {
+  const { colorMode } = useColorMode()
+
   return (
     <Flex
       as="nav"
@@ -21,7 +23,11 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
       borderColor="stroke.main"
       justify="space-between"
       bg="bg.main"
-      bgImage="url('/assets/images/navbar-texture-bg.webp')"
+      bgImage={
+        colorMode === 'light'
+          ? `url('/assets/images/navbar-texture-bg-light.webp')`
+          : `url('/assets/images/navbar-texture-bg-dark.webp')`
+      }
       bgSize="100% 100%"
       bgPosition="center"
       bgRepeat="no-repeat"
