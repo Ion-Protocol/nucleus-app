@@ -126,7 +126,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.BOBA]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: 0,
+            withdrawalFee: 0.01,
           },
         },
       },
@@ -427,7 +427,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.RARI]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawalFee: 0, // Default 0.2%,
           },
         },
       },
