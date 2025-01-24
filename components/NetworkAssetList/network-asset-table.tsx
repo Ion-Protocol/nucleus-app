@@ -25,7 +25,6 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
   const router = useRouter()
   const data = useNetworkAssetTableData()
 
-  // selectedAssets is an array of addresses
   const filteredData = useMemo(() => {
     return data.filter((item) => {
       const matchesAsset =

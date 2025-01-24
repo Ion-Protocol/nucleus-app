@@ -9,6 +9,7 @@ import { MultiSelectFilter } from '../table/multi-select-filter'
 import { NetworkAssetListConnector } from './connector'
 import { NetworkAssetTable } from './network-asset-table'
 import NetworkAssetItem from './NetworkAssetItem'
+import { NetworkKey, networksConfig } from '@/config/networks'
 
 const LayoutGridIcon = chakra(LucideLayoutGridIcon)
 const ListFilterIcon = chakra(LucideListFilterIcon)
@@ -20,9 +21,18 @@ export const tokenAddressMapping: Partial<Record<TokenKey, Address>> = {
   [TokenKey.UNIFIETH]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
   [TokenKey.EARNETH]: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
   [TokenKey.TETH]: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+  [TokenKey.BOBAETH]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
 }
 
-const chainKeys = [ChainKey.SEI, ChainKey.FORM, ChainKey.RARI, ChainKey.UNIFI, ChainKey.SWELL, ChainKey.ECLIPSE]
+const chainKeys = [
+  ChainKey.SEI,
+  ChainKey.FORM,
+  ChainKey.RARI,
+  ChainKey.UNIFI,
+  ChainKey.SWELL,
+  ChainKey.ECLIPSE,
+  ChainKey.BOBA,
+]
 
 function NetworkAssetList({ networkAssetKeys }: NetworkAssetListConnector.Props) {
   const [selectedLayout, setSelectedLayout] = useState<'grid' | 'table'>('grid')
@@ -30,13 +40,16 @@ function NetworkAssetList({ networkAssetKeys }: NetworkAssetListConnector.Props)
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([])
 
   const filteredNetworkAssets = useMemo(() => {
-    if (selectedAssets.length === 0) {
-      return networkAssetKeys
-    }
     return networkAssetKeys.filter((networkAssetKey) => {
-      return selectedAssets.includes(tokenAddressMapping[networkAssetKey as TokenKey] as string)
+      const matchAsset =
+        selectedAssets.length === 0 ||
+        selectedAssets.includes(tokenAddressMapping[networkAssetKey as TokenKey] as string)
+
+      const networkAssetChain = networksConfig[NetworkKey.MAINNET].assets[networkAssetKey]?.chain
+      const matchNetwork = selectedNetworks.length === 0 || selectedNetworks.includes(networkAssetChain as string)
+      return matchAsset && matchNetwork
     })
-  }, [networkAssetKeys, selectedAssets])
+  }, [networkAssetKeys, selectedAssets, selectedNetworks])
 
   function handleClearFilters() {
     setSelectedAssets([])
