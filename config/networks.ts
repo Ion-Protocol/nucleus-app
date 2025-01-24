@@ -157,6 +157,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
+    protocols: [],
   },
   [TokenKey.SSETH]: {
     apys: {},
