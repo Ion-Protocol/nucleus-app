@@ -861,10 +861,15 @@ export const selectWithdrawalFee = (state: RootState): number => {
   const chainConfig = selectNetworkAssetConfig(state)
   const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
   const receiveTokenKey = selectReceiveTokenKey(state)
-  return (
-    chainConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawalFee ||
-    defaultWithdrawalFee
-  )
+
+  if (!chainConfig || !redemptionDestinationChainKey || !receiveTokenKey) {
+    return defaultWithdrawalFee
+  }
+
+  const withdrawalFee =
+    chainConfig.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawalFee
+  // Allow 0 but use default for null/undefined
+  return withdrawalFee !== null && withdrawalFee !== undefined ? withdrawalFee : defaultWithdrawalFee
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.

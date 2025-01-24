@@ -1,16 +1,16 @@
 import { ChainIcon } from '@/components/config/chainIcons'
+import { RootState } from '@/store'
+import {
+  selectRedeemDestinationChains,
+  selectRedeemSourceChains,
+  setRedeemDestinationChain,
+  setRedeemSourceChain,
+} from '@/store/slices/networkAssets'
+import { ChainKey } from '@/types/ChainKey'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Button, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
-import { ChainKey } from '@/types/ChainKey'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  selectRedeemSourceChains,
-  selectRedeemDestinationChains,
-  setRedeemSourceChain,
-  setRedeemDestinationChain,
-} from '@/store/slices/networkAssets'
-import { RootState } from '@/store'
 import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 interface RedeemChainSelectProps {
   role: 'source' | 'destination'
@@ -26,7 +26,13 @@ function RedeemChainSelect({ role, isActive }: RedeemChainSelectProps) {
 
   // Get available chains
   const availableSourceChains = useSelector(selectRedeemSourceChains)
-  const availableDestinationChains = useSelector(selectRedeemDestinationChains)
+  const unfilteredDestinationChains = useSelector(selectRedeemDestinationChains)
+
+  // Filter destination chains based on source chain
+  const availableDestinationChains =
+    redeemSourceChain === ChainKey.ETHEREUM
+      ? unfilteredDestinationChains.filter((chain) => chain.key === ChainKey.ETHEREUM)
+      : unfilteredDestinationChains
 
   // Get the current chain based on role
   const currentChain = role === 'source' ? redeemSourceChain : redeemDestinationChain
@@ -43,7 +49,13 @@ function RedeemChainSelect({ role, isActive }: RedeemChainSelectProps) {
 
   const handleChainChange = (chainKey: ChainKey) => {
     if (role === 'source') {
-      dispatch(setRedeemSourceChain(chainKey))
+      if (chainKey === ChainKey.ETHEREUM) {
+        // Set both source and destination chains to Ethereum
+        dispatch(setRedeemSourceChain(chainKey))
+        dispatch(setRedeemDestinationChain(chainKey))
+      } else {
+        dispatch(setRedeemSourceChain(chainKey))
+      }
     } else {
       dispatch(setRedeemDestinationChain(chainKey))
     }

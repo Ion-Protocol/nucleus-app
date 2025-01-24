@@ -126,7 +126,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.BOBA]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: 0,
+            withdrawalFee: 0.01,
           },
         },
       },
@@ -379,6 +379,10 @@ const mainnetNetworkAssets: NetworkAssets = {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
         },
+        [ChainKey.RARI]: {
+          chain: ChainKey.RARI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
       },
       redemptionSourceChain: ChainKey.RARI,
       redemptionSourceAsset: TokenKey.RARIETH,
@@ -421,6 +425,12 @@ const mainnetNetworkAssets: NetworkAssets = {
           [TokenKey.WEETH]: {
             token: tokensConfig[TokenKey.WEETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+        },
+        [ChainKey.RARI]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: 0, // Default 0.2%,
           },
         },
       },
