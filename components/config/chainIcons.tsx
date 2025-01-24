@@ -2,19 +2,20 @@
 import { ChainKey } from '@/types/ChainKey'
 import { IconProps } from '@chakra-ui/react'
 import React from 'react'
+import { AstrolIcon } from '../shared/icons/Astrol'
 import { BobaIcon } from '../shared/icons/Boba'
 import { DineroIcon } from '../shared/icons/Dinero'
 import { EclipseLargeIcon } from '../shared/icons/EclipseLarge'
 import { EthereumIcon } from '../shared/icons/Ethereum'
-import { FormIcon } from '../shared/icons/Form'
-import { RariIcon } from '../shared/icons/Rari'
-import { SeiLargeIcon } from '../shared/icons/SeiLarge'
-import { SwellLargeIcon } from '../shared/icons/SwellLarge'
+import { FormLargeIcon } from '../shared/icons/FormLarge'
+import { InvariantIcon } from '../shared/icons/Invariant'
 import { JellyverseIcon } from '../shared/icons/Jellyverse'
 import { OrcaIcon } from '../shared/icons/Orca'
-import { InvariantIcon } from '../shared/icons/Invariant'
+import { RariLargeIcon } from '../shared/icons/RariLarge'
 import { SaveNetworkIcon } from '../shared/icons/SaveNetwork'
-import { AstrolIcon } from '../shared/icons/Astrol'
+import { SeiLargeIcon } from '../shared/icons/SeiLarge'
+import { SwellLargeIcon } from '../shared/icons/SwellLarge'
+import { UnifiLargeIcon } from '../shared/icons/UnifiLarge'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
@@ -22,14 +23,15 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.SWELL]: (props) => <SwellLargeIcon {...props} />,
   [ChainKey.ECLIPSE]: (props) => <EclipseLargeIcon {...props} />,
   [ChainKey.DINERO]: (props) => <DineroIcon {...props} />,
-  [ChainKey.FORM]: (props) => <FormIcon {...props} />,
-  [ChainKey.RARI]: (props) => <RariIcon {...props} />,
   [ChainKey.BOBA]: (props) => <BobaIcon {...props} />,
+  [ChainKey.FORM]: (props) => <FormLargeIcon {...props} />,
+  [ChainKey.RARI]: (props) => <RariLargeIcon {...props} />,
   [ChainKey.JELLYVERSE]: (props) => <JellyverseIcon {...props} />,
   [ChainKey.ORCA]: (props) => <OrcaIcon {...props} />,
   [ChainKey.INVARIANT]: (props) => <InvariantIcon {...props} />,
   [ChainKey.SAVE]: (props) => <SaveNetworkIcon {...props} />,
   [ChainKey.ASTROL]: (props) => <AstrolIcon {...props} />,
+  [ChainKey.UNIFI]: (props) => <UnifiLargeIcon {...props} />,
 }
 
 interface ChainIconMapProps extends IconProps {

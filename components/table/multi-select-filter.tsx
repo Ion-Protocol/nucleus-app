@@ -21,13 +21,17 @@ import { ChevronDownIcon, ChevronUpIcon, Globe, SearchIcon } from 'lucide-react'
 import React from 'react'
 import { Address } from 'viem'
 import { TokenIcon } from '../config/tokenIcons'
+import { ChainIcon } from '../config/chainIcons'
+import { ChainKey } from '@/types/ChainKey'
 
 interface MultiSelectFilterProps {
   title: string
   onChange: (values: string[]) => void
   options: Record<string, string>
   isAssetFilter?: boolean
+  isNetworkFilter?: boolean
   selectedValues: string[]
+  customComponent?: (info: string) => React.ReactNode
 }
 
 export const MultiSelectFilter = ({
@@ -35,7 +39,9 @@ export const MultiSelectFilter = ({
   options,
   onChange,
   isAssetFilter,
+  isNetworkFilter,
   selectedValues,
+  customComponent,
 }: MultiSelectFilterProps) => {
   const [searchQuery, setSearchQuery] = React.useState('')
 
@@ -116,6 +122,11 @@ export const MultiSelectFilter = ({
                             tokenKey={getSymbolByAddress(value as Address)?.toLowerCase() as TokenKey}
                           />
                           <span>{getSymbolByAddress(value as Address)}</span>
+                        </Flex>
+                      ) : isNetworkFilter ? (
+                        <Flex alignItems={'center'} gap={2}>
+                          <ChainIcon height={'16px'} width={'16px'} chainKey={key as ChainKey} />
+                          <span>{capitalizeFirstLetter(key)}</span>
                         </Flex>
                       ) : (
                         capitalizeFirstLetter(key)

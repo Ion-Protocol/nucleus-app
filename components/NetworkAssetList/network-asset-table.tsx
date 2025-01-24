@@ -2,27 +2,39 @@ import { NetworkKey, networksConfig } from '@/config/networks'
 import { DashboardTableDataItem } from '@/types'
 import { TokenKey } from '@/types/TokenKey'
 import { Button, Flex, Table, TableContainer, Text } from '@chakra-ui/react'
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { createColumnHelper, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
+import { tokenAddressMapping } from '.'
 import { AtomTag } from '../shared/AtomTag'
 import { ChainIconRow } from '../shared/chain-icon-row'
 import { MintIcon } from '../shared/icons/Mint'
+import { SortableHeader } from '../table/sortable-header'
 import { TableBody } from '../table/table-body'
 import { TableHeader } from '../table/table-header'
 import { AssetCell } from './asset-cell'
 import { NetworkAssetTooltip } from './NetworkAssetItem/network-asset-tooltip'
 import { useNetworkAssetTableData } from './useNetworkAssetTableData'
-import { SortableHeader } from '../table/sortable-header'
 
-export function NetworkAssetTable() {
+interface NetworkAssetTableProps {
+  selectedAssets: string[]
+  selectedNetworks: string[]
+}
+
+export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkAssetTableProps) {
   const router = useRouter()
   const data = useNetworkAssetTableData()
+
+  // selectedAssets is an array of addresses
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      const matchesAsset =
+        selectedAssets.length === 0 || selectedAssets.includes(tokenAddressMapping[item.asset] as string)
+      const matchesNetwork = selectedNetworks.length === 0 || selectedNetworks.includes(item.chain as string)
+
+      return matchesAsset && matchesNetwork
+    })
+  }, [data, selectedAssets, selectedNetworks])
 
   function handleClickRow(row: DashboardTableDataItem) {
     const networkAsset = networksConfig[NetworkKey.MAINNET].assets[row.asset]
@@ -80,11 +92,18 @@ export function NetworkAssetTable() {
 
   const table = useReactTable({
     debugTable: false,
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    initialState: {
+      sorting: [
+        {
+          id: 'tvl',
+          desc: true,
+        },
+      ],
+    },
   })
 
   return (

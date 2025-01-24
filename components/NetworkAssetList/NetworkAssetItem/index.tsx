@@ -17,6 +17,7 @@ import { ChainIconRow } from '@/components/shared/chain-icon-row'
 import { NetworkAssetTooltip } from './network-asset-tooltip'
 import { numberToPercent } from '@/utils/number'
 import { hardcodedApy } from '@/config/constants'
+import { NetworkKey, networksConfig } from '@/config/networks'
 
 // The icon needs to be wrapped in chakra to get the correct styles.
 // Otherwise the custom color will not be applied.
@@ -56,6 +57,8 @@ function NetworkAssetItem({
   const vaultAssetApy = boringVaultApy ? boringVaultApy.apy : 0
   const totalApy =
     networkAssetKey === TokenKey.SSETH && rewardsResponse ? rewardsResponse?.APY + vaultAssetApy : vaultAssetApy
+
+  const networkAssetCount = networksConfig[NetworkKey.MAINNET].assets[networkAssetKey]?.points.length
 
   function handleClick() {
     if (isExternal) {
@@ -110,7 +113,7 @@ function NetworkAssetItem({
             TVL
           </Text>
           <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
-          <Text variant="body-16" color="element.lighter">
+          <Text variant="body-16" color="element.main">
             {tvl}
           </Text>
         </Flex>
@@ -121,7 +124,7 @@ function NetworkAssetItem({
             APY
           </Text>
           <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
-          <Text variant="body-16" color="element.lighter">
+          <Text variant="body-16" color="element.main">
             {totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}
           </Text>
         </Flex>
@@ -132,7 +135,11 @@ function NetworkAssetItem({
             Benefits
           </Text>
           <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
-          <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={networkAssetKey} />}>12 Rewards</AtomTag>
+          <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={networkAssetKey} />}>
+            {networkAssetCount && networkAssetCount > 1
+              ? `${networkAssetCount} Rewards`
+              : `${networkAssetCount === 1 ? '1 Reward' : '0 Rewards'}`}
+          </AtomTag>
         </Flex>
 
         {/* Protocols */}
