@@ -7,13 +7,13 @@ export const components = {
   Divider: DividerStyles,
   Text: TextStyles,
   Table: {
-    // TODO: move to Table.ts and account for dark mode
     variants: {
       nucleus: {
         table: {
           borderCollapse: 'separate',
           borderSpacing: '0',
           fontFamily: 'diatype',
+          fontVariantNumeric: 'normal', // Restores regular spacing in the table cells
         },
         th: {
           color: 'element.subdued',

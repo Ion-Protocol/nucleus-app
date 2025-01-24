@@ -1,7 +1,7 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { Chain, chainsConfig } from '@/config/chains'
 import { defaultWithdrawalFee, hardcodedApy, nativeAddress } from '@/config/constants'
-import { networksConfig } from '@/config/networks'
+import { NetworkKey, networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { type BridgeData } from '@/store/slices/tellerApi'
@@ -24,6 +24,7 @@ import { selectNetworkAssetFromRoute } from '../router'
 import { selectTransactionExplorerUrl } from '../status'
 import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { calculateApy } from './calculateApy'
+import { DashboardTableDataItem } from '@/types'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -130,6 +131,21 @@ export const selectReceiveOnChain = (state: RootState) => {
   if (!networkAssetConfig) return null
   return networkAssetConfig.redeem?.redemptionDestinationChain
 }
+
+export const selectNetworkCount = createSelector(
+  (state: RootState) => networksConfig[NetworkKey.MAINNET],
+  (networkConfig) => {
+    const networkAssetsAsArray = Object.keys(networkConfig.assets)
+    const uniqueChains: ChainKey[] = []
+    for (const networkAsset of networkAssetsAsArray) {
+      const chain = networkConfig.assets[networkAsset as TokenKey]?.chain
+      if (chain && !uniqueChains.includes(chain)) {
+        uniqueChains.push(chain)
+      }
+    }
+    return uniqueChains.length
+  }
+)
 
 /////////////////////////////////////////////////////////////////////
 // Nav Drawer
@@ -276,6 +292,28 @@ export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
   const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
   const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
   return abbreviateNumber(tvlInUsdAsNumber)
+}
+
+export const selectTotalTvl = (state: RootState) => {
+  const tvl = Object.values(state.networkAssets.tvl.data).reduce((acc, curr) => acc + BigInt(curr), BigInt(0))
+  return tvl
+}
+
+export const selectFormattedTotalTvl = (state: RootState) => {
+  const tvl = selectTotalTvl(state)
+  const price = selectUsdPerEthRate(state)
+  const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+  const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+
+  // Format the number as currency in USD
+  const formattedTvlInUsd = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(tvlInUsdAsNumber)
+
+  return formattedTvlInUsd
 }
 
 /////////////////////////////////////////////////////////////////////

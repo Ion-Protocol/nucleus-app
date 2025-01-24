@@ -398,7 +398,7 @@ export const semanticTokens = {
           },
           element: {
             default: 'light.green.600',
-            _dark: 'dark.green.100',
+            _dark: 'dark.green.600',
           },
         },
         boosted: {

@@ -51,7 +51,6 @@ const WithdrawDetailsModal = ({
     created_transaction_hash,
     ending_transaction_hash,
   } = order
-  console.table(order)
 
   const offerTokenKey = getSymbolByAddress(offer_token)?.toLowerCase() as TokenKey
   const wantTokenKey = getSymbolByAddress(want_token)?.toLowerCase() as TokenKey
@@ -136,7 +135,7 @@ const WithdrawDetailsModal = ({
           <Text fontSize={'inherit'} color="neutral.800">
             Status
           </Text>
-          <StatusBadge status={status} />
+          <StatusBadge status={status as 'pending' | 'fulfilled' | 'cancelled'} />
         </ModalFooter>
       </ModalContent>
     </Modal>

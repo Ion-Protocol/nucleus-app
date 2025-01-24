@@ -1,0 +1,42 @@
+export const mockAssetData = [
+  {
+    asset: 'TETH',
+    network: 'Eclipse',
+    earningsApy: 2.11,
+    amount: 2.22,
+    usdValue: 500,
+    rewardCount: 1,
+  },
+  {
+    asset: 'UNIFIETH',
+    network: 'UniFi',
+    earningsApy: 5.32,
+    amount: 0.9,
+    usdValue: 15000,
+    rewardCount: 5,
+  },
+  {
+    asset: 'DINERO',
+    network: 'Dinero',
+    earningsApy: 3.75,
+    amount: 1.1,
+    usdValue: 2500,
+    rewardCount: 2,
+  },
+  {
+    asset: 'SSETH',
+    network: 'Ethereum',
+    earningsApy: 4.25,
+    amount: 2.5,
+    usdValue: 3200,
+    rewardCount: 10,
+  },
+  {
+    asset: 'WETH',
+    network: 'Ethereum',
+    earningsApy: 3.99,
+    amount: 3.2,
+    usdValue: 430,
+    rewardCount: 3,
+  },
+]
