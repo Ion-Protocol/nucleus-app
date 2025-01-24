@@ -28,12 +28,11 @@ import {
   selectTvlLoading,
 } from '@/store/slices/portfolio/selectors'
 import { Flex, TabList, TabPanel, TabPanels, Tabs, Text, useColorMode, useTheme } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 export default function Portfolio() {
   const dispatch = useAppDispatch()
-  const theme = useTheme()
-  console.log('🚀 ~ Portfolio ~ theme:', theme)
   const { colorMode } = useColorMode()
 
   // State
@@ -63,6 +62,16 @@ export default function Portfolio() {
 
   const handleTimeRangeChange = (timeRange: TimeRange) => {
     dispatch(setTimeRange(timeRange))
+  }
+
+  /////////////////////////////////////////////////////////
+  // TODO: REMOVE THIS WHEN PORTFOLIO IS FULLY IMPLEMENTED!
+  /////////////////////////////////////////////////////////
+  // This redirect only exits to prevent a user from visiting the portfolio page
+  // by typing the URL into the browser.
+  if (typeof window !== 'undefined' && window.location.pathname === '/portfolio') {
+    window.location.href = '/'
+    return null
   }
 
   return (
