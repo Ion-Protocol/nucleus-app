@@ -34,8 +34,8 @@ const chainKeys = [
   ChainKey.BOBA,
 ]
 
-function NetworkAssetList({ networkAssetKeys }: NetworkAssetListConnector.Props) {
-  const [selectedLayout, setSelectedLayout] = useState<'grid' | 'table'>('grid')
+function NetworkAssetList({ networkAssetKeys, tvls }: NetworkAssetListConnector.Props) {
+  const [selectedLayout, setSelectedLayout] = useState<'grid' | 'table'>('table')
   const [selectedAssets, setSelectedAssets] = useState<string[]>([])
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([])
 
@@ -50,6 +50,12 @@ function NetworkAssetList({ networkAssetKeys }: NetworkAssetListConnector.Props)
       return matchAsset && matchNetwork
     })
   }, [networkAssetKeys, selectedAssets, selectedNetworks])
+
+  const sortedNetworkAssetKeys = useMemo(() => {
+    return networkAssetKeys.sort((a, b) => {
+      return Number(tvls[b]) - Number(tvls[a])
+    })
+  }, [networkAssetKeys, tvls])
 
   function handleClearFilters() {
     setSelectedAssets([])
@@ -112,7 +118,7 @@ function NetworkAssetList({ networkAssetKeys }: NetworkAssetListConnector.Props)
       </Flex>
       {selectedLayout === 'grid' ? (
         <Flex wrap="wrap" justifyContent="flex-start" alignItems="flex-start" gap={6}>
-          {filteredNetworkAssets.map((tokenKey) => (
+          {sortedNetworkAssetKeys.map((tokenKey) => (
             <NetworkAssetItem key={tokenKey} networkAssetKey={tokenKey} />
           ))}
         </Flex>

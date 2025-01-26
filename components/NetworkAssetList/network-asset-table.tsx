@@ -15,6 +15,8 @@ import { TableHeader } from '../table/table-header'
 import { AssetCell } from './asset-cell'
 import { NetworkAssetTooltip } from './NetworkAssetItem/network-asset-tooltip'
 import { useNetworkAssetTableData } from './useNetworkAssetTableData'
+import { useAppSelector } from '@/store/hooks'
+import { selectNetApyLoading } from '@/store/slices/networkAssets'
 
 interface NetworkAssetTableProps {
   selectedAssets: string[]
@@ -23,7 +25,7 @@ interface NetworkAssetTableProps {
 
 export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkAssetTableProps) {
   const router = useRouter()
-  const data = useNetworkAssetTableData()
+  const { data, isLoading } = useNetworkAssetTableData()
 
   const filteredData = useMemo(() => {
     return data.filter((item) => {
@@ -61,16 +63,20 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
     }),
     columnHelper.accessor('apy', {
       header: ({ column }) => <SortableHeader column={column}>APY and Benefits</SortableHeader>,
-      cell: (info) => (
-        <Flex align="center" gap={3}>
-          <Text variant="body-16" w="3em">
-            {info.getValue()}
-          </Text>
-          <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={info.row.original.asset as TokenKey} />}>
-            12 Rewards
-          </AtomTag>
-        </Flex>
-      ),
+      cell: (info) => {
+        const networkAssetCount =
+          networksConfig[NetworkKey.MAINNET].assets[info.row.original.asset as TokenKey]?.points.length
+        return (
+          <Flex align="center" gap={3}>
+            <Text variant="body-16" w="3em">
+              {info.getValue()}
+            </Text>
+            <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={info.row.original.asset as TokenKey} />}>
+              {networkAssetCount} Rewards
+            </AtomTag>
+          </Flex>
+        )
+      },
     }),
     columnHelper.accessor('applications', {
       header: 'Applications',
@@ -109,7 +115,12 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
     <TableContainer width="100%">
       <Table variant="nucleus">
         <TableHeader headerGroups={table.getHeaderGroups()} bg="bg.white" />
-        <TableBody rows={table.getRowModel().rows} handleRowClick={handleClickRow} table={table} />
+        <TableBody
+          rows={table.getRowModel().rows}
+          handleRowClick={handleClickRow}
+          table={table}
+          isLoading={isLoading}
+        />
       </Table>
 
       {/* Bottom Spacer */}

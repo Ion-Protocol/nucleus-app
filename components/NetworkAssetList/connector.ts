@@ -1,10 +1,12 @@
 import { RootState } from '@/store'
-import { selectAllNetworkAssetKeys } from '@/store/slices/networkAssets'
+import { selectAllNetworkAssetKeys, selectBridgesState } from '@/store/slices/networkAssets'
 import { ConnectedProps, connect } from 'react-redux'
 
 const mapState = (state: RootState) => {
   const networkAssetKeys = selectAllNetworkAssetKeys(state)
-  return { networkAssetKeys }
+  const bridgesState = selectBridgesState(state)
+  const tvls = bridgesState.tvl.data
+  return { networkAssetKeys, tvls }
 }
 
 const mapDispatch = {}
