@@ -6,6 +6,7 @@ import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import {
   Flex,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -15,7 +16,7 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight } from '@untitled-ui/icons-react'
 import FulfilledDetails from './withdraw-fulfilled-details'
 import RequestDetails from './withdraw-request-details'
 
@@ -85,7 +86,7 @@ const WithdrawDetailsModal = ({
               <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
               <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${getSymbolByAddress(offer_token)}`}</Text>
             </Flex>
-            <ArrowRight size={16} strokeWidth={1.5} />
+            <Icon as={ArrowRight} boxSize={4} color="element.subdued" />
             {status === 'fulfilled' && (
               <Flex gap={2}>
                 <TokenIcon fontSize="24px" tokenKey={wantTokenKey} />

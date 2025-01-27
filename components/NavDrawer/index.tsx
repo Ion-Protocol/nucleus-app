@@ -1,37 +1,43 @@
 import { discordUrl, docsUrl } from '@/config/constants'
-import { Divider, Flex } from '@chakra-ui/react'
-import { CircleArrowRight } from 'lucide-react'
-import { TokenIcon } from '../config/tokenIcons'
-import { DashboardIcon } from '../shared/icons/Dashboard'
-import { DiscordIcon } from '../shared/icons/Discord'
-import { DocsIcon } from '../shared/icons/Docs'
-import { NetworkAssetNavIcon } from '../shared/icons/NetworkAsset'
-import { PortfolioIcon } from '../shared/icons/Portfolio'
-import { TermsIcon } from '../shared/icons/Terms'
-import { FooterLink } from './FooterLink'
-import { Logo } from './Logo'
-import NavCollapse from './NavCollapse'
-import { NavItem } from './NavItem'
+import { Divider, Flex, chakra, useColorMode } from '@chakra-ui/react'
+import { BookOpen01, CoinsStacked02, Compass02, File02, LogOut04 } from '@untitled-ui/icons-react'
+import { DiscordOutline } from '../shared/icons/DiscordOutline'
+// import { PortfolioIcon } from '../shared/icons/Portfolio'
 import { NavDrawerConnector } from './connector'
+import { Logo } from './Logo'
+import { NavItem } from './NavItem'
 
+export const CompassIcon = chakra(Compass02)
+export const LogOutIcon = chakra(LogOut04)
+export const PortfolioIcon = chakra(CoinsStacked02)
 function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) {
+  const { colorMode } = useColorMode()
+
   return (
     <Flex
+      as="nav"
       direction="column"
       minW="240px"
       maxW="240px"
       borderRight="1px solid"
-      borderColor="border"
-      p={6}
+      borderColor="stroke.main"
       justify="space-between"
-      bg="drawerBackground"
+      bg="bg.main"
+      bgImage={
+        colorMode === 'light'
+          ? `url('/assets/images/navbar-texture-bg-light.webp')`
+          : `url('/assets/images/navbar-texture-bg-dark.webp')`
+      }
+      bgSize="100% 100%"
+      bgPosition="center"
+      bgRepeat="no-repeat"
     >
       <Flex direction="column" flex={1}>
         <Logo />
-        <Flex direction="column" mt={6} gap={1}>
-          <NavItem title="Dashboard" href="/dashboard" leftIcon={<DashboardIcon />} />
-          <NavCollapse title="Mint" leftIcon={<NetworkAssetNavIcon />}>
-            {networkAssets.map((networkAsset) => (
+        <Divider />
+        <NavItem title="Explore" href="/dashboard" leftIcon={CompassIcon} />
+        {/* <NavCollapse title="Mint" leftIcon={<NetworkAssetNavIcon />}> */}
+        {/* {networkAssets.map((networkAsset) => (
               <NavItem
                 key={networkAsset.key}
                 title={networkAsset.token.name}
@@ -42,18 +48,19 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
                 isExternal={networkAsset.isExternal}
                 partnerUrl={networkAsset.partnerUrl}
               />
-            ))}
-          </NavCollapse>
-          <NavItem title="Withdrawal" href="/withdrawal" leftIcon={<CircleArrowRight />} />
-          <NavItem disabled title="Portfolio" href="/portfolio" leftIcon={<PortfolioIcon />} />
-        </Flex>
+            ))} */}
+        {/* </NavCollapse> */}
+        {/* TODO: Reorder these items when portfolio is implemented */}
+        <NavItem title="Withdrawals" href="/withdrawals" leftIcon={LogOutIcon} />
+        <NavItem disabled title="Portfolio" href="/portfolio" leftIcon={PortfolioIcon} comingSoon />
       </Flex>
+      {/* ! Commented out while we build onboarding flow and way to track user progress */}
+      {/* <Divider />
+      <GetStarted /> */}
       <Divider />
-      <Flex pt={6} direction="column">
-        <FooterLink title="Docs" href={docsUrl} icon={<DocsIcon />} openNewTab />
-        <FooterLink title="Discord" href={discordUrl} icon={<DiscordIcon />} openNewTab />
-        <FooterLink title="Terms & Conditions" onClick={openTermsModal} icon={<TermsIcon />} />
-      </Flex>
+      <NavItem title="Docs" href={docsUrl} leftIcon={BookOpen01} isExternal />
+      <NavItem title="Discord" href={discordUrl} leftIcon={DiscordOutline} isExternal />
+      <NavItem title="Terms & Conditions" onClick={openTermsModal} leftIcon={File02} />
     </Flex>
   )
 }
