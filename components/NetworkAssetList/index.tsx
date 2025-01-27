@@ -1,3 +1,4 @@
+import { NetworkKey, networksConfig } from '@/config/networks'
 import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { Button, chakra, Flex, IconButton } from '@chakra-ui/react'
@@ -9,7 +10,6 @@ import { MultiSelectFilter } from '../table/multi-select-filter'
 import { NetworkAssetListConnector } from './connector'
 import { NetworkAssetTable } from './network-asset-table'
 import NetworkAssetItem from './NetworkAssetItem'
-import { NetworkKey, networksConfig } from '@/config/networks'
 
 const LayoutGridIcon = chakra(LucideLayoutGridIcon)
 const ListFilterIcon = chakra(LucideListFilterIcon)
@@ -83,7 +83,7 @@ function NetworkAssetList({ networkAssetKeys, tvls }: NetworkAssetListConnector.
             </Button>
           )}
           <MultiSelectFilter
-            title="by Asset"
+            title="by Asset Type"
             selectedValues={selectedAssets}
             onChange={(addresses: string[]) => setSelectedAssets(addresses as string[])}
             options={tokenAddressMapping}

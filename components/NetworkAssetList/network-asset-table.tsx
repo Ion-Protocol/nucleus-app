@@ -1,8 +1,9 @@
 import { NetworkKey, networksConfig } from '@/config/networks'
 import { DashboardTableDataItem } from '@/types'
 import { TokenKey } from '@/types/TokenKey'
-import { Button, Flex, Table, TableContainer, Text } from '@chakra-ui/react'
+import { Button, Flex, Icon, Table, TableContainer, Text } from '@chakra-ui/react'
 import { createColumnHelper, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
+import { LinkExternal02 } from '@untitled-ui/icons-react'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { tokenAddressMapping } from '.'
@@ -15,8 +16,6 @@ import { TableHeader } from '../table/table-header'
 import { AssetCell } from './asset-cell'
 import { NetworkAssetTooltip } from './NetworkAssetItem/network-asset-tooltip'
 import { useNetworkAssetTableData } from './useNetworkAssetTableData'
-import { useAppSelector } from '@/store/hooks'
-import { selectNetApyLoading } from '@/store/slices/networkAssets'
 
 interface NetworkAssetTableProps {
   selectedAssets: string[]
@@ -85,13 +84,36 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
     columnHelper.display({
       id: 'actions',
       header: '',
-      cell: ({ row }) => (
-        <Flex justify="flex-end">
-          <Button onClick={() => handleClickRow(row.original)} variant="outline" leftIcon={<MintIcon pb="1px" />}>
-            <Text variant="body-16">Mint</Text>
-          </Button>
-        </Flex>
-      ),
+      cell: ({ row }) => {
+        const networkAsset = networksConfig[NetworkKey.MAINNET].assets[row.original.asset as TokenKey]
+        const isExternal = networkAsset?.isExternal
+        return (
+          <Flex justify="flex-end">
+            <Button
+              onClick={() => handleClickRow(row.original)}
+              variant="outline"
+              leftIcon={
+                isExternal ? (
+                  <Icon
+                    as={LinkExternal02}
+                    boxSize={4}
+                    color="base.white"
+                    sx={{
+                      path: {
+                        strokeWidth: '1px',
+                      },
+                    }}
+                  />
+                ) : (
+                  <MintIcon boxSize={4} color="base.white" />
+                )
+              }
+            >
+              <Text variant="body-16">Mint</Text>
+            </Button>
+          </Flex>
+        )
+      },
     }),
   ]
 
@@ -115,12 +137,7 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
     <TableContainer width="100%">
       <Table variant="nucleus">
         <TableHeader headerGroups={table.getHeaderGroups()} bg="bg.white" />
-        <TableBody
-          rows={table.getRowModel().rows}
-          handleRowClick={handleClickRow}
-          table={table}
-          isLoading={isLoading}
-        />
+        <TableBody rows={table.getRowModel().rows} table={table} isLoading={isLoading} />
       </Table>
 
       {/* Bottom Spacer */}

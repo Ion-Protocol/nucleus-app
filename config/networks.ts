@@ -67,7 +67,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 1,
       },
     ],
     redeemComingSoon: false,
@@ -157,7 +157,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
-    protocols: [],
+    protocols: [
+      // ChainKey.OKU, ChainKey.TEAHOUSE
+    ],
   },
   [TokenKey.SSETH]: {
     apys: {},
@@ -179,7 +181,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 1,
       },
     ],
     redeem: {
@@ -368,7 +370,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 1,
       },
     ],
     redeem: {
@@ -689,7 +691,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
     },
-    protocols: [ChainKey.ORCA, ChainKey.INVARIANT, ChainKey.SAVE, ChainKey.ASTROL],
+    protocols: [ChainKey.ORCA, ChainKey.INVARIANT, ChainKey.SAVE, ChainKey.ASTROL, ChainKey.SANDGLASS],
   },
 }
 

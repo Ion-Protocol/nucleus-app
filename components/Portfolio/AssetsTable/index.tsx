@@ -5,13 +5,13 @@ import { NetworkKey, networksConfig } from '@/config/networks'
 import { useAppSelector } from '@/store/hooks'
 import { selectAddress } from '@/store/slices/account'
 import { AssetDataItem, selectAssetData, selectAssetDataLoading } from '@/store/slices/portfolio/selectors'
+import { ChainKey } from '@/types/ChainKey'
+import { TokenKey } from '@/types/TokenKey'
 import { Flex, Table, TableContainer } from '@chakra-ui/react'
 import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
 import { useRouter } from 'next/router'
 import React, { useCallback } from 'react'
 import { createAssetColumns } from './helpers'
-import { ChainKey } from '@/types/ChainKey'
-import { TokenKey } from '@/types/TokenKey'
 
 const loadingData: AssetDataItem[] = Array.from({ length: 3 }, () => ({
   asset: TokenKey.ETH,
@@ -79,7 +79,6 @@ export function AssetsTable() {
         <TableHeader headerGroups={table.getHeaderGroups()} />
         <TableBody
           rows={!isLoading ? table.getRowModel().rows : loadingTable.getRowModel().rows}
-          handleRowClick={() => {}}
           isLoading={isLoading}
           table={table}
         />

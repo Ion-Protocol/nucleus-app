@@ -1,4 +1,3 @@
-import { Order } from '@/types/Order'
 import { Skeleton, Tbody, Td, Tr } from '@chakra-ui/react'
 import { Row, Table, flexRender } from '@tanstack/react-table'
 

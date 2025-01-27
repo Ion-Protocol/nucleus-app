@@ -12,6 +12,7 @@ import { InvariantIcon } from '../shared/icons/Invariant'
 import { JellyverseIcon } from '../shared/icons/Jellyverse'
 import { OrcaIcon } from '../shared/icons/Orca'
 import { RariLargeIcon } from '../shared/icons/RariLarge'
+import { SandglassIcon } from '../shared/icons/Sandglass'
 import { SaveNetworkIcon } from '../shared/icons/SaveNetwork'
 import { SeiLargeIcon } from '../shared/icons/SeiLarge'
 import { SwellLargeIcon } from '../shared/icons/SwellLarge'
@@ -32,6 +33,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.SAVE]: (props) => <SaveNetworkIcon {...props} />,
   [ChainKey.ASTROL]: (props) => <AstrolIcon {...props} />,
   [ChainKey.UNIFI]: (props) => <UnifiLargeIcon {...props} />,
+  [ChainKey.SANDGLASS]: (props) => <SandglassIcon {...props} />,
 }
 
 interface ChainIconMapProps extends IconProps {

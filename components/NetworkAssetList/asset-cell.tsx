@@ -7,7 +7,6 @@ import { CellContext } from '@tanstack/react-table'
 import { ChainIcon } from '../config/chainIcons'
 import { TokenIcon } from '../config/tokenIcons'
 import { IconWithSubIcon } from '../shared/icon-with-sub-icon'
-import { ChainKey } from '@/types/ChainKey'
 
 export function AssetCell({ info }: { info: CellContext<DashboardTableDataItem, TokenKey> }) {
   const { asset: tokenKey, chain: chainKey } = info.row.original
