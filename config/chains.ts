@@ -68,4 +68,13 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.CAMELOT]: {
     name: 'Camelot',
   },
+  [ChainKey.SANDGLASS]: {
+    name: 'Sandglass',
+  },
+  [ChainKey.OKU]: {
+    name: 'Oku',
+  },
+  [ChainKey.TEAHOUSE]: {
+    name: 'Teahouse',
+  },
 }

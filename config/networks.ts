@@ -268,8 +268,28 @@ const mainnetNetworkAssets: NetworkAssets = {
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
     points: [
       {
+        key: PointSystemKey.FORM,
+        name: 'Form',
+        pointsMultiplier: 3,
+      },
+      {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
+        pointsMultiplier: 3,
+      },
+      {
+        key: PointSystemKey.RENZO,
+        name: 'ezPoints',
+        pointsMultiplier: 2,
+      },
+      {
+        key: PointSystemKey.SYMBIOTIC,
+        name: 'Symbiotic',
+        pointsMultiplier: 0.5,
+      },
+      {
+        key: PointSystemKey.MELLOW,
+        name: 'Mellow',
         pointsMultiplier: 1,
       },
     ],
