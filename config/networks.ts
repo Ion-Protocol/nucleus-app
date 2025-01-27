@@ -70,14 +70,18 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 2,
       },
     ],
-    redeemComingSoon: true,
+    redeemComingSoon: false,
     redeem: {
-      layerZeroChainSelector: 1, // Hyperlane Domain Identifier
+      hyperlaneChainSelector: 1, // Hyperlane Domain Identifier
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
+        },
+        [ChainKey.BOBA]: {
+          chain: ChainKey.BOBA,
+          explorerBaseUrl: bobaExplorerBaseURL,
         },
       },
       redemptionSourceAsset: TokenKey.BOBAETH,
@@ -98,21 +102,33 @@ const mainnetNetworkAssets: NetworkAssets = {
             token: tokensConfig[TokenKey.WETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
-          [TokenKey.SFRXETH]: {
-            token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Custom fee for SFRXETH
-          },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Custom fee for APXETH
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.RSWETH]: {
+            token: tokensConfig[TokenKey.RSWETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.EZETH]: {
+            token: tokensConfig[TokenKey.EZETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.WEETH]: {
+            token: tokensConfig[TokenKey.WEETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
+          [TokenKey.WSTETH]: {
+            token: tokensConfig[TokenKey.WSTETH],
+            withdrawalFee: defaultWithdrawalFee,
           },
         },
-        // [ChainKey.BOBA]: {
-        //   [TokenKey.WETH]: {
-        //     token: tokensConfig[TokenKey.WETH],
-        //     withdrawalFee: 0,
-        //   },
-        // },
+        [ChainKey.BOBA]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: 0.01,
+          },
+        },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
       withdrawalFee: defaultWithdrawalFee,
@@ -141,6 +157,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
+    protocols: [],
   },
   [TokenKey.SSETH]: {
     apys: {},
@@ -231,6 +248,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     token: tokensConfig[TokenKey.SSETH],
+    protocols: [ChainKey.JELLYVERSE],
   },
   [TokenKey.FETH]: {
     apys: {},
@@ -249,12 +267,12 @@ const mainnetNetworkAssets: NetworkAssets = {
     points: [
       {
         key: PointSystemKey.FORM,
-        name: 'Form Points',
+        name: 'Form',
         pointsMultiplier: 3,
       },
       {
         key: PointSystemKey.NUCLEUS,
-        name: 'Nucleus Points',
+        name: 'Nucleus',
         pointsMultiplier: 3,
       },
       {
@@ -264,12 +282,12 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       {
         key: PointSystemKey.SYMBIOTIC,
-        name: 'Symbiotic Points',
+        name: 'Symbiotic',
         pointsMultiplier: 0.5,
       },
       {
         key: PointSystemKey.MELLOW,
-        name: 'Mellow Points',
+        name: 'Mellow',
         pointsMultiplier: 1,
       },
     ],
@@ -324,6 +342,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
     },
     token: tokensConfig[TokenKey.FETH],
+    protocols: [],
   },
   [TokenKey.RARIETH]: {
     apys: {},
@@ -359,6 +378,10 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
+        },
+        [ChainKey.RARI]: {
+          chain: ChainKey.RARI,
+          explorerBaseUrl: rariExplorerBaseUrl,
         },
       },
       redemptionSourceChain: ChainKey.RARI,
@@ -404,6 +427,12 @@ const mainnetNetworkAssets: NetworkAssets = {
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
+        [ChainKey.RARI]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: 0, // Default 0.2%,
+          },
+        },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
       withdrawalFee: defaultWithdrawalFee,
@@ -433,6 +462,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.RARI]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.RARIETH],
+    protocols: [],
   },
   [TokenKey.UNIFIETH]: {
     apys: {},
@@ -510,6 +540,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
     },
+    protocols: [],
   },
   [TokenKey.EARNETH]: {
     apys: {},
@@ -586,6 +617,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
     },
+    protocols: [],
   },
   [TokenKey.TETH]: {
     apys: {},
@@ -657,6 +689,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
     },
+    protocols: [ChainKey.ORCA, ChainKey.INVARIANT, ChainKey.SAVE, ChainKey.ASTROL],
   },
 }
 

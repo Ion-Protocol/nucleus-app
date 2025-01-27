@@ -18,6 +18,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     key: TokenKey.WETH,
     name: 'WETH',
     symbol: 'WETH',
+    fullName: 'Wrapped ETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       [ChainKey.SEI]: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
@@ -214,6 +215,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     key: TokenKey.RARIETH,
     name: 'rari',
     symbol: 'RARI',
+    fullName: 'Rari ETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
     },

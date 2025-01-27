@@ -29,16 +29,18 @@ export function numberToPercent(value: number, decimals: number = 1): string {
   return `${value.toFixed(decimals)}%`
 }
 
-export function abbreviateNumber(num: number): string {
+export function abbreviateNumber(num: number, opts?: { decimals?: number; abbreviateThousands?: boolean }): string {
   if (num >= 1_000_000_000) {
-    return `$${(num / 1_000_000_000).toFixed(2)}B`
+    return `$${(num / 1_000_000_000).toFixed(opts?.decimals || 2)}B`
   } else if (num >= 1_000_000) {
-    return `$${(num / 1_000_000).toFixed(2)}M`
+    return `$${(num / 1_000_000).toFixed(opts?.decimals || 2)}M`
+  } else if (num >= 1_000 && opts?.abbreviateThousands) {
+    return `$${(num / 1_000).toFixed(opts?.decimals || 2)}K`
   } else {
     return num.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
-      maximumFractionDigits: 0,
+      maximumFractionDigits: opts?.decimals || 0,
     })
   }
 }
@@ -174,4 +176,20 @@ export function truncateToSignificantDigits(numStr: string, significantDigits: n
   }
 
   return truncatedStr
+}
+
+export function smartRoundDown(decimalString: string): string {
+  // Convert the input string to a number
+  const value = parseFloat(decimalString)
+
+  // Optional: handle invalid input (e.g., non-numeric string)
+  if (isNaN(value)) {
+    throw new Error(`Invalid decimal input: ${decimalString}`)
+  }
+
+  // Truncate to 2 decimal places
+  const truncated = Math.floor(value * 100) / 100
+
+  // Convert back to string; toString() naturally removes trailing zeroes
+  return truncated.toString()
 }

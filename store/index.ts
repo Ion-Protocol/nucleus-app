@@ -13,6 +13,7 @@ import { routerReducer } from './slices/router/slice'
 import { statusReducer } from './slices/status/slice'
 import { dialogReducer } from './slices/stepDialog/slice'
 import { UIReducer } from './slices/ui/slice'
+import { portfolioReducer } from './slices/portfolio/slice'
 import { userProofApi } from './slices/userProofSlice/apiSlice'
 
 import { deserialize, serialize } from 'wagmi'
@@ -43,10 +44,11 @@ const apiMiddlewares = [
 export const store = configureStore({
   reducer: {
     account: accountReducer,
-    dialog: dialogReducer,
     balances: balancesReducer,
-    networkAssets: networkAssetsReducer,
+    dialog: dialogReducer,
     network: networkReducer,
+    networkAssets: networkAssetsReducer,
+    portfolio: portfolioReducer,
     price: priceReducer,
     router: routerReducer,
     status: statusReducer,

@@ -52,7 +52,7 @@ function NavDrawer({ networkAssets, openTermsModal }: NavDrawerConnector.Props) 
         {/* </NavCollapse> */}
         {/* TODO: Reorder these items when portfolio is implemented */}
         <NavItem title="Withdrawals" href="/withdrawals" leftIcon={LogOutIcon} />
-        <NavItem title="Portfolio" href="/portfolio" leftIcon={PortfolioIcon} disabled comingSoon />
+        <NavItem disabled title="Portfolio" href="/portfolio" leftIcon={PortfolioIcon} comingSoon />
       </Flex>
       {/* ! Commented out while we build onboarding flow and way to track user progress */}
       {/* <Divider />

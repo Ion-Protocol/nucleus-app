@@ -4,10 +4,10 @@ import { Row, Table, flexRender } from '@tanstack/react-table'
 
 // TODO: update to be a generic type instead of order?
 interface TableBodyProps {
-  table: Table<Order>
-  rows: Row<Order>[]
-  handleRowClick: (order: Order) => void
-  isLoading: boolean
+  table: Table<any>
+  rows: Row<any>[]
+  handleRowClick?: (data: any) => void
+  isLoading?: boolean
 }
 
 export function TableBody({ rows, handleRowClick, isLoading, table }: TableBodyProps) {
@@ -30,9 +30,11 @@ export function TableBody({ rows, handleRowClick, isLoading, table }: TableBodyP
   return (
     <Tbody>
       {rows.map((row) => (
-        <Tr key={row.id} onClick={() => handleRowClick(row.original)}>
+        <Tr key={row.id} onClick={() => handleRowClick?.(row.original)}>
           {row.getVisibleCells().map((cell) => (
-            <Td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</Td>
+            <Td key={cell.id} textAlign="left" pl={3}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </Td>
           ))}
         </Tr>
       ))}

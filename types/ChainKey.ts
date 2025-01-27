@@ -8,4 +8,11 @@ export enum ChainKey {
   DINERO = 'dinero',
   FORM = 'form',
   UNIFI = 'UniFi',
+  ORCA = 'orca',
+  INVARIANT = 'invariant',
+  SAVE = 'save',
+  ASTROL = 'astrol',
+  JELLYVERSE = 'jellyverse',
+  YEI = 'yei',
+  CAMELOT = 'camelot',
 }

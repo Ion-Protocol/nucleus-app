@@ -23,6 +23,10 @@ export type WithdrawalParams = {
   limit?: number
 }
 
+export type TvlResponse = {
+  currentTvlInUsd: number
+}
+
 // Define a service using a base URL and expected endpoints
 export const nucleusBackendApi = createApi({
   reducerPath: 'nucleusBackendApi',
@@ -60,7 +64,10 @@ export const nucleusBackendApi = createApi({
         return `v1/protocol/withdrawals?${params.toString()}`
       },
     }),
+    getTvl: builder.query<TvlResponse, void>({
+      query: () => `v1/protocol/tvl`,
+    }),
   }),
 })
 
-export const { useGetDefaultYieldAPYQuery, useWithdrawalOrdersByUserQuery } = nucleusBackendApi
+export const { useGetDefaultYieldAPYQuery, useWithdrawalOrdersByUserQuery, useGetTvlQuery } = nucleusBackendApi

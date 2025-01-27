@@ -1,11 +1,12 @@
 import { ChakraProps, Flex, Text } from '@chakra-ui/react'
 
 interface MultiIconProps extends ChakraProps {
-  icons: React.ReactNode[]
+  icons?: React.ReactNode[]
   max?: number
 }
 
 export function MultiIcon({ icons, max = 4, ...props }: MultiIconProps) {
+  if (!icons || icons.length === 0) return null
   return (
     <Flex align="center">
       <Flex position="relative" alignItems="center" h="24px" w={`${Math.min(icons.length, max) * 24}px`} {...props}>
