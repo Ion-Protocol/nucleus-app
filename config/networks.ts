@@ -67,7 +67,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 1,
       },
     ],
     redeemComingSoon: false,
@@ -157,7 +157,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
-    protocols: [],
+    protocols: [
+      // ChainKey.OKU, ChainKey.TEAHOUSE
+    ],
   },
   [TokenKey.SSETH]: {
     apys: {},
@@ -179,7 +181,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 1,
       },
     ],
     redeem: {
@@ -266,28 +268,8 @@ const mainnetNetworkAssets: NetworkAssets = {
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
     points: [
       {
-        key: PointSystemKey.FORM,
-        name: 'Form',
-        pointsMultiplier: 3,
-      },
-      {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 3,
-      },
-      {
-        key: PointSystemKey.RENZO,
-        name: 'ezPoints',
-        pointsMultiplier: 2,
-      },
-      {
-        key: PointSystemKey.SYMBIOTIC,
-        name: 'Symbiotic',
-        pointsMultiplier: 0.5,
-      },
-      {
-        key: PointSystemKey.MELLOW,
-        name: 'Mellow',
         pointsMultiplier: 1,
       },
     ],
@@ -368,7 +350,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 2,
+        pointsMultiplier: 1,
       },
     ],
     redeem: {
@@ -689,7 +671,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
     },
-    protocols: [ChainKey.ORCA, ChainKey.INVARIANT, ChainKey.SAVE, ChainKey.ASTROL],
+    protocols: [ChainKey.ORCA, ChainKey.INVARIANT, ChainKey.SAVE, ChainKey.ASTROL, ChainKey.SANDGLASS],
   },
 }
 

@@ -15,4 +15,7 @@ export enum ChainKey {
   JELLYVERSE = 'jellyverse',
   YEI = 'yei',
   CAMELOT = 'camelot',
+  SANDGLASS = 'sandglass',
+  OKU = 'oku',
+  TEAHOUSE = 'teahouse',
 }
