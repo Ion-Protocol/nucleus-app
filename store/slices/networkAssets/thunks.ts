@@ -258,6 +258,7 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
 
     // Await for shares results
     const totalSharesResults = await Promise.allSettled(promises)
+    // console.log('totalSharesResults', networkAssetConfig.token.symbol, totalSharesResults)
 
     const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
@@ -268,6 +269,18 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
       return total
     }, BigInt(0)) // Start with 0n as BigInt
 
+    // console.log('calculateTotalSupply', tokenKey, calculateTotalSupply)
+    if (tokenKey === TokenKey.EARNBTC) {
+      console.log('calculateTotalShares in if Check', tokenKey, totalSharesResults)
+      const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
+      console.log('tokenPerShareRate in if Check', tokenKey, tokenPerShareRate)
+      const tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(10 ** 10)) / WAD.bigint
+      console.log('tvlInToken in if Check', tokenKey, tvlInToken)
+      const tvlAsString = tvlInToken.toString()
+      console.log('tvlAsString in if Check', tokenKey, tvlAsString)
+
+      return { tvl: tvlAsString, tokenKey }
+    }
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
 
@@ -576,7 +589,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
     } catch (e) {
       console.error(e)
       const error = e as Error
-      // const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
+      // const errorMessage = `Your transaction was submitted but we couldn't verify its completion. Please look at your wallet transactions to verify a successful transaction.`
       const errorMessage = `Deposit failed`
       const fullErrorMessage = `${errorMessage}\n${error.message}`
       dispatch(setErrorTitle('Deposit Not Verified'))

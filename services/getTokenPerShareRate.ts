@@ -23,8 +23,9 @@ class RateForTeth implements RateFetchingStrategy {
 class RateForEarnETH implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     const wbtcPerShareExchangeRate = await getRate(accountantAddress) // 1e9
+    console.log('wbtcPerShareExchangeRate', wbtcPerShareExchangeRate)
     const { answer: btcPerWbtcExchangeRate } = await latestRoundData(contractAddresses.chainlinkBtcPerWbtc) // 1e9
-
+    console.log('btcPerWbtcExchangeRate', btcPerWbtcExchangeRate)
     // Convert WBTC/share to BTC/share
     return wbtcPerShareExchangeRate * btcPerWbtcExchangeRate // 1e18
   }
@@ -52,6 +53,7 @@ export async function getTokenPerShareRate(networkAssetKey: TokenKey, accountant
     [TokenKey.TETH]: new DefaultRateFetchingStrategy(),
     [TokenKey.EARNETH]: new DefaultRateFetchingStrategy(),
     [TokenKey.FETH]: new DefaultRateFetchingStrategy(),
+    [TokenKey.EARNBTC]: new DefaultRateFetchingStrategy(),
   }
 
   const rateStrategy = rateStrategies[networkAssetKey] || new DefaultRateFetchingStrategy()

@@ -113,6 +113,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'EARNBTC',
     addresses: {
       [ChainKey.ETHEREUM]: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
+      [ChainKey.SWELL]: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
     },
   },
   [TokenKey.EARNETH]: {
@@ -248,7 +249,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     key: TokenKey.BOBAETH,
     name: 'bobaETH',
     fullName: 'Boba ETH',
-    symbol: 'bobaETH',
+    symbol: 'BOBAETH',
     addresses: {
       [ChainKey.BOBA]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
       [ChainKey.ETHEREUM]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',

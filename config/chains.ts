@@ -77,4 +77,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.TEAHOUSE]: {
     name: 'Teahouse',
   },
+  [ChainKey.NEPTUNE]: {
+    name: 'Neptune',
+  },
 }

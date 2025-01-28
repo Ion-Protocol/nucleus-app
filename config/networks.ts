@@ -157,9 +157,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
-    protocols: [
-      // ChainKey.OKU, ChainKey.TEAHOUSE
-    ],
+    protocols: [ChainKey.OKU, ChainKey.TEAHOUSE],
   },
   [TokenKey.SSETH]: {
     apys: {},
@@ -691,8 +689,169 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
     },
-    protocols: [ChainKey.ORCA, ChainKey.INVARIANT, ChainKey.SAVE, ChainKey.ASTROL, ChainKey.SANDGLASS],
+    protocols: [
+      ChainKey.ORCA,
+      ChainKey.INVARIANT,
+      ChainKey.SAVE,
+      ChainKey.ASTROL,
+      ChainKey.SANDGLASS,
+      ChainKey.NEPTUNE,
+    ],
   },
+  [TokenKey.EARNBTC]: {
+    apys: {},
+    token: tokensConfig[TokenKey.EARNBTC],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
+    comingSoon: false,
+    isExternal: true,
+    partnerUrl: 'https://app.swellnetwork.io/earn/earnbtc',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.EARNBTC),
+    chain: ChainKey.SWELL,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+      [ChainKey.SWELL]: {
+        chain: ChainKey.SWELL,
+        explorerBaseUrl: swellExplorerBaseURL,
+      },
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    contracts: {
+      teller: '0x651F908702F23D794dC54FA36D77DFB6E35F0924',
+      accountant: '0x6bBf58f1A95D22f497fD2e7f640fAE94481b1A08',
+      boringVault: '0x66E47E6957B85Cf62564610B76dD206BB04d831a',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 3,
+      },
+    ],
+    redeem: {
+      withdrawalFee: defaultWithdrawalFee,
+      redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.EARNETH,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.SWELL,
+      layerZeroChainSelector: 0,
+      wantTokens: {
+        [ChainKey.ETHEREUM]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+          [TokenKey.SFRXETH]: {
+            token: tokensConfig[TokenKey.SFRXETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+          [TokenKey.APXETH]: {
+            token: tokensConfig[TokenKey.APXETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+        },
+      },
+    },
+    protocols: [],
+  },
+  // [TokenKey.NELIXER]: {
+  //   apys: {},
+  //   token: tokensConfig[TokenKey.NELIXER],
+  //   description:
+  //     'Connect your wallet, select your deposit asset, and mint the Swell ETH Default Yield Asset as you prepare to explore the Swell Chain Ecosystem',
+  //   comingSoon: false,
+  //   isExternal: true,
+  //   partnerUrl: 'https://app.swellnetwork.io/earn/earnbtc',
+  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.EARNBTC),
+  //   chain: ChainKey.SWELL,
+  //   deployedOn: ChainKey.ETHEREUM,
+  //   sourceChains: {
+  //     [ChainKey.ETHEREUM]: {
+  //       chain: ChainKey.ETHEREUM,
+  //       explorerBaseUrl: etherscanBaseUrl,
+  //     },
+  //     [ChainKey.SWELL]: {
+  //       chain: ChainKey.SWELL,
+  //       explorerBaseUrl: swellExplorerBaseURL,
+  //     },
+  //   },
+  //   defaultMintChain: ChainKey.ETHEREUM,
+  //   defaultRedemptionChain: ChainKey.ETHEREUM,
+  //   sourceTokens: {
+  //     [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+  //   },
+  //   contracts: {
+  //     teller: '0x651F908702F23D794dC54FA36D77DFB6E35F0924',
+  //     accountant: '0x6bBf58f1A95D22f497fD2e7f640fAE94481b1A08',
+  //     boringVault: '0x66E47E6957B85Cf62564610B76dD206BB04d831a',
+  //   },
+  //   receiveOn: ChainKey.ETHEREUM,
+  //   points: [
+  //     {
+  //       key: PointSystemKey.NUCLEUS,
+  //       name: 'Nucleus',
+  //       pointsMultiplier: 3,
+  //     },
+  //   ],
+  //   redeem: {
+  //     withdrawalFee: defaultWithdrawalFee,
+  //     redemptionSourceChain: ChainKey.ETHEREUM,
+  //     redemptionSourceChains: {
+  //       [ChainKey.ETHEREUM]: {
+  //         chain: ChainKey.ETHEREUM,
+  //         explorerBaseUrl: layerZeroBaseUrl,
+  //       },
+  //     },
+  //     redemptionSourceAsset: TokenKey.EARNETH,
+  //     redemptionDestinationChain: ChainKey.ETHEREUM,
+  //     redemptionDestinationChains: {
+  //       [ChainKey.ETHEREUM]: {
+  //         chain: ChainKey.ETHEREUM,
+  //         explorerBaseUrl: layerZeroBaseUrl,
+  //       },
+  //     },
+  //     withdrawalChain: ChainKey.SWELL,
+  //     layerZeroChainSelector: 0,
+  //     wantTokens: {
+  //       [ChainKey.ETHEREUM]: {
+  //         [TokenKey.WETH]: {
+  //           token: tokensConfig[TokenKey.WETH],
+  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+  //         },
+  //         [TokenKey.SFRXETH]: {
+  //           token: tokensConfig[TokenKey.SFRXETH],
+  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+  //         },
+  //         [TokenKey.APXETH]: {
+  //           token: tokensConfig[TokenKey.APXETH],
+  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+  //         },
+  //       },
+  //     },
+  //   },
+  //   protocols: [],
+  // },
 }
 
 export const networksConfig: Record<NetworkKey, NetworkConfig> = {
