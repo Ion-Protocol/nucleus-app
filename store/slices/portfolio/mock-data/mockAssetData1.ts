@@ -1,0 +1,68 @@
+export const mockAssetData = [
+  {
+    asset: 'ssETH',
+    network: 'Sei',
+    earningsApy: 3.98,
+    amount: 3.14,
+    usdValue: 49000,
+    rewardCount: 12,
+  },
+  {
+    asset: 'WETH',
+    network: 'Sei',
+    earningsApy: 3.98,
+    amount: 3.14,
+    usdValue: 100,
+    rewardCount: 12,
+  },
+  {
+    asset: 'FETH',
+    network: 'Form',
+    earningsApy: 4.0,
+    amount: 2.78,
+    usdValue: 49000,
+    rewardCount: 12,
+  },
+  {
+    asset: 'WETH',
+    network: 'Form',
+    earningsApy: 3.98,
+    amount: 3.14,
+    usdValue: 8000,
+    rewardCount: 12,
+  },
+  {
+    asset: 'rariETH',
+    network: 'Rari',
+    earningsApy: 4.0,
+    amount: 1.4,
+    usdValue: 12000,
+    rewardCount: 12,
+  },
+
+  // Other items
+  {
+    asset: 'pzETH',
+    network: 'Swell',
+    earningsApy: 4.0,
+    amount: 1.4,
+    usdValue: 100,
+    rewardCount: 12,
+  },
+  {
+    asset: 'wstETH',
+    network: 'Swell',
+    earningsApy: 4.0,
+    amount: 1.4,
+    usdValue: 200,
+    rewardCount: 12,
+  },
+  {
+    asset: 'RSWETH',
+    network: 'Swell',
+    earningsApy: 4.0,
+    amount: 1.4,
+    usdValue: 300,
+    rewardCount: 12,
+  },
+]

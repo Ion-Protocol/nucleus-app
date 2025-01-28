@@ -4,7 +4,7 @@ import { Flex, Icon, Text } from '@chakra-ui/react'
 import { Dot } from 'lucide-react'
 
 interface StatusBadgeProps {
-  status: Order['status']
+  status: 'pending' | 'fulfilled' | 'cancelled'
 }
 
 export function StatusBadge({ status }: StatusBadgeProps) {

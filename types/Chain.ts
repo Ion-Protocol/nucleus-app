@@ -30,7 +30,7 @@ export interface NetworkAsset {
   points: PointSystem[]
   redeem: {
     hyperlaneChainSelector?: number
-    layerZeroChainSelector: number
+    layerZeroChainSelector?: number
     redemptionDestinationChain: ChainKey
     redemptionDestinationChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
     redemptionSourceAsset: TokenKey
@@ -48,6 +48,7 @@ export interface NetworkAsset {
     [chain in ChainKey]: TokenKey[]
   }>
   token: Token
+  protocols: ChainKey[]
 }
 
 export type NetworkAssets = Partial<Record<TokenKey, NetworkAsset>>

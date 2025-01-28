@@ -4,7 +4,7 @@ import OrdersTable from '@/components/orders-table'
 import { selectAddress } from '@/store/slices/account'
 import { useWithdrawalOrdersByUserQuery } from '@/store/slices/nucleusBackendApi'
 import { ClockArrowUp } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 export default function Withdrawals() {
@@ -30,8 +30,9 @@ export default function Withdrawals() {
     }
   )
 
-  // ! Try to move this logic into the table
-  const filteredData = orders ? orders.filter((row) => Number(row.amount) !== 0) : []
+  const filteredData = useMemo(() => {
+    return orders ? orders.filter((row) => Number(row.amount) !== 0) : []
+  }, [orders])
 
   return (
     <Flex p={8} direction="column" pb="150px" bg={'bg.white'}>

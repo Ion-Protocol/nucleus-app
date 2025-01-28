@@ -2,8 +2,8 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { TokenKey } from '@/types/TokenKey'
 import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
-import { AlertDialogBody, Flex, Text } from '@chakra-ui/react'
-import { ArrowRight } from 'lucide-react'
+import { AlertDialogBody, Flex, Icon, Text } from '@chakra-ui/react'
+import { ArrowRight } from '@untitled-ui/icons-react'
 import { Address } from 'viem'
 import RequestDetails from '../WithdrawalDetailModal/withdraw-request-details'
 
@@ -44,7 +44,7 @@ const CancelWithdrawDialogBody = ({
         <Flex gap={2} justifyContent="center" alignItems="center">
           <TokenIcon fontSize="24px" tokenKey={offerTokenKey} />
           <Text fontSize="xl" fontFamily="ppformula">{`${displayAmount} ${getSymbolByAddress(offer_token)}`}</Text>
-          <ArrowRight size={16} strokeWidth={1.5} />
+          <Icon as={ArrowRight} boxSize={4} color="element.subdued" />
           {status === 'pending' && (
             <Text fontSize="xl" fontFamily="ppformula" color="element.subdued">
               Pending...

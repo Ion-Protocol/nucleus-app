@@ -47,4 +47,34 @@ export const chainsConfig: Record<ChainKey, Chain> = {
     name: 'Boba',
     id: boba.id,
   },
+  [ChainKey.ORCA]: {
+    name: 'Orca',
+  },
+  [ChainKey.INVARIANT]: {
+    name: 'Invariant',
+  },
+  [ChainKey.SAVE]: {
+    name: 'Save',
+  },
+  [ChainKey.ASTROL]: {
+    name: 'Astrol',
+  },
+  [ChainKey.JELLYVERSE]: {
+    name: 'Jellyverse',
+  },
+  [ChainKey.YEI]: {
+    name: 'Yei',
+  },
+  [ChainKey.CAMELOT]: {
+    name: 'Camelot',
+  },
+  [ChainKey.SANDGLASS]: {
+    name: 'Sandglass',
+  },
+  [ChainKey.OKU]: {
+    name: 'Oku',
+  },
+  [ChainKey.TEAHOUSE]: {
+    name: 'Teahouse',
+  },
 }

@@ -1,7 +1,7 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { Chain, chainsConfig } from '@/config/chains'
 import { defaultWithdrawalFee, hardcodedApy, nativeAddress } from '@/config/constants'
-import { networksConfig } from '@/config/networks'
+import { NetworkKey, networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { type BridgeData } from '@/store/slices/tellerApi'
@@ -24,6 +24,7 @@ import { selectNetworkAssetFromRoute } from '../router'
 import { selectTransactionExplorerUrl } from '../status'
 import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { calculateApy } from './calculateApy'
+import { DashboardTableDataItem } from '@/types'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -47,11 +48,8 @@ export const selectRedeemSourceChain = (state: RootState) => state.networkAssets
 export const selectRedemptionSourceChainKey = (state: RootState) => state.networkAssets.redeemSourceChain
 
 export const selectRedemptionDestinationChainKey = (state: RootState) => {
-  const networkAssetConfig = selectNetworkAssetConfig(state)
-  if (!networkAssetConfig) {
-    return null
-  }
-  return networkAssetConfig.redeem.redemptionDestinationChain
+  const withdrawalDestinationChainKey = selectBridgesState(state).redeemDestinationChain
+  return withdrawalDestinationChainKey
 }
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
@@ -122,12 +120,32 @@ export const selectRedeemLayerZeroChainSelector = (state: RootState): number => 
   return networkAssetConfig?.redeem.layerZeroChainSelector || 0
 }
 
+export const selectRedeemHyperlaneChainSelector = (state: RootState): number => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  return networkAssetConfig?.redeem.hyperlaneChainSelector || 0
+}
+
 // DO NOT memoize: Direct lookup; returns a value from configuration.
 export const selectReceiveOnChain = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   if (!networkAssetConfig) return null
   return networkAssetConfig.redeem?.redemptionDestinationChain
 }
+
+export const selectNetworkCount = createSelector(
+  (state: RootState) => networksConfig[NetworkKey.MAINNET],
+  (networkConfig) => {
+    const networkAssetsAsArray = Object.keys(networkConfig.assets)
+    const uniqueChains: ChainKey[] = []
+    for (const networkAsset of networkAssetsAsArray) {
+      const chain = networkConfig.assets[networkAsset as TokenKey]?.chain
+      if (chain && !uniqueChains.includes(chain)) {
+        uniqueChains.push(chain)
+      }
+    }
+    return uniqueChains.length
+  }
+)
 
 /////////////////////////////////////////////////////////////////////
 // Nav Drawer
@@ -274,6 +292,28 @@ export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
   const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
   const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
   return abbreviateNumber(tvlInUsdAsNumber)
+}
+
+export const selectTotalTvl = (state: RootState) => {
+  const tvl = Object.values(state.networkAssets.tvl.data).reduce((acc, curr) => acc + BigInt(curr), BigInt(0))
+  return tvl
+}
+
+export const selectFormattedTotalTvl = (state: RootState) => {
+  const tvl = selectTotalTvl(state)
+  const price = selectUsdPerEthRate(state)
+  const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+  const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+
+  // Format the number as currency in USD
+  const formattedTvlInUsd = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(tvlInUsdAsNumber)
+
+  return formattedTvlInUsd
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -793,11 +833,12 @@ export const selectDepositBridgeData = createSelector(
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
 export const selectRedeemBridgeData = createSelector(
-  [selectRedeemLayerZeroChainSelector, selectAddress],
-  (selectRedeemLayerZeroChainSelector, userAddress): BridgeData | null => {
+  [selectRedeemLayerZeroChainSelector, selectRedeemHyperlaneChainSelector, selectAddress],
+  (redeemLayerZeroChainSelector, redeemHyperlaneChainSelector, userAddress): BridgeData | null => {
     if (!userAddress) return null
+    const chainSelector = redeemHyperlaneChainSelector ? redeemHyperlaneChainSelector : redeemLayerZeroChainSelector
     return {
-      chainSelector: selectRedeemLayerZeroChainSelector,
+      chainSelector: chainSelector,
       destinationChainReceiver: userAddress,
       bridgeFeeToken: nativeAddress,
       messageGas: BigInt(100000),
@@ -820,10 +861,15 @@ export const selectWithdrawalFee = (state: RootState): number => {
   const chainConfig = selectNetworkAssetConfig(state)
   const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
   const receiveTokenKey = selectReceiveTokenKey(state)
-  return (
-    chainConfig?.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawalFee ||
-    defaultWithdrawalFee
-  )
+
+  if (!chainConfig || !redemptionDestinationChainKey || !receiveTokenKey) {
+    return defaultWithdrawalFee
+  }
+
+  const withdrawalFee =
+    chainConfig.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawalFee
+  // Allow 0 but use default for null/undefined
+  return withdrawalFee !== null && withdrawalFee !== undefined ? withdrawalFee : defaultWithdrawalFee
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.

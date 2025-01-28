@@ -1,6 +1,6 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Icon } from '@chakra-ui/react'
 import { Column } from '@tanstack/react-table'
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
+import { ArrowDown, ArrowUp, SwitchVertical01 } from '@untitled-ui/icons-react'
 import React from 'react'
 
 interface SortableHeaderProps<T> {
@@ -21,11 +21,11 @@ export function SortableHeader<T>({ column, children }: SortableHeaderProps<T>) 
     >
       {children}
       {column.getIsSorted() === 'asc' ? (
-        <ArrowUp size={16} />
+        <Icon as={ArrowUp} fontSize={16} />
       ) : column.getIsSorted() === 'desc' ? (
-        <ArrowDown size={16} />
+        <Icon as={ArrowDown} fontSize={16} />
       ) : (
-        <ArrowUpDown size={16} />
+        <Icon as={SwitchVertical01} fontSize={16} />
       )}
     </Box>
   )

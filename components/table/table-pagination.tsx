@@ -1,5 +1,5 @@
-import { Flex, HStack, IconButton, Text } from '@chakra-ui/react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Flex, HStack, Icon, IconButton, Text } from '@chakra-ui/react'
+import { ChevronLeft, ChevronRight } from '@untitled-ui/icons-react'
 
 interface PaginationProps {
   currentPage: number
@@ -38,27 +38,29 @@ export function Pagination({
         </Text>
       </HStack>
 
-      <HStack spacing={1}>
+      <Flex alignItems="center" gap={2}>
         <Text fontSize="sm" color="element.main">
           Page {currentPage} / {totalPages}
         </Text>
-        <IconButton
-          variant="ghost"
-          aria-label="Previous page"
-          icon={<ChevronLeft size={16} />}
-          size="sm"
-          isDisabled={hasPreviousPage}
-          onClick={onPreviousPage}
-        />
-        <IconButton
-          variant="ghost"
-          aria-label="Next page"
-          icon={<ChevronRight size={16} />}
-          size="sm"
-          isDisabled={hasNextPage}
-          onClick={onNextPage}
-        />
-      </HStack>
+        <Flex>
+          <IconButton
+            variant="ghost"
+            aria-label="Previous page"
+            icon={<Icon as={ChevronLeft} boxSize={4} />}
+            size="sm"
+            isDisabled={hasPreviousPage}
+            onClick={onPreviousPage}
+          />
+          <IconButton
+            variant="ghost"
+            aria-label="Next page"
+            icon={<Icon as={ChevronRight} boxSize={4} />}
+            size="sm"
+            isDisabled={hasNextPage}
+            onClick={onNextPage}
+          />
+        </Flex>
+      </Flex>
     </Flex>
   )
 }

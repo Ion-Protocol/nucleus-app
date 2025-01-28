@@ -1,6 +1,6 @@
 import { FormattedAmount } from '@/components/table/formatted-amount'
 import { SortableHeader } from '@/components/table/sortable-header'
-import { Order } from '@/types/Order'
+import { Order, OrderStatus } from '@/types/Order'
 import { Box, Button } from '@chakra-ui/react'
 import { createColumnHelper } from '@tanstack/react-table'
 import { X } from 'lucide-react'
@@ -14,7 +14,7 @@ export const createOrderColumns = (onCancelOrder: (order: Order) => void) => [
   columnHelper.accessor('status', {
     header: 'Status',
     filterFn: 'arrIncludesSome',
-    cell: (info) => <StatusBadge status={info.getValue()} />,
+    cell: (info) => <StatusBadge status={info.getValue() as 'pending' | 'fulfilled' | 'cancelled'} />,
   }),
   columnHelper.accessor('offer_token', {
     header: 'Asset',

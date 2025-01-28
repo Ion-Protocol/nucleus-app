@@ -1,7 +1,7 @@
 import { OrderStatus } from '@/types/Order'
 import { Flex, Icon, Link, Text } from '@chakra-ui/react'
+import { ArrowRight, LinkExternal02 } from '@untitled-ui/icons-react'
 import { format, fromUnixTime } from 'date-fns'
-import { ArrowRight, SquareArrowOutUpRight } from 'lucide-react'
 
 interface DateCellProps {
   date: string
@@ -45,7 +45,16 @@ export function DateCell({ date, status, txHash, vaultAddress, showLeftArrow = f
               rel="noopener noreferrer"
               color="element.lighter"
             >
-              <Icon as={SquareArrowOutUpRight} boxSize={4} color="element.lighter" />
+              <Icon
+                as={LinkExternal02}
+                fontSize={16}
+                color="element.lighter"
+                sx={{
+                  path: {
+                    strokeWidth: '1px',
+                  },
+                }}
+              />
             </Link>
           )}
         </Flex>

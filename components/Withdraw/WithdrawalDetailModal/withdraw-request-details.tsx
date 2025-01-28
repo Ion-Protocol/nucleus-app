@@ -2,8 +2,8 @@ import { IonTooltip } from '@/components/shared/IonTooltip'
 import { bigIntToNumber, bigIntToNumberAsString } from '@/utils/bigint'
 import { getSymbolByAddress } from '@/utils/withdrawal'
 import { Flex, Heading, Icon, Link, Text } from '@chakra-ui/react'
+import { LinkExternal02 } from '@untitled-ui/icons-react'
 import { format, fromUnixTime } from 'date-fns'
-import { SquareArrowOutUpRight } from 'lucide-react'
 import { Address } from 'viem'
 
 interface RequestDetailsProps {
@@ -108,7 +108,16 @@ const RequestDetails = ({
               rel="noopener noreferrer"
               color="element.lighter"
             >
-              <Icon as={SquareArrowOutUpRight} boxSize={4} color="element.lighter" />
+              <Icon
+                as={LinkExternal02}
+                boxSize={4}
+                color="element.lighter"
+                sx={{
+                  path: {
+                    strokeWidth: '1px',
+                  },
+                }}
+              />
             </Link>
           </Flex>
         </Flex>

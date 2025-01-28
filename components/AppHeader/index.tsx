@@ -16,18 +16,9 @@ export function AppHeader() {
   }, [toggleColorMode, toggleTheme])
 
   return (
-    <Flex
-      h="100px"
-      bg="bg.white"
-      borderBottom="1px solid"
-      borderColor="border"
-      justify="flex-end"
-      align="center"
-      pr={6}
-      gap={3}
-    >
+    <Flex h="4rem" bg="bg.white" justify="flex-end" align="center" pr={6} gap={3}>
       <IconButton
-        variant="borderless"
+        variant="outline"
         aria-label="toggle color mode"
         onClick={handleToggleTheme}
         icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
