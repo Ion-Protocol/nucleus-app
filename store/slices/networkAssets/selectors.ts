@@ -24,7 +24,6 @@ import { selectNetworkAssetFromRoute } from '../router'
 import { selectTransactionExplorerUrl } from '../status'
 import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { calculateApy } from './calculateApy'
-import { DashboardTableDataItem } from '@/types'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -837,6 +836,7 @@ export const selectRedeemBridgeData = createSelector(
   (redeemLayerZeroChainSelector, redeemHyperlaneChainSelector, userAddress): BridgeData | null => {
     if (!userAddress) return null
     const chainSelector = redeemHyperlaneChainSelector ? redeemHyperlaneChainSelector : redeemLayerZeroChainSelector
+    console.log('redeemBridgeData', chainSelector, userAddress)
     return {
       chainSelector: chainSelector,
       destinationChainReceiver: userAddress,

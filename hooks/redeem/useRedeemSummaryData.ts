@@ -1,4 +1,5 @@
 import { tokensConfig } from '@/config/tokens'
+import { useAppSelector } from '@/store/hooks'
 import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
 import {
   selectIsBridgeRequired,
@@ -16,15 +17,17 @@ import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
 import { useSelector } from 'react-redux'
 import { formatUnits } from 'viem'
 import { useRedeemData } from './useRedeemData'
-import { useAppSelector } from '@/store/hooks'
 
 export const useRedeemSummaryData = () => {
   const { useGetTokenRateInQuote, usePreviewFee, rateInQuoteWithFee } = useRedeemData()
-  const { data: previewFee } = usePreviewFee
+  const { data: previewFee, error: previewFeeError } = usePreviewFee
+  console.log('previewFee', previewFee)
+  console.log('previewFeeError', previewFeeError)
   const nativeAsset = useSelector(selectNativeAsset)
   const { data: tokenPrice } = useGetTokenPriceQuery(nativeAsset?.coinGeckoId!, {
     skip: !nativeAsset?.coinGeckoId,
   })
+  console.log('tokenPrice', tokenPrice)
 
   const withdrawalDestinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)

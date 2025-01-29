@@ -271,13 +271,9 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
 
     // console.log('calculateTotalSupply', tokenKey, calculateTotalSupply)
     if (tokenKey === TokenKey.EARNBTC) {
-      console.log('calculateTotalShares in if Check', tokenKey, totalSharesResults)
       const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
-      console.log('tokenPerShareRate in if Check', tokenKey, tokenPerShareRate)
       const tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(10 ** 10)) / WAD.bigint
-      console.log('tvlInToken in if Check', tokenKey, tvlInToken)
       const tvlAsString = tvlInToken.toString()
-      console.log('tvlAsString in if Check', tokenKey, tvlAsString)
 
       return { tvl: tvlAsString, tokenKey }
     }

@@ -2,7 +2,7 @@ import { createFunkitWagmiConfig, getDefaultTransports, getDefaultWallets } from
 import { bitgetWallet, ledgerWallet } from '@funkit/connect/wallets'
 import { fallback, http } from 'wagmi'
 import { mainnet } from 'wagmi/chains'
-import { bobanetwork, rari, sei, swellchain } from './customWagmiChains'
+import { bobanetwork, form, rari, sei, swellchain } from './customWagmiChains'
 import { tenderlyStaging } from './tenderly'
 
 const MAINNET_CHAINSTACK_URL = process.env.NEXT_PUBLIC_MAINNET_CHAINSTACK_URL || ''
@@ -12,7 +12,8 @@ const SWELL_RPC_URL = process.env.NEXT_PUBLIC_SWELL_RPC_URL || ''
 const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 const SHOW_TENDERLY = process.env.NEXT_PUBLIC_SHOW_TENDERLY === 'true'
 const TENDERLY_RPC_URL = process.env.NEXT_PUBLIC_TENDERLY_RPC_URL || ''
-
+const BOBANETWORK_RPC_URL = process.env.NEXT_PUBLIC_BOBANETWORK_RPC_URL || ''
+const FORM_RPC_URL = process.env.NEXT_PUBLIC_FORM_RPC_URL || ''
 const chains = [] as any
 
 chains.push(mainnet)
@@ -23,7 +24,7 @@ chains.push(sei)
 chains.push(rari)
 chains.push(swellchain)
 chains.push(bobanetwork)
-
+chains.push(form)
 const { wallets } = getDefaultWallets()
 
 declare module 'wagmi' {
@@ -50,7 +51,8 @@ export const wagmiConfig = createFunkitWagmiConfig({
     [sei.id]: fallback([http(SEI_RPC_URL)]),
     [rari.id]: fallback([http(RARI_RPC_URL)]),
     [swellchain.id]: fallback([http(SWELL_RPC_URL)]),
-    [bobanetwork.id]: fallback([http()]),
+    [bobanetwork.id]: fallback([http(BOBANETWORK_RPC_URL)]),
+    [form.id]: fallback([http(FORM_RPC_URL)]),
   },
   ssr: true,
 })

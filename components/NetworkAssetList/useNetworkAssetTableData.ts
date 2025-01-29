@@ -19,7 +19,6 @@ export function useNetworkAssetTableData() {
   const usdPerEthRate = useAppSelector(selectUsdPerEthRate)
   const bridgesState = useAppSelector(selectBridgesState)
   const usdPerBtcRate = useAppSelector(selectUsdPerBtcRate)
-  console.log('usdPerBtcRate', usdPerBtcRate)
 
   const networkAssetConfig = useMemo(() => networksConfig[NetworkKey.MAINNET].assets, [])
   const networkAssetKeys = useMemo(() => Object.keys(networkAssetConfig) as TokenKey[], [networkAssetConfig])
@@ -30,7 +29,6 @@ export function useNetworkAssetTableData() {
       const promises = networkAssetKeys.map(async (networkAssetKey) => {
         const vaultAddress = networkAssetConfig[networkAssetKey]?.contracts.boringVault
         const tokenKey = networkAssetConfig[networkAssetKey]?.token.key
-        console.log('tokenKey', tokenKey)
         // Need to track the vault asset to check if it is base 8 or 18
         if (!vaultAddress) {
           return {
@@ -96,7 +94,7 @@ export function useNetworkAssetTableData() {
     } finally {
       setIsLoading(false)
     }
-  }, [networkAssetKeys, networkAssetConfig, bridgesState, usdPerEthRate, dispatch])
+  }, [networkAssetKeys, networkAssetConfig, dispatch, bridgesState.tvl.data, usdPerEthRate, usdPerBtcRate])
 
   useEffect(() => {
     fetchRewardsAPY()
