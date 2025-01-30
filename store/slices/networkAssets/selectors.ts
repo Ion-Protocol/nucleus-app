@@ -822,6 +822,7 @@ export const selectDepositDisabled = (state: RootState): boolean => {
   const isPreviewFeeApplicableButNotReady = shouldTriggerPreviewFee && previewFee === null
   const isOnTethAndAddressEmpty = networkAssetKey === TokenKey.TETH && solanaAddress.trim() === ''
   const isOnTethAndAddressError = networkAssetKey === TokenKey.TETH && solanaAddressError !== null
+  const isRari = networkAssetKey === TokenKey.RARI // ! Disable RARI Minting while Depreciating RARIETH
 
   return (
     isEmpty ||
@@ -830,7 +831,8 @@ export const selectDepositDisabled = (state: RootState): boolean => {
     isPending ||
     isPreviewFeeApplicableButNotReady ||
     isOnTethAndAddressEmpty ||
-    isOnTethAndAddressError
+    isOnTethAndAddressError ||
+    isRari
   )
 }
 
