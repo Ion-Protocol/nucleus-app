@@ -69,11 +69,6 @@ export const useRedeemData = () => {
   const redemptionSourceChainId = useSelector(selectRedemptionSourceChainId) // Id of chain where redemption starts
   const redeemBridgeData = useSelector(selectRedeemBridgeData)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
-  console.log('redeemAmount', redeemAmount)
-  console.log('tellerContractAddress', tellerContractAddress)
-  console.log('redemptionSourceChainId', redemptionSourceChainId)
-  console.log('redeemBridgeData', redeemBridgeData)
-  console.log('isBridgeRequired', isBridgeRequired)
 
   // Preview Fee Query Hook. Note: Only applies to withdrawal with Bridge
   // TODO: Update to return whole query object to allow destructuring where needed. Will allow for better access to loading states and errors

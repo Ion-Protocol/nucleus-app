@@ -14,18 +14,18 @@ class DefaultRateFetchingStrategy implements RateFetchingStrategy {
   }
 }
 
+// ! Deprecated. Should be removed?
 class RateForTeth implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     return getRate(accountantAddress)
   }
 }
 
+// ! Deprecated. Should be removed?
 class RateForEarnETH implements RateFetchingStrategy {
   async getRate(accountantAddress: Address): Promise<bigint> {
     const wbtcPerShareExchangeRate = await getRate(accountantAddress) // 1e9
-    console.log('wbtcPerShareExchangeRate', wbtcPerShareExchangeRate)
     const { answer: btcPerWbtcExchangeRate } = await latestRoundData(contractAddresses.chainlinkBtcPerWbtc) // 1e9
-    console.log('btcPerWbtcExchangeRate', btcPerWbtcExchangeRate)
     // Convert WBTC/share to BTC/share
     return wbtcPerShareExchangeRate * btcPerWbtcExchangeRate // 1e18
   }

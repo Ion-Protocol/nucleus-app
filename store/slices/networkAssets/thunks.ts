@@ -258,7 +258,6 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
 
     // Await for shares results
     const totalSharesResults = await Promise.allSettled(promises)
-    console.log('totalSharesResults', networkAssetConfig.token.symbol, totalSharesResults)
 
     const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
@@ -267,32 +266,26 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
         return total + sharesResult.value.supply
       }
       return total
-    }, BigInt(0)) // Start with 0n as BigInt
+    }, BigInt(0))
 
-    // console.log('calculateTotalSupply', tokenKey, calculateTotalSupply)
+    // Get token per share rate (always 1e18)
+    const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress)
+
+    // Calculate TVL with normalization to 18 decimals for all assets
+    // TODO: Instead of checking tokenKey, we should just use the decimals of the token returned by the accountant.
+    let tvlInToken: bigint
     if (tokenKey === TokenKey.EARNBTC) {
-      const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
-      const tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(10 ** 10)) / WAD.bigint
-      const tvlAsString = tvlInToken.toString()
-
-      return { tvl: tvlAsString, tokenKey }
+      // EARNBTC uses 8 decimals, normalize to 18 by multiplying by 10^10
+      tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e10)
+    } else if (tokenKey === TokenKey.NELIXIR) {
+      // NELIXIR uses 6 decimals, normalize to 18 by multiplying by 10^12
+      tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e12)
+    } else {
+      // ETH-based assets already use 18 decimals
+      tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint
     }
 
-    if (tokenKey === TokenKey.NELIXIR) {
-      const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
-      console.log('tokenPerShareRate', tokenPerShareRate)
-      // Adjust for 6 decimals of nELIXIR while maintaining precision with tokenPerShareRate (1e18)
-      const tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(1e12)) / WAD.bigint
-      return { tvl: tvlInToken.toString(), tokenKey }
-    }
-    // Fetch exchange rate
-    const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
-
-    // Calculate TVL
-    const tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
-    const tvlAsString = tvlInToken.toString()
-
-    return { tvl: tvlAsString, tokenKey }
+    return { tvl: tvlInToken.toString(), tokenKey }
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to fetch TVL.\n${error.message}`

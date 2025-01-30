@@ -933,7 +933,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
-        pointsMultiplier: 3,
+        pointsMultiplier: 1,
       },
     ],
     redeem: {

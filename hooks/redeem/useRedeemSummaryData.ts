@@ -21,13 +21,11 @@ import { useRedeemData } from './useRedeemData'
 export const useRedeemSummaryData = () => {
   const { useGetTokenRateInQuote, usePreviewFee, rateInQuoteWithFee } = useRedeemData()
   const { data: previewFee, error: previewFeeError } = usePreviewFee
-  console.log('previewFee', previewFee)
-  console.log('previewFeeError', previewFeeError)
+
   const nativeAsset = useSelector(selectNativeAsset)
   const { data: tokenPrice } = useGetTokenPriceQuery(nativeAsset?.coinGeckoId!, {
     skip: !nativeAsset?.coinGeckoId,
   })
-  console.log('tokenPrice', tokenPrice)
 
   const withdrawalDestinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)

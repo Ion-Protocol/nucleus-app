@@ -11,7 +11,7 @@ export default function Dashboard() {
   const networkCount = useAppSelector(selectNetworkCount)
   const formattedTotalTvl = useAppSelector(selectFormattedTotalTvl)
 
-  const { data: tvlData } = useGetTvlQuery()
+  const { data: tvlData, isLoading: tvlLoading } = useGetTvlQuery()
 
   return (
     <Flex p={9} direction="column" pb="150px" position="relative">
