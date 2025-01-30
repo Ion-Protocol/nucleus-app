@@ -259,4 +259,13 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
     },
   },
+  [TokenKey.NELIXIR]: {
+    key: TokenKey.NELIXIR,
+    name: 'nELIXIR',
+    symbol: 'NELIXIR',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x9fbc367b9bb966a2a537989817a088afcaffdc4c',
+      [ChainKey.PLUME]: '0x9fbc367b9bb966a2a537989817a088afcaffdc4c',
+    },
+  },
 }

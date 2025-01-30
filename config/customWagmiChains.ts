@@ -1,5 +1,5 @@
 import type { Chain } from '@funkit/connect'
-import { boba as bobaWagmi, sei as seiWagmi } from 'wagmi/chains'
+import { boba as bobaWagmi, plume as plumeWagmi, sei as seiWagmi } from 'wagmi/chains'
 import { formExplorerBaseUrl, rariExplorerBaseUrl, swellExplorerBaseURL } from './constants'
 
 export const sei = {
@@ -82,4 +82,10 @@ export const form = {
       address: '0xcA11bde05977b3631167028862bE2a173976CA11',
     },
   },
+  sourceId: 1,
+} as const satisfies Chain
+
+export const plume = {
+  ...plumeWagmi,
+  iconUrl: '/assets/svgs/plume.svg',
 } as const satisfies Chain

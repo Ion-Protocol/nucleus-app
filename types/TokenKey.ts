@@ -27,5 +27,5 @@ export enum TokenKey {
   WEETH = 'weeth',
   WETH = 'weth',
   WSTETH = 'wsteth',
-  // NELIXER = 'nelixer',
+  NELIXIR = 'nelixir',
 }

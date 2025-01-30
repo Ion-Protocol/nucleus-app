@@ -53,7 +53,12 @@ export function useNetworkAssetTableData() {
         const tvlAsBigIntString = bridgesState.tvl.data[networkAssetKey]
         const tvlAsBigInt = BigInt(tvlAsBigIntString)
 
-        // ! This is a temporary fix for the BTC APY.
+        /**
+         * Duplicated code from networkAssets/selectors.ts
+         * Function: selectFormattedNetworkAssetTvlByKey
+         * We need to refactor this to be more dry and generic
+         */
+        // ! This is a temporary fix for the BTC TVL.
         // TODO: We should refactor this to be  use the decimals returned from the Accountant.
         if (tokenKey === TokenKey.EARNBTC) {
           const tvlInUsdAsBigInt = (tvlAsBigInt * usdPerBtcRate) / BigInt(1e8)
@@ -67,6 +72,20 @@ export function useNetworkAssetTableData() {
               formatted: formattedTvl,
               value: tvlInUsdAsNumber,
             },
+            applications: networkAssetConfig[networkAssetKey]?.protocols || [],
+          }
+        }
+
+        // ! This is a temporary fix for the NELIXIR TVL.
+        // TODO: We should refactor this to be  use the decimals returned from the Accountant.
+        if (tokenKey === TokenKey.NELIXIR) {
+          const tvlInUsdAsNumber = bigIntToNumber(tvlAsBigInt, { decimals: 6 })
+          const formattedTvl = abbreviateNumber(tvlInUsdAsNumber)
+          return {
+            asset: networkAssetKey,
+            apy: formattedApy,
+            chain: networkAssetConfig[networkAssetKey]?.chain,
+            tvl: { formatted: formattedTvl, value: tvlInUsdAsNumber },
             applications: networkAssetConfig[networkAssetKey]?.protocols || [],
           }
         }

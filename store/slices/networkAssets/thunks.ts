@@ -258,7 +258,7 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
 
     // Await for shares results
     const totalSharesResults = await Promise.allSettled(promises)
-    // console.log('totalSharesResults', networkAssetConfig.token.symbol, totalSharesResults)
+    console.log('totalSharesResults', networkAssetConfig.token.symbol, totalSharesResults)
 
     const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
@@ -276,6 +276,14 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
       const tvlAsString = tvlInToken.toString()
 
       return { tvl: tvlAsString, tokenKey }
+    }
+
+    if (tokenKey === TokenKey.NELIXIR) {
+      const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
+      console.log('tokenPerShareRate', tokenPerShareRate)
+      // Adjust for 6 decimals of nELIXIR while maintaining precision with tokenPerShareRate (1e18)
+      const tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(1e12)) / WAD.bigint
+      return { tvl: tvlInToken.toString(), tokenKey }
     }
     // Fetch exchange rate
     const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
