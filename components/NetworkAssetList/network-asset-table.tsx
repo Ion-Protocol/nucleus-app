@@ -70,7 +70,7 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
           networksConfig[NetworkKey.MAINNET].assets[info.row.original.asset as TokenKey]?.points.length
         return (
           <Flex align="center" gap={3}>
-            <Text variant="body-16" w="3em">
+            <Text variant="body-16" w="3rem">
               {info.getValue()}
             </Text>
             <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={info.row.original.asset as TokenKey} />}>
@@ -100,7 +100,6 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
                   <Icon
                     as={LinkExternal02}
                     boxSize={4}
-                    color="base.white"
                     sx={{
                       path: {
                         strokeWidth: '1px',
@@ -108,7 +107,7 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
                     }}
                   />
                 ) : (
-                  <MintIcon boxSize={4} color="base.white" />
+                  <MintIcon boxSize={4} />
                 )
               }
             >

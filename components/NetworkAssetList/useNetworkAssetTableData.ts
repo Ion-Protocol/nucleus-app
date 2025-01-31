@@ -66,7 +66,7 @@ export function useNetworkAssetTableData() {
           const formattedTvl = abbreviateNumber(tvlInUsdAsNumber)
           return {
             asset: networkAssetKey,
-            apy: formattedApy,
+            apy: 'N/A',
             chain: networkAssetConfig[networkAssetKey]?.chain,
             tvl: {
               formatted: formattedTvl,

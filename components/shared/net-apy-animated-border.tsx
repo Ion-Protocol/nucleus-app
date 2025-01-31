@@ -1,11 +1,10 @@
-import { Flex, Box, Text, useColorMode, useTheme } from '@chakra-ui/react'
-import { TelescopeIcon } from 'lucide-react'
-import { css, keyframes } from '@emotion/react'
-import { PropsWithChildren } from 'react'
 import { numberToPercent } from '@/utils/number'
+import { Box, Flex, Text } from '@chakra-ui/react'
+import { css, keyframes } from '@emotion/react'
+import { TelescopeIcon } from 'lucide-react'
 
 interface AnimatedBorderProps {
-  apy: number
+  apy: number | 'N/A'
 }
 
 // Define the rotation keyframes
@@ -42,7 +41,7 @@ export function NetApyAnimatedBorder({ apy }: AnimatedBorderProps) {
           </Text>
         </Flex>
         <Text variant="body-16-m" color={color}>
-          {numberToPercent(apy, 2)}
+          {apy === 'N/A' ? 'N/A' : numberToPercent(apy, 2)}
         </Text>
       </Flex>
 

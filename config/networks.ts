@@ -858,6 +858,31 @@ const mainnetNetworkAssets: NetworkAssets = {
         name: 'Nucleus',
         pointsMultiplier: 3,
       },
+      {
+        key: PointSystemKey.PUMPBTC,
+        name: 'Pump BTC',
+        pointsMultiplier: 1,
+      },
+      {
+        key: PointSystemKey.LORENZOSTBTC,
+        name: 'Lorenzo stBTC',
+        pointsMultiplier: 1,
+      },
+      {
+        key: PointSystemKey.FIREBTC,
+        name: 'Fire Bitcoin',
+        pointsMultiplier: 1,
+      },
+      {
+        key: PointSystemKey.BABYLON,
+        name: 'Babylon',
+        pointsMultiplier: 1,
+      },
+      {
+        key: PointSystemKey.SOLVBTC,
+        name: 'Solv BTC',
+        pointsMultiplier: 1,
+      },
     ],
     redeem: {
       withdrawalFee: defaultWithdrawalFee,

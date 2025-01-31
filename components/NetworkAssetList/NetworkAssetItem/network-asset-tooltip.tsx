@@ -8,7 +8,6 @@ import { useGetDefaultYieldAPYQuery } from '@/store/slices/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
 import { numberToPercent } from '@/utils/number'
 import { Flex, Text, useColorMode } from '@chakra-ui/react'
-import { TelescopeIcon } from 'lucide-react'
 import { Address } from 'viem'
 
 interface NetworkAssetTooltipProps {
@@ -40,7 +39,11 @@ export function NetworkAssetTooltip({ networkAssetKey }: NetworkAssetTooltipProp
               </Text>
             </Flex>
             <Text variant="body-14" color="element.violet">
-              {vaultAssetApy ? numberToPercent(vaultAssetApy, 2) : numberToPercent(hardcodedApy, 2)}
+              {networkAssetKey === TokenKey.EARNBTC
+                ? 'N/A'
+                : vaultAssetApy
+                  ? numberToPercent(vaultAssetApy, 2)
+                  : numberToPercent(hardcodedApy, 2)}
             </Text>
           </Flex>
         </Flex>
@@ -75,7 +78,9 @@ export function NetworkAssetTooltip({ networkAssetKey }: NetworkAssetTooltipProp
       </Flex>
 
       {/* Net APY */}
-      <NetApyAnimatedBorder apy={vaultAssetApy ? vaultAssetApy : hardcodedApy} />
+      <NetApyAnimatedBorder
+        apy={networkAssetKey === TokenKey.EARNBTC ? 'N/A' : vaultAssetApy ? vaultAssetApy : hardcodedApy}
+      />
     </Flex>
   )
 }

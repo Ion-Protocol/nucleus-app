@@ -7,6 +7,11 @@ export enum PointSystemKey {
   EIGENLAYER = 'eigenlayer',
   SYMBIOTIC = 'symbiotic',
   MELLOW = 'mellow',
+  PUMPBTC = 'pumpbtc',
+  SOLVBTC = 'solvbtc',
+  BABYLON = 'babylon',
+  FIREBTC = 'firebtc',
+  LORENZOSTBTC = 'lorenzostbtc',
 }
 
 export interface PointSystem {
