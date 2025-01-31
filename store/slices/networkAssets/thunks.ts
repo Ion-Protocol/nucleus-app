@@ -266,16 +266,26 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
         return total + sharesResult.value.supply
       }
       return total
-    }, BigInt(0)) // Start with 0n as BigInt
+    }, BigInt(0))
 
-    // Fetch exchange rate
-    const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress) // 1e18
+    // Get token per share rate (always 1e18)
+    const tokenPerShareRate = await getTokenPerShareRate(tokenKey, accountantAddress)
 
-    // Calculate TVL
-    const tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint // Adjust for 18 decimals
-    const tvlAsString = tvlInToken.toString()
+    // Calculate TVL with normalization to 18 decimals for all assets
+    // TODO: Instead of checking tokenKey, we should just use the decimals of the token returned by the accountant.
+    let tvlInToken: bigint
+    if (tokenKey === TokenKey.EARNBTC) {
+      // EARNBTC uses 8 decimals, normalize to 18 by multiplying by 10^10
+      tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e10)
+    } else if (tokenKey === TokenKey.NELIXIR) {
+      // NELIXIR uses 6 decimals, normalize to 18 by multiplying by 10^12
+      tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e12)
+    } else {
+      // ETH-based assets already use 18 decimals
+      tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint
+    }
 
-    return { tvl: tvlAsString, tokenKey }
+    return { tvl: tvlInToken.toString(), tokenKey }
   } catch (e) {
     const error = e as Error
     const errorMessage = `Failed to fetch TVL.\n${error.message}`
@@ -576,7 +586,7 @@ export const performDeposit = createAsyncThunk<PerformDepositResult, void, { rej
     } catch (e) {
       console.error(e)
       const error = e as Error
-      // const errorMessage = `Your transaction was submitted but we couldn’t verify its completion. Please look at your wallet transactions to verify a successful transaction.`
+      // const errorMessage = `Your transaction was submitted but we couldn't verify its completion. Please look at your wallet transactions to verify a successful transaction.`
       const errorMessage = `Deposit failed`
       const fullErrorMessage = `${errorMessage}\n${error.message}`
       dispatch(setErrorTitle('Deposit Not Verified'))

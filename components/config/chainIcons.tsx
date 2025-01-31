@@ -10,12 +10,15 @@ import { EthereumIcon } from '../shared/icons/Ethereum'
 import { FormLargeIcon } from '../shared/icons/FormLarge'
 import { InvariantIcon } from '../shared/icons/Invariant'
 import { JellyverseIcon } from '../shared/icons/Jellyverse'
+import { NeptuneIcon } from '../shared/icons/Neptune'
+import { OkuIcon } from '../shared/icons/Oku'
 import { OrcaIcon } from '../shared/icons/Orca'
 import { RariLargeIcon } from '../shared/icons/RariLarge'
 import { SandglassIcon } from '../shared/icons/Sandglass'
 import { SaveNetworkIcon } from '../shared/icons/SaveNetwork'
 import { SeiLargeIcon } from '../shared/icons/SeiLarge'
 import { SwellLargeIcon } from '../shared/icons/SwellLarge'
+import { TeahouseIcon } from '../shared/icons/Teahouse'
 import { UnifiLargeIcon } from '../shared/icons/UnifiLarge'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
@@ -34,6 +37,9 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.ASTROL]: (props) => <AstrolIcon {...props} />,
   [ChainKey.UNIFI]: (props) => <UnifiLargeIcon {...props} />,
   [ChainKey.SANDGLASS]: (props) => <SandglassIcon {...props} />,
+  [ChainKey.NEPTUNE]: (props) => <NeptuneIcon {...props} />,
+  [ChainKey.OKU]: (props) => <OkuIcon {...props} />,
+  [ChainKey.TEAHOUSE]: (props) => <TeahouseIcon {...props} />,
 }
 
 interface ChainIconMapProps extends IconProps {

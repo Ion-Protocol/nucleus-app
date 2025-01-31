@@ -52,9 +52,14 @@ function NetworkAssetList({ networkAssetKeys, tvls }: NetworkAssetListConnector.
   }, [networkAssetKeys, selectedAssets, selectedNetworks])
 
   const sortedNetworkAssetKeys = useMemo(() => {
-    return networkAssetKeys.sort((a, b) => {
-      return Number(tvls[b]) - Number(tvls[a])
-    })
+    return (
+      networkAssetKeys
+        // ! Remove RARI from the list. This is temporary while we depreciate RARI and remove it all together.
+        .filter((key) => networksConfig[NetworkKey.MAINNET].assets[key]?.chain !== ChainKey.RARI)
+        .sort((a, b) => {
+          return Number(tvls[b]) - Number(tvls[a])
+        })
+    )
   }, [networkAssetKeys, tvls])
 
   function handleClearFilters() {

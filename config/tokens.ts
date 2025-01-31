@@ -11,6 +11,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.ETHEREUM]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       [ChainKey.SEI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
       [ChainKey.RARI]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+      // [ChainKey.FORM]: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
     },
     coinGeckoId: 'ethereum',
   },
@@ -24,6 +25,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
       [ChainKey.RARI]: '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0',
       [ChainKey.BOBA]: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
+      // [ChainKey.FORM]: '0xb1b812b664c28E1bA1d35De925Ae88b7Bc7cdCF5', // Found on explorer but form doesn't list WETH on their bridge
     },
   },
   [TokenKey.WEETH]: {
@@ -113,6 +115,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'EARNBTC',
     addresses: {
       [ChainKey.ETHEREUM]: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a',
+      // [ChainKey.SWELL]: '0x215DC1cC32d9d08a0081e55E55895C8Cf006839a', // ! causes error in fetch balances
     },
   },
   [TokenKey.EARNETH]: {
@@ -122,6 +125,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'EARNETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
+      [ChainKey.SWELL]: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
     },
   },
   [TokenKey.SSETH]: {
@@ -201,6 +205,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
     symbol: 'FETH',
     addresses: {
       [ChainKey.ETHEREUM]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
+      [ChainKey.FORM]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
     },
   },
   [TokenKey.PZETH]: {
@@ -248,10 +253,19 @@ export const tokensConfig: Record<TokenKey, Token> = {
     key: TokenKey.BOBAETH,
     name: 'bobaETH',
     fullName: 'Boba ETH',
-    symbol: 'bobaETH',
+    symbol: 'BOBAETH',
     addresses: {
       [ChainKey.BOBA]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
       [ChainKey.ETHEREUM]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+    },
+  },
+  [TokenKey.NELIXIR]: {
+    key: TokenKey.NELIXIR,
+    name: 'nELIXIR',
+    symbol: 'NELIXIR',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x9fbc367b9bb966a2a537989817a088afcaffdc4c',
+      [ChainKey.PLUME]: '0x9fbc367b9bb966a2a537989817a088afcaffdc4c',
     },
   },
 }

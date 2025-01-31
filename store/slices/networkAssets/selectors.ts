@@ -19,12 +19,11 @@ import { Address, toHex } from 'viem'
 import { selectAddress } from '../account'
 import { selectBalances } from '../balance'
 import { selectNetworkKey } from '../chain'
-import { selectPriceLoading, selectUsdPerEthRate } from '../price'
+import { selectPriceLoading, selectUsdPerBtcRate, selectUsdPerEthRate } from '../price'
 import { selectNetworkAssetFromRoute } from '../router'
 import { selectTransactionExplorerUrl } from '../status'
 import { selectTotalClaimables } from '../userProofSlice/selectors'
 import { calculateApy } from './calculateApy'
-import { DashboardTableDataItem } from '@/types'
 
 const USE_FUNKIT = process.env.NEXT_PUBLIC_USE_FUNKIT === 'true'
 
@@ -277,8 +276,32 @@ export const selectActiveChainTvl = (state: RootState) => {
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
 export const selectFormattedNetworkAssetTvlByKey = (state: RootState, tokenKey: TokenKey) => {
   const tvl = selectNetworkAssetTvlByKey(state, tokenKey)
-  const price = selectUsdPerEthRate(state)
   if (tvl === null) return '-'
+
+  /**
+   * Duplicated code from useNetworkAssetTableData.ts
+   * We need to refactor this to be more dry and generic
+   */
+  // ! This is a temporary fix for the NELIXIR TVL.
+  // TODO: We should refactor this to be  use the decimals returned from the Accountant.
+  // Handle NELIXIR TVL
+  if (tokenKey === TokenKey.NELIXIR) {
+    const tvlInUsdAsNumber = bigIntToNumber(tvl, { decimals: 6 })
+    return abbreviateNumber(tvlInUsdAsNumber)
+  }
+
+  // ! This is a temporary fix for the BTC TVL.
+  // TODO: We should refactor this to be  use the decimals returned from the Accountant.
+  // Handle BTC TVL
+  if (tokenKey === TokenKey.EARNBTC) {
+    const price = selectUsdPerBtcRate(state)
+    const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
+    const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt, { decimals: 8 })
+    return abbreviateNumber(tvlInUsdAsNumber)
+  }
+
+  // Default case (ETH-based assets)
+  const price = selectUsdPerEthRate(state)
   const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
   const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
   return abbreviateNumber(tvlInUsdAsNumber)
@@ -295,25 +318,51 @@ export const selectActiveFormattedNetworkAssetTvl = (state: RootState) => {
 }
 
 export const selectTotalTvl = (state: RootState) => {
-  const tvl = Object.values(state.networkAssets.tvl.data).reduce((acc, curr) => acc + BigInt(curr), BigInt(0))
-  return tvl
+  return Object.entries(state.networkAssets.tvl.data).reduce((acc, [tokenKey, tvl]) => {
+    if (!tvl) return acc
+
+    // Skip RARIETH TVL
+    if (tokenKey === TokenKey.RARIETH) {
+      console.log('Skipping RARIETH TVL')
+      return acc
+    }
+
+    // Handle EARNBTC (8 decimals)
+    if (tokenKey === TokenKey.EARNBTC) {
+      const btcPrice = selectUsdPerBtcRate(state) // Price in 8 decimals
+      const tvlInUsd = (BigInt(tvl) * btcPrice) / BigInt(1e8)
+      console.log(`EARNBTC TVL in USD: ${Number(tvlInUsd) / 1e8}`)
+      return acc + tvlInUsd
+    }
+
+    // Handle NELIXIR (6 decimals)
+    if (tokenKey === TokenKey.NELIXIR) {
+      // NELIXIR TVL is already in USD with 6 decimals
+      // Normalize to 8 decimals for consistency
+      const tvlInUsd = BigInt(tvl) * BigInt(100)
+      console.log(`NELIXIR TVL in USD: ${Number(tvlInUsd) / 1e8}`)
+      return acc + tvlInUsd
+    }
+
+    // Default case (ETH-based assets - 18 decimals)
+    const ethPrice = selectUsdPerEthRate(state) // Price in 8 decimals
+    const tvlInUsd = (BigInt(tvl) * ethPrice) / BigInt(1e18)
+    console.log(`${tokenKey} TVL in USD: ${Number(tvlInUsd) / 1e8}`)
+    return acc + tvlInUsd
+  }, BigInt(0))
 }
 
 export const selectFormattedTotalTvl = (state: RootState) => {
-  const tvl = selectTotalTvl(state)
-  const price = selectUsdPerEthRate(state)
-  const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
-  const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt)
+  const tvlInUsd = selectTotalTvl(state)
+  // Convert from 8 decimal places to whole numbers
+  const tvlInUsdAsNumber = Number(tvlInUsd) / 1e8
 
-  // Format the number as currency in USD
-  const formattedTvlInUsd = new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(tvlInUsdAsNumber)
-
-  return formattedTvlInUsd
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -799,6 +848,7 @@ export const selectDepositDisabled = (state: RootState): boolean => {
   const isPreviewFeeApplicableButNotReady = shouldTriggerPreviewFee && previewFee === null
   const isOnTethAndAddressEmpty = networkAssetKey === TokenKey.TETH && solanaAddress.trim() === ''
   const isOnTethAndAddressError = networkAssetKey === TokenKey.TETH && solanaAddressError !== null
+  const isRari = networkAssetKey === TokenKey.RARI // ! Disable RARI Minting while Depreciating RARIETH
 
   return (
     isEmpty ||
@@ -807,7 +857,8 @@ export const selectDepositDisabled = (state: RootState): boolean => {
     isPending ||
     isPreviewFeeApplicableButNotReady ||
     isOnTethAndAddressEmpty ||
-    isOnTethAndAddressError
+    isOnTethAndAddressError ||
+    isRari
   )
 }
 

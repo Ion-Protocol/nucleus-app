@@ -16,6 +16,7 @@ import { TokenEarnethIcon } from '../shared/icons/TokenEarneth'
 import { TokenEzethIcon } from '../shared/icons/TokenEzeth'
 import { TokenFethIcon } from '../shared/icons/TokenFeth'
 import { TokenIseiIcon } from '../shared/icons/TokenIsei'
+import { TokenNelixirIcon } from '../shared/icons/TokenNelixir'
 import { TokenPufethIcon } from '../shared/icons/TokenPufeth'
 import { TokenPzethIcon } from '../shared/icons/TokenPzeth'
 import { TokenRsethIcon } from '../shared/icons/TokenRseth'
@@ -64,6 +65,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.RARIETH]: (props) => <Icon as={RariethIcon} {...props} />,
   [TokenKey.RARI]: (props) => <RariIcon {...props} />,
   [TokenKey.UNIFIETH]: (props) => <Icon as={UnifiethIcon} {...props} />,
+  [TokenKey.NELIXIR]: (props) => <Icon as={TokenNelixirIcon} {...props} />,
 }
 
 interface TokenIconProps extends ChakraProps {
