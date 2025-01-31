@@ -1,12 +1,17 @@
 import { PointSystemKey } from '@/types/PointSystem'
-import { ChakraProps, Image } from '@chakra-ui/react'
+import { ChakraProps } from '@chakra-ui/react'
 import React from 'react'
+import { BabylonIcon } from '../shared/icons/Babylon'
 import { EigenlayerPointsIcon } from '../shared/icons/EigenlayerPoints'
+import { FireBitcoinIcon } from '../shared/icons/FireBitcoin'
 import { FormIcon } from '../shared/icons/Form'
 import { IonTokenIcon } from '../shared/icons/IonToken'
+import { LorenzoStbtcIcon } from '../shared/icons/LorenzoStbtc'
 import { MellowIcon } from '../shared/icons/Mellow'
 import { NucleusLogoBlackIcon } from '../shared/icons/NucleusLogo'
+import { PumpBtcIcon } from '../shared/icons/PumpBtc'
 import { RenzoIcon } from '../shared/icons/Renzo'
+import { SolvBtcIcon } from '../shared/icons/SolvBtc'
 import { SwellChainIcon } from '../shared/icons/SwellChain'
 import { SymbioticIcon } from '../shared/icons/Symbiotic'
 
@@ -19,6 +24,11 @@ export const pointSystemIconMap: Partial<Record<PointSystemKey, (props: ChakraPr
   [PointSystemKey.EIGENLAYER]: (props) => <EigenlayerPointsIcon {...props} />,
   [PointSystemKey.SYMBIOTIC]: (props) => <SymbioticIcon {...props} />,
   [PointSystemKey.MELLOW]: (props) => <MellowIcon {...props} />,
+  [PointSystemKey.PUMPBTC]: (props) => <PumpBtcIcon {...props} />,
+  [PointSystemKey.SOLVBTC]: (props) => <SolvBtcIcon {...props} />,
+  [PointSystemKey.BABYLON]: (props) => <BabylonIcon {...props} />,
+  [PointSystemKey.LORENZOSTBTC]: (props) => <LorenzoStbtcIcon {...props} />,
+  [PointSystemKey.FIREBTC]: (props) => <FireBitcoinIcon {...props} />,
 }
 
 interface PointSystemIconProps extends ChakraProps {

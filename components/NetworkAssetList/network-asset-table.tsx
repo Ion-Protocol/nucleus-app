@@ -1,5 +1,6 @@
 import { NetworkKey, networksConfig } from '@/config/networks'
 import { DashboardTableDataItem } from '@/types'
+import { ChainKey } from '@/types/ChainKey'
 import { TokenKey } from '@/types/TokenKey'
 import { Button, Flex, Icon, Table, TableContainer, Text } from '@chakra-ui/react'
 import { createColumnHelper, getCoreRowModel, getSortedRowModel, useReactTable } from '@tanstack/react-table'
@@ -31,8 +32,10 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
       const matchesAsset =
         selectedAssets.length === 0 || selectedAssets.includes(tokenAddressMapping[item.asset] as string)
       const matchesNetwork = selectedNetworks.length === 0 || selectedNetworks.includes(item.chain as string)
+      // ! Remove RARI from the list. This is temporary while we depreciate RARI and remove it all together.
+      const isNotRari = item.chain !== ChainKey.RARI
 
-      return matchesAsset && matchesNetwork
+      return matchesAsset && matchesNetwork && isNotRari
     })
   }, [data, selectedAssets, selectedNetworks])
 
@@ -67,7 +70,7 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
           networksConfig[NetworkKey.MAINNET].assets[info.row.original.asset as TokenKey]?.points.length
         return (
           <Flex align="center" gap={3}>
-            <Text variant="body-16" w="3em">
+            <Text variant="body-16" w="3rem">
               {info.getValue()}
             </Text>
             <AtomTag tooltip={<NetworkAssetTooltip networkAssetKey={info.row.original.asset as TokenKey} />}>
@@ -97,7 +100,6 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
                   <Icon
                     as={LinkExternal02}
                     boxSize={4}
-                    color="base.white"
                     sx={{
                       path: {
                         strokeWidth: '1px',
@@ -105,7 +107,7 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
                     }}
                   />
                 ) : (
-                  <MintIcon boxSize={4} color="base.white" />
+                  <MintIcon boxSize={4} />
                 )
               }
             >

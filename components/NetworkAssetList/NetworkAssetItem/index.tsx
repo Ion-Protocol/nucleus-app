@@ -6,18 +6,18 @@ import { Address } from 'viem'
 import { ChainIcon } from '@/components/config/chainIcons'
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { AtomTag } from '@/components/shared/AtomTag'
+import { ChainIconRow } from '@/components/shared/chain-icon-row'
 import { IconWithSubIcon } from '@/components/shared/icon-with-sub-icon'
 import { MintIcon } from '@/components/shared/icons/Mint'
+import { hardcodedApy } from '@/config/constants'
+import { NetworkKey, networksConfig } from '@/config/networks'
 import { useGetRewardsAPYQuery } from '@/store/slices/incentivesApi'
 import { useGetDefaultYieldAPYQuery } from '@/store/slices/nucleusBackendApi'
 import { TokenKey } from '@/types/TokenKey'
+import { numberToPercent } from '@/utils/number'
 import { ArrowUpRightIcon as LucideArrowUpRightIcon } from 'lucide-react'
 import { YieldBridgeItemConnector } from './connector'
-import { ChainIconRow } from '@/components/shared/chain-icon-row'
 import { NetworkAssetTooltip } from './network-asset-tooltip'
-import { numberToPercent } from '@/utils/number'
-import { hardcodedApy } from '@/config/constants'
-import { NetworkKey, networksConfig } from '@/config/networks'
 
 // The icon needs to be wrapped in chakra to get the correct styles.
 // Otherwise the custom color will not be applied.
@@ -125,7 +125,11 @@ function NetworkAssetItem({
           </Text>
           <Flex flex="1" borderBottom="1px dashed" borderColor="stroke.main" mx={2} mb="0.4em" />
           <Text variant="body-16" color="element.main">
-            {totalApy ? numberToPercent(totalApy, 2) : numberToPercent(hardcodedApy, 2)}
+            {networkAssetKey === TokenKey.EARNBTC
+              ? 'N/A'
+              : totalApy
+                ? numberToPercent(totalApy, 2)
+                : numberToPercent(hardcodedApy, 2)}
           </Text>
         </Flex>
 

@@ -1,6 +1,6 @@
 import { ChainKey } from '@/types/ChainKey'
-import { boba, mainnet, sei } from 'viem/chains'
-import { rari, swellchain } from './customWagmiChains'
+import { boba, mainnet, plume, sei } from 'viem/chains'
+import { form, rari, swellchain } from './customWagmiChains'
 
 export interface Chain {
   name: string
@@ -35,6 +35,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   },
   [ChainKey.FORM]: {
     name: 'Form',
+    id: form.id,
   },
   [ChainKey.UNIFI]: {
     name: 'UniFi',
@@ -46,6 +47,10 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.BOBA]: {
     name: 'Boba',
     id: boba.id,
+  },
+  [ChainKey.PLUME]: {
+    name: 'Plume',
+    id: plume.id,
   },
   [ChainKey.ORCA]: {
     name: 'Orca',
@@ -76,5 +81,8 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   },
   [ChainKey.TEAHOUSE]: {
     name: 'Teahouse',
+  },
+  [ChainKey.NEPTUNE]: {
+    name: 'Neptune',
   },
 }
