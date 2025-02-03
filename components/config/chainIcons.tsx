@@ -1,4 +1,3 @@
-// import SeiIcon from '@/components/shared/icons/Sei_Symbol_Red.svg'
 import { ChainKey } from '@/types/ChainKey'
 import { IconProps } from '@chakra-ui/react'
 import React from 'react'
@@ -20,6 +19,8 @@ import { SeiLargeIcon } from '../shared/icons/SeiLarge'
 import { SwellLargeIcon } from '../shared/icons/SwellLarge'
 import { TeahouseIcon } from '../shared/icons/Teahouse'
 import { UnifiLargeIcon } from '../shared/icons/UnifiLarge'
+import { LynxIcon } from '../shared/icons/Lynx'
+import { LendlandIcon } from '../shared/icons/Lendland'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
@@ -40,6 +41,8 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.NEPTUNE]: (props) => <NeptuneIcon {...props} />,
   [ChainKey.OKU]: (props) => <OkuIcon {...props} />,
   [ChainKey.TEAHOUSE]: (props) => <TeahouseIcon {...props} />,
+  [ChainKey.LYNX]: (props) => <LynxIcon {...props} color="inherit" fill="none" />,
+  [ChainKey.LENDLAND]: (props) => <LendlandIcon {...props} color="inherit" fill="none" />,
 }
 
 interface ChainIconMapProps extends IconProps {

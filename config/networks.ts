@@ -159,7 +159,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
-    protocols: [ChainKey.OKU, ChainKey.TEAHOUSE],
+    protocols: [ChainKey.OKU, ChainKey.TEAHOUSE, ChainKey.LENDLAND, ChainKey.LYNX],
   },
   [TokenKey.SSETH]: {
     apys: {},
