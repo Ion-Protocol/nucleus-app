@@ -105,6 +105,10 @@ const mainnetNetworkAssets: NetworkAssets = {
             token: tokensConfig[TokenKey.WETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
+          [TokenKey.APXETH]: {
+            token: tokensConfig[TokenKey.APXETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
           [TokenKey.RSWETH]: {
             token: tokensConfig[TokenKey.RSWETH],
             withdrawalFee: defaultWithdrawalFee,
@@ -145,7 +149,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.RSWETH, TokenKey.EZETH, TokenKey.WEETH, TokenKey.WSTETH],
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.APXETH,
+        TokenKey.RSWETH,
+        TokenKey.EZETH,
+        TokenKey.WEETH,
+        TokenKey.WSTETH,
+      ],
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
