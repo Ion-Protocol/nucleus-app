@@ -7,6 +7,7 @@ import {
   bobaExplorerBaseURL,
   defaultWithdrawalFee,
   etherscanBaseUrl,
+  formExplorerBaseUrl,
   hyperlaneBaseUrl,
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
