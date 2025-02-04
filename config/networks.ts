@@ -7,6 +7,7 @@ import {
   bobaExplorerBaseURL,
   defaultWithdrawalFee,
   etherscanBaseUrl,
+  formExplorerBaseUrl,
   hyperlaneBaseUrl,
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
@@ -104,6 +105,10 @@ const mainnetNetworkAssets: NetworkAssets = {
             token: tokensConfig[TokenKey.WETH],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
+          [TokenKey.APXETH]: {
+            token: tokensConfig[TokenKey.APXETH],
+            withdrawalFee: defaultWithdrawalFee,
+          },
           [TokenKey.RSWETH]: {
             token: tokensConfig[TokenKey.RSWETH],
             withdrawalFee: defaultWithdrawalFee,
@@ -144,7 +149,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     sourceTokens: {
-      [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.RSWETH, TokenKey.EZETH, TokenKey.WEETH, TokenKey.WSTETH],
+      [ChainKey.ETHEREUM]: [
+        TokenKey.WETH,
+        TokenKey.APXETH,
+        TokenKey.RSWETH,
+        TokenKey.EZETH,
+        TokenKey.WEETH,
+        TokenKey.WSTETH,
+      ],
       [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
@@ -241,140 +253,23 @@ const mainnetNetworkAssets: NetworkAssets = {
     token: tokensConfig[TokenKey.SSETH],
     protocols: [ChainKey.JELLYVERSE],
   },
-  // * Commented out while we wait for the hyperlane accountant gets redeployed Revering to old config
-  // [TokenKey.FETH]: {
-  //   apys: {},
-  //   chain: ChainKey.FORM,
-  //   comingSoon: false,
-  //   contracts: {
-  //     teller: '0xbb305E64C9F12E721ef86d6ff731248b28A38e29',
-  //     accountant: '0x8ca1d13De3039142186aA57656Adbe0fD2620D2B',
-  //     boringVault: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
-  //   },
-  //   defaultMintChain: ChainKey.ETHEREUM,
-  //   defaultRedemptionChain: ChainKey.ETHEREUM,
-  //   deployedOn: ChainKey.FORM,
-  //   description:
-  //     'Connect your wallet, select your deposit asset, and mint the Boba Default Asset to earn while you explore the Boba ecosystem',
-  //   hyperlaneChainSelector: 478, // Hyperlane Domain Identifier
-  //   manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.BOBAETH),
-  //   nativeCurrency: tokensConfig[TokenKey.ETH],
-  //   points: [
-  //     {
-  //       key: PointSystemKey.FORM,
-  //       name: 'Form',
-  //       pointsMultiplier: 3,
-  //     },
-  //     {
-  //       key: PointSystemKey.NUCLEUS,
-  //       name: 'Nucleus',
-  //       pointsMultiplier: 3,
-  //     },
-  //     {
-  //       key: PointSystemKey.RENZO,
-  //       name: 'ezPoints',
-  //       pointsMultiplier: 2,
-  //     },
-  //     {
-  //       key: PointSystemKey.SYMBIOTIC,
-  //       name: 'Symbiotic',
-  //       pointsMultiplier: 0.5,
-  //     },
-  //     {
-  //       key: PointSystemKey.MELLOW,
-  //       name: 'Mellow',
-  //       pointsMultiplier: 1,
-  //     },
-  //   ],
-  //   redeemComingSoon: false,
-  //   redeem: {
-  //     hyperlaneChainSelector: 1, // Hyperlane Domain Identifier
-  //     redemptionDestinationChain: ChainKey.ETHEREUM,
-  //     redemptionDestinationChains: {
-  //       [ChainKey.ETHEREUM]: {
-  //         chain: ChainKey.ETHEREUM,
-  //         explorerBaseUrl: etherscanBaseUrl,
-  //       },
-  //       [ChainKey.FORM]: {
-  //         chain: ChainKey.FORM,
-  //         explorerBaseUrl: formExplorerBaseUrl,
-  //       },
-  //     },
-  //     redemptionSourceAsset: TokenKey.FETH,
-  //     redemptionSourceChain: ChainKey.FORM,
-  //     redemptionSourceChains: {
-  //       [ChainKey.FORM]: {
-  //         chain: ChainKey.FORM,
-  //         explorerBaseUrl: formExplorerBaseUrl,
-  //       },
-  //       [ChainKey.ETHEREUM]: {
-  //         chain: ChainKey.ETHEREUM,
-  //         explorerBaseUrl: etherscanBaseUrl,
-  //       },
-  //     },
-  //     wantTokens: {
-  //       [ChainKey.ETHEREUM]: {
-  //         [TokenKey.WETH]: {
-  //           token: tokensConfig[TokenKey.WETH],
-  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
-  //         },
-  //         [TokenKey.WSTETH]: {
-  //           token: tokensConfig[TokenKey.WSTETH],
-  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
-  //         },
-  //         [TokenKey.PZETH]: {
-  //           token: tokensConfig[TokenKey.PZETH],
-  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
-  //         },
-  //         [TokenKey.EZETH]: {
-  //           token: tokensConfig[TokenKey.EZETH],
-  //           withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
-  //         },
-  //       },
-  //       [ChainKey.FORM]: {
-  //         [TokenKey.WETH]: {
-  //           token: tokensConfig[TokenKey.WETH],
-  //           withdrawalFee: 0.02,
-  //         },
-  //       },
-  //     },
-  //     withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-  //     withdrawalFee: defaultWithdrawalFee,
-  //   },
-  //   receiveOn: ChainKey.FORM,
-  //   showRewardsAndHistory: false,
-  //   sourceChains: {
-  //     [ChainKey.ETHEREUM]: {
-  //       chain: ChainKey.ETHEREUM,
-  //       explorerBaseUrl: hyperlaneBaseUrl,
-  //     },
-  //     [ChainKey.FORM]: {
-  //       chain: ChainKey.FORM,
-  //       explorerBaseUrl: formExplorerBaseUrl,
-  //     },
-  //   },
-  //   sourceTokens: {
-  //     [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
-  //     [ChainKey.FORM]: [TokenKey.WETH],
-  //   },
-  //   token: tokensConfig[TokenKey.FETH],
-  //   protocols: [],
-  // },
-  // * OLD FETH CONFIG WHILE WE WAIT FOR THE NEW ACCOUNTANT TO BE DEPLOYED
   [TokenKey.FETH]: {
     apys: {},
     chain: ChainKey.FORM,
+    comingSoon: false,
     contracts: {
-      teller: '0xd567b6D8e9C95d8a29e60018156becaBDC63E851',
+      teller: '0x1360c5FEDe23B28196d7744DCFA35C63b7fF4322',
       accountant: '0x8ca1d13De3039142186aA57656Adbe0fD2620D2B',
       boringVault: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
-    deployedOn: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.FORM,
     description:
-      'Connect your wallet, select your deposit asset, and mint the Form ETH Default Yield Asset as you prepare to explore the Form Chain Ecosystem',
-    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.FETH),
+      'Connect your wallet, select your deposit asset, and mint the Boba Default Asset to earn while you explore the Boba ecosystem',
+    hyperlaneChainSelector: 478, // Hyperlane Domain Identifier
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.BOBAETH),
+    nativeCurrency: tokensConfig[TokenKey.ETH],
     points: [
       {
         key: PointSystemKey.FORM,
@@ -402,25 +297,32 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 1,
       },
     ],
+    redeemComingSoon: false,
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
-      redemptionSourceChain: ChainKey.ETHEREUM,
-      redemptionSourceChains: {
-        [ChainKey.ETHEREUM]: {
-          chain: ChainKey.ETHEREUM,
-          explorerBaseUrl: etherscanBaseUrl,
-        },
-      },
-      redemptionSourceAsset: TokenKey.FETH,
+      hyperlaneChainSelector: 1, // Hyperlane Domain Identifier
       redemptionDestinationChain: ChainKey.ETHEREUM,
       redemptionDestinationChains: {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
         },
+        [ChainKey.FORM]: {
+          chain: ChainKey.FORM,
+          explorerBaseUrl: formExplorerBaseUrl,
+        },
       },
-      withdrawalChain: ChainKey.FORM,
-      layerZeroChainSelector: 0,
+      redemptionSourceAsset: TokenKey.FETH,
+      redemptionSourceChain: ChainKey.FORM,
+      redemptionSourceChains: {
+        [ChainKey.FORM]: {
+          chain: ChainKey.FORM,
+          explorerBaseUrl: formExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
@@ -440,17 +342,31 @@ const mainnetNetworkAssets: NetworkAssets = {
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
+        [ChainKey.FORM]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: 0.02,
+          },
+        },
       },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      withdrawalFee: defaultWithdrawalFee,
     },
-    receiveOn: ChainKey.ETHEREUM,
+    receiveOn: ChainKey.FORM,
+    showRewardsAndHistory: false,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: etherscanBaseUrl,
+        explorerBaseUrl: hyperlaneBaseUrl,
+      },
+      [ChainKey.FORM]: {
+        chain: ChainKey.FORM,
+        explorerBaseUrl: formExplorerBaseUrl,
       },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
+      [ChainKey.FORM]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.FETH],
     protocols: [],
