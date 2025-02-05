@@ -89,7 +89,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
                 <Flex align="center">
                   <IonTooltip label={formattedTokenRateWithFeeFull}>
                     <Text textAlign="right" variant="paragraph">
-                      {`${formattedTokenRateWithFee} ${receiveToken.symbol} / ${sharesTokenKey}`}
+                      {`${formattedTokenRateWithFee} ${receiveToken?.symbol} / ${sharesTokenKey}`}
                     </Text>
                   </IonTooltip>
                   <AccordionIcon />
@@ -114,7 +114,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
               <IonSkeleton minW="75px" isLoaded={tokenRateInQuoteSuccess}>
                 <IonTooltip label={tokenRateInQuote?.rateInQuoteSafeAsString}>
                   <Text textAlign="right" variant="paragraph" color="disabledText">
-                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken.symbol} / ${sharesTokenKey}`}
+                    {`${tokenRateInQuote?.truncatedRateInQuoteSafeAsString} ${receiveToken?.symbol} / ${sharesTokenKey}`}
                   </Text>
                 </IonTooltip>
               </IonSkeleton>
