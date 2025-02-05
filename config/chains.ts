@@ -91,4 +91,7 @@ export const chainsConfig: Record<ChainKey, Chain> = {
   [ChainKey.LENDLAND]: {
     name: 'Lendland',
   },
+  [ChainKey.SUPRA]: {
+    name: 'Supra',
+  },
 }

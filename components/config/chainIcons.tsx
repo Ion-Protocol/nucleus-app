@@ -21,6 +21,7 @@ import { TeahouseIcon } from '../shared/icons/Teahouse'
 import { UnifiLargeIcon } from '../shared/icons/UnifiLarge'
 import { LynxIcon } from '../shared/icons/Lynx'
 import { LendlandIcon } from '../shared/icons/Lendland'
+import { SupraIcon } from '../shared/icons/Supra'
 
 export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.Element>> = {
   [ChainKey.ETHEREUM]: (props) => <EthereumIcon {...props} />,
@@ -43,6 +44,7 @@ export const chainIconMap: Partial<Record<ChainKey, (props: IconProps) => JSX.El
   [ChainKey.TEAHOUSE]: (props) => <TeahouseIcon {...props} />,
   [ChainKey.LYNX]: (props) => <LynxIcon {...props} color="inherit" fill="none" />,
   [ChainKey.LENDLAND]: (props) => <LendlandIcon {...props} color="inherit" fill="none" />,
+  [ChainKey.SUPRA]: (props) => <SupraIcon {...props} color="inherit" fill="none" />,
 }
 
 interface ChainIconMapProps extends IconProps {
