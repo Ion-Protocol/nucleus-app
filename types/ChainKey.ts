@@ -8,6 +8,8 @@ export enum ChainKey {
   FORM = 'form',
   INVARIANT = 'invariant',
   JELLYVERSE = 'jellyverse',
+  LENDLAND = 'lendland',
+  LYNX = 'lynx',
   NEPTUNE = 'neptune',
   OKU = 'oku',
   ORCA = 'orca',
