@@ -19,6 +19,7 @@ export enum ChainKey {
   SAVE = 'save',
   SEI = 'sei',
   SWELL = 'swell',
+  SUPRA = 'supra',
   TEAHOUSE = 'teahouse',
   UNIFI = 'UniFi',
   YEI = 'yei',
