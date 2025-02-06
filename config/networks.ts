@@ -1000,7 +1000,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     comingSoon: false,
     isExternal: false,
     manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SUPUSD),
-    chain: ChainKey.SUPRA,
+    chain: ChainKey.ETHEREUM,
     deployedOn: ChainKey.ETHEREUM,
     sourceChains: {
       [ChainKey.ETHEREUM]: {
@@ -1009,7 +1009,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     defaultMintChain: ChainKey.ETHEREUM,
-    defaultRedemptionChain: ChainKey.SUPRA,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.USN, TokenKey.SUSN],
     },
@@ -1018,7 +1018,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       accountant: '0xf27803c9e5578e1350f5b5c9906b7973747d2ec4',
       boringVault: '0x61465652cceb2c63b17c56a3f5646566c753eeff',
     },
-    receiveOn: ChainKey.SUPRA,
+    receiveOn: ChainKey.ETHEREUM,
     points: [
       {
         key: PointSystemKey.NUCLEUS,
@@ -1028,11 +1028,11 @@ const mainnetNetworkAssets: NetworkAssets = {
     ],
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
-      redemptionSourceChain: ChainKey.SUPRA,
+      redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
-        [ChainKey.SUPRA]: {
-          chain: ChainKey.SUPRA,
-          explorerBaseUrl: supraScanBaseUrl,
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.SUPUSD,
