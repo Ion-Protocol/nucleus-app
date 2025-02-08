@@ -82,10 +82,6 @@ const mainnetNetworkAssets: NetworkAssets = {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
         },
-        [ChainKey.BOBA]: {
-          chain: ChainKey.BOBA,
-          explorerBaseUrl: bobaExplorerBaseURL,
-        },
       },
       redemptionSourceAsset: TokenKey.BOBAETH,
       redemptionSourceChain: ChainKey.BOBA,
@@ -143,10 +139,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: hyperlaneBaseUrl,
       },
-      [ChainKey.BOBA]: {
-        chain: ChainKey.BOBA,
-        explorerBaseUrl: bobaExplorerBaseURL,
-      },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [
@@ -157,7 +149,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         TokenKey.WEETH,
         TokenKey.WSTETH,
       ],
-      [ChainKey.BOBA]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.BOBAETH],
     protocols: [ChainKey.OKU, ChainKey.TEAHOUSE, ChainKey.LENDLAND, ChainKey.LYNX],
