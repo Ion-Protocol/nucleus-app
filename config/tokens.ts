@@ -270,7 +270,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
   },
   [TokenKey.SUPUSD]: {
     key: TokenKey.SUPUSD,
-    name: 'SupUSD',
+    name: 'supUSD',
     symbol: 'SUPUSD',
     addresses: {
       [ChainKey.ETHEREUM]: '0x61465652cceb2c63b17c56a3f5646566c753eeff',
