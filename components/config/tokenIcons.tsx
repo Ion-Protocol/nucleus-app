@@ -31,6 +31,9 @@ import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
 import { UnifiethIcon } from '../shared/icons/Unifieth'
 import { WstethIcon } from '../shared/icons/Wsteth'
+import { SupusdIcon } from '../shared/icons/Supusd'
+import { UsnIcon } from '../shared/icons/Usn'
+import { SusnIcon } from '../shared/icons/Susn'
 
 function DefaultIcon() {
   return <></>
@@ -66,6 +69,9 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.RARI]: (props) => <RariIcon {...props} />,
   [TokenKey.UNIFIETH]: (props) => <Icon as={UnifiethIcon} {...props} />,
   [TokenKey.NELIXIR]: (props) => <Icon as={TokenNelixirIcon} {...props} />,
+  [TokenKey.SUPUSD]: (props) => <SupusdIcon {...props} color="inherit" fill="none" />,
+  [TokenKey.USN]: (props) => <Icon as={UsnIcon} {...props} color="inherit" fill="none" />,
+  [TokenKey.SUSN]: (props) => <Icon as={SusnIcon} {...props} color="inherit" fill="none" />,
 }
 
 interface TokenIconProps extends ChakraProps {
