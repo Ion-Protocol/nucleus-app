@@ -268,4 +268,28 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.PLUME]: '0x9fbc367b9bb966a2a537989817a088afcaffdc4c',
     },
   },
+  [TokenKey.SUPUSD]: {
+    key: TokenKey.SUPUSD,
+    name: 'supUSD',
+    symbol: 'SUPUSD',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x61465652cceb2c63b17c56a3f5646566c753eeff',
+    },
+  },
+  [TokenKey.USN]: {
+    key: TokenKey.USN,
+    name: 'USN',
+    symbol: 'USN',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0xdA67B4284609d2d48e5d10cfAc411572727dc1eD',
+    },
+  },
+  [TokenKey.SUSN]: {
+    key: TokenKey.SUSN,
+    name: 'sUSN',
+    symbol: 'SUSN',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0xE24a3DC889621612422A64E6388927901608B91D',
+    },
+  },
 }

@@ -12,6 +12,7 @@ import {
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
   seiExplorerBaseUrl,
+  supraScanBaseUrl,
   swellExplorerBaseURL,
 } from './constants'
 import { form, rari } from './customWagmiChains'
@@ -880,6 +881,70 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+        },
+      },
+    },
+    protocols: [],
+  },
+  [TokenKey.SUPUSD]: {
+    apys: {},
+    token: tokensConfig[TokenKey.SUPUSD],
+    description:
+      'Connect your wallet, select your deposit asset, and mint the Supra USD Default Asset to earn while you explore the Supra ecosystem.',
+    comingSoon: false,
+    isExternal: false,
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.SUPUSD),
+    chain: ChainKey.ETHEREUM,
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: [TokenKey.USN, TokenKey.SUSN],
+    },
+    contracts: {
+      teller: '0xc6111ddaf7119f313c9beda7ccac4eb7e05fd268',
+      accountant: '0xf27803c9e5578e1350f5b5c9906b7973747d2ec4',
+      boringVault: '0x61465652cceb2c63b17c56a3f5646566c753eeff',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 1,
+      },
+    ],
+    redeem: {
+      withdrawalFee: defaultWithdrawalFee,
+      redemptionSourceChain: ChainKey.ETHEREUM,
+      redemptionSourceChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: etherscanBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.SUPUSD,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.SUPRA,
+      layerZeroChainSelector: 0,
+      wantTokens: {
+        [ChainKey.ETHEREUM]: {
+          [TokenKey.SUSN]: {
+            token: tokensConfig[TokenKey.SUSN],
             withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
