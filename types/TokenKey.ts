@@ -34,5 +34,5 @@ export enum TokenKey {
   UNIFIBTC = 'unifibtc',
   LBTC = 'lbtc',
   PUMPBTC = 'pumpbtc',
-  CBBTC = 'cbbbtc',
+  CBBTC = 'cbbtc',
 }
