@@ -31,7 +31,4 @@ export enum TokenKey {
   WEETH = 'weeth',
   WETH = 'weth',
   WSTETH = 'wsteth',
-  CARROTS = 'carrots',
-  GRASS = 'grass',
-  RSWELL = 'rswell',
 }
