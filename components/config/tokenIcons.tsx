@@ -5,10 +5,15 @@ import { DineroIcon } from '../shared/icons/Dinero'
 import { EthereumIcon } from '../shared/icons/Ethereum'
 import { OptimismIcon } from '../shared/icons/Optimism'
 // import { RariethIcon } from '../shared/icons/Rarieth'
+import { CarrotsIcon } from '../shared/icons/Carrots'
+import { EclipseIcon } from '../shared/icons/Eclipse'
 import { RariIcon } from '../shared/icons/Rari'
 import RariethIcon from '../shared/icons/rarieth.svg'
+import { RswellIcon } from '../shared/icons/Rswell'
 import { RswethIcon } from '../shared/icons/Rsweth'
 import { SeiIcon } from '../shared/icons/Sei'
+import { SupusdIcon } from '../shared/icons/Supusd'
+import { SusnIcon } from '../shared/icons/Susn'
 import { TokenApxethIcon } from '../shared/icons/TokenApxeth'
 import { TokenBobaethIcon } from '../shared/icons/TokenBobaeth'
 import { TokenEarnbtcIcon } from '../shared/icons/TokenEarnbtc'
@@ -30,10 +35,8 @@ import { TokenWeethIcon } from '../shared/icons/TokenWeeth'
 import { TokenWethIcon } from '../shared/icons/TokenWeth'
 import { TokenWfrxethIcon } from '../shared/icons/TokenWfrxeth'
 import { UnifiethIcon } from '../shared/icons/Unifieth'
-import { WstethIcon } from '../shared/icons/Wsteth'
-import { SupusdIcon } from '../shared/icons/Supusd'
 import { UsnIcon } from '../shared/icons/Usn'
-import { SusnIcon } from '../shared/icons/Susn'
+import { WstethIcon } from '../shared/icons/Wsteth'
 
 function DefaultIcon() {
   return <></>
@@ -72,6 +75,9 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.SUPUSD]: (props) => <SupusdIcon {...props} color="inherit" fill="none" />,
   [TokenKey.USN]: (props) => <Icon as={UsnIcon} {...props} color="inherit" fill="none" />,
   [TokenKey.SUSN]: (props) => <Icon as={SusnIcon} {...props} color="inherit" fill="none" />,
+  [TokenKey.GRASS]: (props) => <Icon as={EclipseIcon} {...props} color="inherit" fill="none" />,
+  [TokenKey.CARROTS]: (props) => <Icon as={CarrotsIcon} {...props} color="inherit" fill="none" />,
+  [TokenKey.RSWELL]: (props) => <Icon as={RswellIcon} {...props} color="inherit" fill="none" />,
 }
 
 interface TokenIconProps extends ChakraProps {
