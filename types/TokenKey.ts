@@ -31,4 +31,8 @@ export enum TokenKey {
   WEETH = 'weeth',
   WETH = 'weth',
   WSTETH = 'wsteth',
+  UNIFIBTC = 'unifibtc',
+  LBTC = 'lbtc',
+  PUMPBTC = 'pumpbtc',
+  CBBTC = 'cbbbtc',
 }
