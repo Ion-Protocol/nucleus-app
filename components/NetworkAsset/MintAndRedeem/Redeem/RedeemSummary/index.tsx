@@ -89,7 +89,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
                 <Flex align="center">
                   <IonTooltip label={formattedTokenRateWithFeeFull}>
                     <Text textAlign="right" variant="paragraph">
-                      {`${formattedTokenRateWithFee} ${receiveToken.symbol} / ${sharesTokenKey}`}
+                      {`${formattedTokenRateWithFee} ${receiveToken?.symbol} / ${sharesTokenKey}`}
                     </Text>
                   </IonTooltip>
                   <AccordionIcon />

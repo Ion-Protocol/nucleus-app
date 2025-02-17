@@ -350,10 +350,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         chain: ChainKey.ETHEREUM,
         explorerBaseUrl: hyperlaneBaseUrl,
       },
-      [ChainKey.FORM]: {
-        chain: ChainKey.FORM,
-        explorerBaseUrl: formExplorerBaseUrl,
-      },
     },
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.WETH, TokenKey.WSTETH, TokenKey.EZETH, TokenKey.PZETH],
