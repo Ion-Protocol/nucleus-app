@@ -109,6 +109,7 @@ export const fetchAllTokenBalances = createAsyncThunk<
         }
       }
 
+      console.log('balances', balances)
       return { balances }
     } catch (e) {
       // Do nothing to process errors since we are constantly fetching balances.

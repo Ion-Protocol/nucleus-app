@@ -25,7 +25,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
       [ChainKey.RARI]: '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0',
       [ChainKey.BOBA]: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
-      // [ChainKey.FORM]: '0xb1b812b664c28E1bA1d35De925Ae88b7Bc7cdCF5', // Found on explorer but form doesn't list WETH on their bridge
+      [ChainKey.FORM]: '0xb1b812b664c28E1bA1d35De925Ae88b7Bc7cdCF5', // Found on explorer but form doesn't list WETH on their bridge
     },
   },
   [TokenKey.WEETH]: {
