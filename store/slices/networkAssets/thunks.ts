@@ -285,6 +285,8 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
       tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint
     }
 
+    console.log(tokenKey, totalSharesResults, calculateTotalSupply, tokenPerShareRate, tvlInToken)
+
     return { tvl: tvlInToken.toString(), tokenKey }
   } catch (e) {
     const error = e as Error

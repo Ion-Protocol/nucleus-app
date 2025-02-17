@@ -323,7 +323,6 @@ export const selectTotalTvl = (state: RootState) => {
 
     // Skip RARIETH TVL
     if (tokenKey === TokenKey.RARIETH) {
-      console.log('Skipping RARIETH TVL')
       return acc
     }
 
@@ -331,7 +330,6 @@ export const selectTotalTvl = (state: RootState) => {
     if (tokenKey === TokenKey.EARNBTC) {
       const btcPrice = selectUsdPerBtcRate(state) // Price in 8 decimals
       const tvlInUsd = (BigInt(tvl) * btcPrice) / BigInt(1e8)
-      console.log(`EARNBTC TVL in USD: ${Number(tvlInUsd) / 1e8}`)
       return acc + tvlInUsd
     }
 
@@ -340,14 +338,12 @@ export const selectTotalTvl = (state: RootState) => {
       // NELIXIR TVL is already in USD with 6 decimals
       // Normalize to 8 decimals for consistency
       const tvlInUsd = BigInt(tvl) * BigInt(100)
-      console.log(`NELIXIR TVL in USD: ${Number(tvlInUsd) / 1e8}`)
       return acc + tvlInUsd
     }
 
     // Default case (ETH-based assets - 18 decimals)
     const ethPrice = selectUsdPerEthRate(state) // Price in 8 decimals
     const tvlInUsd = (BigInt(tvl) * ethPrice) / BigInt(1e18)
-    console.log(`${tokenKey} TVL in USD: ${Number(tvlInUsd) / 1e8}`)
     return acc + tvlInUsd
   }, BigInt(0))
 }
