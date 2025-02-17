@@ -27,9 +27,12 @@ const tokenValuesMapping: Partial<Record<TokenKey, Address>> = {
   [TokenKey.SSETH]: '0xA8A3A5013104e093245164eA56588DBE10a3Eb48',
   [TokenKey.FETH]: '0x6C587402dC88Ef187670F744dFB9d6a09Ff7fd76',
   [TokenKey.RARIETH]: '0x5d82Ac302C64B229dC94f866FD10EC6CcF8d47A2',
-  [TokenKey.UNIFIETH]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
+  [TokenKey.UNIFIETH]: '0x196ead472583Bc1e9aF7A05F860D9857e1Bd3dCc',
   [TokenKey.EARNETH]: '0x9Ed15383940CC380fAEF0a75edacE507cC775f22',
   [TokenKey.TETH]: '0x19e099B7aEd41FA52718D780dDA74678113C0b32',
+  [TokenKey.BOBAETH]: '0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1',
+  [TokenKey.NELIXIR]: '0x9fbC367B9Bb966a2A537989817A088AFCaFFDC4c',
+  [TokenKey.UNIFIBTC]: '0x170D847A8320F3B6A77eE15B0CAE430e3eC933a0',
 }
 
 export const statusValuesMapping: Record<string, string> = {
@@ -91,6 +94,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch, isLoading }) =
 
   const handleRowClick = useCallback(
     (order: Order) => {
+      console.log('order', order)
       setSelectedOrder(order)
       onDetailsOpen()
     },
