@@ -297,10 +297,6 @@ const mainnetNetworkAssets: NetworkAssets = {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
         },
-        [ChainKey.FORM]: {
-          chain: ChainKey.FORM,
-          explorerBaseUrl: formExplorerBaseUrl,
-        },
       },
       redemptionSourceAsset: TokenKey.FETH,
       redemptionSourceChain: ChainKey.FORM,
