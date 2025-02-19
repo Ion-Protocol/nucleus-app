@@ -3,6 +3,7 @@ import { selectNetworkAssetConfig } from '@/store/slices/networkAssets'
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Bridge } from './Bridge'
 import { Mint } from './Mint'
 import { Redeem } from './Redeem'
 
@@ -16,25 +17,30 @@ export function MintAndRedeem() {
         {/* Tab Buttons */}
         <TabList>
           <Tab _selected={{ borderBottom: '2px solid', borderColor: 'text' }}>
-            <Text variant="paragraphBold" color={selectedIndex === 0 ? 'text' : 'secondaryText'} fontWeight="bold">
+            <Text variant="paragraph" color={selectedIndex === 0 ? 'text' : 'secondaryText'}>
               Mint
             </Text>
           </Tab>
           {networkAssetConfig?.redeemComingSoon ? (
             <IonTooltip label="Coming soon < 1 week" aria-label="Redeem tab tooltip">
               <Tab isDisabled _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-                <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+                <Text variant="paragraph" color={selectedIndex === 1 ? 'text' : 'secondaryText'}>
                   Redeem
                 </Text>
               </Tab>
             </IonTooltip>
           ) : (
             <Tab _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
-              <Text variant="paragraphBold" color={selectedIndex === 1 ? 'text' : 'secondaryText'} fontWeight="bold">
+              <Text variant="paragraph" color={selectedIndex === 1 ? 'text' : 'secondaryText'}>
                 Redeem
               </Text>
             </Tab>
           )}
+          <Tab>
+            <Text variant="paragraph" color={selectedIndex === 2 ? 'text' : 'secondaryText'}>
+              Bridge
+            </Text>
+          </Tab>
         </TabList>
 
         {/* Tabs Content, Mint and Redeem */}
@@ -44,6 +50,9 @@ export function MintAndRedeem() {
           </TabPanel>
           <TabPanel>
             <Redeem />
+          </TabPanel>
+          <TabPanel>
+            <Bridge />
           </TabPanel>
         </TabPanels>
       </Tabs>
