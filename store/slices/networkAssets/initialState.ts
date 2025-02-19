@@ -70,6 +70,8 @@ export type NetworkAssetsState = {
   // 2. The value is used in a thunk
   sourceChain: ChainKey | null
 
+  bridgeSource: ChainKey | null
+
   // The redemption source chain is the chain that the user selects in the drop down menu on the redeem page
   // ---
   // Justification for storing in global state:
@@ -151,6 +153,8 @@ export type NetworkAssetsState = {
     pending: boolean
     error: string | null
   }
+
+  bridgeAmount: string
 }
 
 export const initialState: NetworkAssetsState = {
@@ -193,6 +197,12 @@ export const initialState: NetworkAssetsState = {
   // Source chain
   sourceChain: null,
 
+  // Bridge source chain
+  bridgeSource: null,
+
+  // Bridge amount
+  bridgeAmount: '',
+
   // Redemption source chain
   redeemSourceChain: null,
 
@@ -234,4 +244,6 @@ export const initialState: NetworkAssetsState = {
     pending: false,
     error: null,
   },
+
+  bridgeAmount: '',
 }

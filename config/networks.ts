@@ -12,7 +12,6 @@ import {
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
   seiExplorerBaseUrl,
-  supraScanBaseUrl,
   swellExplorerBaseURL,
 } from './constants'
 import { form, rari } from './customWagmiChains'
@@ -247,6 +246,20 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.FETH]: {
     apys: {},
+    bridge: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: hyperlaneBaseUrl,
+        bridgeChainIdentifier: 1,
+        bridgeExplorerBaseUrl: hyperlaneBaseUrl,
+      },
+      [ChainKey.FORM]: {
+        chain: ChainKey.FORM,
+        explorerBaseUrl: formExplorerBaseUrl,
+        bridgeChainIdentifier: 478,
+        bridgeExplorerBaseUrl: hyperlaneBaseUrl,
+      },
+    },
     chain: ChainKey.FORM,
     comingSoon: false,
     contracts: {

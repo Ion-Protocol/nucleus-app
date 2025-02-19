@@ -13,6 +13,12 @@ export interface TokenApyDataItem {
 
 export interface NetworkAsset {
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
+  bridge?: Partial<
+    Record<
+      ChainKey,
+      { chain: ChainKey; explorerBaseUrl: string; bridgeChainIdentifier: number; bridgeExplorerBaseUrl: string }
+    >
+  >
   chain: ChainKey
   comingSoon?: boolean
   contracts: Contracts

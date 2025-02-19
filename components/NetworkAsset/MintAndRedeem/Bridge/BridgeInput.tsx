@@ -1,52 +1,60 @@
 import { TokenIcon } from '@/components/config/tokenIcons'
 import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
+import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
-import { selectNetworkAssetConfig } from '@/store/slices/networkAssets'
-import { TokenKey } from '@/types/TokenKey'
+import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
+import { selectBridgeSourceChain, setBridgeAmount } from '@/store/slices/networkAssets'
+import { setBridgeAmountMax } from '@/store/slices/networkAssets/thunks'
+import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+
 function BridgeInput() {
-  const networkAssetConfig = useSelector((state: RootState) => selectNetworkAssetConfig(state))
-  console.log(networkAssetConfig)
+  const dispatch = useDispatch()
   const [isFocused, setIsFocused] = useState(false)
-  const [inputValue, setInputValue] = useState('')
-  const [loadingTokenBalance, setLoadingTokenBalance] = useState(false)
-  const [tokenBalance, setTokenBalance] = useState(0)
-  const [error, setError] = useState('')
+
+  // Get the source chain and network asset
+  const bridgeSourceChain = useSelector(selectBridgeSourceChain)
+  const networkAssetFromRoute = useSelector(selectNetworkAssetFromRoute)
+
+  // Get the token balance for the source chain
+  const tokenBalance = useSelector((state: RootState) =>
+    selectFormattedTokenBalance(state, bridgeSourceChain, networkAssetFromRoute)
+  )
+  const loadingTokenBalance = useSelector(selectBalancesLoading)
+
+  // Get the input value from Redux
+  const inputValue = useSelector((state: RootState) => state.networkAssets.bridgeAmount || '')
+
+  // Get token name
+  const networkAssetName = networkAssetFromRoute ? tokensConfig[networkAssetFromRoute].name : ''
 
   const onChange = (value: string) => {
-    setInputValue(value)
+    dispatch(setBridgeAmount(value))
   }
 
   const onMax = () => {
-    setInputValue('')
-    setError('')
+    dispatch(setBridgeAmountMax())
   }
 
   return (
     <IonCard variant="outline" bg={isFocused ? 'backgroundSecondary' : 'none'} pt={5}>
       {/* Top Row */}
       <Flex justify="space-between" align="center">
-        <Text variant="smallParagraph" color={error ? 'error.main' : 'text'}>
-          Amount
-        </Text>
-
+        <Text variant="smallParagraph">Amount</Text>
         <Flex color="secondaryText" gap={1}>
-          <>
-            <Text variant="smallParagraph">Balance: </Text>
-            <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
-              <Text>{tokenBalance}</Text>
-            </IonSkeleton>
-          </>
+          <Text variant="smallParagraph">Balance: </Text>
+          <IonSkeleton isLoaded={!loadingTokenBalance} minW="25px">
+            <Text variant="smallParagraph">{tokenBalance}</Text>
+          </IonSkeleton>
         </Flex>
       </Flex>
 
       {/* Input */}
       <Flex align="center" gap={3} mt={3} justify="space-between">
-        {/* Input Box */}
-        <Flex direction="column">
+        <Flex direction="column" w="full">
           <Input
             value={inputValue}
             onChange={(e) => onChange(e.target.value)}
@@ -58,23 +66,18 @@ function BridgeInput() {
             fontSize="18px"
             letterSpacing="0.05em"
             placeholder="0"
-            color={error ? 'error.main' : 'text'}
           />
-          {error && <Text color="error.main">{error}</Text>}
         </Flex>
         <Flex gap={3} align="center">
-          {/* Max Button */}
-          <Flex gap={3}>
-            <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
-              <Text color="disabledText" variant="smallParagraph">
-                MAX
-              </Text>
-            </Button>
-            <Divider orientation="vertical" h="36px" borderColor="border" />
-            <Flex gap={2} align="center">
-              <TokenIcon fontSize="28px" tokenKey={TokenKey.FETH} />
-              <Text variant="paragraph">FETH</Text>
-            </Flex>
+          <Button variant="outline" color="secondaryText" size="sm" onClick={onMax}>
+            <Text color="disabledText" variant="smallParagraph">
+              MAX
+            </Text>
+          </Button>
+          <Divider orientation="vertical" h="36px" borderColor="border" />
+          <Flex gap={2} align="center">
+            <TokenIcon fontSize="28px" tokenKey={networkAssetFromRoute} />
+            <Text variant="paragraph">{networkAssetName}</Text>
           </Flex>
         </Flex>
       </Flex>

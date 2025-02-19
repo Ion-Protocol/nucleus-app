@@ -42,6 +42,7 @@ import {
 import { selectClaimableTokenAddresses, selectTotalClaimables, selectUserProof } from '../userProofSlice/selectors'
 import {
   selectAvailableNetworkAssetKeys,
+  selectBridgeSourceChain,
   selectContractAddressByName,
   selectDepositAmount,
   selectDepositAmountAsBigInt,
@@ -56,7 +57,7 @@ import {
   selectSourceTokenKey,
   selectTokenAddressByTokenKey,
 } from './selectors'
-import { clearDepositAmount, setDepositAmount, setRedeemAmount } from './slice'
+import { clearDepositAmount, setBridgeAmount, setDepositAmount, setRedeemAmount } from './slice'
 
 export type FetchPausedResult = Partial<Record<TokenKey, boolean>>
 
@@ -347,6 +348,24 @@ export const setRedeemAmountMax = createAsyncThunk<void, void, { state: RootStat
     // Using dispatch within the thunk to trigger the setInputValue action so
     // that the the previewFee side effect will also trigger
     dispatch(setRedeemAmount(tokenBalanceAsNumber))
+  }
+)
+
+export const setBridgeAmountMax = createAsyncThunk(
+  'networkAssets/setBridgeAmountMax',
+  async (_, { getState, dispatch }) => {
+    const state = getState() as RootState
+    const networkAssetKey = selectNetworkAssetFromRoute(state)
+    const sourceChain = selectBridgeSourceChain(state)
+    const tokenBalance = selectTokenBalance(state, sourceChain, networkAssetKey)
+
+    let tokenBalanceAsNumber = tokenBalance ? convertFromDecimals(tokenBalance) : '0'
+
+    if (networkAssetKey === TokenKey.TETH) {
+      tokenBalanceAsNumber = truncateToSignificantDigits(tokenBalanceAsNumber, 9)
+    }
+
+    dispatch(setBridgeAmount(tokenBalanceAsNumber))
   }
 )
 

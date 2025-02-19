@@ -50,6 +50,31 @@ export const selectRedemptionDestinationChainKey = (state: RootState) => {
   const withdrawalDestinationChainKey = selectBridgesState(state).redeemDestinationChain
   return withdrawalDestinationChainKey
 }
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectBridgeSourceChain = (state: RootState) => {
+  return state.networkAssets.bridgeSource
+}
+
+// SHOULD memoize: Returns a computed value based on source chain
+export const selectBridgeDestinationChain = createSelector(
+  [selectBridgeSourceChain],
+  (bridgeSourceChain): ChainKey | null => {
+    if (!bridgeSourceChain) return null
+
+    // When source is Ethereum, destination is Form
+    if (bridgeSourceChain === ChainKey.ETHEREUM) {
+      return ChainKey.FORM
+    }
+
+    // When source is Form, destination is Ethereum
+    if (bridgeSourceChain === ChainKey.FORM) {
+      return ChainKey.ETHEREUM
+    }
+
+    return null
+  }
+)
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
 /////////////////////////////////////////////////////////////////////

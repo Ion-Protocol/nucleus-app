@@ -88,7 +88,7 @@ export const tellerApi = createApi({
           })
           return { data: hash }
         } catch (err) {
-          const error = err as WriteContractErrorType | WaitForTransactionReceiptErrorType
+          const error = err as WriteContractErrorType
           return { error, data: undefined, meta: undefined }
         }
       },
