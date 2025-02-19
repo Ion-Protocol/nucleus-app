@@ -42,7 +42,7 @@ import {
 import { selectClaimableTokenAddresses, selectTotalClaimables, selectUserProof } from '../userProofSlice/selectors'
 import {
   selectAvailableNetworkAssetKeys,
-  selectBridgeSourceChain,
+  selectBridgeSourceChainKey,
   selectContractAddressByName,
   selectDepositAmount,
   selectDepositAmountAsBigInt,
@@ -356,8 +356,8 @@ export const setBridgeAmountMax = createAsyncThunk(
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState
     const networkAssetKey = selectNetworkAssetFromRoute(state)
-    const sourceChain = selectBridgeSourceChain(state)
-    const tokenBalance = selectTokenBalance(state, sourceChain, networkAssetKey)
+    const sourceChainKey = selectBridgeSourceChainKey(state)
+    const tokenBalance = selectTokenBalance(state, sourceChainKey, networkAssetKey)
 
     let tokenBalanceAsNumber = tokenBalance ? convertFromDecimals(tokenBalance) : '0'
 

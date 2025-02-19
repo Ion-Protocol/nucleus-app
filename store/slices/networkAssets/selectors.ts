@@ -52,29 +52,10 @@ export const selectRedemptionDestinationChainKey = (state: RootState) => {
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectBridgeSourceChain = (state: RootState) => {
+export const selectBridgeSourceChainKey = (state: RootState) => {
   return state.networkAssets.bridgeSource
 }
 
-// SHOULD memoize: Returns a computed value based on source chain
-export const selectBridgeDestinationChain = createSelector(
-  [selectBridgeSourceChain],
-  (bridgeSourceChain): ChainKey | null => {
-    if (!bridgeSourceChain) return null
-
-    // When source is Ethereum, destination is Form
-    if (bridgeSourceChain === ChainKey.ETHEREUM) {
-      return ChainKey.FORM
-    }
-
-    // When source is Form, destination is Ethereum
-    if (bridgeSourceChain === ChainKey.FORM) {
-      return ChainKey.ETHEREUM
-    }
-
-    return null
-  }
-)
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
 /////////////////////////////////////////////////////////////////////
@@ -966,6 +947,87 @@ export const selectWithdrawalDestinationExplorerBaseUrl = (state: RootState) => 
   return withdrawalDestinationExplorerBaseUrl
 }
 
+/////////////////////////////////////////////////////////////////////
+// Bridge Selectors
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a computed value based on source chain
+export const selectBridgeDestinationChainKey = createSelector(
+  [selectBridgeSourceChainKey, selectNetworkAssetConfig],
+  (bridgeSourceChainKey, networkAssetConfig): ChainKey | null => {
+    if (!bridgeSourceChainKey || !networkAssetConfig?.bridge) return null
+
+    // Find the matching bridge config for the source chain
+    const bridgeConfig = networkAssetConfig.bridge[bridgeSourceChainKey]
+    if (!bridgeConfig) return null
+
+    // Look for a different chain in the bridge config that isn't the source
+    const destinationChainKey = Object.keys(networkAssetConfig.bridge).find(
+      (chainKey) => chainKey !== bridgeSourceChainKey
+    ) as ChainKey | undefined
+
+    return destinationChainKey || null
+  }
+)
+
+export const selectBridgeSource = (state: RootState) => {
+  const bridgeSourceChainKey = selectBridgeSourceChainKey(state)
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!bridgeSourceChainKey || !networkAssetConfig?.bridge) return null
+  const bridgeSource = networkAssetConfig.bridge[bridgeSourceChainKey]
+  return bridgeSource
+}
+
+export const selectBridgeDestination = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const bridgeDestinationChainKey = selectBridgeDestinationChainKey(state)
+  if (!bridgeDestinationChainKey || !networkAssetConfig?.bridge) return null
+  const bridgeDestination = networkAssetConfig.bridge[bridgeDestinationChainKey]
+  return bridgeDestination
+}
+
+export const selectBridgeDestinationChainId = (state: RootState) => {
+  const bridgeDestinationChainKey = selectBridgeDestinationChainKey(state)
+  if (!bridgeDestinationChainKey) return null
+  const chain = chainsConfig[bridgeDestinationChainKey as ChainKey]
+  if (!chain) return null
+  return chain.id
+}
+
+export const selectBridgeDestinationChainIdentifier = (state: RootState) => {
+  const bridgeDestination = selectBridgeDestination(state)
+  if (!bridgeDestination) return null
+  return bridgeDestination.bridgeChainIdentifier
+}
+
+export const selectBridgeExplorerBaseUrl = (state: RootState) => {
+  const bridgeDestination = selectBridgeDestination(state)
+  if (!bridgeDestination) return null
+  return bridgeDestination.explorerBaseUrl
+}
+
+// DO NOT memoize: Direct lookup; returns a value from state.
+export const selectBridgeAmount = (state: RootState) => {
+  return state.networkAssets.bridgeAmount
+}
+
+// SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
+export const selectBridgeDataForBridge = createSelector(
+  [selectBridgeDestinationChainIdentifier, selectAddress],
+  (bridgeDestinationChainIdentifier, userAddress): BridgeData | null => {
+    if (!bridgeDestinationChainIdentifier || !userAddress) return null
+    const chainSelector = bridgeDestinationChainIdentifier
+    return {
+      chainSelector: chainSelector,
+      destinationChainReceiver: userAddress,
+      bridgeFeeToken: nativeAddress,
+      messageGas: BigInt(100000),
+      data: '0x',
+    }
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////
 

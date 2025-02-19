@@ -1,8 +1,8 @@
 import { ChainIcon } from '@/components/config/chainIcons'
 import { chainsConfig } from '@/config/chains'
 import {
-  selectBridgeDestinationChain,
-  selectBridgeSourceChain,
+  selectBridgeDestinationChainKey,
+  selectBridgeSourceChainKey,
   selectNetworkAssetConfig,
 } from '@/store/slices/networkAssets'
 import { ChainKey } from '@/types/ChainKey'
@@ -14,8 +14,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 function BridgeSelect() {
   const dispatch = useDispatch()
-  const bridgeSourceChain = useSelector(selectBridgeSourceChain)
-  const bridgeDestinationChain = useSelector(selectBridgeDestinationChain)
+  const bridgeSourceChainKey = useSelector(selectBridgeSourceChainKey)
+  const bridgeDestinationChainKey = useSelector(selectBridgeDestinationChainKey)
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
 
   // Get available chains from network asset config
@@ -26,18 +26,18 @@ function BridgeSelect() {
 
   // Set initial source chain to first available chain on mount
   useEffect(() => {
-    if (!bridgeSourceChain && availableChains.length > 0) {
+    if (!bridgeSourceChainKey && availableChains.length > 0) {
       dispatch({ type: 'networkAssets/setBridgeSource', payload: availableChains[0] })
     }
-  }, [dispatch, bridgeSourceChain, availableChains])
+  }, [dispatch, bridgeSourceChainKey, availableChains])
 
   const handleSourceChange = (chainKey: ChainKey) => {
     dispatch({ type: 'networkAssets/setBridgeSource', payload: chainKey })
   }
 
   const handleSwap = () => {
-    if (bridgeSourceChain) {
-      dispatch({ type: 'networkAssets/setBridgeSource', payload: bridgeDestinationChain })
+    if (bridgeSourceChainKey) {
+      dispatch({ type: 'networkAssets/setBridgeSource', payload: bridgeDestinationChainKey })
     }
   }
 
@@ -55,15 +55,15 @@ function BridgeSelect() {
             as={Button}
             rightIcon={<ChevronDownIcon />}
             textAlign="left"
-            color={!bridgeSourceChain ? 'disabled' : undefined}
+            color={!bridgeSourceChainKey ? 'disabled' : undefined}
             bg="formBackground"
             _hover={{ bg: 'hoverSecondary' }}
             w="100%"
           >
             <Flex align="center" gap={3}>
-              {bridgeSourceChain && <ChainIcon chainKey={bridgeSourceChain} />}
+              {bridgeSourceChainKey && <ChainIcon chainKey={bridgeSourceChainKey} />}
               <Text variant="paragraph">
-                {bridgeSourceChain ? chainsConfig[bridgeSourceChain].name : 'Select Chain'}
+                {bridgeSourceChainKey ? chainsConfig[bridgeSourceChainKey].name : 'Select Chain'}
               </Text>
             </Flex>
           </MenuButton>
@@ -110,16 +110,16 @@ function BridgeSelect() {
             as={Button}
             rightIcon={<ChevronDownIcon />}
             textAlign="left"
-            color={!bridgeSourceChain ? 'disabled' : undefined}
+            color={!bridgeDestinationChainKey ? 'disabled' : undefined}
             bg="formBackground"
             _hover={{ bg: 'hoverSecondary' }}
             w="100%"
             isDisabled={true}
           >
             <Flex align="center" gap={3}>
-              {bridgeDestinationChain && <ChainIcon chainKey={bridgeDestinationChain} />}
+              {bridgeDestinationChainKey && <ChainIcon chainKey={bridgeDestinationChainKey} />}
               <Text variant="paragraph">
-                {bridgeDestinationChain ? chainsConfig[bridgeDestinationChain].name : 'Select Chain'}
+                {bridgeDestinationChainKey ? chainsConfig[bridgeDestinationChainKey].name : 'Select Chain'}
               </Text>
             </Flex>
           </MenuButton>

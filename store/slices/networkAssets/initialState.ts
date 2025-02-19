@@ -198,7 +198,7 @@ export const initialState: NetworkAssetsState = {
   sourceChain: null,
 
   // Bridge source chain
-  bridgeSource: null,
+  bridgeSource: ChainKey.ETHEREUM,
 
   // Bridge amount
   bridgeAmount: '',
@@ -244,6 +244,4 @@ export const initialState: NetworkAssetsState = {
     pending: false,
     error: null,
   },
-
-  bridgeAmount: '',
 }

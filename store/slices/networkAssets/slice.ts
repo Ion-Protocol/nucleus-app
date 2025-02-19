@@ -74,6 +74,9 @@ const networkAssetsSlice = createSlice({
     setBridgeAmount: (state, action) => {
       state.bridgeAmount = sanitizeDepositInput(action.payload, state.bridgeAmount)
     },
+    clearBridgeAmount: (state) => {
+      state.bridgeAmount = ''
+    },
   },
   extraReducers,
 })

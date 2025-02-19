@@ -4,7 +4,7 @@ import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
-import { selectBridgeSourceChain, setBridgeAmount } from '@/store/slices/networkAssets'
+import { selectBridgeSourceChainKey, setBridgeAmount } from '@/store/slices/networkAssets'
 import { setBridgeAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
@@ -16,12 +16,12 @@ function BridgeInput() {
   const [isFocused, setIsFocused] = useState(false)
 
   // Get the source chain and network asset
-  const bridgeSourceChain = useSelector(selectBridgeSourceChain)
+  const bridgeSourceChainKey = useSelector(selectBridgeSourceChainKey)
   const networkAssetFromRoute = useSelector(selectNetworkAssetFromRoute)
 
   // Get the token balance for the source chain
   const tokenBalance = useSelector((state: RootState) =>
-    selectFormattedTokenBalance(state, bridgeSourceChain, networkAssetFromRoute)
+    selectFormattedTokenBalance(state, bridgeSourceChainKey, networkAssetFromRoute)
   )
   const loadingTokenBalance = useSelector(selectBalancesLoading)
 
