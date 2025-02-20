@@ -235,8 +235,12 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
                   View on Explorer
                   <Icon as={LinkExternal01} fontSize={16} color="element.subdued" strokeWidth={1.5} />
                 </Link>
-                <Text variant="smallParagraph" color="element.subdued">
-                  Note: The bridge explorer may take up to 5 minutes to populate.
+                <Text variant="smallParagraph" textAlign="center" color="element.subdued">
+                  It may take up to{' '}
+                  <Text as="span" fontWeight="bold">
+                    5 minutes
+                  </Text>{' '}
+                  for your transaction to populate on the Hyperlane Explorer
                 </Text>
               </Flex>
             )}
