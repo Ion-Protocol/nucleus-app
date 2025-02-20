@@ -36,11 +36,13 @@ export function MintAndRedeem() {
               </Text>
             </Tab>
           )}
-          <Tab>
-            <Text variant="paragraph" color={selectedIndex === 2 ? 'text' : 'secondaryText'}>
-              Bridge
-            </Text>
-          </Tab>
+          {networkAssetConfig?.allowBridge && (
+            <Tab>
+              <Text variant="paragraph" color={selectedIndex === 2 ? 'text' : 'secondaryText'}>
+                Bridge
+              </Text>
+            </Tab>
+          )}
         </TabList>
 
         {/* Tabs Content, Mint and Redeem */}

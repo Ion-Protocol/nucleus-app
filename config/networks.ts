@@ -246,6 +246,7 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.FETH]: {
     apys: {},
+    allowBridge: true,
     bridge: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,

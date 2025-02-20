@@ -2,16 +2,18 @@ import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { RootState } from '@/store'
+import { selectFormattedTokenBalance } from '@/store/slices/balance/selectors'
 import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
 import {
   selectBridgeAmount,
   selectBridgeAmountAsBigInt,
   selectBridgeDataForBridge,
-  selectBridgeDestinationChainId,
   selectBridgeSourceChainId,
+  selectBridgeSourceChainKey,
   selectContractAddressByName,
   selectNativeAsset,
 } from '@/store/slices/networkAssets'
+import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { ChakraProps, Flex, Text, useDisclosure } from '@chakra-ui/react'
@@ -24,12 +26,14 @@ export function Bridge({ ...props }: ChakraProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const bridgeAmount = useSelector(selectBridgeAmount)
   const bridgeAmountAsBigInt = useSelector(selectBridgeAmountAsBigInt)
-  console.log('bridgeAmount', bridgeAmount)
-  console.log('bridgeAmountAsBigInt', bridgeAmountAsBigInt)
   const bridgeData = useSelector(selectBridgeDataForBridge)
   const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
-  const bridgeDestinationChainId = useSelector(selectBridgeDestinationChainId)
   const bridgeSourceChainId = useSelector(selectBridgeSourceChainId)
+  const bridgeSourceChainKey = useSelector(selectBridgeSourceChainKey)
+  const networkAssetFromRoute = useSelector(selectNetworkAssetFromRoute)
+  const tokenBalance = useSelector((state: RootState) =>
+    selectFormattedTokenBalance(state, bridgeSourceChainKey, networkAssetFromRoute)
+  )
   const { data: previewFee, isLoading: previewFeeLoading } = useGetPreviewFeeQuery(
     {
       shareAmount: bridgeAmountAsBigInt,
@@ -78,7 +82,14 @@ export function Bridge({ ...props }: ChakraProps) {
         p={2}
         gap={1}
         onClick={onOpen}
-        isDisabled={!bridgeAmountAsBigInt || !bridgeData || !tellerContractAddress || !bridgeSourceChainId}
+        isDisabled={
+          !bridgeAmountAsBigInt ||
+          !bridgeData ||
+          !tellerContractAddress ||
+          !bridgeSourceChainId ||
+          !tokenBalance ||
+          bridgeAmount > tokenBalance
+        }
       >
         <Text variant="button">Bridge</Text>
       </ConnectAwareButton>

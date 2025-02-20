@@ -102,6 +102,7 @@ export const {
   setReceiveAmount,
   setSourceChain,
   setBridgeAmount,
+  clearBridgeAmount,
   setBridgeSource,
   setSolanaAddress,
 } = networkAssetsSlice.actions

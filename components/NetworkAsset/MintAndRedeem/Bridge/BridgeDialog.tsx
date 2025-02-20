@@ -60,8 +60,6 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
   )
   const bridgeDestinationChainId = useSelector(selectBridgeDestinationChainId)
   const bridgeSourceChainId = useSelector(selectBridgeSourceChainId)
-  console.log('bridgeSourceChainId', bridgeSourceChainId)
-  console.log('bridgeDestinationChainId', bridgeDestinationChainId)
   const [
     bridge,
     {

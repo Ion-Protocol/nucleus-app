@@ -13,6 +13,7 @@ export interface TokenApyDataItem {
 
 export interface NetworkAsset {
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
+  allowBridge?: boolean
   bridge?: Partial<
     Record<
       ChainKey,
