@@ -978,6 +978,14 @@ export const selectBridgeSource = (state: RootState) => {
   return bridgeSource
 }
 
+export const selectBridgeSourceChainId = (state: RootState) => {
+  const bridgeSourceChainKey = selectBridgeSourceChainKey(state)
+  if (!bridgeSourceChainKey) return null
+  const chain = chainsConfig[bridgeSourceChainKey as ChainKey]
+  if (!chain) return null
+  return chain.id
+}
+
 export const selectBridgeDestination = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
   const bridgeDestinationChainKey = selectBridgeDestinationChainKey(state)
@@ -1009,6 +1017,13 @@ export const selectBridgeExplorerBaseUrl = (state: RootState) => {
 // DO NOT memoize: Direct lookup; returns a value from state.
 export const selectBridgeAmount = (state: RootState) => {
   return state.networkAssets.bridgeAmount
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectBridgeAmountAsBigInt = (state: RootState): bigint => {
+  const bridgeAmountAsString = selectBridgeAmount(state)
+  if (!bridgeAmountAsString || bridgeAmountAsString.trim() === '') return BigInt(0)
+  return BigInt(convertToDecimals(bridgeAmountAsString, 18))
 }
 
 // SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.

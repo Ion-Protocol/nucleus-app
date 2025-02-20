@@ -351,7 +351,7 @@ export const setRedeemAmountMax = createAsyncThunk<void, void, { state: RootStat
   }
 )
 
-export const setBridgeAmountMax = createAsyncThunk(
+export const setBridgeAmountMax = createAsyncThunk<void, void, { state: RootState; rejectValue: string }>(
   'networkAssets/setBridgeAmountMax',
   async (_, { getState, dispatch }) => {
     const state = getState() as RootState

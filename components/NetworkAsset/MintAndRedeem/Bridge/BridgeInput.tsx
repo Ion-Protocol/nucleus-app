@@ -3,16 +3,17 @@ import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
+import { useAppDispatch } from '@/store/hooks'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import { selectBridgeSourceChainKey, setBridgeAmount } from '@/store/slices/networkAssets'
 import { setBridgeAmountMax } from '@/store/slices/networkAssets/thunks'
 import { selectNetworkAssetFromRoute } from '@/store/slices/router'
 import { Button, Divider, Flex, Input, Text } from '@chakra-ui/react'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 function BridgeInput() {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const [isFocused, setIsFocused] = useState(false)
 
   // Get the source chain and network asset
