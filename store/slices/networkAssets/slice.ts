@@ -68,6 +68,15 @@ const networkAssetsSlice = createSlice({
     setSolanaAddress: (state, action) => {
       state.solanaAddress = action.payload
     },
+    setBridgeSource: (state, action: PayloadAction<ChainKey | null>) => {
+      state.bridgeSource = action.payload
+    },
+    setBridgeAmount: (state, action) => {
+      state.bridgeAmount = sanitizeDepositInput(action.payload, state.bridgeAmount)
+    },
+    clearBridgeAmount: (state) => {
+      state.bridgeAmount = ''
+    },
   },
   extraReducers,
 })
@@ -92,6 +101,9 @@ export const {
   setSelectedRedeemSourceToken,
   setReceiveAmount,
   setSourceChain,
+  setBridgeAmount,
+  clearBridgeAmount,
+  setBridgeSource,
   setSolanaAddress,
 } = networkAssetsSlice.actions
 export const networkAssetsReducer = networkAssetsSlice.reducer

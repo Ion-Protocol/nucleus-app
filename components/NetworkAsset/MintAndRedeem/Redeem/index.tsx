@@ -202,6 +202,9 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       {/* Redeem Summary */}
       <RedeemSummary />
       <ConnectAwareButton
+        h="fit-content"
+        p={2}
+        gap={1}
         isDisabled={!isValid || redeemAmount > BigInt(tokenBalance || '0')}
         onClick={handleRedeemClick}
         isLoading={isLoading}

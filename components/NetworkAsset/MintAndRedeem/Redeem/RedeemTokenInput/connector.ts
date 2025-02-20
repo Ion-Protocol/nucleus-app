@@ -3,10 +3,10 @@ import { RootState } from '@/store'
 import { selectBalancesLoading, selectFormattedTokenBalance } from '@/store/slices/balance'
 import {
   selectNetworkAssetConfig,
-  selectTokenRateInQuoteLoading,
-  selectRedemptionSourceChainKey,
-  selectRedeemSourceChain,
   selectRedeemAmount,
+  selectRedeemSourceChain,
+  selectRedemptionSourceChainKey,
+  selectTokenRateInQuoteLoading,
   setRedeemAmount,
 } from '@/store/slices/networkAssets'
 import { setRedeemAmountMax } from '@/store/slices/networkAssets/thunks'

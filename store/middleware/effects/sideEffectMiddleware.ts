@@ -2,6 +2,7 @@ import { AppDispatch } from '@/store'
 import { setAddress } from '@/store/slices/account'
 import { fetchAllTokenBalances } from '@/store/slices/balance'
 import {
+  clearBridgeAmount,
   clearDepositAmount,
   clearPreviewFee,
   clearRedeemAmount,
@@ -46,6 +47,7 @@ export const sideEffectMiddleware: Middleware =
 
       // Clear redeem-related state
       dispatch(clearRedeemAmount())
+      dispatch(clearBridgeAmount())
       dispatch(clearRedeemSourceChain())
       dispatch(resetRedeemDestinationChain())
     }
