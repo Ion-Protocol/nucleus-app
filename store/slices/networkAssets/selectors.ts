@@ -1009,9 +1009,9 @@ export const selectBridgeDestinationChainIdentifier = (state: RootState) => {
 }
 
 export const selectBridgeExplorerBaseUrl = (state: RootState) => {
-  const bridgeDestination = selectBridgeDestination(state)
-  if (!bridgeDestination) return null
-  return bridgeDestination.explorerBaseUrl
+  const bridgeSource = selectBridgeSource(state)
+  if (!bridgeSource) return null
+  return bridgeSource.bridgeExplorerBaseUrl
 }
 
 // DO NOT memoize: Direct lookup; returns a value from state.

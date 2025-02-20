@@ -250,7 +250,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     bridge: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
-        explorerBaseUrl: hyperlaneBaseUrl,
+        explorerBaseUrl: etherscanBaseUrl,
         bridgeChainIdentifier: 1,
         bridgeExplorerBaseUrl: hyperlaneBaseUrl,
       },
