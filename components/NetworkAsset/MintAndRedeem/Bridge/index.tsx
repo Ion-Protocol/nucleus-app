@@ -1,6 +1,7 @@
 import { ConnectAwareButton } from '@/components/shared/ConnectAwareButton'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
+import { useChainManagement } from '@/hooks/useChainManagement'
 import { RootState } from '@/store'
 import { selectFormattedTokenBalance } from '@/store/slices/balance/selectors'
 import { useGetTokenPriceQuery } from '@/store/slices/coinGecko'
@@ -24,6 +25,7 @@ import BridgeSelect from './BridgeSelect'
 
 export function Bridge({ ...props }: ChakraProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { switchToChain } = useChainManagement()
   const bridgeAmount = useSelector(selectBridgeAmount)
   const bridgeAmountAsBigInt = useSelector(selectBridgeAmountAsBigInt)
   const bridgeData = useSelector(selectBridgeDataForBridge)
@@ -50,6 +52,11 @@ export function Bridge({ ...props }: ChakraProps) {
     skip: !nativeAsset?.coinGeckoId,
   })
   const formattedPreviewFee = previewFee?.feeAsString && tokenPrice ? Number(previewFee.feeAsString) * tokenPrice : 0
+
+  const handleBridge = async () => {
+    await switchToChain(bridgeSourceChainId!)
+    onOpen()
+  }
   return (
     <Flex direction="column" {...props} gap={6}>
       <BridgeSelect />
@@ -81,7 +88,7 @@ export function Bridge({ ...props }: ChakraProps) {
         h="fit-content"
         p={2}
         gap={1}
-        onClick={onOpen}
+        onClick={handleBridge}
         isDisabled={
           !bridgeAmountAsBigInt ||
           !bridgeData ||

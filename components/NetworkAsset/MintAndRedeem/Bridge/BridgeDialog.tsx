@@ -2,13 +2,13 @@ import { TokenIcon } from '@/components/config/tokenIcons'
 import { TxAnimationWrapper } from '@/components/global/tx-animation-wrapper'
 import ErrorCodeBlock from '@/components/global/tx-dialog/error-code-block'
 import TxSteps from '@/components/global/tx-steps'
-import { useChainManagement } from '@/hooks/useChainManagement'
 import { RootState } from '@/store'
 import {
   selectBridgeAmount,
   selectBridgeAmountAsBigInt,
   selectBridgeDataForBridge,
   selectBridgeDestinationChainId,
+  selectBridgeExplorerBaseUrl,
   selectBridgeSourceChainId,
   selectContractAddressByName,
 } from '@/store/slices/networkAssets'
@@ -31,6 +31,7 @@ import {
   Link,
   Text,
 } from '@chakra-ui/react'
+import { LinkExternal01 } from '@untitled-ui/icons-react'
 import { ArrowRight, Eye, EyeOff } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -48,12 +49,12 @@ interface BridgeDialogProps {
 function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
   const cancelRef = useRef<HTMLButtonElement>(null)
   const [isFullErrorDisplayed, setIsFullErrorDisplayed] = useState(false)
-  const { switchToChain } = useChainManagement()
 
   // Use the same selectors as the parent component
   const bridgeAmountAsBigInt = useSelector(selectBridgeAmountAsBigInt)
   const bridgeAmount = useSelector(selectBridgeAmount)
   const bridgeData = useSelector(selectBridgeDataForBridge)
+  const bridgeExplorerBaseUrl = useSelector(selectBridgeExplorerBaseUrl)
   const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
   const boringVaultContractAddress = useSelector((state: RootState) =>
     selectContractAddressByName(state, 'boringVault')
@@ -94,7 +95,6 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
     bridgeDestinationChainId &&
     bridgeSourceChainId
   ) {
-    switchToChain(bridgeSourceChainId)
     bridge({
       shareAmount: bridgeAmountAsBigInt,
       bridgeData,
@@ -220,6 +220,25 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
               <Button onClick={onClose} fontFamily="diatype" fontWeight="normal" width="100%">
                 Close
               </Button>
+            )}
+            {isTxReceiptSuccess && (
+              <Flex flexDirection="column" alignItems="center" gap={1}>
+                <Link
+                  href={`${bridgeExplorerBaseUrl}/?search=${txReceipt?.transactionHash}&destination=${bridgeDestinationChainId}`}
+                  isExternal
+                  textDecoration="none"
+                  display="flex"
+                  alignItems="center"
+                  color="element.subdued"
+                  gap={1}
+                >
+                  View on Explorer
+                  <Icon as={LinkExternal01} fontSize={16} color="element.subdued" strokeWidth={1.5} />
+                </Link>
+                <Text variant="smallParagraph" color="element.subdued">
+                  Note: The bridge explorer may take up to 5 minutes to populate.
+                </Text>
+              </Flex>
             )}
           </AlertDialogFooter>
         </AlertDialogContent>
