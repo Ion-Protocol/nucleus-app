@@ -1,4 +1,4 @@
-import { TokenIcon } from '@/components/config/tokenIcons'
+import { ChainIcon } from '@/components/config/chainIcons'
 import { TxAnimationWrapper } from '@/components/global/tx-animation-wrapper'
 import ErrorCodeBlock from '@/components/global/tx-dialog/error-code-block'
 import TxSteps from '@/components/global/tx-steps'
@@ -8,8 +8,10 @@ import {
   selectBridgeAmountAsBigInt,
   selectBridgeDataForBridge,
   selectBridgeDestinationChainId,
+  selectBridgeDestinationChainKey,
   selectBridgeExplorerBaseUrl,
   selectBridgeSourceChainId,
+  selectBridgeSourceChainKey,
   selectContractAddressByName,
 } from '@/store/slices/networkAssets'
 import { useBridgeMutation } from '@/store/slices/tellerApi'
@@ -59,6 +61,8 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
   const boringVaultContractAddress = useSelector((state: RootState) =>
     selectContractAddressByName(state, 'boringVault')
   )
+  const bridgeSourceChainKey = useSelector(selectBridgeSourceChainKey)
+  const bridgeDestinationChainKey = useSelector(selectBridgeDestinationChainKey)
   const bridgeDestinationChainId = useSelector(selectBridgeDestinationChainId)
   const bridgeSourceChainId = useSelector(selectBridgeSourceChainId)
   const [
@@ -151,7 +155,7 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
             {isTxReceiptSuccess && bridgeAmountAsBigInt && (
               <Flex flexDirection="column" alignItems="center" gap={4}>
                 <Flex gap={2} justifyContent="center" alignItems="center">
-                  <TokenIcon fontSize="24px" tokenKey={sourceTokenKey} />
+                  <ChainIcon fontSize="24px" chainKey={bridgeSourceChainKey!} />
                   <Text as="h1" fontFamily="ppformula" fontSize="xl" fontWeight="medium">
                     {`${bigIntToNumberAsString(bridgeAmountAsBigInt, {
                       decimals: 18,
@@ -159,7 +163,7 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
                     })} ${getSymbolByAddress(boringVaultContractAddress as `0x${string}`)}`}
                   </Text>
                   <Icon as={ArrowRight} size={16} color="element.subdued" strokeWidth={1.5} />
-                  <TokenIcon fontSize="24px" tokenKey={destinationTokenKey} />
+                  <ChainIcon fontSize="24px" chainKey={bridgeDestinationChainKey!} />
                 </Flex>
                 <Text fontFamily="diatype" fontSize="xl" fontWeight="normal" textAlign="center" color="element.main">
                   Bridge initiated successfully
