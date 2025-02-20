@@ -38,7 +38,11 @@ import { useSelector } from 'react-redux'
 interface BridgeDialogProps {
   isOpen: boolean
   onClose: () => void
-  previewFee: string
+  previewFee: {
+    fee: bigint
+    feeAsString: string
+    truncatedFeeAsString: string
+  }
 }
 
 function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
@@ -56,6 +60,8 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
   )
   const bridgeDestinationChainId = useSelector(selectBridgeDestinationChainId)
   const bridgeSourceChainId = useSelector(selectBridgeSourceChainId)
+  console.log('bridgeSourceChainId', bridgeSourceChainId)
+  console.log('bridgeDestinationChainId', bridgeDestinationChainId)
   const [
     bridge,
     {
@@ -67,7 +73,9 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
       isSuccess: isBridgeMutationSuccess,
       status: bridgeMutationStatus,
     },
-  ] = useBridgeMutation()
+  ] = useBridgeMutation({
+    fixedCacheKey: `bridge-${bridgeSourceChainId}-${bridgeDestinationChainId}-${bridgeAmountAsBigInt}`,
+  })
 
   const {
     data: txReceipt,
@@ -93,8 +101,8 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
       shareAmount: bridgeAmountAsBigInt,
       bridgeData,
       contractAddress: tellerContractAddress,
-      chainId: bridgeDestinationChainId,
-      fee: BigInt(previewFee),
+      chainId: bridgeSourceChainId,
+      fee: previewFee.fee,
     })
   }
 
@@ -120,11 +128,9 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
           </AlertDialogHeader>
 
           <AlertDialogBody display="flex" flexDirection="column" gap={6}>
-            {!isFullErrorDisplayed && bridgeAmountAsBigInt && (
+            {!isFullErrorDisplayed && bridgeAmount && (
               <TxAnimationWrapper
-                amount={bigIntToNumberAsString(bridgeAmountAsBigInt, {
-                  decimals: 18,
-                })}
+                amount={bridgeAmountAsBigInt.toString()}
                 offerToken={boringVaultContractAddress as `0x${string}`}
                 offerTokenKey={sourceTokenKey}
                 isError={isBridgeMutationError || isTxReceiptError}

@@ -5,6 +5,7 @@ import { CrossChainTellerBaseAbi } from '@/contracts/CrossChainTellerBaseAbi'
 import { bigIntToNumberAsString } from '@/utils/bigint'
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Address } from 'viem'
+import { serialize } from 'wagmi'
 import {
   readContract,
   type ReadContractErrorType,
@@ -42,7 +43,7 @@ type WagmiError = ReadContractErrorType | WriteContractErrorType | WaitForTransa
 
 export const tellerApi = createApi({
   reducerPath: 'previewFeeApi',
-  baseQuery: fakeBaseQuery<WagmiError>(),
+  baseQuery: fakeBaseQuery<string>(),
   tagTypes: ['PreviewFee'],
   endpoints: (builder) => ({
     getPreviewFee: builder.query<PreviewFeeResponse, PreviewFeeArgs>({
@@ -63,11 +64,9 @@ export const tellerApi = createApi({
             },
           }
         } catch (err) {
-          const error = err as ReadContractErrorType
+          const error = serialize(err)
           return {
-            error,
-            data: undefined,
-            meta: undefined,
+            error: error,
           }
         }
       },
@@ -88,8 +87,10 @@ export const tellerApi = createApi({
           })
           return { data: hash }
         } catch (err) {
-          const error = err as WriteContractErrorType
-          return { error, data: undefined, meta: undefined }
+          const error = serialize(err)
+          return {
+            error: error,
+          }
         }
       },
     }),

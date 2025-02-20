@@ -24,6 +24,8 @@ export function Bridge({ ...props }: ChakraProps) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const bridgeAmount = useSelector(selectBridgeAmount)
   const bridgeAmountAsBigInt = useSelector(selectBridgeAmountAsBigInt)
+  console.log('bridgeAmount', bridgeAmount)
+  console.log('bridgeAmountAsBigInt', bridgeAmountAsBigInt)
   const bridgeData = useSelector(selectBridgeDataForBridge)
   const tellerContractAddress = useSelector((state: RootState) => selectContractAddressByName(state, 'teller'))
   const bridgeDestinationChainId = useSelector(selectBridgeDestinationChainId)
@@ -44,7 +46,6 @@ export function Bridge({ ...props }: ChakraProps) {
     skip: !nativeAsset?.coinGeckoId,
   })
   const formattedPreviewFee = previewFee?.feeAsString && tokenPrice ? Number(previewFee.feeAsString) * tokenPrice : 0
-  console.log('previewFee', previewFee)
   return (
     <Flex direction="column" {...props} gap={6}>
       <BridgeSelect />
@@ -81,7 +82,7 @@ export function Bridge({ ...props }: ChakraProps) {
       >
         <Text variant="button">Bridge</Text>
       </ConnectAwareButton>
-      {previewFee && <BridgeDialog isOpen={isOpen} onClose={onClose} previewFee={previewFee.data?.feeAsString} />}
+      {previewFee && <BridgeDialog isOpen={isOpen} onClose={onClose} previewFee={previewFee} />}
     </Flex>
   )
 }
