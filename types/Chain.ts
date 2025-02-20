@@ -48,6 +48,7 @@ export interface NetworkAsset {
     [chain in ChainKey]: TokenKey[]
   }>
   token: Token
+  tvlSources: Partial<Record<ChainKey, { chain: ChainKey }>>
   protocols: ChainKey[]
 }
 
