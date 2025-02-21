@@ -13,6 +13,13 @@ export interface TokenApyDataItem {
 
 export interface NetworkAsset {
   apys: Partial<Record<TokenKey, TokenApyDataItem[]>>
+  allowBridge?: boolean
+  bridge?: Partial<
+    Record<
+      ChainKey,
+      { chain: ChainKey; explorerBaseUrl: string; bridgeChainIdentifier: number; bridgeExplorerBaseUrl: string }
+    >
+  >
   chain: ChainKey
   comingSoon?: boolean
   contracts: Contracts
@@ -48,6 +55,7 @@ export interface NetworkAsset {
     [chain in ChainKey]: TokenKey[]
   }>
   token: Token
+  tvlSources: Partial<Record<ChainKey, { chain: ChainKey }>>
   protocols: ChainKey[]
 }
 

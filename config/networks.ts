@@ -12,7 +12,6 @@ import {
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
   seiExplorerBaseUrl,
-  supraScanBaseUrl,
   swellExplorerBaseURL,
 } from './constants'
 import { form, rari } from './customWagmiChains'
@@ -152,6 +151,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       ],
     },
     token: tokensConfig[TokenKey.BOBAETH],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.BOBA]: {
+        chain: ChainKey.BOBA,
+      },
+    },
     protocols: [ChainKey.OKU, ChainKey.TEAHOUSE, ChainKey.LENDLAND, ChainKey.LYNX],
   },
   [TokenKey.SSETH]: {
@@ -243,10 +250,33 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.SEI]: [TokenKey.WETH, TokenKey.SEIYANETH],
     },
     token: tokensConfig[TokenKey.SSETH],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.SEI]: {
+        chain: ChainKey.SEI,
+      },
+    },
     protocols: [ChainKey.JELLYVERSE],
   },
   [TokenKey.FETH]: {
     apys: {},
+    allowBridge: true,
+    bridge: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+        bridgeChainIdentifier: 1,
+        bridgeExplorerBaseUrl: hyperlaneBaseUrl,
+      },
+      [ChainKey.FORM]: {
+        chain: ChainKey.FORM,
+        explorerBaseUrl: formExplorerBaseUrl,
+        bridgeChainIdentifier: 478,
+        bridgeExplorerBaseUrl: hyperlaneBaseUrl,
+      },
+    },
     chain: ChainKey.FORM,
     comingSoon: false,
     contracts: {
@@ -353,6 +383,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.FORM]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.FETH],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.FORM]: {
+        chain: ChainKey.FORM,
+      },
+    },
     protocols: [],
   },
   [TokenKey.RARIETH]: {
@@ -473,6 +511,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.RARI]: [TokenKey.WETH],
     },
     token: tokensConfig[TokenKey.RARIETH],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.RARI]: {
+        chain: ChainKey.RARI,
+      },
+    },
     protocols: [],
   },
   [TokenKey.UNIFIETH]: {
@@ -552,6 +598,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.UNIFI]: {
+        chain: ChainKey.UNIFI,
+      },
+    },
   },
   [TokenKey.EARNETH]: {
     apys: {},
@@ -629,6 +683,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.SWELL]: {
+        chain: ChainKey.SWELL,
+      },
+    },
   },
   [TokenKey.TETH]: {
     apys: {},
@@ -708,6 +770,11 @@ const mainnetNetworkAssets: NetworkAssets = {
       ChainKey.SANDGLASS,
       ChainKey.NEPTUNE,
     ],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+    },
   },
   [TokenKey.EARNBTC]: {
     apys: {},
@@ -810,6 +877,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.SWELL]: {
+        chain: ChainKey.SWELL,
+      },
+    },
   },
   [TokenKey.NELIXIR]: {
     apys: {},
@@ -879,6 +954,14 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+      [ChainKey.PLUME]: {
+        chain: ChainKey.PLUME,
+      },
+    },
   },
   [TokenKey.SUPUSD]: {
     apys: {},
@@ -943,6 +1026,11 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
     protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+    },
   },
 }
 
