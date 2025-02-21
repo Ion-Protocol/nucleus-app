@@ -227,9 +227,12 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   const accountantAddress = networkAssetConfig?.contracts.accountant
 
   // Collect chainIds users can deposit into vault from
-  const chainIds = Object.values(networkAssetConfig.sourceChains).map(
-    (sourceChain) => chainsConfig[sourceChain.chain].id
+  const chainIds = Object.values(networkAssetConfig.tvlSources).map(
+    (tvlSourceChain) => chainsConfig[tvlSourceChain.chain].id
   )
+  if (tokenKey === TokenKey.BOBAETH) {
+    console.log('chainIds', chainIds)
+  }
 
   if (!chainIds) {
     const errorMessage = `Chain ${chainIds} does not properly defined`
@@ -257,8 +260,15 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
         }))
     )
 
+    if (tokenKey === TokenKey.SUPUSD) {
+      console.log('promises', promises)
+    }
+
     // Await for shares results
     const totalSharesResults = await Promise.allSettled(promises)
+    if (tokenKey === TokenKey.SUPUSD) {
+      console.log('totalSharesResults', totalSharesResults)
+    }
 
     const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
@@ -278,15 +288,17 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
     if (tokenKey === TokenKey.EARNBTC) {
       // EARNBTC uses 8 decimals, normalize to 18 by multiplying by 10^10
       tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e10)
-    } else if (tokenKey === TokenKey.NELIXIR) {
-      // NELIXIR uses 6 decimals, normalize to 18 by multiplying by 10^12
+    } else if (tokenKey === TokenKey.NELIXIR || tokenKey === TokenKey.SUPUSD) {
+      // NELIXIR and SUPUSD use 6 decimals, normalize to 18 by multiplying by 10^12
       tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e12)
     } else {
       // ETH-based assets already use 18 decimals
       tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint
     }
 
-    console.log(tokenKey, totalSharesResults, calculateTotalSupply, tokenPerShareRate, tvlInToken)
+    if (tokenKey === TokenKey.SUPUSD) {
+      console.log(tokenKey, totalSharesResults, calculateTotalSupply, tokenPerShareRate, tvlInToken)
+    }
 
     return { tvl: tvlInToken.toString(), tokenKey }
   } catch (e) {
