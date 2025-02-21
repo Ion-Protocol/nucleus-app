@@ -12,7 +12,6 @@ import {
   layerZeroBaseUrl,
   rariExplorerBaseUrl,
   seiExplorerBaseUrl,
-  supraScanBaseUrl,
   swellExplorerBaseURL,
 } from './constants'
 import { form, rari } from './customWagmiChains'
