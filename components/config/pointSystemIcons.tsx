@@ -1,7 +1,9 @@
 import { PointSystemKey } from '@/types/PointSystem'
-import { ChakraProps } from '@chakra-ui/react'
+import { ChakraProps, Icon } from '@chakra-ui/react'
 import React from 'react'
 import { BabylonIcon } from '../shared/icons/Babylon'
+import { CarrotsIcon } from '../shared/icons/Carrots'
+import { EclipseIcon } from '../shared/icons/Eclipse'
 import { EigenlayerPointsIcon } from '../shared/icons/EigenlayerPoints'
 import { FireBitcoinIcon } from '../shared/icons/FireBitcoin'
 import { FormIcon } from '../shared/icons/Form'
@@ -14,6 +16,7 @@ import { RenzoIcon } from '../shared/icons/Renzo'
 import { SolvBtcIcon } from '../shared/icons/SolvBtc'
 import { SwellChainIcon } from '../shared/icons/SwellChain'
 import { SymbioticIcon } from '../shared/icons/Symbiotic'
+import { WswellIcon } from '../shared/icons/Wswell'
 
 export const pointSystemIconMap: Partial<Record<PointSystemKey, (props: ChakraProps) => JSX.Element>> = {
   [PointSystemKey.ION]: (props) => <IonTokenIcon {...props} />,
@@ -29,6 +32,9 @@ export const pointSystemIconMap: Partial<Record<PointSystemKey, (props: ChakraPr
   [PointSystemKey.BABYLON]: (props) => <BabylonIcon {...props} />,
   [PointSystemKey.LORENZOSTBTC]: (props) => <LorenzoStbtcIcon {...props} />,
   [PointSystemKey.FIREBTC]: (props) => <FireBitcoinIcon {...props} />,
+  [PointSystemKey.CARROTS]: (props) => <Icon as={CarrotsIcon} {...props} />,
+  [PointSystemKey.GRASS]: (props) => <EclipseIcon {...props} />,
+  [PointSystemKey.WSWELL]: (props) => <Icon as={WswellIcon} {...props} />,
 }
 
 interface PointSystemIconProps extends ChakraProps {

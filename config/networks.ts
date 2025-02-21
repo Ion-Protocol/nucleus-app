@@ -564,6 +564,11 @@ const mainnetNetworkAssets: NetworkAssets = {
         name: 'Nucleus',
         pointsMultiplier: 2,
       },
+      {
+        key: PointSystemKey.CARROTS,
+        name: 'Carrots',
+        pointsMultiplier: 1,
+      },
     ],
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
@@ -650,6 +655,11 @@ const mainnetNetworkAssets: NetworkAssets = {
         name: 'Nucleus',
         pointsMultiplier: 3,
       },
+      {
+        key: PointSystemKey.WSWELL,
+        name: 'wSWELL',
+        pointsMultiplier: 1,
+      },
     ],
     redeem: {
       withdrawalFee: defaultWithdrawalFee,
@@ -728,6 +738,11 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.NUCLEUS,
         name: 'Nucleus',
+        pointsMultiplier: 1,
+      },
+      {
+        key: PointSystemKey.GRASS,
+        name: 'Grass',
         pointsMultiplier: 1,
       },
     ],
@@ -842,6 +857,11 @@ const mainnetNetworkAssets: NetworkAssets = {
       {
         key: PointSystemKey.SOLVBTC,
         name: 'Solv BTC',
+        pointsMultiplier: 1,
+      },
+      {
+        key: PointSystemKey.WSWELL,
+        name: 'wSWELL',
         pointsMultiplier: 1,
       },
     ],
