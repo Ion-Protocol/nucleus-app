@@ -114,7 +114,13 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
 
   const sourceTokenKey = getSymbolByAddress(boringVaultContractAddress as `0x${string}`)?.toLowerCase() as TokenKey
   const destinationTokenKey = getSymbolByAddress(boringVaultContractAddress as `0x${string}`)?.toLowerCase() as TokenKey
-
+  const displayAmount =
+    Number(bridgeAmount) < 0.01
+      ? '< 0.01'
+      : `${bigIntToNumberAsString(bridgeAmountAsBigInt, {
+          decimals: 18,
+          maximumFractionDigits: 2,
+        })}`
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -157,10 +163,7 @@ function BridgeDialog({ isOpen, onClose, previewFee }: BridgeDialogProps) {
                 <Flex gap={2} justifyContent="center" alignItems="center">
                   <ChainIcon fontSize="24px" chainKey={bridgeSourceChainKey!} />
                   <Text as="h1" fontFamily="ppformula" fontSize="xl" fontWeight="medium">
-                    {`${bigIntToNumberAsString(bridgeAmountAsBigInt, {
-                      decimals: 18,
-                      maximumFractionDigits: 2,
-                    })} ${getSymbolByAddress(boringVaultContractAddress as `0x${string}`)}`}
+                    {`${displayAmount} ${getSymbolByAddress(boringVaultContractAddress as `0x${string}`)}`}
                   </Text>
                   <Icon as={ArrowRight} size={16} color="element.subdued" strokeWidth={1.5} />
                   <ChainIcon fontSize="24px" chainKey={bridgeDestinationChainKey!} />

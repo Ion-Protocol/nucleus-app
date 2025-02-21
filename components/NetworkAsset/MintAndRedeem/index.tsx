@@ -37,7 +37,7 @@ export function MintAndRedeem() {
             </Tab>
           )}
           {networkAssetConfig?.allowBridge && (
-            <Tab>
+            <Tab _selected={{ color: 'white', borderBottom: '2px solid', borderColor: 'text' }}>
               <Text variant="paragraph" color={selectedIndex === 2 ? 'text' : 'secondaryText'}>
                 Bridge
               </Text>
