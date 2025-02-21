@@ -13,10 +13,10 @@ import { MellowIcon } from '../shared/icons/Mellow'
 import { NucleusLogoBlackIcon } from '../shared/icons/NucleusLogo'
 import { PumpBtcIcon } from '../shared/icons/PumpBtc'
 import { RenzoIcon } from '../shared/icons/Renzo'
-import { RswellIcon } from '../shared/icons/Rswell'
 import { SolvBtcIcon } from '../shared/icons/SolvBtc'
 import { SwellChainIcon } from '../shared/icons/SwellChain'
 import { SymbioticIcon } from '../shared/icons/Symbiotic'
+import { WswellIcon } from '../shared/icons/Wswell'
 
 export const pointSystemIconMap: Partial<Record<PointSystemKey, (props: ChakraProps) => JSX.Element>> = {
   [PointSystemKey.ION]: (props) => <IonTokenIcon {...props} />,
@@ -34,7 +34,7 @@ export const pointSystemIconMap: Partial<Record<PointSystemKey, (props: ChakraPr
   [PointSystemKey.FIREBTC]: (props) => <FireBitcoinIcon {...props} />,
   [PointSystemKey.CARROTS]: (props) => <Icon as={CarrotsIcon} {...props} />,
   [PointSystemKey.GRASS]: (props) => <EclipseIcon {...props} />,
-  [PointSystemKey.RSWELL]: (props) => <Icon as={RswellIcon} {...props} />,
+  [PointSystemKey.WSWELL]: (props) => <Icon as={WswellIcon} {...props} />,
 }
 
 interface PointSystemIconProps extends ChakraProps {

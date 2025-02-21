@@ -656,8 +656,8 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 3,
       },
       {
-        key: PointSystemKey.RSWELL,
-        name: 'rSWELL',
+        key: PointSystemKey.WSWELL,
+        name: 'wSWELL',
         pointsMultiplier: 1,
       },
     ],
@@ -860,8 +860,8 @@ const mainnetNetworkAssets: NetworkAssets = {
         pointsMultiplier: 1,
       },
       {
-        key: PointSystemKey.RSWELL,
-        name: 'rSWELL',
+        key: PointSystemKey.WSWELL,
+        name: 'wSWELL',
         pointsMultiplier: 1,
       },
     ],

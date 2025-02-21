@@ -14,7 +14,7 @@ export enum PointSystemKey {
   LORENZOSTBTC = 'lorenzostbtc',
   CARROTS = 'carrots',
   GRASS = 'grass',
-  RSWELL = 'rswell',
+  WSWELL = 'wswell',
 }
 
 export interface PointSystem {

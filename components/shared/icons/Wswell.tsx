@@ -1,7 +1,7 @@
 import { createIcon } from '@chakra-ui/react'
 
-export const RswellIcon = createIcon({
-  displayName: 'RswellIcon',
+export const WswellIcon = createIcon({
+  displayName: 'WswellIcon',
   viewBox: '0 0 24 24',
   path: (
     <>
