@@ -50,6 +50,12 @@ export const selectRedemptionDestinationChainKey = (state: RootState) => {
   const withdrawalDestinationChainKey = selectBridgesState(state).redeemDestinationChain
   return withdrawalDestinationChainKey
 }
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectBridgeSourceChainKey = (state: RootState) => {
+  return state.networkAssets.bridgeSource
+}
+
 /////////////////////////////////////////////////////////////////////
 // Config Selectors
 /////////////////////////////////////////////////////////////////////
@@ -323,7 +329,6 @@ export const selectTotalTvl = (state: RootState) => {
 
     // Skip RARIETH TVL
     if (tokenKey === TokenKey.RARIETH) {
-      console.log('Skipping RARIETH TVL')
       return acc
     }
 
@@ -331,7 +336,6 @@ export const selectTotalTvl = (state: RootState) => {
     if (tokenKey === TokenKey.EARNBTC) {
       const btcPrice = selectUsdPerBtcRate(state) // Price in 8 decimals
       const tvlInUsd = (BigInt(tvl) * btcPrice) / BigInt(1e8)
-      console.log(`EARNBTC TVL in USD: ${Number(tvlInUsd) / 1e8}`)
       return acc + tvlInUsd
     }
 
@@ -340,14 +344,12 @@ export const selectTotalTvl = (state: RootState) => {
       // NELIXIR TVL is already in USD with 6 decimals
       // Normalize to 8 decimals for consistency
       const tvlInUsd = BigInt(tvl) * BigInt(100)
-      console.log(`NELIXIR TVL in USD: ${Number(tvlInUsd) / 1e8}`)
       return acc + tvlInUsd
     }
 
     // Default case (ETH-based assets - 18 decimals)
     const ethPrice = selectUsdPerEthRate(state) // Price in 8 decimals
     const tvlInUsd = (BigInt(tvl) * ethPrice) / BigInt(1e18)
-    console.log(`${tokenKey} TVL in USD: ${Number(tvlInUsd) / 1e8}`)
     return acc + tvlInUsd
   }, BigInt(0))
 }
@@ -945,6 +947,102 @@ export const selectWithdrawalDestinationExplorerBaseUrl = (state: RootState) => 
   return withdrawalDestinationExplorerBaseUrl
 }
 
+/////////////////////////////////////////////////////////////////////
+// Bridge Selectors
+/////////////////////////////////////////////////////////////////////
+
+// SHOULD memoize: Returns a computed value based on source chain
+export const selectBridgeDestinationChainKey = createSelector(
+  [selectBridgeSourceChainKey, selectNetworkAssetConfig],
+  (bridgeSourceChainKey, networkAssetConfig): ChainKey | null => {
+    if (!bridgeSourceChainKey || !networkAssetConfig?.bridge) return null
+
+    // Find the matching bridge config for the source chain
+    const bridgeConfig = networkAssetConfig.bridge[bridgeSourceChainKey]
+    if (!bridgeConfig) return null
+
+    // Look for a different chain in the bridge config that isn't the source
+    const destinationChainKey = Object.keys(networkAssetConfig.bridge).find(
+      (chainKey) => chainKey !== bridgeSourceChainKey
+    ) as ChainKey | undefined
+
+    return destinationChainKey || null
+  }
+)
+
+export const selectBridgeSource = (state: RootState) => {
+  const bridgeSourceChainKey = selectBridgeSourceChainKey(state)
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!bridgeSourceChainKey || !networkAssetConfig?.bridge) return null
+  const bridgeSource = networkAssetConfig.bridge[bridgeSourceChainKey]
+  return bridgeSource
+}
+
+export const selectBridgeSourceChainId = (state: RootState) => {
+  const bridgeSourceChainKey = selectBridgeSourceChainKey(state)
+  if (!bridgeSourceChainKey) return null
+  const chain = chainsConfig[bridgeSourceChainKey as ChainKey]
+  if (!chain) return null
+  return chain.id
+}
+
+export const selectBridgeDestination = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  const bridgeDestinationChainKey = selectBridgeDestinationChainKey(state)
+  if (!bridgeDestinationChainKey || !networkAssetConfig?.bridge) return null
+  const bridgeDestination = networkAssetConfig.bridge[bridgeDestinationChainKey]
+  return bridgeDestination
+}
+
+export const selectBridgeDestinationChainId = (state: RootState) => {
+  const bridgeDestinationChainKey = selectBridgeDestinationChainKey(state)
+  if (!bridgeDestinationChainKey) return null
+  const chain = chainsConfig[bridgeDestinationChainKey as ChainKey]
+  if (!chain) return null
+  return chain.id
+}
+
+export const selectBridgeDestinationChainIdentifier = (state: RootState) => {
+  const bridgeDestination = selectBridgeDestination(state)
+  if (!bridgeDestination) return null
+  return bridgeDestination.bridgeChainIdentifier
+}
+
+export const selectBridgeExplorerBaseUrl = (state: RootState) => {
+  const bridgeSource = selectBridgeSource(state)
+  if (!bridgeSource) return null
+  return bridgeSource.bridgeExplorerBaseUrl
+}
+
+// DO NOT memoize: Direct lookup; returns a value from state.
+export const selectBridgeAmount = (state: RootState) => {
+  return state.networkAssets.bridgeAmount
+}
+
+// DO NOT memoize: Returns a primitive value; memoization not necessary.
+export const selectBridgeAmountAsBigInt = (state: RootState): bigint => {
+  const bridgeAmountAsString = selectBridgeAmount(state)
+  if (!bridgeAmountAsString || bridgeAmountAsString.trim() === '') return BigInt(0)
+  return BigInt(convertToDecimals(bridgeAmountAsString, 18))
+}
+
+// SHOULD memoize: Returns a new object; memoization avoids unnecessary recalculations.
+export const selectBridgeDataForBridge = createSelector(
+  [selectBridgeDestinationChainIdentifier, selectAddress],
+  (bridgeDestinationChainIdentifier, userAddress): BridgeData | null => {
+    if (!bridgeDestinationChainIdentifier || !userAddress) return null
+    const chainSelector = bridgeDestinationChainIdentifier
+    return {
+      chainSelector: chainSelector,
+      destinationChainReceiver: userAddress,
+      bridgeFeeToken: nativeAddress,
+      messageGas: BigInt(100000),
+      data: '0x',
+    }
+  }
+)
+
+/////////////////////////////////////////////////////////////////////
 // Fun Selectors
 /////////////////////////////////////////////////////////////////////
 

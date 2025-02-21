@@ -25,7 +25,7 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.SEI]: '0x160345fC359604fC6e70E3c5fAcbdE5F7A9342d8',
       [ChainKey.RARI]: '0xf037540e51d71b2d2b1120e8432ba49f29edfbd0',
       [ChainKey.BOBA]: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
-      // [ChainKey.FORM]: '0xb1b812b664c28E1bA1d35De925Ae88b7Bc7cdCF5', // Found on explorer but form doesn't list WETH on their bridge
+      [ChainKey.FORM]: '0xb1b812b664c28E1bA1d35De925Ae88b7Bc7cdCF5', // Found on explorer but form doesn't list WETH on their bridge
     },
   },
   [TokenKey.WEETH]: {
@@ -169,7 +169,41 @@ export const tokensConfig: Record<TokenKey, Token> = {
     name: 'unifiETH',
     symbol: 'UNIFIETH',
     addresses: {
+      [ChainKey.ETHEREUM]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
       [ChainKey.UNIFI]: '0x196ead472583bc1e9af7a05f860d9857e1bd3dcc',
+    },
+  },
+  [TokenKey.UNIFIBTC]: {
+    key: TokenKey.UNIFIBTC,
+    name: 'unifiBTC',
+    symbol: 'UNIFIBTC',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x170d847a8320f3b6a77ee15b0cae430e3ec933a0',
+      [ChainKey.UNIFI]: '0x170d847a8320f3b6a77ee15b0cae430e3ec933a0',
+    },
+  },
+  [TokenKey.LBTC]: {
+    key: TokenKey.LBTC,
+    name: 'lBTC',
+    symbol: 'LBTC',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x8236a87084f8b84306f72007f36f2618a5634494',
+    },
+  },
+  [TokenKey.PUMPBTC]: {
+    key: TokenKey.PUMPBTC,
+    name: 'pumpBTC',
+    symbol: 'PUMPBTC',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0xf469fbd2abcd6b9de8e169d128226c0fc90a012e',
+    },
+  },
+  [TokenKey.CBBTC]: {
+    key: TokenKey.CBBTC,
+    name: 'cbBTC',
+    symbol: 'CBBTC',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf',
     },
   },
   [TokenKey.SFRXETH]: {
