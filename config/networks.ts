@@ -610,9 +610,6 @@ const mainnetNetworkAssets: NetworkAssets = {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
       },
-      [ChainKey.UNIFI]: {
-        chain: ChainKey.UNIFI,
-      },
     },
   },
   [TokenKey.EARNETH]: {
