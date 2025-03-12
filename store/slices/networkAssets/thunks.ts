@@ -279,7 +279,7 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
     // TODO: Instead of checking tokenKey, we should just use the decimals of the token returned by the accountant.
     let tvlInToken: bigint
     if (tokenKey === TokenKey.EARNBTC) {
-      // Rearranged calculation to avoid truncation
+      // EARNBTC uses 8 decimals
       tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(1e10)) / WAD.bigint
     } else if (tokenKey === TokenKey.NELIXIR || tokenKey === TokenKey.SUPUSD) {
       // NELIXIR and SUPUSD use 6 decimals, normalize to 18 by multiplying by 10^12
