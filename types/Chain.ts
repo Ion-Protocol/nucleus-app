@@ -43,9 +43,9 @@ export interface NetworkAsset {
     redemptionSourceAsset: TokenKey
     redemptionSourceChain: ChainKey
     redemptionSourceChains: Partial<Record<ChainKey, { chain: ChainKey; explorerBaseUrl: string }>>
-    wantTokens: Partial<Record<ChainKey, Partial<Record<TokenKey, { token: Token; withdrawalFee: number }>>>>
+    wantTokens: Partial<Record<ChainKey, Partial<Record<TokenKey, { token: Token; withdrawSlippage: number }>>>>
     withdrawalChain: ChainKey
-    withdrawalFee: number
+    withdrawSlippage: number
   }
   receiveOn: ChainKey
   redeemComingSoon?: boolean

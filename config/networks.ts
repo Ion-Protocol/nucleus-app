@@ -5,7 +5,7 @@ import { TokenKey } from '@/types/TokenKey'
 import { boba, sei } from 'wagmi/chains'
 import {
   bobaExplorerBaseURL,
-  defaultWithdrawalFee,
+  defaultWithdrawSlippage,
   etherscanBaseUrl,
   formExplorerBaseUrl,
   hyperlaneBaseUrl,
@@ -99,38 +99,38 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: 1,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee,
+            withdrawSlippage: 1,
           },
           [TokenKey.RSWETH]: {
             token: tokensConfig[TokenKey.RSWETH],
-            withdrawalFee: defaultWithdrawalFee,
+            withdrawSlippage: 1,
           },
           [TokenKey.EZETH]: {
             token: tokensConfig[TokenKey.EZETH],
-            withdrawalFee: defaultWithdrawalFee,
+            withdrawSlippage: 1,
           },
           [TokenKey.WEETH]: {
             token: tokensConfig[TokenKey.WEETH],
-            withdrawalFee: defaultWithdrawalFee,
+            withdrawSlippage: 1,
           },
           [TokenKey.WSTETH]: {
             token: tokensConfig[TokenKey.WSTETH],
-            withdrawalFee: defaultWithdrawalFee,
+            withdrawSlippage: 1,
           },
         },
         [ChainKey.BOBA]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: 0.01,
+            withdrawSlippage: 1,
           },
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
     },
     receiveOn: ChainKey.BOBA,
     showRewardsAndHistory: false,
@@ -209,20 +209,20 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: 0.01, // Custom fee for SFRXETH
+            withdrawSlippage: 0.01, // Custom fee for SFRXETH
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: 0.01, // Custom fee for APXETH
+            withdrawSlippage: 0.01, // Custom fee for APXETH
           },
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
     },
     receiveOn: ChainKey.SEI,
     showRewardsAndHistory: true,
@@ -349,30 +349,30 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.WSTETH]: {
             token: tokensConfig[TokenKey.WSTETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.PZETH]: {
             token: tokensConfig[TokenKey.PZETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.EZETH]: {
             token: tokensConfig[TokenKey.EZETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
         [ChainKey.FORM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: 0.02,
+            withdrawSlippage: 0.02,
           },
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
     },
     receiveOn: ChainKey.FORM,
     showRewardsAndHistory: false,
@@ -457,42 +457,42 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.EZETH]: {
             token: tokensConfig[TokenKey.EZETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.WSTETH]: {
             token: tokensConfig[TokenKey.WSTETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.RSWETH]: {
             token: tokensConfig[TokenKey.RSWETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.RSETH]: {
             token: tokensConfig[TokenKey.RSETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.WEETH]: {
             token: tokensConfig[TokenKey.WEETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
         [ChainKey.RARI]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: 0, // Default 0.2%,
+            withdrawSlippage: 0, // Default 0.2%,
           },
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from shares token to want token
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
     },
     receiveOn: ChainKey.RARI,
     redeemComingSoon: false,
@@ -571,7 +571,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
       redemptionSourceChain: ChainKey.UNIFI,
       redemptionSourceChains: {
         [ChainKey.UNIFI]: {
@@ -597,15 +597,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
       },
@@ -662,7 +662,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -684,15 +684,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
       },
@@ -747,7 +747,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -769,15 +769,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, /// Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, /// Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
       },
@@ -866,7 +866,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -888,15 +888,15 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.SFRXETH]: {
             token: tokensConfig[TokenKey.SFRXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
       },
@@ -951,7 +951,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -973,7 +973,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
       },
@@ -1023,7 +1023,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawalFee: defaultWithdrawalFee,
+      withdrawSlippage: defaultWithdrawSlippage,
       redemptionSourceChain: ChainKey.ETHEREUM,
       redemptionSourceChains: {
         [ChainKey.ETHEREUM]: {
@@ -1045,7 +1045,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.SUSN]: {
             token: tokensConfig[TokenKey.SUSN],
-            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
           },
         },
       },
