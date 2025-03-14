@@ -60,7 +60,7 @@ export function useNetworkAssetTableData() {
          */
         // ! This is a temporary fix for the BTC TVL.
         // TODO: We should refactor this to be  use the decimals returned from the Accountant.
-        if (tokenKey === TokenKey.EARNBTC) {
+        if (tokenKey === TokenKey.EARNBTC || tokenKey === TokenKey.UNIFIBTC) {
           const tvlInUsdAsBigInt = (tvlAsBigInt * usdPerBtcRate) / BigInt(1e8)
           const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt, { decimals: 8 })
           const formattedTvl = abbreviateNumber(tvlInUsdAsNumber)
@@ -77,8 +77,8 @@ export function useNetworkAssetTableData() {
         }
 
         // ! This is a temporary fix for the NELIXIR TVL.
-        // TODO: We should refactor this to be  use the decimals returned from the Accountant.
-        if (tokenKey === TokenKey.NELIXIR) {
+        // TODO: We should refactor this to be use the decimals returned from the Accountant.
+        if (tokenKey === TokenKey.NELIXIR || tokenKey === TokenKey.UNIFIUSD) {
           const tvlInUsdAsNumber = bigIntToNumber(tvlAsBigInt, { decimals: 6 })
           const formattedTvl = abbreviateNumber(tvlInUsdAsNumber)
           return {
