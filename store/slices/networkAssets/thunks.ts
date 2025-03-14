@@ -230,9 +230,6 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   const chainIds = Object.values(networkAssetConfig.tvlSources).map(
     (tvlSourceChain) => chainsConfig[tvlSourceChain.chain].id
   )
-  if (tokenKey === TokenKey.BOBAETH) {
-    console.log('chainIds', chainIds)
-  }
 
   if (!chainIds) {
     const errorMessage = `Chain ${chainIds} does not properly defined`
@@ -260,15 +257,8 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
         }))
     )
 
-    if (tokenKey === TokenKey.SUPUSD) {
-      console.log('promises', promises)
-    }
-
     // Await for shares results
     const totalSharesResults = await Promise.allSettled(promises)
-    if (tokenKey === TokenKey.SUPUSD) {
-      console.log('totalSharesResults', totalSharesResults)
-    }
 
     const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
@@ -294,10 +284,6 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
     } else {
       // ETH-based assets already use 18 decimals
       tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint
-    }
-
-    if (tokenKey === TokenKey.SUPUSD) {
-      console.log(tokenKey, totalSharesResults, calculateTotalSupply, tokenPerShareRate, tvlInToken)
     }
 
     return { tvl: tvlInToken.toString(), tokenKey }
