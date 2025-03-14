@@ -659,7 +659,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawSlippage: defaultWithdrawSlippage,
+      withdrawSlippage: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.UNIFI,
       redemptionSourceChains: {
         [ChainKey.UNIFI]: {
@@ -685,7 +685,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
@@ -739,7 +739,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawSlippage: defaultWithdrawSlippage,
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.UNIFI,
       redemptionSourceChains: {
         [ChainKey.UNIFI]: {
@@ -765,7 +765,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
           },
         },
       },
