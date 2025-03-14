@@ -659,7 +659,7 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     ],
     redeem: {
-      withdrawSlippage: defaultWithdrawalFee,
+      withdrawalFee: defaultWithdrawalFee,
       redemptionSourceChain: ChainKey.UNIFI,
       redemptionSourceChains: {
         [ChainKey.UNIFI]: {
