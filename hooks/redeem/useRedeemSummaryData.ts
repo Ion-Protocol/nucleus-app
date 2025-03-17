@@ -11,7 +11,7 @@ import {
   selectRedeemAmountAsBigInt,
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainKey,
-  selectWithdrawalFee,
+  selectWithdrawSlippage,
 } from '@/store/slices/networkAssets'
 import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
 import { useSelector } from 'react-redux'
@@ -30,7 +30,7 @@ export const useRedeemSummaryData = () => {
   const withdrawalDestinationChainKey = useSelector(selectRedemptionDestinationChainKey)
   const redemptionSourceChainKey = useSelector(selectRedemptionSourceChainKey)
 
-  const withdrawalFee = useSelector(selectWithdrawalFee)
+  const withdrawSlippage = useSelector(selectWithdrawSlippage)
 
   const networkAssetConfig = useSelector(selectNetworkAssetConfig)
   const isBridgeRequired = useSelector(selectIsBridgeRequired)
@@ -71,7 +71,7 @@ export const useRedeemSummaryData = () => {
     rateInQuoteWithFee,
     withdrawalDestinationChainKey,
     redemptionSourceChainKey,
-    withdrawalFee,
+    withdrawSlippage,
     isBridgeRequired,
     tokenKeys,
     receiveToken,
