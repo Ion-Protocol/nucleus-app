@@ -22,6 +22,7 @@ import {
   selectRedemptionSourceChainId,
   selectRedemptionSourceChainKey,
   selectWantAssetAddress,
+  selectWithdrawalDeadline,
   selectWithdrawalDestinationExplorerBaseUrl,
   selectWithdrawalSourceExplorerBaseUrl,
 } from '@/store/slices/networkAssets'
@@ -37,7 +38,6 @@ import RedeemTokenInput from './RedeemTokenInput'
 interface RedeemProps extends ChakraProps {}
 
 export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
-  const deadline = calculateRedeemDeadline() // default value in function is 3 days
   /**
    ******************************************************************************
    * Selectors to validate data before submit
@@ -76,6 +76,8 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const redeemAmount = useSelector(selectRedeemAmountAsBigInt)
   const wantTokenAddress = useSelector(selectWantAssetAddress)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
+  const deadline = useSelector(selectWithdrawalDeadline)
+  console.log('deadline', deadline)
 
   /**
    * Selectors for token balance on destination chain (always mainnet) and
@@ -132,9 +134,10 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
       console.error('Source or destination explorer base URL is not set')
       return
     }
+    const formattedDeadline = calculateRedeemDeadline(deadline)
 
     const { atomicRequestArgs, atomicRequestOptions } = prepareAtomicRequestData(
-      deadline,
+      formattedDeadline,
       rateInQuoteWithFee,
       redeemAmount,
       sharesTokenAddress as Address,
