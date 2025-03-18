@@ -77,7 +77,6 @@ export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
   const wantTokenAddress = useSelector(selectWantAssetAddress)
   const wantTokenKey = useSelector(selectReceiveTokenKey)
   const deadline = useSelector(selectWithdrawalDeadline)
-  console.log('deadline', deadline)
 
   /**
    * Selectors for token balance on destination chain (always mainnet) and

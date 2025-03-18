@@ -949,7 +949,8 @@ export const selectWithdrawalDestinationExplorerBaseUrl = (state: RootState) => 
 
 export const selectWithdrawalDeadline = (state: RootState) => {
   const networkAssetConfig = selectNetworkAssetConfig(state)
-  const withdrawalDeadline = networkAssetConfig?.defaultWithdrawalDeadline
+  if (!networkAssetConfig) return 3
+  const withdrawalDeadline = networkAssetConfig.defaultWithdrawalDeadline
   return withdrawalDeadline
 }
 /////////////////////////////////////////////////////////////////////
