@@ -37,7 +37,7 @@ import RedeemTokenInput from './RedeemTokenInput'
 interface RedeemProps extends ChakraProps {}
 
 export const Redeem = React.memo(function Redeem({ ...props }: RedeemProps) {
-  const deadline = calculateRedeemDeadline() // default value in function is 3 days
+  const deadline = calculateRedeemDeadline() // default value in function is 7 days
   /**
    ******************************************************************************
    * Selectors to validate data before submit
