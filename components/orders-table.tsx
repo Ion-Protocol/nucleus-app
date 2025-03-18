@@ -94,7 +94,6 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ data, refetch, isLoading }) =
 
   const handleRowClick = useCallback(
     (order: Order) => {
-      console.log('order', order)
       setSelectedOrder(order)
       onDetailsOpen()
     },

@@ -182,6 +182,14 @@ export const tokensConfig: Record<TokenKey, Token> = {
       [ChainKey.UNIFI]: '0x170d847a8320f3b6a77ee15b0cae430e3ec933a0',
     },
   },
+  [TokenKey.UNIFIUSD]: {
+    key: TokenKey.UNIFIUSD,
+    name: 'unifiUSD',
+    symbol: 'UNIFIUSD',
+    addresses: {
+      [ChainKey.ETHEREUM]: '0x82c40e07277eBb92935f79cE92268F80dDc7caB4',
+    },
+  },
   [TokenKey.LBTC]: {
     key: TokenKey.LBTC,
     name: 'lBTC',

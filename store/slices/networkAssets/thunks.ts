@@ -230,9 +230,6 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
   const chainIds = Object.values(networkAssetConfig.tvlSources).map(
     (tvlSourceChain) => chainsConfig[tvlSourceChain.chain].id
   )
-  if (tokenKey === TokenKey.BOBAETH) {
-    console.log('chainIds', chainIds)
-  }
 
   if (!chainIds) {
     const errorMessage = `Chain ${chainIds} does not properly defined`
@@ -260,15 +257,8 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
         }))
     )
 
-    if (tokenKey === TokenKey.SUPUSD) {
-      console.log('promises', promises)
-    }
-
     // Await for shares results
     const totalSharesResults = await Promise.allSettled(promises)
-    if (tokenKey === TokenKey.SUPUSD) {
-      console.log('totalSharesResults', totalSharesResults)
-    }
 
     const calculateTotalSupply = totalSharesResults.reduce((total, sharesResult) => {
       // Check if it's a fulfilled result and has a supply
@@ -285,19 +275,15 @@ export const fetchNetworkAssetTvl = createAsyncThunk<
     // Calculate TVL with normalization to 18 decimals for all assets
     // TODO: Instead of checking tokenKey, we should just use the decimals of the token returned by the accountant.
     let tvlInToken: bigint
-    if (tokenKey === TokenKey.EARNBTC) {
-      // EARNBTC uses 8 decimals, normalize to 18 by multiplying by 10^10
-      tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e10)
-    } else if (tokenKey === TokenKey.NELIXIR || tokenKey === TokenKey.SUPUSD) {
+    if (tokenKey === TokenKey.EARNBTC || tokenKey === TokenKey.UNIFIBTC) {
+      // BTC-based assets use 8 decimals, normalize to 18 by multiplying by 10^10
+      tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(1e10)) / WAD.bigint
+    } else if (tokenKey === TokenKey.NELIXIR || tokenKey === TokenKey.SUPUSD || tokenKey === TokenKey.UNIFIUSD) {
       // NELIXIR and SUPUSD use 6 decimals, normalize to 18 by multiplying by 10^12
-      tvlInToken = ((calculateTotalSupply * tokenPerShareRate) / WAD.bigint) * BigInt(1e12)
+      tvlInToken = (calculateTotalSupply * tokenPerShareRate * BigInt(1e12)) / WAD.bigint
     } else {
       // ETH-based assets already use 18 decimals
       tvlInToken = (calculateTotalSupply * tokenPerShareRate) / WAD.bigint
-    }
-
-    if (tokenKey === TokenKey.SUPUSD) {
-      console.log(tokenKey, totalSharesResults, calculateTotalSupply, tokenPerShareRate, tvlInToken)
     }
 
     return { tvl: tvlInToken.toString(), tokenKey }

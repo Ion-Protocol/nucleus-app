@@ -38,6 +38,7 @@ import { UnifiBtcIcon } from '../shared/icons/UnifiBtc'
 import { UnifiethIcon } from '../shared/icons/Unifieth'
 import { UsnIcon } from '../shared/icons/Usn'
 import { WstethIcon } from '../shared/icons/Wsteth'
+import { TokenUsdIcon } from '../shared/icons/TokenUsd'
 
 function DefaultIcon() {
   return <></>
@@ -80,6 +81,7 @@ export const tokenIconMap: Record<TokenKey, (props: ChakraProps) => JSX.Element>
   [TokenKey.LBTC]: (props) => <Icon as={LbtcIcon} {...props} color="inherit" fill="none" />,
   [TokenKey.PUMPBTC]: (props) => <Icon as={PumpBtcIcon} {...props} color="inherit" fill="none" />,
   [TokenKey.CBBTC]: (props) => <Icon as={CbBtcIcon} {...props} color="inherit" fill="none" />,
+  [TokenKey.UNIFIUSD]: (props) => <Icon as={TokenUsdIcon} {...props} color="inherit" fill="none" />,
 }
 
 interface TokenIconProps extends ChakraProps {

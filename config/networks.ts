@@ -617,6 +617,166 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
     },
   },
+  [TokenKey.UNIFIBTC]: {
+    apys: {},
+    token: tokensConfig[TokenKey.UNIFIBTC],
+    description: '',
+    comingSoon: false,
+    isExternal: true,
+    isNewDeployment: true,
+    partnerUrl: 'https://app.puffer.fi/vaults/unifiBTC',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIBTC),
+    chain: ChainKey.UNIFI,
+    layerZeroChainSelector: 111111, // Not actual
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    contracts: {
+      teller: '0x0743647a607822781f9d0a639454e76289182f0b',
+      accountant: '0x2afb28b0561d99b5e00829ec2ef54946a00a35f7',
+      boringVault: '0x170d847a8320f3b6a77ee15b0cae430e3ec933a0',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+      {
+        key: PointSystemKey.CARROTS,
+        name: 'Carrots',
+        pointsMultiplier: 1,
+      },
+    ],
+    redeem: {
+      withdrawalFee: defaultWithdrawalFee,
+      redemptionSourceChain: ChainKey.UNIFI,
+      redemptionSourceChains: {
+        [ChainKey.UNIFI]: {
+          chain: ChainKey.UNIFI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.UNIFIBTC,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 111111, // placeholder
+      wantTokens: {
+        [ChainKey.ETHEREUM]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+        },
+      },
+    },
+    protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+    },
+  },
+  [TokenKey.UNIFIUSD]: {
+    apys: {},
+    token: tokensConfig[TokenKey.UNIFIUSD],
+    description: '',
+    comingSoon: false,
+    isExternal: true,
+    isNewDeployment: true,
+    partnerUrl: 'https://app.puffer.fi/vaults/unifiUSD',
+    manuallyPaused: MANUALLY_PAUSED_NETWORK_ASSETS.includes(TokenKey.UNIFIUSD),
+    chain: ChainKey.UNIFI,
+    layerZeroChainSelector: 111111, // Not actual
+    deployedOn: ChainKey.ETHEREUM,
+    sourceChains: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+        explorerBaseUrl: etherscanBaseUrl,
+      },
+    },
+    defaultMintChain: ChainKey.ETHEREUM,
+    defaultRedemptionChain: ChainKey.ETHEREUM,
+    sourceTokens: {
+      [ChainKey.ETHEREUM]: defaultEthVaultAssets,
+    },
+    contracts: {
+      teller: '0x5d3Fb47FE7f3F4Ce8fe55518f7E4F7D6061B54DD',
+      accountant: '0xe0bDb7b9225A2CeB42998dc2E51D4D3CDeb7e3Be',
+      boringVault: '0x82c40e07277eBb92935f79cE92268F80dDc7caB4',
+    },
+    receiveOn: ChainKey.ETHEREUM,
+    points: [
+      {
+        key: PointSystemKey.NUCLEUS,
+        name: 'Nucleus',
+        pointsMultiplier: 2,
+      },
+      {
+        key: PointSystemKey.CARROTS,
+        name: 'Carrots',
+        pointsMultiplier: 1,
+      },
+    ],
+    redeem: {
+      withdrawalFee: defaultWithdrawalFee,
+      redemptionSourceChain: ChainKey.UNIFI,
+      redemptionSourceChains: {
+        [ChainKey.UNIFI]: {
+          chain: ChainKey.UNIFI,
+          explorerBaseUrl: rariExplorerBaseUrl,
+        },
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      redemptionSourceAsset: TokenKey.UNIFIUSD,
+      redemptionDestinationChain: ChainKey.ETHEREUM,
+      redemptionDestinationChains: {
+        [ChainKey.ETHEREUM]: {
+          chain: ChainKey.ETHEREUM,
+          explorerBaseUrl: layerZeroBaseUrl,
+        },
+      },
+      withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
+      layerZeroChainSelector: 111111, // placeholder
+      wantTokens: {
+        [ChainKey.ETHEREUM]: {
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
+            withdrawalFee: defaultWithdrawalFee, // Default 0.2%,
+          },
+        },
+      },
+    },
+    protocols: [],
+    tvlSources: {
+      [ChainKey.ETHEREUM]: {
+        chain: ChainKey.ETHEREUM,
+      },
+    },
+  },
   [TokenKey.EARNETH]: {
     apys: {},
     token: tokensConfig[TokenKey.EARNETH],
