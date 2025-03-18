@@ -34,8 +34,9 @@ export function NetworkAssetTable({ selectedAssets, selectedNetworks }: NetworkA
       const matchesNetwork = selectedNetworks.length === 0 || selectedNetworks.includes(item.chain as string)
       // ! Remove RARI from the list. This is temporary while we depreciate RARI and remove it all together.
       const isNotRari = item.chain !== ChainKey.RARI
+      const isNotSupUsd = item.asset !== TokenKey.SUPUSD
 
-      return matchesAsset && matchesNetwork && isNotRari
+      return matchesAsset && matchesNetwork && isNotRari && isNotSupUsd
     })
   }, [data, selectedAssets, selectedNetworks])
 

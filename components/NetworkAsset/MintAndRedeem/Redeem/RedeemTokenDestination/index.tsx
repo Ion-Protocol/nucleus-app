@@ -3,9 +3,9 @@ import { IonCard } from '@/components/shared/IonCard'
 import { IonSkeleton } from '@/components/shared/IonSkeleton'
 import { IonTooltip } from '@/components/shared/IonTooltip'
 import { useGetRateInQuoteSafeQuery } from '@/store/slices/accountantApi'
-import { selectWithdrawalFee } from '@/store/slices/networkAssets'
+import { selectWithdrawSlippage } from '@/store/slices/networkAssets'
 import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
-import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
+import { applyWithdrawSlippageReduction } from '@/utils/withdrawal'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import { Flex, Input, Text } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
@@ -25,7 +25,7 @@ function RedeemTokenDestination({
   redeemAmountAsBigInt,
   chainId,
 }: RedeemTokenDestinationConnector.Props) {
-  const withdrawalFee = useSelector(selectWithdrawalFee)
+  const withdrawSlippage = useSelector(selectWithdrawSlippage)
 
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetRateInQuoteSafeQuery(
     {
@@ -40,7 +40,7 @@ function RedeemTokenDestination({
 
   // Calculate rate with 0.02% fee
   const rateInQuoteWithFee = tokenRateInQuote?.rateInQuoteSafe
-    ? applyWithdrawalFeeReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawalFee)
+    ? applyWithdrawSlippageReduction(BigInt(tokenRateInQuote?.rateInQuoteSafe), withdrawSlippage)
     : BigInt(0)
 
   // Calculate redeem amount using rate

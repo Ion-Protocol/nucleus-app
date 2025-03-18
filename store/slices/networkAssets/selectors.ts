@@ -1,6 +1,6 @@
 import { CrossChainTellerBase } from '@/api/contracts/Teller/previewFee'
 import { Chain, chainsConfig } from '@/config/chains'
-import { defaultWithdrawalFee, hardcodedApy, nativeAddress } from '@/config/constants'
+import { defaultWithdrawSlippage, hardcodedApy, nativeAddress } from '@/config/constants'
 import { NetworkKey, networksConfig } from '@/config/networks'
 import { tokensConfig } from '@/config/tokens'
 import { RootState } from '@/store'
@@ -291,7 +291,7 @@ export const selectFormattedNetworkAssetTvlByKey = (state: RootState, tokenKey: 
   // ! This is a temporary fix for the NELIXIR TVL.
   // TODO: We should refactor this to be  use the decimals returned from the Accountant.
   // Handle NELIXIR TVL
-  if (tokenKey === TokenKey.NELIXIR) {
+  if (tokenKey === TokenKey.NELIXIR || tokenKey === TokenKey.UNIFIUSD) {
     const tvlInUsdAsNumber = bigIntToNumber(tvl, { decimals: 6 })
     return abbreviateNumber(tvlInUsdAsNumber)
   }
@@ -299,7 +299,7 @@ export const selectFormattedNetworkAssetTvlByKey = (state: RootState, tokenKey: 
   // ! This is a temporary fix for the BTC TVL.
   // TODO: We should refactor this to be  use the decimals returned from the Accountant.
   // Handle BTC TVL
-  if (tokenKey === TokenKey.EARNBTC) {
+  if (tokenKey === TokenKey.EARNBTC || tokenKey === TokenKey.UNIFIBTC) {
     const price = selectUsdPerBtcRate(state)
     const tvlInUsdAsBigInt = (tvl * price) / BigInt(1e8)
     const tvlInUsdAsNumber = bigIntToNumber(tvlInUsdAsBigInt, { decimals: 8 })
@@ -909,26 +909,26 @@ export const selectWantAssetAddress = (state: RootState) => {
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-// Returns withdrawal fee for selected receive token
-export const selectWithdrawalFee = (state: RootState): number => {
+// Returns withdrawal slippage for selected receive token
+export const selectWithdrawSlippage = (state: RootState): number => {
   const chainConfig = selectNetworkAssetConfig(state)
   const redemptionDestinationChainKey = selectRedemptionDestinationChainKey(state)
   const receiveTokenKey = selectReceiveTokenKey(state)
 
   if (!chainConfig || !redemptionDestinationChainKey || !receiveTokenKey) {
-    return defaultWithdrawalFee
+    return defaultWithdrawSlippage
   }
 
-  const withdrawalFee =
-    chainConfig.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawalFee
+  const withdrawalSlippage =
+    chainConfig.redeem.wantTokens[redemptionDestinationChainKey as ChainKey]?.[receiveTokenKey]?.withdrawSlippage
   // Allow 0 but use default for null/undefined
-  return withdrawalFee !== null && withdrawalFee !== undefined ? withdrawalFee : defaultWithdrawalFee
+  return withdrawalSlippage !== null && withdrawalSlippage !== undefined ? withdrawalSlippage : defaultWithdrawSlippage
 }
 
 // DO NOT memoize: Returns a primitive value; memoization not necessary.
-export const selectWithdrawalFeeAsBigInt = (state: RootState): bigint => {
-  const withdrawalFee = selectWithdrawalFee(state)
-  return withdrawalFee ? BigInt(withdrawalFee * WAD.number) : BigInt(0)
+export const selectWithdrawSlippageAsBigInt = (state: RootState): bigint => {
+  const withdrawSlippage = selectWithdrawSlippage(state)
+  return withdrawSlippage ? BigInt(withdrawSlippage * WAD.number) : BigInt(0)
 }
 
 export const selectWithdrawalSourceExplorerBaseUrl = (state: RootState) => {

@@ -11,10 +11,10 @@ import {
   selectRedeemBridgeData,
   selectRedemptionSourceChainId,
   selectWantAssetAddress,
-  selectWithdrawalFee,
+  selectWithdrawSlippage,
 } from '@/store/slices/networkAssets/selectors'
 import { useGetPreviewFeeQuery } from '@/store/slices/tellerApi'
-import { applyWithdrawalFeeReduction } from '@/utils/withdrawal'
+import { applyWithdrawSlippageReduction } from '@/utils/withdrawal'
 import { useSelector } from 'react-redux'
 import { Address } from 'viem'
 
@@ -58,9 +58,9 @@ export const useRedeemData = () => {
   )
 
   // Apply Fee to Token Rate in Quote
-  const withdrawalFee = useSelector(selectWithdrawalFee)
+  const withdrawSlippage = useSelector(selectWithdrawSlippage)
   const rateInQuoteWithFee = useGetTokenRateInQuote.data?.rateInQuoteSafe
-    ? applyWithdrawalFeeReduction(BigInt(useGetTokenRateInQuote.data?.rateInQuoteSafe), withdrawalFee)
+    ? applyWithdrawSlippageReduction(BigInt(useGetTokenRateInQuote.data?.rateInQuoteSafe), withdrawSlippage)
     : BigInt(0)
 
   // Bridge Preview Fee Selectors. Note: Only applies to withdrawal with Bridge
@@ -89,7 +89,7 @@ export const useRedeemData = () => {
     useAllowance,
     useGetTokenRateInQuote,
     rateInQuoteWithFee,
-    withdrawalFee,
+    withdrawSlippage,
     usePreviewFee,
   }
 }

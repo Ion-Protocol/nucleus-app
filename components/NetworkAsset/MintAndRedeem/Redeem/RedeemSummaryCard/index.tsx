@@ -24,7 +24,7 @@ export type RedeemSummaryCardProps = {
   redeemAmount: string
   receiveAmount: string
   bridgeFee?: string
-  withdrawFee: string
+  withdrawSlippage: string
   deadline: string
   total?: string
   totalUsd?: string
@@ -36,7 +36,7 @@ const RedeemSummaryCard = () => {
     usePreviewFee,
     withdrawalDestinationChainKey,
     redemptionSourceChainKey,
-    withdrawalFee,
+    withdrawSlippage,
     isBridgeRequired,
     receiveToken,
     sharesTokenKey,
@@ -120,14 +120,14 @@ const RedeemSummaryCard = () => {
                   fullValue={`${tokenRateInQuote?.rateInQuoteSafeAsString} ${receiveToken?.name} / ${sharesTokenKey}`}
                 />
                 <SummaryRow
-                  label={RedeemSummaryCopy.withdrawFee.label}
-                  tooltip={RedeemSummaryCopy.withdrawFee.tooltip}
-                  value={`${withdrawalFee}%`}
+                  label={RedeemSummaryCopy.withdrawSlippage.label}
+                  tooltip={RedeemSummaryCopy.withdrawSlippage.tooltip}
+                  value={`${withdrawSlippage}%`}
                 />
                 <SummaryRow
                   label={RedeemSummaryCopy.deadline.label}
                   tooltip={RedeemSummaryCopy.deadline.tooltip}
-                  value={'3 days'}
+                  value={'7 days'}
                 />
               </Flex>
             </AccordionPanel>

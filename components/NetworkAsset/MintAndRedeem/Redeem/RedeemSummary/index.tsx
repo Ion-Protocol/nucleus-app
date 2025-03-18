@@ -23,10 +23,10 @@ export const RedeemSummaryCopy = {
     tooltip:
       'The current exchange rate used to calculate the redemption price that is not inclusive of the withdrawal fee.',
   },
-  withdrawFee: {
-    label: 'Withdraw Fee',
+  withdrawSlippage: {
+    label: 'Withdraw Slippage',
     tooltip:
-      'Withdraw fees are applied in order to incentivize solvers to process withdraw orders into arbitrary requested assets.',
+      'Withdrawal slippage is the amount of slippage that is applied to the withdrawal. This slippage is applied in order to incentivize solvers to process withdraw orders into arbitrary requested assets.',
   },
   deadline: {
     label: 'Deadline',
@@ -42,7 +42,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
     redemptionSourceChainKey,
     sharesTokenKey,
     redeemAmountAsBigInt,
-    withdrawalFee,
+    withdrawSlippage,
     isBridgeRequired,
     receiveToken,
     nativeAsset,
@@ -123,15 +123,15 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
             <Flex align="center" justify="space-between">
               <Flex color="secondaryText" gap={2} align="center">
                 <Text variant="paragraph" color="disabledText">
-                  {RedeemSummaryCopy.withdrawFee.label}
+                  {RedeemSummaryCopy.withdrawSlippage.label}
                 </Text>
-                <IonTooltip label={RedeemSummaryCopy.withdrawFee.tooltip}>
+                <IonTooltip label={RedeemSummaryCopy.withdrawSlippage.tooltip}>
                   <InfoOutlineIcon color="infoIcon" mt={'2px'} fontSize="sm" />
                 </IonTooltip>
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
                 <Text textAlign="right" variant="paragraph" color="disabledText">
-                  {withdrawalFee}%
+                  {Number(withdrawSlippage).toFixed(2)}%
                 </Text>
               </IonSkeleton>
             </Flex>
@@ -147,7 +147,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
                 <Text textAlign="right" variant="paragraph" color="disabledText">
-                  3 days
+                  7 days
                 </Text>
               </IonSkeleton>
             </Flex>
