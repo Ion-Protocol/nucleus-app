@@ -147,7 +147,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
                 <Text textAlign="right" variant="paragraph" color="disabledText">
-                  3 days
+                  7 days
                 </Text>
               </IonSkeleton>
             </Flex>
