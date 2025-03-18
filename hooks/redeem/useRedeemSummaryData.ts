@@ -11,9 +11,10 @@ import {
   selectRedeemAmountAsBigInt,
   selectRedemptionDestinationChainKey,
   selectRedemptionSourceChainKey,
+  selectWithdrawalDeadline,
   selectWithdrawSlippage,
 } from '@/store/slices/networkAssets'
-import { WAD, bigIntToNumberAsString } from '@/utils/bigint'
+import { bigIntToNumberAsString, WAD } from '@/utils/bigint'
 import { useSelector } from 'react-redux'
 import { formatUnits } from 'viem'
 import { useRedeemData } from './useRedeemData'
@@ -41,6 +42,8 @@ export const useRedeemSummaryData = () => {
 
   const redeemAmount = useSelector(selectRedeemAmount)
   const redeemAmountAsBigInt = useSelector(selectRedeemAmountAsBigInt)
+
+  const deadline = useAppSelector(selectWithdrawalDeadline)
 
   // Calculate redeem amount using rate
   const receiveAmountAsBigInt =
@@ -86,5 +89,6 @@ export const useRedeemSummaryData = () => {
     redeemAmountTruncated,
     receiveAmountTruncated,
     receiveAmountFormattedFull,
+    deadline,
   }
 }
