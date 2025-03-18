@@ -127,7 +127,7 @@ const RedeemSummaryCard = () => {
                 <SummaryRow
                   label={RedeemSummaryCopy.deadline.label}
                   tooltip={RedeemSummaryCopy.deadline.tooltip}
-                  value={'3 days'}
+                  value={'7 days'}
                 />
               </Flex>
             </AccordionPanel>
