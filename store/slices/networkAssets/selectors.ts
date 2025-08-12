@@ -947,6 +947,12 @@ export const selectWithdrawalDestinationExplorerBaseUrl = (state: RootState) => 
   return withdrawalDestinationExplorerBaseUrl
 }
 
+export const selectWithdrawalDeadline = (state: RootState) => {
+  const networkAssetConfig = selectNetworkAssetConfig(state)
+  if (!networkAssetConfig) return 3
+  const withdrawalDeadline = networkAssetConfig.defaultWithdrawalDeadline
+  return withdrawalDeadline
+}
 /////////////////////////////////////////////////////////////////////
 // Bridge Selectors
 /////////////////////////////////////////////////////////////////////
