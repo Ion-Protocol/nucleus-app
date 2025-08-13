@@ -97,35 +97,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.APXETH]: {
-            token: tokensConfig[TokenKey.APXETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.RSWETH]: {
-            token: tokensConfig[TokenKey.RSWETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.EZETH]: {
-            token: tokensConfig[TokenKey.EZETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.WEETH]: {
-            token: tokensConfig[TokenKey.WEETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.WSTETH]: {
-            token: tokensConfig[TokenKey.WSTETH],
-            withdrawSlippage: 1,
-          },
-        },
-        [ChainKey.BOBA]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 1,
+          [TokenKey.PZETH]: {
+            token: tokensConfig[TokenKey.PZETH],
+            withdrawSlippage: defaultWithdrawSlippage,
           },
         },
       },
@@ -207,10 +181,6 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 0.5, // Default 0.2%,
-          },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
             withdrawSlippage: 0.01, // Custom fee for APXETH
@@ -343,27 +313,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-          [TokenKey.WSTETH]: {
-            token: tokensConfig[TokenKey.WSTETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
           [TokenKey.PZETH]: {
             token: tokensConfig[TokenKey.PZETH],
             withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-          [TokenKey.EZETH]: {
-            token: tokensConfig[TokenKey.EZETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-        },
-        [ChainKey.FORM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 0.02,
           },
         },
       },
