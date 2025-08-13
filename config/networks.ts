@@ -209,11 +209,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-          [TokenKey.SFRXETH]: {
-            token: tokensConfig[TokenKey.SFRXETH],
-            withdrawSlippage: 0.01, // Custom fee for SFRXETH
+            withdrawSlippage: 0.5, // Default 0.2%,
           },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
@@ -222,7 +218,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      withdrawSlippage: defaultWithdrawSlippage,
+      withdrawSlippage: 0.5,
     },
     receiveOn: ChainKey.SEI,
     showRewardsAndHistory: true,
