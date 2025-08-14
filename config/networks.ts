@@ -228,7 +228,7 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.FETH]: {
     apys: {},
-    allowBridge: true,
+    allowBridge: false,
     bridge: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
@@ -293,10 +293,6 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           chain: ChainKey.ETHEREUM,
           explorerBaseUrl: etherscanBaseUrl,
-        },
-        [ChainKey.FORM]: {
-          chain: ChainKey.FORM,
-          explorerBaseUrl: formExplorerBaseUrl,
         },
       },
       redemptionSourceAsset: TokenKey.FETH,
