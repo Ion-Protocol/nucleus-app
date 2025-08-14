@@ -97,8 +97,8 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
-          [TokenKey.PZETH]: {
-            token: tokensConfig[TokenKey.PZETH],
+          [TokenKey.WETH]: {
+            token: tokensConfig[TokenKey.WETH],
             withdrawSlippage: defaultWithdrawSlippage,
           },
         },
