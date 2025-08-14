@@ -99,33 +99,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         [ChainKey.ETHEREUM]: {
           [TokenKey.WETH]: {
             token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.APXETH]: {
-            token: tokensConfig[TokenKey.APXETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.RSWETH]: {
-            token: tokensConfig[TokenKey.RSWETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.EZETH]: {
-            token: tokensConfig[TokenKey.EZETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.WEETH]: {
-            token: tokensConfig[TokenKey.WEETH],
-            withdrawSlippage: 1,
-          },
-          [TokenKey.WSTETH]: {
-            token: tokensConfig[TokenKey.WSTETH],
-            withdrawSlippage: 1,
-          },
-        },
-        [ChainKey.BOBA]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 1,
+            withdrawSlippage: defaultWithdrawSlippage,
           },
         },
       },
@@ -207,14 +181,6 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-          [TokenKey.SFRXETH]: {
-            token: tokensConfig[TokenKey.SFRXETH],
-            withdrawSlippage: 0.01, // Custom fee for SFRXETH
-          },
           [TokenKey.APXETH]: {
             token: tokensConfig[TokenKey.APXETH],
             withdrawSlippage: 0.01, // Custom fee for APXETH
@@ -222,7 +188,7 @@ const mainnetNetworkAssets: NetworkAssets = {
         },
       },
       withdrawalChain: ChainKey.ETHEREUM, // Call to teller to withdraw from SSETH to Want Token
-      withdrawSlippage: defaultWithdrawSlippage,
+      withdrawSlippage: 0.5,
     },
     receiveOn: ChainKey.SEI,
     showRewardsAndHistory: true,
@@ -262,7 +228,7 @@ const mainnetNetworkAssets: NetworkAssets = {
   },
   [TokenKey.FETH]: {
     apys: {},
-    allowBridge: true,
+    allowBridge: false,
     bridge: {
       [ChainKey.ETHEREUM]: {
         chain: ChainKey.ETHEREUM,
@@ -343,27 +309,9 @@ const mainnetNetworkAssets: NetworkAssets = {
       },
       wantTokens: {
         [ChainKey.ETHEREUM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-          [TokenKey.WSTETH]: {
-            token: tokensConfig[TokenKey.WSTETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
           [TokenKey.PZETH]: {
             token: tokensConfig[TokenKey.PZETH],
             withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-          [TokenKey.EZETH]: {
-            token: tokensConfig[TokenKey.EZETH],
-            withdrawSlippage: defaultWithdrawSlippage, // Default 0.2%,
-          },
-        },
-        [ChainKey.FORM]: {
-          [TokenKey.WETH]: {
-            token: tokensConfig[TokenKey.WETH],
-            withdrawSlippage: 0.02,
           },
         },
       },
