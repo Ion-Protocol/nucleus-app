@@ -1,3 +1,4 @@
+import DeprecationModal from './DeprecationModal'
 import ErrorModal from './ErrorModal'
 import TermsModal from './TermsModal'
 import TransactionSuccessModal from './TransactionSuccessModal'
@@ -8,6 +9,7 @@ export function ModalsContainer() {
       <ErrorModal />
       <TransactionSuccessModal />
       <TermsModal />
+      <DeprecationModal />
     </>
   )
 }
