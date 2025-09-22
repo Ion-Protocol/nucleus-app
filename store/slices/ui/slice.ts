@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '@/store'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 // ==================
 // 1. STATE INTERFACE
@@ -7,6 +7,7 @@ import { RootState } from '@/store'
 export interface UIState {
   isNetworkAssetNavOpen: boolean
   isTermsModalOpen: boolean
+  isDeprecationModalOpen: boolean
 }
 
 // ==================
@@ -15,6 +16,7 @@ export interface UIState {
 const initialState: UIState = {
   isNetworkAssetNavOpen: false,
   isTermsModalOpen: false,
+  isDeprecationModalOpen: false,
 }
 
 // ==================
@@ -36,12 +38,26 @@ const uiSlice = createSlice({
     closeTermsModal(state) {
       state.isTermsModalOpen = false
     },
+    openDeprecationModal(state) {
+      state.isDeprecationModalOpen = true
+    },
+    closeDeprecationModal(state) {
+      state.isDeprecationModalOpen = false
+    },
   },
 })
 
-export const { toggleNetworkAssetNav, setNetworkAssetNavOpen, openTermsModal, closeTermsModal } = uiSlice.actions
+export const {
+  toggleNetworkAssetNav,
+  setNetworkAssetNavOpen,
+  openTermsModal,
+  closeTermsModal,
+  openDeprecationModal,
+  closeDeprecationModal,
+} = uiSlice.actions
 
 export const selectNetworkAssetNavOpen = (state: RootState) => state.ui.isNetworkAssetNavOpen
 export const selectTermsModalOpen = (state: RootState) => state.ui.isTermsModalOpen
+export const selectDeprecationModalOpen = (state: RootState) => state.ui.isDeprecationModalOpen
 
 export const UIReducer = uiSlice.reducer

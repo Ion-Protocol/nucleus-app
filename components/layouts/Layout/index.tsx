@@ -11,6 +11,7 @@ import { useTermsEffect } from '@/hooks/useTermsEffect'
 import { useConnectEffect } from '@/hooks/useConnectEffect'
 import { useFunkitThemeInitializer } from '@/styles/theme/hooks/useFunkitThemeInitializer'
 import { usePollTokenBalance } from '@/store/hooks/usePollTokenBalance'
+import { useDeprecationModal } from '@/hooks/useDeprecationModal'
 
 export function Layout({ children }: PropsWithChildren) {
   useRouteChangeEffect()
@@ -20,6 +21,7 @@ export function Layout({ children }: PropsWithChildren) {
   useStoreInitializer()
   useFunkitThemeInitializer()
   usePollTokenBalance()
+  useDeprecationModal()
 
   const [isDesktop] = useMediaQuery('(min-width: 1025px)')
   const [isTablet] = useMediaQuery('(min-width: 769px) and (max-width: 1024px)')
