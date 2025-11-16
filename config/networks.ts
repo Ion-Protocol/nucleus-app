@@ -60,6 +60,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 7,
     deployedOn: ChainKey.BOBA,
     description:
       'Connect your wallet, select your deposit asset, and mint the Boba Default Asset to earn while you explore the Boba ecosystem',
@@ -145,6 +146,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.SEI,
+    defaultWithdrawalDeadline: 3,
     deployedOn: ChainKey.SEI,
     description:
       'Connect your wallet, select your deposit asset, and mint the Sei Default Asset to earn while you explore the Sei ecosystem',
@@ -252,6 +254,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     deployedOn: ChainKey.FORM,
     description:
       'Connect your wallet, select your deposit asset, and mint the Boba Default Asset to earn while you explore the Boba ecosystem',
@@ -356,6 +359,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.RARI,
     defaultRedemptionChain: ChainKey.RARI,
+    defaultWithdrawalDeadline: 3,
     deployedOn: ChainKey.RARI,
     description:
       'Connect your wallet, select your deposit asset, and mint the Rari Default Asset to earn while you explore the Rari ecosystem',
@@ -493,6 +497,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -581,6 +586,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -661,6 +667,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -744,6 +751,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -829,6 +837,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -923,6 +932,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -1038,6 +1048,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: defaultEthVaultAssets,
     },
@@ -1110,6 +1121,7 @@ const mainnetNetworkAssets: NetworkAssets = {
     },
     defaultMintChain: ChainKey.ETHEREUM,
     defaultRedemptionChain: ChainKey.ETHEREUM,
+    defaultWithdrawalDeadline: 3,
     sourceTokens: {
       [ChainKey.ETHEREUM]: [TokenKey.USN, TokenKey.SUSN],
     },
