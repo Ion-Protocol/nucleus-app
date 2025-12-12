@@ -98,14 +98,18 @@ export const fetchAllTokenBalances = createAsyncThunk<
       // * Used for debugging if a token balance is failing
       // const tempResults = await Promise.allSettled(balancePromises)
       // console.log('tempResults', TokenKey, tempResults)
-      const results = await Promise.all(balancePromises)
+      const results = await Promise.allSettled(balancePromises)
 
       for (const result of results) {
-        if (result && result.tokenKey && result.chainKey) {
-          if (!balances[result.tokenKey as TokenKey]) {
-            balances[result.tokenKey as TokenKey] = {} as Record<ChainKey, string | null>
+        if (result.status === 'fulfilled') {
+          const fulfilledResult = result.value
+          if (fulfilledResult && fulfilledResult.tokenKey && fulfilledResult.chainKey) {
+            if (!balances[fulfilledResult.tokenKey as TokenKey]) {
+              balances[fulfilledResult.tokenKey as TokenKey] = {} as Record<ChainKey, string | null>
+            }
+            balances[fulfilledResult.tokenKey as TokenKey][fulfilledResult.chainKey as ChainKey] =
+              fulfilledResult.balance
           }
-          balances[result.tokenKey as TokenKey][result.chainKey as ChainKey] = result.balance
         }
       }
 
