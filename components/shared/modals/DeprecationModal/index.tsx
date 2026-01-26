@@ -1,16 +1,11 @@
 import { DEPRECATION_CONFIG } from '@/config/deprecation'
-import { Box, Button, Flex, Image, Modal, ModalContent, ModalOverlay, Text } from '@chakra-ui/react'
-import { CoinsSwap01 } from '@untitled-ui/icons-react'
+import { Box, Button, Flex, Image, Link, Modal, ModalContent, ModalOverlay, Text } from '@chakra-ui/react'
+import { LinkExternal01 } from '@untitled-ui/icons-react'
 import { DeprecationModalConnector } from './connector'
 
-function DeprecationModal({ isOpen, onClose }: DeprecationModalConnector.Props) {
-  const handleMigrateFunds = () => {
-    localStorage.setItem(DEPRECATION_CONFIG.MODAL_DISMISSED_KEY, 'true')
-    onClose()
-  }
-
+function DeprecationModal({ isOpen }: DeprecationModalConnector.Props) {
   return (
-    <Modal isOpen={isOpen} onClose={() => {}} isCentered size="2xl">
+    <Modal isOpen={isOpen} onClose={() => {}} isCentered size="2xl" closeOnOverlayClick={false} closeOnEsc={false}>
       <ModalOverlay />
       <ModalContent
         bg="backgroundSecondary"
@@ -31,7 +26,7 @@ function DeprecationModal({ isOpen, onClose }: DeprecationModalConnector.Props) 
             color="textSecondary"
             textAlign="center"
           >
-            Announcement Alert
+            Important Notice
           </Text>
 
           {/* Decorative Background */}
@@ -56,7 +51,7 @@ function DeprecationModal({ isOpen, onClose }: DeprecationModalConnector.Props) 
               color="text"
               textAlign="center"
             >
-              Nucleus is being deprecated
+              Nucleus has been deprecated
             </Text>
             <Text
               fontFamily="ABC Diatype Variable Unlicensed Trial"
@@ -65,15 +60,23 @@ function DeprecationModal({ isOpen, onClose }: DeprecationModalConnector.Props) 
               lineHeight="1.3em"
               letterSpacing="-2%"
               color="textSecondary"
-              textAlign="left"
+              textAlign="center"
             >
-              Please migrate your funds and export your data to avoid interruption.
+              This application is no longer active. To withdraw your funds, please follow the manual withdrawal
+              instructions in our documentation.
             </Text>
           </Flex>
 
           {/* Primary Action Button */}
-          <Button variant="solid" leftIcon={<CoinsSwap01 width="16px" height="16px" />} onClick={handleMigrateFunds}>
-            <Text variant="body-16">Migrate funds</Text>
+          <Button
+            as={Link}
+            href={DEPRECATION_CONFIG.WITHDRAWAL_DOCS_URL}
+            isExternal
+            variant="solid"
+            rightIcon={<LinkExternal01 width="16px" height="16px" />}
+            _hover={{ textDecoration: 'none' }}
+          >
+            <Text variant="body-16">View withdrawal instructions</Text>
           </Button>
         </Flex>
       </ModalContent>
