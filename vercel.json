@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://docs.nucleusearn.io/nucleus-architecture/deprecation-guide",
+      "permanent": true
+    }
+  ]
+}
