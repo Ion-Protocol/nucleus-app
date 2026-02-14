@@ -25,6 +25,7 @@ export interface NetworkAsset {
   contracts: Contracts
   defaultMintChain: ChainKey
   defaultRedemptionChain: ChainKey
+  defaultWithdrawalDeadline: number
   deployedOn: ChainKey
   description: string
   isExternal?: boolean

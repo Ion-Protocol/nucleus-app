@@ -47,6 +47,7 @@ const RedeemSummaryCard = () => {
     redeemAmountTruncated,
     receiveAmountTruncated,
     receiveAmountFormattedFull,
+    deadline,
   } = useRedeemSummaryData()
   const { data: tokenRateInQuote } = useGetTokenRateInQuote
   const { data: previewFee } = usePreviewFee
@@ -127,7 +128,7 @@ const RedeemSummaryCard = () => {
                 <SummaryRow
                   label={RedeemSummaryCopy.deadline.label}
                   tooltip={RedeemSummaryCopy.deadline.tooltip}
-                  value={'7 days'}
+                  value={`${deadline} days`}
                 />
               </Flex>
             </AccordionPanel>

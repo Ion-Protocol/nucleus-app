@@ -49,6 +49,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
     formattedTokenRateWithFee,
     formattedTokenRateWithFeeFull,
     formattedPreviewFee,
+    deadline,
   } = useRedeemSummaryData()
   const { data: previewFee, isLoading: isPreviewFeeLoading } = usePreviewFee
   const { data: tokenRateInQuote, isSuccess: tokenRateInQuoteSuccess } = useGetTokenRateInQuote
@@ -147,7 +148,7 @@ function RedeemSummary({}: RedeemSummaryConnector.Props) {
               </Flex>
               <IonSkeleton minW="75px" isLoaded={true}>
                 <Text textAlign="right" variant="paragraph" color="disabledText">
-                  7 days
+                  {deadline} days
                 </Text>
               </IonSkeleton>
             </Flex>
